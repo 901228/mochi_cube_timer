@@ -6,39 +6,62 @@ import "package:cupertino_ui/cupertino_ui.dart";
 import "package:flutter/foundation.dart" show listEquals;
 import "package:forui/forui.dart";
 
+/// One puzzle drawn in a given state.
+///
+/// [heroTag] is optional because two Heroes sharing a tag on screen at once is
+/// an error: the timer page's view flies into its full-screen preview, while a
+/// copy shown inside a dialog just sits there.
+class PuzzleStateView extends StatelessWidget {
+  const PuzzleStateView({super.key, required this.puzzle, required this.state, this.heroTag});
+
+  final Puzzle puzzle;
+
+  /// One number per piece of the puzzle's layout — a [Scramble.state], or the
+  /// state part way through a scramble.
+  final List<int> state;
+
+  final Object? heroTag;
+
+  @override
+  Widget build(BuildContext context) {
+    final layout = puzzle.scrambler.layout;
+
+    final view = AspectRatio(
+      aspectRatio: layout.width / layout.height,
+      child: CustomPaint(
+        isComplex: true,
+        painter: switch (layout) {
+          final PuzzleLayout puzzleLayout => PuzzlePainter(
+            layout: puzzleLayout,
+            state: state,
+            // colors: colorsFor(scrambler.id),
+            colors: [
+              Color(0xFFFFFFFF), // U
+              Color(0xFFB71C1C), // R
+              Color(0xFF2E7D32), // F
+              Color(0xFFFDD835), // D
+              Color(0xFFEF6C00), // L
+              Color(0xFF1565C0), // B
+            ],
+          ),
+          final ClockLayout clockLayout => ClockPainter(layout: clockLayout, state: state),
+        },
+      ),
+    );
+
+    return heroTag == null ? view : Hero(tag: heroTag!, child: view);
+  }
+}
+
 class Cube2DView extends StatelessWidget {
   final ScrambleHistory history;
   const Cube2DView({super.key, required this.history});
 
-  Widget _buildCube(Scramble scramble) {
-    final layout = history.puzzle.scrambler.layout;
-
-    return Hero(
-      tag: "cube_2d_view-${history.puzzle}",
-      child: AspectRatio(
-        aspectRatio: layout.width / layout.height,
-        child: CustomPaint(
-          isComplex: true,
-          painter: switch (layout) {
-            final PuzzleLayout puzzleLayout => PuzzlePainter(
-              layout: puzzleLayout,
-              state: scramble.state,
-              // colors: colorsFor(scrambler.id),
-              colors: [
-                Color(0xFFFFFFFF), // U
-                Color(0xFFB71C1C), // R
-                Color(0xFF2E7D32), // F
-                Color(0xFFFDD835), // D
-                Color(0xFFEF6C00), // L
-                Color(0xFF1565C0), // B
-              ],
-            ),
-            final ClockLayout clockLayout => ClockPainter(layout: clockLayout, state: scramble.state),
-          },
-        ),
-      ),
-    );
-  }
+  Widget _buildCube(Scramble scramble) => PuzzleStateView(
+    puzzle: history.puzzle,
+    state: scramble.state,
+    heroTag: "cube_2d_view-${history.puzzle}",
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -306,10 +329,13 @@ class ClockPainter extends CustomPainter {
         Offset(cos(hour * pi / 6 - pi / 2), sin(hour * pi / 6 - pi / 2)) * bodyRadius / 1.1,
     ];
 
+    // Dials 0-8 are the front, 9-17 the back, and the layout puts the back on
+    // the left. The left side is the darker one, so the front takes the light
+    // faces even though it comes first.
     for (var side = 0; side < 2; side++) {
       final front = side == 0;
-      final body = front ? lightFill : darkFill;
-      final dial = front ? darkFill : lightFill;
+      final body = front ? darkFill : lightFill;
+      final dial = front ? lightFill : darkFill;
       final centres = _centres(side, at);
 
       // draw body
@@ -335,14 +361,16 @@ class ClockPainter extends CustomPainter {
     final lightPin = Paint()..color = color.lightPin;
     final darkPin = Paint()..color = color.darkPin;
     final pinRadius = layout.pinRadius * scale * 0.65;
+    // Pins 0-3 belong to the front and 4-7 to the back, in the same order the
+    // dials are, so they take the same sides as the bodies they sit on.
     for (var i = 0; i < 4; i++) {
       final centre = at(layout.pins[i]);
-      canvas.drawCircle(centre, pinRadius, lightPin);
+      canvas.drawCircle(centre, pinRadius, darkPin);
       canvas.drawCircle(centre, pinRadius, stroke);
     }
     for (var i = 4; i < 8; i++) {
       final centre = at(layout.pins[i]);
-      canvas.drawCircle(centre, pinRadius, darkPin);
+      canvas.drawCircle(centre, pinRadius, lightPin);
       canvas.drawCircle(centre, pinRadius, stroke);
     }
 
