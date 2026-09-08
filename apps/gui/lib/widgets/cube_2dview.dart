@@ -1,5 +1,4 @@
 import "dart:math" show cos, sin, pi;
-import "dart:ui";
 
 import "package:cube_timer/cube_timer.dart";
 import "package:cupertino_ui/cupertino_ui.dart";
@@ -49,23 +48,41 @@ class PuzzleStateView extends StatelessWidget {
       ),
     );
 
-    return heroTag == null ? view : Hero(tag: heroTag!, child: view);
+    return heroTag == null ? view : Hero(tag: heroTag!, curve: heroFlightCurve, child: view);
   }
 }
 
-class Cube2DView extends StatelessWidget {
-  final ScrambleHistory history;
-  const Cube2DView({super.key, required this.history});
+/// The curve every flight between the timer page and the scramble viewer uses.
+///
+/// Stated in one place so the puzzle and the moves travel together. This is
+/// [Hero]'s own default; it is named here so both flights can be retuned at
+/// once.
+const Curve heroFlightCurve = Curves.fastOutSlowIn;
 
-  Widget _buildCube(Scramble scramble) => PuzzleStateView(
-    puzzle: history.puzzle,
-    state: scramble.state,
-    heroTag: "cube_2d_view-${history.puzzle}",
-  );
+/// The hero tag a puzzle's view flies under.
+///
+/// One per puzzle, shared by the thumbnail and whatever enlarges it, so the two
+/// are the same object moving rather than two copies.
+Object puzzleHeroTag(Puzzle puzzle) => "cube_2d_view-$puzzle";
+
+/// The current scramble as a thumbnail.
+///
+/// [onPress] is the caller's, not this widget's: what tapping a puzzle opens is
+/// the page's business, and routing from in here would make this widget depend
+/// on the dialog that in turn depends on it.
+class Cube2DView extends StatelessWidget {
+  const Cube2DView({super.key, required this.history, this.onPress});
+
+  final ScrambleHistory history;
+  final ValueChanged<Scramble>? onPress;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
+      // Keyed on the history: FutureBuilder holds on to the old snapshot's data
+      // when its future changes, and drawing the previous puzzle's state
+      // through this puzzle's layout reads off the end of it.
+      key: ObjectKey(history),
       future: history.current,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -77,37 +94,14 @@ class Cube2DView extends StatelessWidget {
           return const FCircularProgress();
         }
 
+        final press = onPress;
         return FTappable(
-          onPress: () {
-            final routeStyle = context.theme.dialogRouteStyle;
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                opaque: false,
-                transitionDuration: routeStyle.motion.entranceDuration,
-                pageBuilder: (context, animation, _) => Stack(
-                  children: [
-                    Positioned.fill(
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        behavior: HitTestBehavior.opaque,
-                        child: FadeTransition(
-                          opacity: animation,
-                          child: BackdropFilter(
-                            filter:
-                                routeStyle.barrierFilter?.call(context, animation.value) ??
-                                ImageFilter.blur(),
-                            child: const ColoredBox(color: Color(0x00FFFFFF)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Center(child: _buildCube(scramble)),
-                  ],
-                ),
-              ),
-            );
-          },
-          child: _buildCube(scramble),
+          onPress: press == null ? null : () => press(scramble),
+          child: PuzzleStateView(
+            puzzle: history.puzzle,
+            state: scramble.state,
+            heroTag: puzzleHeroTag(history.puzzle),
+          ),
         );
       },
     );

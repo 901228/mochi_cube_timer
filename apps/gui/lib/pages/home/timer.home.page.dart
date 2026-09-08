@@ -65,6 +65,11 @@ class _TimerViewState extends State<_TimerView> {
     }
   }
 
+  /// Both the scramble text and the thumbnail open the same viewer, so there is
+  /// one way a puzzle gets enlarged rather than two that look alike.
+  void _showScramble(Scramble scramble) =>
+      showScrambleDialog(context, puzzle: widget.puzzle, scramble: scramble);
+
   void _previous() => setState(_history.previous);
   void _next() => setState(_history.next);
 
@@ -109,6 +114,11 @@ class _TimerViewState extends State<_TimerView> {
           mainAxisSize: .min,
           children: [
             FutureBuilder(
+              // Keyed on the history, so switching puzzles starts a fresh
+              // builder. FutureBuilder keeps the old snapshot's data when its
+              // future changes, which would pair the previous puzzle's scramble
+              // with the new puzzle for a frame.
+              key: ObjectKey(_history),
               future: _history.current,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -121,21 +131,17 @@ class _TimerViewState extends State<_TimerView> {
                 }
 
                 return FTappable(
-                  onPress: () => showFDialog(
-                    context: context,
-                    builder: (context, style, animation) => ScrambleDialog(
+                  onPress: () => _showScramble(scramble),
+                  // The size lives on the DefaultTextStyle rather than on the
+                  // moves, so a hero's flight can read it off this context and
+                  // lerp towards the one the dialog uses. The weight is left
+                  // alone: ScrambleTokens sets its own, the same at both ends.
+                  child: DefaultTextStyle.merge(
+                    style: context.theme.typography.display.lg,
+                    child: ScrambleTokens(
                       puzzle: widget.puzzle,
-                      scramble: scramble,
-                      style: style,
-                      animation: animation,
+                      steps: widget.puzzle.scrambler.stepsOf(scramble),
                     ),
-                  ),
-                  child: Text(
-                    scramble.notation,
-                    textAlign: .center,
-                    overflow: .ellipsis,
-                    maxLines: 10,
-                    style: context.theme.typography.display.lg.copyWith(fontWeight: .w600),
                   ),
                 );
               },
@@ -173,7 +179,7 @@ class _TimerViewState extends State<_TimerView> {
                 ],
               ),
             ),
-            Cube2DView(history: _history),
+            Cube2DView(history: _history, onPress: _showScramble),
             Expanded(
               child: Column(
                 mainAxisSize: .min,
