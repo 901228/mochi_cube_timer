@@ -4,6 +4,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 
 import "../../widgets/cube_2dview.dart";
+import "../../widgets/scramble_dialog.dart";
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -122,26 +123,11 @@ class _TimerViewState extends State<_TimerView> {
                 return FTappable(
                   onPress: () => showFDialog(
                     context: context,
-                    builder: (context, style, animation) => FDialog(
+                    builder: (context, style, animation) => ScrambleDialog(
+                      puzzle: widget.puzzle,
+                      scramble: scramble,
                       style: style,
                       animation: animation,
-                      builder: (context, style) => Padding(
-                        padding: const .all(20),
-                        child: Column(
-                          mainAxisSize: .min,
-                          spacing: 16,
-                          children: [
-                            Padding(
-                              padding: const .all(8),
-                              child: DefaultTextStyle.merge(
-                                style: style.titleTextStyle,
-                                child: const Text("Scramble"),
-                              ),
-                            ),
-                            Text(scramble.notation),
-                          ],
-                        ),
-                      ),
                     ),
                   ),
                   child: Text(
