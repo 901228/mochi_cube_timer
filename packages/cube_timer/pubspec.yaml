@@ -1,0 +1,26 @@
+name: cube_timer
+description: Shared package for the Mochi Cube Timer app.
+version: 1.0.0
+publish_to: none
+
+resolution: workspace
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  mochi_cube:
+    path: ../../../mochi_cube/
+
+  bloc:
+  equatable:
+
+  drift:
+  sqlite3:
+
+dev_dependencies:
+  lints: ^6.1.0
+  test:
+
+  build_runner:
+  drift_dev:

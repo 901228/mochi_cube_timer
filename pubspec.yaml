@@ -1,0 +1,34 @@
+name: mochi_cube_timer
+publish_to: none
+environment:
+  sdk: ^3.13.2
+
+workspace:
+  - apps/gui
+  - apps/tui
+  - packages/cube_timer
+
+dependencies:
+  bloc: ^9.2.1
+  drift: ^2.34.4
+  equatable: ^2.1.0
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.12.0
+  sqlite3: ^3.5.2
+
+dev_dependencies:
+  melos: ^7.7.0
+  build_runner: ^2.16.1
+  freezed: ^4.0.1
+  json_serializable: ^6.14.1
+  drift_dev: ^2.34.6
+
+melos:
+  sdkPath: .fvm/flutter_sdk
+  categories:
+  ide:
+    intellij:
+      enabled: false
+
+  scripts:
+    run-tui: cd apps/tui && dart bin/tui.dart

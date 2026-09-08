@@ -1,0 +1,82 @@
+name: mochi_cube_timer_gui
+description: "A gui application for mochi cube timer."
+publish_to: "none"
+
+resolution: workspace
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.9
+
+  go_router: ^18.0.0
+  forui: ^0.26.0
+  cupertino_ui: ^1.0.2
+  material_ui: ^1.1.1
+
+  cube_timer:
+    path: ../../packages/cube_timer
+
+  drift:
+  drift_flutter: ^0.3.1
+
+  flutter_bloc: ^9.1.1
+  flutter_svg: ^2.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  forui_cli: ^0.26.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/cube_icons/222.svg
+    - assets/cube_icons/333.svg
+    - assets/cube_icons/444.svg
+    - assets/cube_icons/555.svg
+    - assets/cube_icons/666.svg
+    - assets/cube_icons/777.svg
+    - assets/cube_icons/clock.svg
+    - assets/cube_icons/fto.svg
+    - assets/cube_icons/minx.svg
+    - assets/cube_icons/pyram.svg
+    - assets/cube_icons/skewb.svg
+    - assets/cube_icons/sq1.svg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  fonts:
+    - family: Comfortaa
+      fonts:
+        - asset: assets/fonts/Comfortaa/Comfortaa-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Comfortaa/Comfortaa-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Comfortaa/Comfortaa-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Comfortaa/Comfortaa-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Comfortaa/Comfortaa-Bold.ttf
+          weight: 700
+    - family: NotoSansTC
+      fonts:
+        - asset: assets/fonts/NotoSansTC/NotoSansTC-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansTC/NotoSansTC-Bold.ttf
+          weight: 700
