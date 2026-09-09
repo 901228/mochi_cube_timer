@@ -6,7 +6,7 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
-import "home/sidebar.home.dart";
+import "home/sidebar.dart";
 
 class PageFrame extends StatelessWidget {
   const PageFrame({super.key, required this.pages, required this.navigationShell});
@@ -26,7 +26,7 @@ class PageFrame extends StatelessWidget {
             decoration: .shapeDelta(
               color: theme.colors.background,
               shape: RoundedRectangleBorder(
-                side: BorderSide(color: theme.colors.border),
+                side: BorderSide(color: theme.colors.border, width: 3),
                 borderRadius: theme.style.borderRadius.md,
               ),
             ),
