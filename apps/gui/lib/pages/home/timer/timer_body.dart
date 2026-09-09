@@ -16,7 +16,7 @@ class TimerBody extends StatelessWidget {
     this.color,
     this.pressedColor = const Color.fromARGB(255, 255, 121, 121),
     this.holdingColor = const Color.fromARGB(255, 255, 255, 121),
-    this.acceptColor = const Color.fromARGB(255, 99, 252, 152),
+    this.acceptColor = const Color.fromARGB(255, 32, 226, 100),
   });
 
   @override
@@ -33,19 +33,34 @@ class TimerBody extends StatelessWidget {
               .none => state is TimerRunInInspection ? pressedColor : color,
             },
           ),
-          child: FTappable(
-            style: .delta(motion: FTappableMotion.none),
-            child: state is TimerRunInInspection
-                ? const InspectionText()
-                : (state is TimerInitial || state.hold == .armed
-                      ? const Center(child: Text("0.00"))
-                      : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
-            onPressDown: (_) {
-              context.read<TimerBloc>().add(TimerPressed());
-            },
-            onPressUp: (_) {
-              context.read<TimerBloc>().add(TimerReleased());
-            },
+          child: Stack(
+            children: [
+              FTappable(
+                style: .delta(motion: FTappableMotion.none),
+                child: state is TimerRunInInspection
+                    ? const InspectionText()
+                    : (state is TimerInitial || state.hold == .armed
+                          ? const Center(child: Text("0.00"))
+                          : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
+                onPressDown: (_) {
+                  context.read<TimerBloc>().add(TimerPressed());
+                },
+                onPressUp: (_) {
+                  context.read<TimerBloc>().add(TimerReleased());
+                },
+              ),
+              if (state is TimerRunInInspection || state is TimerRunInProgress)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: FButton.icon(
+                    onPress: () {
+                      context.read<TimerBloc>().add(TimerReset());
+                    },
+                    child: const Icon(FLucideIcons.xCircle),
+                  ),
+                ),
+            ],
           ),
         );
       },
