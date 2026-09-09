@@ -1,8 +1,12 @@
 class Ticker {
   const Ticker();
 
-  /// emit every 10ms, the number of milliseconds passed
-  Stream<int> tick({Duration duration = const Duration(milliseconds: 10)}) {
-    return Stream.periodic(duration, (x) => 10);
+  /// Emits the number of milliseconds elapsed since the stream was listened to.
+  ///
+  /// The value is read from a [Stopwatch] instead of counting ticks, so a late
+  /// or dropped tick cannot make the reported time drift behind real time.
+  Stream<int> tick({Duration interval = const Duration(milliseconds: 10)}) async* {
+    final stopwatch = Stopwatch()..start();
+    yield* Stream<int>.periodic(interval, (_) => stopwatch.elapsedMilliseconds);
   }
 }

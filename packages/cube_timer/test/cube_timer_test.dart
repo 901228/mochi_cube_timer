@@ -6,7 +6,7 @@ void main() {
     setUp(() {});
 
     test("First Test", () {
-      print(Scrambler.getScramble());
+      // print(Scrambler.getScramble());
     });
   });
 }

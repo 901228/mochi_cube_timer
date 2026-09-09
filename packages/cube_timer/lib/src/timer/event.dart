@@ -16,9 +16,14 @@ final class TimerStopped extends TimerEvent {
   const TimerStopped();
 }
 
-class _TimerTicked extends TimerEvent {
-  const _TimerTicked({required this.duration});
+/// Aborts the current inspection or solve and goes back to [TimerInitial].
+final class TimerReset extends TimerEvent {
+  const TimerReset();
+}
 
-  /// in milliseconds
-  final int duration;
+class _TimerTicked extends TimerEvent {
+  const _TimerTicked({required this.elapsed});
+
+  /// milliseconds elapsed since the current ticker started
+  final int elapsed;
 }
