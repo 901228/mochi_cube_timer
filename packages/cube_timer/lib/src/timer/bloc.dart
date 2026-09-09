@@ -3,21 +3,19 @@ import "dart:async";
 import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
 
+import "config.dart";
 import "ticker.dart";
 
 part "event.dart";
 part "state.dart";
 
-// TODO: make [inspectDuration] and [inspectDnfDuration] configurable
-
-/// default inspection duration in milliseconds
-const int inspectionDuration = 15 * 1000;
-
-/// default inspection duration which caused dnf in milliseconds
-const int inspectionDnfDuration = 17 * 1000;
-
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
-  TimerBloc({required Ticker ticker}) : _ticker = ticker, super(const TimerInitial()) {
+  TimerBloc({required this._ticker, required Stream<TimerConfig> config}) : super(const TimerInitial()) {
+    _configSubscription = config.listen(
+      (config) => _latestConfig = config,
+      onError: (Object e, StackTrace s) => addError(e, s),
+    );
+
     on<TimerStarted>(_onStarted);
     on<TimerInspectionFinished>(_onInspectionFinished);
     on<TimerStopped>(_onStopped);
@@ -27,10 +25,19 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   final Ticker _ticker;
 
+  TimerConfig _latestConfig = const TimerConfig();
+  TimerConfig _runConfig =
+      const TimerConfig(); // config for current run (guard against config changes during run)
+
   StreamSubscription<int>? _tickerSubscription;
+  StreamSubscription<TimerConfig>? _configSubscription;
+
+  int get _inspectionDuration => _runConfig.inspectionDuration.inMilliseconds;
+  int get _inspectionDnfThreshold => _runConfig.inspectionDnfThreshold.inMilliseconds;
 
   @override
   Future<void> close() {
+    _configSubscription?.cancel();
     _tickerSubscription?.cancel();
     return super.close();
   }
@@ -48,8 +55,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   /// Penalty earned by spending [elapsedInspection] ms on inspection.
   Penalty _inspectionPenalty(int elapsedInspection) {
-    if (elapsedInspection <= inspectionDuration) return Penalty.none;
-    if (elapsedInspection <= inspectionDnfDuration) return Penalty.plus2;
+    if (elapsedInspection <= _inspectionDuration) return Penalty.none;
+    if (elapsedInspection <= _inspectionDnfThreshold) return Penalty.plus2;
     return Penalty.dnf;
   }
 
@@ -57,13 +64,20 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     // Ignore a second start while inspecting or solving, otherwise it would
     // silently throw away the run in progress.
     if (state is TimerRunInInspection || state is TimerRunInProgress) return;
-    emit(const TimerRunInInspection(inspectionDuration));
+
+    _runConfig = _latestConfig;
+    if (_runConfig.inspectionEnabled) {
+      emit(TimerRunInInspection(_runConfig.inspectionDuration.inMilliseconds));
+    } else {
+      emit(TimerRunInProgress(0)); // skip inspection
+    }
+
     _restartTicker();
   }
 
   void _onInspectionFinished(TimerInspectionFinished event, Emitter<TimerState> emit) {
     if (state is! TimerRunInInspection) return;
-    final elapsedInspection = inspectionDuration - state.inspection;
+    final elapsedInspection = _inspectionDuration - state.inspection;
     emit(TimerRunInProgress(0, penalty: _inspectionPenalty(elapsedInspection)));
     // Ends the inspection ticker and starts the solve ticker from zero.
     _restartTicker();
@@ -83,11 +97,11 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   void _onTicked(_TimerTicked event, Emitter<TimerState> emit) {
     if (state is TimerRunInInspection) {
       // The ticker reports the time elapsed since inspection began.
-      if (event.elapsed > inspectionDnfDuration) {
+      if (event.elapsed > _inspectionDnfThreshold) {
         _stopTicker();
         emit(const TimerRunComplete(0, penalty: Penalty.dnf));
       } else {
-        emit(TimerRunInInspection(inspectionDuration - event.elapsed));
+        emit(TimerRunInInspection(_inspectionDuration - event.elapsed));
       }
     } else if (state is TimerRunInProgress) {
       emit(TimerRunInProgress(event.elapsed, penalty: state.penalty));
