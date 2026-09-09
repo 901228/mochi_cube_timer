@@ -185,6 +185,7 @@ class PuzzlePainter extends CustomPainter {
   }
 }
 
+// TODO: put these color in settings
 // // 3x3 / 2x2：U R F D L B，WCA 標準配色
 // const List<Color> cubeColors = [
 //   Colors.white,   // U
