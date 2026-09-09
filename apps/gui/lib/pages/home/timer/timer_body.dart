@@ -6,6 +6,8 @@ import "package:forui/forui.dart";
 import "../../../theme.dart";
 import "timer_text.dart";
 
+// TODO: keyboard
+
 class TimerBody extends StatelessWidget {
   final Color? color;
   final Color pressedColor;
@@ -78,15 +80,24 @@ class InspectionText extends StatelessWidget {
     final seconds = context.select((TimerBloc bloc) => (bloc.state.inspection / 1000).ceil());
     final displayText = (seconds <= 0) ? "+2" : seconds.toString();
 
-    final hintTextStyle = context.theme.typography.timer.sm;
+    // alert
+    final inspectionDuration = context.select((TimerBloc bloc) => bloc.runConfig.inspectionDuration);
+    final elapsedSeconds = inspectionDuration.inSeconds - seconds;
+    final (firstAlertTime, secondAlertTime) = TimerConfig.alertTime(inspectionDuration);
+
     final colors = context.theme.colors;
+    final hintTextStyle = context.theme.typography.timer.sm;
+    final hintTextColor = colors.disable(hintTextStyle.color ?? colors.foreground);
+    final alertTextStyle = context.theme.typography.timer.xl4.copyWith(color: hintTextColor);
 
     return TimerText(
       time: Text(displayText),
-      hint: Text(
-        "INSPECTION",
-        style: hintTextStyle.copyWith(color: colors.disable(hintTextStyle.color ?? colors.foreground)),
-      ),
+      hint: Text("INSPECTION", style: hintTextStyle.copyWith(color: hintTextColor)),
+      rightHint: elapsedSeconds == firstAlertTime.inSeconds
+          ? Text("${firstAlertTime.inSeconds}s!", style: alertTextStyle)
+          : elapsedSeconds == secondAlertTime.inSeconds
+          ? Text("${secondAlertTime.inSeconds}s!!", style: alertTextStyle)
+          : null,
     );
   }
 }

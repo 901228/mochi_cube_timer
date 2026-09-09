@@ -22,6 +22,11 @@ class TimerConfig extends Equatable {
   /// inspection dnf threshold
   Duration get inspectionDnfThreshold => inspectionDuration + const Duration(seconds: 2);
 
+  static (Duration, Duration) alertTime(Duration inspectionDuration) => (
+    Duration(seconds: (inspectionDuration.inSeconds * 8 / 15).round()),
+    Duration(seconds: (inspectionDuration.inSeconds * 12 / 15).round()),
+  );
+
   @override
   List<Object> get props => [inspectionEnabled, inspectionDuration, holdDuration];
 }

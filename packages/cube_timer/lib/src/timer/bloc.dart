@@ -28,6 +28,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   TimerConfig _latestConfig = const TimerConfig();
   TimerConfig _runConfig =
       const TimerConfig(); // config for current run (guard against config changes during run)
+  TimerConfig get runConfig => _runConfig;
 
   StreamSubscription<int>? _tickerSubscription;
   StreamSubscription<TimerConfig>? _configSubscription;

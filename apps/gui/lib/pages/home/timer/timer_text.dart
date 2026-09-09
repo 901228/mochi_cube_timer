@@ -4,8 +4,9 @@ class TimerText extends StatelessWidget {
   final double spacing;
   final Widget time;
   final Widget? hint;
+  final Widget? rightHint;
   final Widget? action;
-  const TimerText({super.key, this.spacing = 8, required this.time, this.hint, this.action});
+  const TimerText({super.key, this.spacing = 8, required this.time, this.hint, this.action, this.rightHint});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class TimerText extends StatelessWidget {
         if (hint != null) LayoutId(id: TimerTextLayoutDelegate.hintId, child: hint!),
         LayoutId(id: TimerTextLayoutDelegate.timeId, child: time),
         if (action != null) LayoutId(id: TimerTextLayoutDelegate.actionId, child: action!),
+        if (rightHint != null) LayoutId(id: TimerTextLayoutDelegate.rightHintId, child: rightHint!),
       ],
     );
   }
@@ -23,6 +25,7 @@ class TimerText extends StatelessWidget {
 class TimerTextLayoutDelegate extends MultiChildLayoutDelegate {
   static final String timeId = "time";
   static final String hintId = "hint";
+  static final String rightHintId = "rightHint";
   static final String actionId = "action";
 
   final double spacing;
@@ -33,6 +36,15 @@ class TimerTextLayoutDelegate extends MultiChildLayoutDelegate {
     // place text in the middle
     final text = layoutChild(timeId, BoxConstraints.loose(size));
     positionChild(timeId, Offset((size.width - text.width) / 2, (size.height - text.height) / 2));
+
+    // place right hint
+    if (hasChild(rightHintId)) {
+      final rightHint = layoutChild(
+        rightHintId,
+        BoxConstraints.loose(Size((size.width - text.width) / 2, text.height)),
+      );
+      positionChild(rightHintId, Offset(size.width - rightHint.width, (size.height - rightHint.height) / 2));
+    }
 
     final remainedSize = Size(size.width, (size.height - text.height) / 2 - spacing);
 

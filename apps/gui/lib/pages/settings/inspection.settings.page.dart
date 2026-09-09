@@ -13,6 +13,10 @@ class InspectionSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final (firstAlertTime, secondAlertTime) = TimerConfig.alertTime(
+      Duration(seconds: settings.inspectDuration),
+    );
+
     return Column(
       spacing: groupSpacing,
       children: [
@@ -49,7 +53,7 @@ class InspectionSettingsPage extends StatelessWidget {
             SettingsTile(
               title: "Alert time left",
               subtitle:
-                  "Timer will alert you once ${(settings.inspectDuration * 8 / 15).round()} and ${(settings.inspectDuration * 12 / 15).round()} seconds of inspection have passed",
+                  "Timer will alert you once ${firstAlertTime.inSeconds} and ${secondAlertTime.inSeconds} seconds of inspection have passed",
               suffix: FSwitch(value: settings.alertEnabled, onChange: dao.setAlertEnabled),
             ),
             SettingsTile(
