@@ -3,38 +3,50 @@ import "package:cupertino_ui/cupertino_ui.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 
-import "../../widgets/cube_2dview.dart";
-import "../../widgets/scramble_dialog.dart";
+import "../../../widgets/cube_2dview.dart";
+import "../../../widgets/scramble_dialog.dart";
+import "timer_body.dart";
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final dao = context.read<AppDatabase>().appStateDao;
+    final db = context.read<AppDatabase>();
 
-    return StreamBuilder<AppStateEntry>(
-      stream: dao.watch(),
-      builder: (context, snapshot) {
-        // A failed stream is not a slow one; without this branch it arrives as
-        // a spinner that never stops.
-        if (snapshot.error case final error?) {
-          FlutterError.reportError(
-            FlutterErrorDetails(
-              exception: error,
-              stack: snapshot.stackTrace,
-              library: "mochi cube timer",
-              context: ErrorDescription("watching the app state for the timer page"),
-            ),
-          );
-          return Center(child: Icon(FLucideIcons.triangleAlert, color: context.theme.colors.destructive));
-        }
+    return BlocProvider(
+      create: (context) => TimerBloc(
+        ticker: const Ticker(),
+        config: db.settingsDao.watch().map(
+          (settings) => TimerConfig(
+            inspectionEnabled: settings.inspectionEnabled,
+            inspectionDuration: Duration(seconds: settings.inspectDuration),
+          ),
+        ),
+      ),
+      child: StreamBuilder<AppStateEntry>(
+        stream: db.appStateDao.watch(),
+        builder: (context, snapshot) {
+          // A failed stream is not a slow one; without this branch it arrives as
+          // a spinner that never stops.
+          if (snapshot.error case final error?) {
+            FlutterError.reportError(
+              FlutterErrorDetails(
+                exception: error,
+                stack: snapshot.stackTrace,
+                library: "mochi cube timer",
+                context: ErrorDescription("watching the app state for the timer page"),
+              ),
+            );
+            return Center(child: Icon(FLucideIcons.triangleAlert, color: context.theme.colors.destructive));
+          }
 
-        final data = snapshot.data;
-        if (data == null) return const Center(child: FCircularProgress());
+          final data = snapshot.data;
+          if (data == null) return const Center(child: FCircularProgress());
 
-        return _TimerView(puzzle: data.puzzle);
-      },
+          return _TimerView(puzzle: data.puzzle);
+        },
+      ),
     );
   }
 }
@@ -172,6 +184,7 @@ class _TimerViewState extends State<_TimerView> {
                 crossAxisAlignment: .start,
                 textDirection: .ltr,
                 children: [
+                  // TODO: stats
                   _statusLine("Deviation", "0.74"),
                   _statusLine("Mean", "1.50"),
                   _statusLine("Best", "0.27"),
@@ -186,6 +199,7 @@ class _TimerViewState extends State<_TimerView> {
                 crossAxisAlignment: .end,
                 textDirection: .ltr,
                 children: [
+                  // TODO: stats
                   _statusLine("Ao5", "1.43"),
                   _statusLine("Ao12", "--"),
                   _statusLine("Ao50", "--"),
@@ -196,7 +210,9 @@ class _TimerViewState extends State<_TimerView> {
           ],
         ),
       ),
-      child: Container(color: Color(0xff00ff00), alignment: .center, child: Text("0.000")),
+
+      resizeToAvoidBottomInset: true,
+      child: Center(child: TimerBody()),
     );
   }
 }
