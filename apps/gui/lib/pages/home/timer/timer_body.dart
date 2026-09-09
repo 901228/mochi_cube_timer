@@ -7,29 +7,44 @@ import "../../../theme.dart";
 import "timer_text.dart";
 
 class TimerBody extends StatelessWidget {
-  const TimerBody({super.key});
+  final Color? color;
+  final Color pressedColor;
+  final Color holdingColor;
+  final Color acceptColor;
+  const TimerBody({
+    super.key,
+    this.color,
+    this.pressedColor = const Color.fromARGB(255, 255, 121, 121),
+    this.holdingColor = const Color.fromARGB(255, 255, 255, 121),
+    this.acceptColor = const Color.fromARGB(255, 99, 252, 152),
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerBloc, TimerState>(
-      buildWhen: (prev, state) => prev.runtimeType != state.runtimeType,
+      buildWhen: (prev, state) => prev.runtimeType != state.runtimeType || prev.hold != state.hold,
       builder: (context, state) {
         return DefaultTextStyle(
-          style: context.theme.typography.timer.xl8,
+          style: context.theme.typography.timer.xl8.copyWith(
+            color: switch (state.hold) {
+              .armed => acceptColor,
+              .waiting => state is TimerRunInInspection ? holdingColor : pressedColor,
+              .stopping => pressedColor, // complete and pressed
+              .none => state is TimerRunInInspection ? pressedColor : color,
+            },
+          ),
           child: FTappable(
+            style: .delta(motion: FTappableMotion.none),
             child: state is TimerRunInInspection
                 ? const InspectionText()
-                : (state is TimerInitial
-                      ? const Text("0.00")
-                      : RunTimeText(showActions: state is TimerRunComplete)),
-            onPress: () {
-              if (state is TimerInitial || state is TimerRunComplete) {
-                context.read<TimerBloc>().add(TimerStarted());
-              } else if (state is TimerRunInInspection) {
-                context.read<TimerBloc>().add(TimerInspectionFinished());
-              } else if (state is TimerRunInProgress) {
-                context.read<TimerBloc>().add(TimerStopped());
-              }
+                : (state is TimerInitial || state.hold == .armed
+                      ? const Center(child: Text("0.00"))
+                      : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
+            onPressDown: (_) {
+              context.read<TimerBloc>().add(TimerPressed());
+            },
+            onPressUp: (_) {
+              context.read<TimerBloc>().add(TimerReleased());
             },
           ),
         );

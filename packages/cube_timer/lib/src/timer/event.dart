@@ -4,16 +4,12 @@ sealed class TimerEvent {
   const TimerEvent();
 }
 
-final class TimerStarted extends TimerEvent {
-  const TimerStarted();
+final class TimerPressed extends TimerEvent {
+  const TimerPressed();
 }
 
-final class TimerInspectionFinished extends TimerEvent {
-  const TimerInspectionFinished();
-}
-
-final class TimerStopped extends TimerEvent {
-  const TimerStopped();
+final class TimerReleased extends TimerEvent {
+  const TimerReleased();
 }
 
 /// Aborts the current inspection or solve and goes back to [TimerInitial].
@@ -26,4 +22,10 @@ class _TimerTicked extends TimerEvent {
 
   /// milliseconds elapsed since the current ticker started
   final int elapsed;
+}
+
+/// Fired by the hold timer once a press has been held for
+/// [TimerConfig.holdDuration], arming the release that starts the solve.
+class _TimerHoldArmed extends TimerEvent {
+  const _TimerHoldArmed();
 }
