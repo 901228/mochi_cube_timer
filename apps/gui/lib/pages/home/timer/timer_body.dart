@@ -1,12 +1,11 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:cupertino_ui/cupertino_ui.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 
 import "../../../theme.dart";
 import "timer_text.dart";
-
-// TODO: keyboard
 
 class TimerBody extends StatelessWidget {
   final Color? color;
@@ -37,19 +36,47 @@ class TimerBody extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              FTappable(
-                style: .delta(motion: FTappableMotion.none),
-                child: state is TimerRunInInspection
-                    ? const InspectionText()
-                    : (state is TimerInitial || state.hold == .armed
-                          ? const Center(child: Text("0.00"))
-                          : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
-                onPressDown: (_) {
-                  context.read<TimerBloc>().add(TimerPressed());
+              Focus(
+                autofocus: true,
+                onKeyEvent: (node, event) {
+                  // ignore repeat event
+                  if (event is KeyRepeatEvent) {
+                    return .handled;
+                  }
+
+                  switch (event.logicalKey) {
+                    case .space:
+                      switch (event) {
+                        case KeyDownEvent():
+                          context.read<TimerBloc>().add(TimerPressed());
+                        case KeyUpEvent():
+                          context.read<TimerBloc>().add(TimerReleased());
+                      }
+                      return .handled;
+                    case .escape:
+                      switch (event) {
+                        case KeyDownEvent():
+                          context.read<TimerBloc>().add(TimerReset());
+                      }
+                      return .handled;
+                  }
+
+                  return .ignored;
                 },
-                onPressUp: (_) {
-                  context.read<TimerBloc>().add(TimerReleased());
-                },
+                child: FTappable(
+                  style: .delta(motion: FTappableMotion.none),
+                  child: state is TimerRunInInspection
+                      ? const InspectionText()
+                      : (state is TimerInitial || state.hold == .armed
+                            ? const Center(child: Text("0.00"))
+                            : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
+                  onPressDown: (_) {
+                    context.read<TimerBloc>().add(TimerPressed());
+                  },
+                  onPressUp: (_) {
+                    context.read<TimerBloc>().add(TimerReleased());
+                  },
+                ),
               ),
               if (state is TimerRunInInspection || state is TimerRunInProgress)
                 Positioned(
