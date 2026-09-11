@@ -1,0 +1,141 @@
+import "package:cube_timer/cube_timer.dart";
+import "package:flutter/widgets.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_svg/flutter_svg.dart";
+import "package:forui/forui.dart";
+
+class PuzzleSelectionDialog extends StatelessWidget {
+  final FDialogStyleDelta style;
+  final Animation<double> animation;
+  const PuzzleSelectionDialog({super.key, required this.style, required this.animation});
+
+  void _select(BuildContext context, Puzzle puzzle) {
+    context.read<AppDatabase>().appStateDao.setPuzzle(puzzle);
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FDialog(
+      style: style,
+      animation: animation,
+      builder: (context, style) => Padding(
+        padding: const .all(20),
+        child: Column(
+          mainAxisSize: .min,
+          spacing: 16,
+          children: [
+            Padding(
+              padding: const .all(8),
+              child: DefaultTextStyle.merge(
+                style: style.titleTextStyle,
+                child: const Text("Select a puzzle"),
+              ),
+            ),
+            // Flexible plus shrinkWrap so the dialog hugs its content, and only
+            // scrolls on a screen too short to fit every puzzle. Expanded would
+            // stretch it to the full screen height instead.
+            Flexible(
+              child: GridView.builder(
+                shrinkWrap: true,
+                padding: .zero,
+                itemCount: Puzzle.values.length,
+                // mainAxisExtent sets the cell height outright. Without it the
+                // delegate falls back to childAspectRatio, which derives the
+                // height from the width and makes every other value guesswork.
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisExtent: 92,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 16,
+                ),
+                // HACK: currently the scrambler of `sq1`, `skewb`, `minx`, `fto`, `777`, `666`, `555`, `444` is not completed, so we return null for them.
+                itemBuilder: (context, index) => _PuzzleTile(
+                  puzzle: Puzzle.values[index],
+                  style: style,
+                  onPress:
+                      {
+                        "sq1",
+                        "skewb",
+                        "minx",
+                        "fto",
+                        "777",
+                        "666",
+                        "555",
+                        "444",
+                      }.contains(Puzzle.values[index].id)
+                      ? null
+                      : () => _select(context, Puzzle.values[index]),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PuzzleTile extends StatelessWidget {
+  const _PuzzleTile({required this.puzzle, required this.style, this.onPress});
+
+  final Puzzle puzzle;
+  final FDialogStyle style;
+  final VoidCallback? onPress;
+
+  // TODO: add all puzzle scramble and remove this
+  /// Greyscale filter
+  static const _disabledFilter = ColorFilter.matrix(<double>[
+    0.2126, 0.7152, 0.0722, 0, 0, //
+    0.2126, 0.7152, 0.0722, 0, 0, //
+    0.2126, 0.7152, 0.0722, 0, 0, //
+    0, 0, 0, 0.5, 0, //
+  ]);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget content = Column(
+      mainAxisAlignment: .center,
+      spacing: 4,
+      children: [
+        SvgPicture.asset("assets/cube_icons/${puzzle.id}.svg", width: 48, height: 48),
+        Text(
+          puzzle.displayName,
+          textAlign: .center,
+          maxLines: 2,
+          overflow: .ellipsis,
+          style: style.bodyTextStyle,
+        ),
+      ],
+    );
+
+    // disabled
+    if (onPress == null) {
+      content = ColorFiltered(colorFilter: _disabledFilter, child: content);
+    }
+
+    return FTappable(onPress: onPress, semanticsLabel: puzzle.displayName, child: content);
+  }
+}
+
+// TODO: change the colors of the puzzles according to the theme
+class PuzzleColors extends ColorMapper {
+  const PuzzleColors({required this.outer, required this.inner, required this.symbol});
+
+  final Color outer, inner, symbol;
+
+  @override
+  Color substitute(String? id, String elementName, String attributeName, Color color) {
+    if (color == const Color(0xFF3F82FF)) return outer;
+    if (color == const Color(0xFF80A8FF)) return inner;
+    if (color == const Color(0xFFD3F5FF)) return symbol;
+    return color;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is PuzzleColors && other.outer == outer && other.inner == inner && other.symbol == symbol;
+
+  @override
+  int get hashCode => Object.hash(outer, inner, symbol);
+}
