@@ -1,6 +1,6 @@
 import "package:cube_timer/cube_timer.dart";
-import "package:cupertino_ui/cupertino_ui.dart";
 import "package:flutter/services.dart";
+import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 

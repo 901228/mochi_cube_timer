@@ -1,8 +1,8 @@
 import "dart:math" show cos, sin, pi;
 
 import "package:cube_timer/cube_timer.dart";
-import "package:cupertino_ui/cupertino_ui.dart";
 import "package:flutter/foundation.dart" show listEquals;
+import "package:flutter/widgets.dart";
 import "package:forui/forui.dart";
 
 /// One puzzle drawn in a given state.
