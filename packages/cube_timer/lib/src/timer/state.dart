@@ -1,7 +1,5 @@
 part of "bloc.dart";
 
-enum Penalty { none, plus2, dnf }
-
 /// Where a press is in its lifecycle.
 ///
 /// [waiting] and [armed] gate the start of a solve; [stopping] is the press

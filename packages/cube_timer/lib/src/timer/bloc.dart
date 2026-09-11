@@ -3,6 +3,7 @@ import "dart:async";
 import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
 
+import "../puzzle/puzzle.dart";
 import "config.dart";
 import "ticker.dart";
 

@@ -73,3 +73,6 @@ class ScrambleHistory {
     if (_index == _entries.length) _entries.add(puzzle.getScramble());
   }
 }
+
+/// The penalty for a solve.
+enum Penalty { none, plus2, dnf }
