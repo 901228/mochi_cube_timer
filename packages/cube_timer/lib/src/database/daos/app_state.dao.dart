@@ -3,14 +3,22 @@ import "package:drift/drift.dart";
 import "../../puzzle.dart";
 import "../app_database.dart";
 import "../tables/app_state.table.dart";
+import "../tables/sessions.table.dart";
 
 part "app_state.dao.g.dart";
 
-@DriftAccessor(tables: [AppState])
+@DriftAccessor(tables: [AppState, Sessions])
 class AppStateDao extends DatabaseAccessor<AppDatabase> with _$AppStateDaoMixin {
   AppStateDao(super.db);
 
-  Stream<AppStateEntry> watch() => (select(appState)..where((t) => t.id.equals(0))).watchSingle();
+  Stream<({Puzzle puzzle, SessionEntry session})> watch() {
+    final query = select(appState).join([innerJoin(sessions, sessions.id.equalsExp(appState.session))])
+      ..where(appState.id.equals(0));
+
+    return query.watchSingle().map(
+      (row) => (puzzle: row.readTable(appState).puzzle, session: row.readTable(sessions)),
+    );
+  }
 
   Future<void> save(AppStateCompanion patch) => (update(appState)..where((t) => t.id.equals(0))).write(patch);
 

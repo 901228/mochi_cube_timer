@@ -24,5 +24,3 @@ class Settings extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
-
-class SettingsProvider {}
