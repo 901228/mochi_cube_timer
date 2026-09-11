@@ -7,6 +7,8 @@ import "package:forui/forui.dart";
 import "../../../theme.dart";
 import "timer_text.dart";
 
+// TODO: push a new page when record started
+
 class TimerBody extends StatelessWidget {
   final Color? color;
   final Color pressedColor;
@@ -34,62 +36,71 @@ class TimerBody extends StatelessWidget {
               .none => state is TimerRunInInspection ? pressedColor : color,
             },
           ),
-          child: Stack(
-            children: [
-              Focus(
-                autofocus: true,
-                onKeyEvent: (node, event) {
-                  // ignore repeat event
-                  if (event is KeyRepeatEvent) {
-                    return .handled;
-                  }
+          child: Focus(
+            autofocus: true,
+            onKeyEvent: (node, event) {
+              // ignore repeat event
+              if (event is KeyRepeatEvent) {
+                return .handled;
+              }
 
-                  switch (event.logicalKey) {
-                    case .space:
-                      switch (event) {
-                        case KeyDownEvent():
-                          context.read<TimerBloc>().add(TimerPressed());
-                        case KeyUpEvent():
-                          context.read<TimerBloc>().add(TimerReleased());
-                      }
-                      return .handled;
-                    case .escape:
-                      switch (event) {
-                        case KeyDownEvent():
-                          context.read<TimerBloc>().add(TimerReset());
-                      }
-                      return .handled;
+              switch (event.logicalKey) {
+                case .space:
+                  switch (event) {
+                    case KeyDownEvent():
+                      context.read<TimerBloc>().add(TimerPressed());
+                    case KeyUpEvent():
+                      context.read<TimerBloc>().add(TimerReleased());
                   }
-
-                  return .ignored;
-                },
-                child: FTappable(
-                  style: .delta(motion: FTappableMotion.none),
-                  child: state is TimerRunInInspection
-                      ? const InspectionText()
-                      : (state is TimerInitial || state.hold == .armed
-                            ? const Center(child: Text("0.00"))
-                            : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
-                  onPressDown: (_) {
-                    context.read<TimerBloc>().add(TimerPressed());
-                  },
-                  onPressUp: (_) {
-                    context.read<TimerBloc>().add(TimerReleased());
-                  },
-                ),
-              ),
-              if (state is TimerRunInInspection || state is TimerRunInProgress)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: FButton.icon(
-                    onPress: () {
+                  return .handled;
+                case .escape:
+                  switch (event) {
+                    case KeyDownEvent():
                       context.read<TimerBloc>().add(TimerReset());
+                  }
+                  return .handled;
+              }
+
+              return .ignored;
+            },
+            child: Stack(
+              children: [
+                // The press surface sits behind the readout rather than around
+                // it. Nested inside, a press on one of the record's action
+                // buttons would still start a solve: both tap recognisers stay
+                // in the arena until the pointer lifts, and this one fires as
+                // soon as the press outlives the tap deadline.
+                Positioned.fill(
+                  child: FTappable(
+                    style: .delta(motion: FTappableMotion.none),
+                    behavior: .opaque,
+                    onPressDown: (_) {
+                      context.read<TimerBloc>().add(TimerPressed());
                     },
-                    child: const Icon(FLucideIcons.xCircle),
+                    onPressUp: (_) {
+                      context.read<TimerBloc>().add(TimerReleased());
+                    },
+                    child: const SizedBox.expand(),
                   ),
                 ),
-            ],
+                state is TimerRunInInspection
+                    ? const InspectionText()
+                    : (state is TimerInitial || state.hold == .armed
+                          ? const IgnorePointer(child: Center(child: Text("0.00")))
+                          : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
+                if (state is TimerRunInInspection || state is TimerRunInProgress)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: FButton.icon(
+                      onPress: () {
+                        context.read<TimerBloc>().add(TimerReset());
+                      },
+                      child: const Icon(FLucideIcons.xCircle),
+                    ),
+                  ),
+              ],
+            ),
           ),
         );
       },

@@ -13,10 +13,23 @@ class TimerText extends StatelessWidget {
     return CustomMultiChildLayout(
       delegate: TimerTextLayoutDelegate(spacing: spacing),
       children: [
-        if (hint != null) LayoutId(id: TimerTextLayoutDelegate.hintId, child: hint!),
-        LayoutId(id: TimerTextLayoutDelegate.timeId, child: time),
+        // Only the action slot takes pointers. The readout itself has to let a
+        // press fall through to the timer surface painted behind it.
+        if (hint != null)
+          LayoutId(
+            id: TimerTextLayoutDelegate.hintId,
+            child: IgnorePointer(child: hint!),
+          ),
+        LayoutId(
+          id: TimerTextLayoutDelegate.timeId,
+          child: IgnorePointer(child: time),
+        ),
         if (action != null) LayoutId(id: TimerTextLayoutDelegate.actionId, child: action!),
-        if (rightHint != null) LayoutId(id: TimerTextLayoutDelegate.rightHintId, child: rightHint!),
+        if (rightHint != null)
+          LayoutId(
+            id: TimerTextLayoutDelegate.rightHintId,
+            child: IgnorePointer(child: rightHint!),
+          ),
       ],
     );
   }
