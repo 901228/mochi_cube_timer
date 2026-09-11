@@ -3,9 +3,10 @@ import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 
-import "../../../widgets/cube_2dview.dart";
-import "../../../widgets/scramble_dialog.dart";
+import "../../../widgets.dart";
 import "timer_body.dart";
+
+// TODO: push a new page when record started
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -24,7 +25,7 @@ class TimerPage extends StatelessWidget {
           ),
         ),
       ),
-      child: StreamBuilder<AppStateEntry>(
+      child: StreamBuilder<({Puzzle puzzle, SessionEntry session})>(
         stream: db.appStateDao.watch(),
         builder: (context, snapshot) {
           // A failed stream is not a slow one; without this branch it arrives as
