@@ -1,5 +1,9 @@
+import "dart:async";
+
 import "package:cube_timer/cube_timer.dart";
 import "package:cupertino_ui/cupertino_ui.dart";
+import "package:flutter/foundation.dart" show kIsWeb;
+import "package:flutter/services.dart" show BrowserContextMenu;
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
 import "package:forui/forui.dart";
@@ -15,6 +19,9 @@ void main() {
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  // A long press opens the browser's own context menu, which cancels Flutter's long press gesture.
+  if (kIsWeb) unawaited(BrowserContextMenu.disableContextMenu());
 
   // database
   final db = AppDatabase(openConnection());

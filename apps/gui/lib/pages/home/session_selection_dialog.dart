@@ -164,6 +164,7 @@ class _SessionSelectionDialogState extends State<SessionSelectionDialog> {
               return FContextMenu(
                 style: .delta(barrierFilter: () => _menuBarrier),
                 menuAnchor: .topLeft,
+                longPress: true,
                 menuBuilder: (context, controller, _) =>
                     _menu(context, session, controller: controller, dao: dao, appStateDao: stateDao),
                 builder: (_, controller, _) {
