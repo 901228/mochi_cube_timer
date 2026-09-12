@@ -42,18 +42,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/cube_icons/222.svg
-    - assets/cube_icons/333.svg
-    - assets/cube_icons/444.svg
-    - assets/cube_icons/555.svg
-    - assets/cube_icons/666.svg
-    - assets/cube_icons/777.svg
-    - assets/cube_icons/clock.svg
-    - assets/cube_icons/fto.svg
-    - assets/cube_icons/minx.svg
-    - assets/cube_icons/pyram.svg
-    - assets/cube_icons/skewb.svg
-    - assets/cube_icons/sq1.svg
+    - assets/tables/
+    - assets/cube_icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
