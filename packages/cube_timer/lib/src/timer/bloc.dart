@@ -19,6 +19,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
     on<TimerPressed>(_onPressed);
     on<TimerReleased>(_onReleased);
+    on<TimerPressCanceled>(_onPressCanceled);
     on<TimerReset>(_onReset);
     on<_TimerHoldArmed>(_onHoldArmed);
     on<_TimerTicked>(_onTicked);
@@ -158,6 +159,23 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
         emit(TimerRunInInspection(state.inspection));
 
       case _:
+    }
+  }
+
+  /// Unlike a release, a cancelled press must not act on the hold it was
+  /// building: it only drops the hold, so an inspection carries on counting
+  /// down and a completed solve keeps its time on screen.
+  void _onPressCanceled(TimerPressCanceled event, Emitter<TimerState> emit) {
+    _cancelHold();
+    switch (state) {
+      case TimerInitial() || TimerRunComplete():
+        emit(_idleWithHold(.none));
+
+      case TimerRunInInspection():
+        emit(TimerRunInInspection(state.inspection));
+
+      // A solve in progress tracks no hold, so there is nothing to drop.
+      case TimerRunInProgress():
     }
   }
 

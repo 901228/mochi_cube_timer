@@ -12,6 +12,12 @@ final class TimerReleased extends TimerEvent {
   const TimerReleased();
 }
 
+/// A press that went away without a release, e.g. the pointer was lost to a
+/// scroll or another gesture won the arena.
+final class TimerPressCanceled extends TimerEvent {
+  const TimerPressCanceled();
+}
+
 /// Aborts the current inspection or solve and goes back to [TimerInitial].
 final class TimerReset extends TimerEvent {
   const TimerReset();

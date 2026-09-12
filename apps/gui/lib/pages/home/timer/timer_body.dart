@@ -38,6 +38,9 @@ class TimerBody extends StatelessWidget {
           ),
           child: Focus(
             autofocus: true,
+            onFocusChange: (focused) {
+              if (!focused) context.read<TimerBloc>().add(TimerPressCanceled());
+            },
             onKeyEvent: (node, event) {
               // ignore repeat event
               if (event is KeyRepeatEvent) {
@@ -79,6 +82,9 @@ class TimerBody extends StatelessWidget {
                     },
                     onPressUp: (_) {
                       context.read<TimerBloc>().add(TimerReleased());
+                    },
+                    onPressCancel: () {
+                      context.read<TimerBloc>().add(TimerPressCanceled());
                     },
                     child: const SizedBox.expand(),
                   ),
