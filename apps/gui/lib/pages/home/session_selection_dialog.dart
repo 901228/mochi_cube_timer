@@ -48,7 +48,10 @@ class _SessionSelectionDialogState extends State<SessionSelectionDialog> {
           textInputAction: .done,
           onSubmit: context.pop,
         ),
-        actions: [FButton(onPress: () => context.pop(name), child: const Text("Confirm"))],
+        actions: [
+          FButton(variant: .outline, onPress: () => context.pop(null), child: const Text("Cancel")),
+          FButton(variant: .primary, onPress: () => context.pop(name), child: const Text("Confirm")),
+        ],
       ),
     );
   }
@@ -143,7 +146,7 @@ class _SessionSelectionDialogState extends State<SessionSelectionDialog> {
           style: widget.style,
           animation: widget.animation,
           title: FHeader.nested(
-            title: const Text("Select a session"),
+            title: Text("Select a session", style: context.theme.typography.display.lg),
             suffixes: [
               FHeaderAction(
                 icon: Icon(FLucideIcons.tagPlus),
