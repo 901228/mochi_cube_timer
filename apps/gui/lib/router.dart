@@ -3,6 +3,7 @@ import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
 import "pages/home.page.dart";
+import "pages/home/records.page.dart";
 import "pages/home/timer/timer.page.dart";
 import "pages/settings.page.dart";
 
@@ -55,7 +56,7 @@ final router = GoRouter(
               path: "/records",
               name: "records",
               builder: (context, state) {
-                return Center(child: Text("records"));
+                return RecordsPage();
               },
             ),
           ],
