@@ -3,6 +3,7 @@ import "dart:async";
 import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
 
+import "../database/daos/records.dao.dart";
 import "../puzzle/puzzle.dart";
 import "config.dart";
 import "ticker.dart";
@@ -11,7 +12,8 @@ part "event.dart";
 part "state.dart";
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
-  TimerBloc({required this._ticker, required Stream<TimerConfig> config}) : super(const TimerInitial()) {
+  TimerBloc({required this._ticker, required Stream<TimerConfig> config, required this._recordsDao})
+    : super(const TimerInitial()) {
     _configSubscription = config.listen(
       (config) => _latestConfig = config,
       onError: (Object e, StackTrace s) => addError(e, s),
@@ -23,9 +25,14 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerReset>(_onReset);
     on<_TimerHoldArmed>(_onHoldArmed);
     on<_TimerTicked>(_onTicked);
+    on<TimerRecorded>(_onRecorded);
+    on<TimerDeleteRecord>(_onDeleteRecord);
+    on<TimerChangePenalty>(_onChangePenalty);
+    on<TimerChangeComment>(_onChangeComment);
   }
 
   final Ticker _ticker;
+  final RecordsDao _recordsDao;
 
   TimerConfig _latestConfig = const TimerConfig();
   TimerConfig _runConfig =
@@ -74,10 +81,12 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   /// previous solve, so pressing on [TimerRunComplete] keeps its time on
   /// screen rather than falling back to [TimerInitial].
   TimerState _idleWithHold(Hold hold) => switch (state) {
-    TimerRunComplete(:final elapsed, :final penalty) => TimerRunComplete(
+    TimerRunComplete(:final elapsed, :final penalty, :final recordId, :final comment) => TimerRunComplete(
       elapsed,
       penalty: penalty,
       hold: hold,
+      recordId: recordId,
+      comment: comment,
     ),
     _ => TimerInitial(hold: hold),
   };
@@ -95,7 +104,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       // does not depend on how long the finger stays down.
       case TimerRunInProgress():
         _stopTicker();
-        emit(TimerRunComplete(state.elapsed, penalty: state.penalty, hold: .stopping));
+        emit(TimerRunComplete(state.elapsed, penalty: state.penalty, hold: .stopping, recordId: null));
 
       // Both paths show the press right away; only what the release does
       // differs. With inspection on the release starts the countdown, so no
@@ -191,7 +200,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       if (event.elapsed > _inspectionDnfThreshold) {
         _cancelHold();
         _stopTicker();
-        emit(const TimerRunComplete(0, penalty: Penalty.dnf));
+        emit(const TimerRunComplete(0, penalty: Penalty.dnf, recordId: null));
       } else {
         // Carries the hold through, otherwise every tick would disarm a press
         // the user is still holding.
@@ -199,6 +208,68 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       }
     } else if (state is TimerRunInProgress) {
       emit(TimerRunInProgress(event.elapsed, penalty: state.penalty));
+    }
+  }
+
+  Future<void> _onRecorded(TimerRecorded event, Emitter<TimerState> emit) async {
+    if (state case TimerRunComplete(recordId: null)) {
+      final id = await _recordsDao.add(
+        puzzle: event.puzzle,
+        session: event.sessionId,
+        scramble: event.notation,
+        time: state.elapsed,
+        penalty: state.penalty,
+      );
+
+      // The reset that happened while the insert was in flight wins: emitting
+      // here would put a run the user abandoned back on screen.
+      if (state case TimerRunComplete(:final elapsed, :final penalty, :final hold, :final comment)) {
+        emit(TimerRunComplete(elapsed, penalty: penalty, hold: hold, recordId: id, comment: comment));
+      }
+    }
+  }
+
+  String? get _recordId => switch (state) {
+    TimerRunComplete(:final recordId) => recordId,
+    _ => null,
+  };
+
+  Future<void> _onDeleteRecord(TimerDeleteRecord event, Emitter<TimerState> emit) async {
+    if (_recordId case final id?) {
+      await _recordsDao.softDelete(id);
+      add(const TimerReset());
+    }
+  }
+
+  Future<void> _onChangePenalty(TimerChangePenalty event, Emitter<TimerState> emit) async {
+    if (_recordId case final id?) {
+      await _recordsDao.setPenalty(id, event.penalty);
+      emit(
+        TimerRunComplete(
+          state.elapsed,
+          penalty: event.penalty,
+          hold: state.hold,
+          recordId: id,
+          comment: (state as TimerRunComplete).comment,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onChangeComment(TimerChangeComment event, Emitter<TimerState> emit) async {
+    if (state case TimerRunComplete(:final recordId?, :final comment)) {
+      if (comment == event.comment) return;
+
+      await _recordsDao.setComment(recordId, event.comment);
+      emit(
+        TimerRunComplete(
+          state.elapsed,
+          penalty: state.penalty,
+          hold: state.hold,
+          recordId: recordId,
+          comment: event.comment,
+        ),
+      );
     }
   }
 }

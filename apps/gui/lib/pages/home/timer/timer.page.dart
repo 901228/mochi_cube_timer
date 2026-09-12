@@ -6,8 +6,6 @@ import "package:forui/forui.dart";
 import "../../../widgets.dart";
 import "timer_body.dart";
 
-// TODO: push a new page when record started
-
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
 
@@ -18,6 +16,7 @@ class TimerPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => TimerBloc(
         ticker: const Ticker(),
+        recordsDao: db.recordsDao,
         config: db.settingsDao.watch().map(
           (settings) => TimerConfig(
             inspectionEnabled: settings.inspectionEnabled,
@@ -45,7 +44,7 @@ class TimerPage extends StatelessWidget {
           final data = snapshot.data;
           if (data == null) return const Center(child: FCircularProgress());
 
-          return _TimerView(puzzle: data.puzzle);
+          return _TimerView(puzzle: data.puzzle, sessionId: data.session.id);
         },
       ),
     );
@@ -53,9 +52,10 @@ class TimerPage extends StatelessWidget {
 }
 
 class _TimerView extends StatefulWidget {
-  const _TimerView({required this.puzzle});
+  const _TimerView({required this.puzzle, required this.sessionId});
 
   final Puzzle puzzle;
+  final String sessionId;
 
   @override
   State<_TimerView> createState() => _TimerViewState();
@@ -117,103 +117,124 @@ class _TimerViewState extends State<_TimerView> {
     ],
   );
 
+  void _record(TimerState state) async {
+    final bloc = context.read<TimerBloc>();
+    final scramble = await _history.current;
+
+    // final id = await dao.add(
+    //   session: widget.sessionId,
+    //   puzzle: widget.puzzle,
+    //   scramble: scramble.notation,
+    //   time: state.elapsed,
+    //   penalty: state.penalty,
+    // );
+
+    bloc.add(TimerRecorded(sessionId: widget.sessionId, puzzle: widget.puzzle, notation: scramble.notation));
+
+    // TODO: break record animation (or notification)
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FScaffold(
-      childPad: false,
-      header: Padding(
-        padding: context.theme.style.pagePadding,
-        child: Column(
-          mainAxisSize: .min,
-          children: [
-            FutureBuilder(
-              // Keyed on the history, so switching puzzles starts a fresh
-              // builder. FutureBuilder keeps the old snapshot's data when its
-              // future changes, which would pair the previous puzzle's scramble
-              // with the new puzzle for a frame.
-              key: ObjectKey(_history),
-              future: _history.current,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text("打亂失敗：${snapshot.error}");
-                }
+    return BlocListener<TimerBloc, TimerState>(
+      listenWhen: (previous, current) => previous is! TimerRunComplete && current is TimerRunComplete,
+      listener: (context, state) => _record(state),
+      child: FScaffold(
+        childPad: false,
+        header: Padding(
+          padding: context.theme.style.pagePadding,
+          child: Column(
+            mainAxisSize: .min,
+            children: [
+              FutureBuilder(
+                // Keyed on the history, so switching puzzles starts a fresh
+                // builder. FutureBuilder keeps the old snapshot's data when its
+                // future changes, which would pair the previous puzzle's scramble
+                // with the new puzzle for a frame.
+                key: ObjectKey(_history),
+                future: _history.current,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("打亂失敗：${snapshot.error}");
+                  }
 
-                final scramble = snapshot.data;
-                if (scramble == null) {
-                  return const FCircularProgress();
-                }
+                  final scramble = snapshot.data;
+                  if (scramble == null) {
+                    return const FCircularProgress();
+                  }
 
-                return FTappable(
-                  onPress: () => _showScramble(scramble),
-                  // The size lives on the DefaultTextStyle rather than on the
-                  // moves, so a hero's flight can read it off this context and
-                  // lerp towards the one the dialog uses. The weight is left
-                  // alone: ScrambleTokens sets its own, the same at both ends.
-                  child: DefaultTextStyle.merge(
-                    style: context.theme.typography.display.lg,
-                    child: ScrambleTokens(
-                      puzzle: widget.puzzle,
-                      steps: widget.puzzle.scrambler.stepsOf(scramble),
+                  return FTappable(
+                    onPress: () => _showScramble(scramble),
+                    // The size lives on the DefaultTextStyle rather than on the
+                    // moves, so a hero's flight can read it off this context and
+                    // lerp towards the one the dialog uses. The weight is left
+                    // alone: ScrambleTokens sets its own, the same at both ends.
+                    child: DefaultTextStyle.merge(
+                      style: context.theme.typography.display.lg,
+                      child: ScrambleTokens(
+                        puzzle: widget.puzzle,
+                        steps: widget.puzzle.scrambler.stepsOf(scramble),
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-            Row(
-              mainAxisSize: .max,
-              mainAxisAlignment: .end,
-              children: [
-                _actionButton(FLucideIcons.pencil, () {
-                  // TODO: manually input the scramble
-                }),
-                _actionButton(FLucideIcons.chevronLeft, _history.hasPrevious ? _previous : null),
-                _actionButton(FLucideIcons.chevronRight, _next),
-              ],
-            ),
-          ],
-        ),
-      ),
-      footer: IntrinsicHeight(
-        child: Row(
-          mainAxisSize: .max,
-          mainAxisAlignment: .spaceBetween,
-          crossAxisAlignment: .stretch,
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .start,
-                textDirection: .ltr,
+                  );
+                },
+              ),
+              Row(
+                mainAxisSize: .max,
+                mainAxisAlignment: .end,
                 children: [
-                  // TODO: stats
-                  _statusLine("Deviation", "0.74"),
-                  _statusLine("Mean", "1.50"),
-                  _statusLine("Best", "0.27"),
-                  _statusLine("Count", "6"),
+                  _actionButton(FLucideIcons.pencil, () {
+                    // TODO: manually input the scramble
+                  }),
+                  _actionButton(FLucideIcons.chevronLeft, _history.hasPrevious ? _previous : null),
+                  _actionButton(FLucideIcons.chevronRight, _next),
                 ],
               ),
-            ),
-            Cube2DView(history: _history, onPress: _showScramble),
-            Expanded(
-              child: Column(
-                mainAxisSize: .min,
-                crossAxisAlignment: .end,
-                textDirection: .ltr,
-                children: [
-                  // TODO: stats
-                  _statusLine("Ao5", "1.43"),
-                  _statusLine("Ao12", "--"),
-                  _statusLine("Ao50", "--"),
-                  _statusLine("Ao100", "--"),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+        footer: IntrinsicHeight(
+          child: Row(
+            mainAxisSize: .max,
+            mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: .stretch,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .start,
+                  textDirection: .ltr,
+                  children: [
+                    // TODO: stats
+                    _statusLine("Deviation", "0.74"),
+                    _statusLine("Mean", "1.50"),
+                    _statusLine("Best", "0.27"),
+                    _statusLine("Count", "6"),
+                  ],
+                ),
+              ),
+              Cube2DView(history: _history, onPress: _showScramble),
+              Expanded(
+                child: Column(
+                  mainAxisSize: .min,
+                  crossAxisAlignment: .end,
+                  textDirection: .ltr,
+                  children: [
+                    // TODO: stats
+                    _statusLine("Ao5", "1.43"),
+                    _statusLine("Ao12", "--"),
+                    _statusLine("Ao50", "--"),
+                    _statusLine("Ao100", "--"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
 
-      resizeToAvoidBottomInset: true,
-      child: Center(child: TimerBody()),
+        resizeToAvoidBottomInset: true,
+        child: Center(child: TimerBody()),
+      ),
     );
   }
 }

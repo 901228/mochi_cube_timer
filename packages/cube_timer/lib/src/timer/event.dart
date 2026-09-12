@@ -35,3 +35,27 @@ class _TimerTicked extends TimerEvent {
 class _TimerHoldArmed extends TimerEvent {
   const _TimerHoldArmed();
 }
+
+class TimerRecorded extends TimerEvent {
+  const TimerRecorded({required this.sessionId, required this.puzzle, required this.notation});
+
+  final String sessionId;
+  final Puzzle puzzle;
+  final String notation;
+}
+
+class TimerDeleteRecord extends TimerEvent {
+  const TimerDeleteRecord();
+}
+
+class TimerChangePenalty extends TimerEvent {
+  const TimerChangePenalty(this.penalty);
+
+  final Penalty penalty;
+}
+
+class TimerChangeComment extends TimerEvent {
+  const TimerChangeComment(this.comment);
+
+  final String comment;
+}

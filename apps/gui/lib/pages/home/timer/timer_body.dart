@@ -3,8 +3,11 @@ import "package:flutter/services.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
+import "package:go_router/go_router.dart";
 
 import "../../../theme.dart";
+import "../../../utils.dart";
+import "../../../widgets.dart";
 import "timer_text.dart";
 
 // TODO: push a new page when record started
@@ -68,11 +71,6 @@ class TimerBody extends StatelessWidget {
             },
             child: Stack(
               children: [
-                // The press surface sits behind the readout rather than around
-                // it. Nested inside, a press on one of the record's action
-                // buttons would still start a solve: both tap recognisers stay
-                // in the arena until the pointer lifts, and this one fires as
-                // soon as the press outlives the tap deadline.
                 Positioned.fill(
                   child: FTappable(
                     style: .delta(motion: FTappableMotion.none),
@@ -93,7 +91,7 @@ class TimerBody extends StatelessWidget {
                     ? const InspectionText()
                     : (state is TimerInitial || state.hold == .armed
                           ? const IgnorePointer(child: Center(child: Text("0.00")))
-                          : RunTimeText(showActions: state is TimerRunComplete && state.hold == .none)),
+                          : const RunTimeText()),
                 if (state is TimerRunInInspection || state is TimerRunInProgress)
                   Positioned(
                     top: 0,
@@ -147,80 +145,124 @@ class InspectionText extends StatelessWidget {
 }
 
 class RunTimeText extends StatelessWidget {
-  final bool showActions;
-  const RunTimeText({super.key, this.showActions = false});
+  const RunTimeText({super.key});
 
-  String _durationToString(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
+  Future<String?> _showCommentDialog(BuildContext context, String initComment) {
+    String comment = initComment;
 
-    String negativeSign = duration.isNegative ? "-" : "";
-    bool hasHours = duration.inHours > 0;
-    String twoDigitHours = hasHours ? "${duration.inHours}:" : "";
-
-    bool hasMinutes = duration.inMinutes > 0 || hasHours;
-    String twoDigitMinutes = hasMinutes
-        ? "${hasHours ? twoDigits(duration.inMinutes.remainder(60).abs()) : duration.inMinutes.toString()}:"
-        : "";
-
-    String twoDigitSeconds = hasMinutes
-        ? twoDigits(duration.inSeconds.remainder(60).abs())
-        : duration.inSeconds.toString();
-    String twoDigitMilliseconds = twoDigits((duration.inMilliseconds.remainder(1000).abs() / 10).round());
-
-    return "$negativeSign$twoDigitHours$twoDigitMinutes$twoDigitSeconds.$twoDigitMilliseconds";
+    return showFDialog<String?>(
+      context: context,
+      builder: (context, style, animation) => AdaptiveDialog(
+        style: style,
+        animation: animation,
+        title: Text(initComment.isEmpty ? "Add comment" : "Edit comment"),
+        body: FTextField(
+          control: .managed(
+            initial: TextEditingValue(text: initComment),
+            onChange: (value) => comment = value.text,
+          ),
+          hint: "Comment",
+          autofocus: true,
+          textInputAction: .done,
+          onSubmit: context.pop,
+        ),
+        actions: [
+          FButton(variant: .outline, onPress: () => context.pop(null), child: const Text("Cancel")),
+          FButton(variant: .primary, onPress: () => context.pop(comment), child: const Text("Confirm")),
+        ],
+      ),
+    );
   }
 
-  Widget _actions() => Row(
-    mainAxisSize: .min,
-    spacing: 8,
-    children: [
-      FTooltip(
-        tipBuilder: (context, controller) => Text("Delete"),
-        child: FButton.icon(
-          onPress: () {
-            // TODO: delete this record
-          },
-          child: Icon(FLucideIcons.x),
+  Widget _actions(BuildContext context, Penalty penalty) {
+    final bloc = context.read<TimerBloc>();
+    final comment = context.select(
+      (TimerBloc bloc) => switch (bloc.state) {
+        TimerRunComplete(:final comment) => comment,
+        _ => "",
+      },
+    );
+
+    return Row(
+      mainAxisSize: .min,
+      spacing: 8,
+      children: [
+        FTooltip(
+          tipBuilder: (context, controller) => Text("Delete"),
+          child: FButton.icon(
+            onPress: () async {
+              final answer = await showConfirmDialog(
+                context,
+                title: "Delete record?",
+                message: "The current solve will be permanently deleted.",
+                confirmLabel: "Delete",
+                destructive: true,
+              );
+
+              if (answer) bloc.add(TimerDeleteRecord());
+            },
+            child: Icon(FLucideIcons.x),
+          ),
         ),
-      ),
-      FTooltip(
-        tipBuilder: (context, controller) => Text("DNF"),
-        child: FButton.icon(
-          onPress: () {
-            // TODO: dnf this record
-          },
-          child: Icon(FLucideIcons.ban),
+        FTooltip(
+          tipBuilder: (context, controller) => Text("DNF"),
+          child: FButton.icon(
+            selected: penalty == .dnf,
+            onPress: () => bloc.add(TimerChangePenalty(penalty == .dnf ? .none : .dnf)),
+            child: Icon(FLucideIcons.ban),
+          ),
         ),
-      ),
-      FTooltip(
-        tipBuilder: (context, controller) => Text("+2"),
-        child: FButton.icon(
-          onPress: () {
-            // TODO: add +2 to this record
-          },
-          child: Icon(FLucideIcons.clockPlus),
+        FTooltip(
+          tipBuilder: (context, controller) => Text("+2"),
+          child: FButton.icon(
+            selected: penalty == .plus2,
+            onPress: () => bloc.add(TimerChangePenalty(penalty == .plus2 ? .none : .plus2)),
+            child: Icon(FLucideIcons.clockPlus),
+          ),
         ),
-      ),
-      FTooltip(
-        tipBuilder: (context, controller) => Text("Comment"),
-        child: FButton.icon(
-          onPress: () {
-            // TODO: comment on this record
-          },
-          child: Icon(FLucideIcons.messageSquareMore),
+        FTooltip(
+          tipBuilder: (context, controller) => Text("Comment"),
+          child: FButton.icon(
+            onPress: () async {
+              final newComment = await _showCommentDialog(context, comment);
+              if (newComment == null) return;
+
+              bloc.add(TimerChangeComment(newComment));
+            },
+            child: Icon(FLucideIcons.messageSquareMore),
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
+
+  Widget plus2Text(BuildContext context) {
+    final colors = context.theme.colors;
+    final textStyle = context.theme.typography.timer.xl;
+    final textColor = colors.disable(textStyle.color ?? colors.foreground);
+
+    return Text("+2", style: textStyle.copyWith(color: textColor));
+  }
 
   @override
   Widget build(BuildContext context) {
     final duration = context.select((TimerBloc bloc) => Duration(milliseconds: bloc.state.elapsed));
     final penalty = context.select((TimerBloc bloc) => bloc.state.penalty);
+    final showActions = context.select(
+      (TimerBloc bloc) => bloc.state is TimerRunComplete && bloc.state.hold == .none,
+    );
 
     return TimerText(
-      time: Text(penalty == .dnf ? "DNF" : _durationToString(duration)),
-      action: showActions ? _actions() : null,
+      time: penalty == .plus2
+          ? Row(
+              mainAxisSize: .min,
+              crossAxisAlignment: .baseline,
+              textBaseline: .ideographic,
+              spacing: 16,
+              children: [Text((duration + Duration(seconds: 2)).timerString), plus2Text(context)],
+            )
+          : Text(penalty == .dnf ? "DNF" : duration.timerString),
+      action: showActions ? _actions(context, penalty) : null,
     );
   }
 }

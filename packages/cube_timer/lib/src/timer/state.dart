@@ -19,7 +19,7 @@ sealed class TimerState extends Equatable {
   final Hold hold;
 
   @override
-  List<Object> get props => [inspection, elapsed, penalty, hold];
+  List<Object?> get props => [inspection, elapsed, penalty, hold];
 }
 
 final class TimerInitial extends TimerState {
@@ -44,9 +44,20 @@ final class TimerRunInProgress extends TimerState {
 }
 
 final class TimerRunComplete extends TimerState {
-  const TimerRunComplete(int elapsed, {super.penalty = .none, super.hold})
-    : super(elapsed: elapsed, inspection: 0);
+  const TimerRunComplete(
+    int elapsed, {
+    super.penalty = .none,
+    super.hold,
+    required this.recordId,
+    this.comment = "",
+  }) : super(elapsed: elapsed, inspection: 0);
+
+  final String? recordId;
+  final String comment;
 
   @override
   String toString() => "TimerRunComplete { elapsed: $elapsed, hold: $hold }";
+
+  @override
+  List<Object?> get props => [...super.props, recordId, comment];
 }
