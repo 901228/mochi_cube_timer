@@ -178,6 +178,7 @@ class _SessionSelectionDialogState extends State<SessionSelectionDialog> {
                     prefix: Icon(FLucideIcons.tag),
                     suffix: FPopoverMenu(
                       style: .delta(barrierFilter: () => _menuBarrier),
+                      cutout: false,
                       menuAnchor: .topRight,
                       childAnchor: .bottomRight,
                       menuBuilder: (context, controller, _) =>
