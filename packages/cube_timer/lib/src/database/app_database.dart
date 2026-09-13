@@ -22,7 +22,9 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 4;
+  // Stays at 1 until the first release; until then the schema is changed in
+  // place and local databases are deleted rather than migrated.
+  int get schemaVersion => 1;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
