@@ -5,12 +5,14 @@ import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
 import "../utils.dart";
+import "settings/cube_colors.settings.dart";
 import "settings/inspection.settings.page.dart";
 import "settings/root.settings.page.dart";
 
 final Map<String, Widget Function(SettingsEntry, SettingsDao)> settingsPages = {
   "root": (settings, dao) => RootSettingsPage(),
   "inspection": (settings, dao) => InspectionSettingsPage(settings: settings, dao: dao),
+  "cube-colors": (settings, dao) => CubeColorsSettingsPage(settings: settings, dao: dao),
 };
 
 const groupSpacing = 16.0;
@@ -67,7 +69,9 @@ class SettingsPage extends StatelessWidget {
                 onPress: section == "root" ? null : () => context.pop(),
                 child: const Text("Settings"),
               ),
-              ?(section != "root" ? FBreadcrumbItem(child: Text(section.capitalized)) : null),
+              ?(section != "root"
+                  ? FBreadcrumbItem(child: Text(section.capitalized.replaceAll(RegExp(r"[-_]"), " ")))
+                  : null),
             ],
           ),
         ),
@@ -92,7 +96,7 @@ class SettingsPage extends StatelessWidget {
           final settings = snapshot.data!;
           return Padding(
             padding: context.theme.style.pagePadding,
-            child: settingsPages[section]!(settings, dao),
+            child: SingleChildScrollView(child: settingsPages[section]!(settings, dao)),
           );
         },
       ),

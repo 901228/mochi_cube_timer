@@ -34,6 +34,18 @@ class RootSettingsPage extends StatelessWidget {
             ),
           ],
         ),
+
+        FTileGroup(
+          label: const Text("Appearance"),
+          children: [
+            SettingsTile(
+              title: "Cube colors",
+              icon: Icon(FLucideIcons.paintRoller),
+              suffix: Icon(FLucideIcons.chevronRight),
+              onPress: () => context.push("/settings/cube-colors"),
+            ),
+          ],
+        ),
       ],
     );
   }
