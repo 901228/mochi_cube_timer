@@ -28,6 +28,7 @@ class ScrambleTokens extends StatelessWidget {
     this.applied,
     this.selected,
     this.onTap,
+    this.onHover,
   });
 
   final Puzzle puzzle;
@@ -41,6 +42,14 @@ class ScrambleTokens extends StatelessWidget {
 
   /// Called with the move's index. Null leaves the moves untappable.
   final ValueChanged<int>? onTap;
+
+  /// Called with the index of the move the pointer is over, and with null when
+  /// it leaves that move. Null leaves the moves unhoverable.
+  ///
+  /// Crossing from one move straight into the next reports the leave and the
+  /// enter in the same pointer event, so the finished scramble is never drawn
+  /// in between.
+  final ValueChanged<int?>? onHover;
 
   /// A move on its own never wraps, so a flight only has to carry one end's
   /// style to the other's.
@@ -90,32 +99,53 @@ class ScrambleTokens extends StatelessWidget {
     final size = style.fontSize ?? 14;
     final done = applied ?? steps.length;
     final tap = onTap;
+    final hover = onHover;
+
+    // Derived from the size rather than fixed, so the gaps read as spaces at
+    // both the page's size and the dialog's.
+    final spacing = size * 0.35;
+    final runSpacing = size * 0.2;
+
+    // When the moves can be pointed at, the gaps are handed to the moves on
+    // either side as padding instead of being left between them. That way a
+    // pointer is always either over a move, where hover and tap both land, or
+    // clear of the moves altogether; a gap between them would flicker the
+    // preview back to the finished scramble while crossing it.
+    final interactive = tap != null || hover != null;
+    final gap = interactive
+        ? EdgeInsets.symmetric(horizontal: spacing / 2, vertical: runSpacing / 2)
+        : EdgeInsets.zero;
 
     return Wrap(
       alignment: .center,
-      // Derived from the size rather than fixed, so the gaps read as spaces at
-      // both the page's size and the dialog's.
-      spacing: size * 0.35,
-      runSpacing: size * 0.2,
+      spacing: interactive ? 0 : spacing,
+      runSpacing: interactive ? 0 : runSpacing,
       children: [
         for (var i = 0; i < steps.length; i++)
           GestureDetector(
             behavior: .opaque,
             onTap: tap == null ? null : () => tap(i),
-            child: Hero(
-              tag: "scramble-$puzzle-$i",
-              curve: Cube2DView.heroFlightCurve,
-              flightShuttleBuilder: _flight,
-              child: _Token(
-                text: steps[i],
-                style: TextStyle(
-                  color: i < done ? theme.colors.foreground : theme.colors.mutedForeground,
-                  // Stated at both ends rather than inherited, so a flight
-                  // never has to change it. Comfortaa is a static family, so
-                  // TextStyle.lerp can only step between the weights that
-                  // exist; with the two sizes only 10% apart there is no
-                  // movement to hide those steps behind.
-                  fontWeight: i + 1 == selected ? FontWeight.w700 : FontWeight.w600,
+            child: MouseRegion(
+              onEnter: hover == null ? null : (_) => hover(i),
+              onExit: hover == null ? null : (_) => hover(null),
+              child: Padding(
+                padding: gap,
+                child: Hero(
+                  tag: "scramble-$puzzle-$i",
+                  curve: Cube2DView.heroFlightCurve,
+                  flightShuttleBuilder: _flight,
+                  child: _Token(
+                    text: steps[i],
+                    style: TextStyle(
+                      color: i < done ? theme.colors.foreground : theme.colors.mutedForeground,
+                      // Stated at both ends rather than inherited, so a flight
+                      // never has to change it. Comfortaa is a static family, so
+                      // TextStyle.lerp can only step between the weights that
+                      // exist; with the two sizes only 10% apart there is no
+                      // movement to hide those steps behind.
+                      fontWeight: .w600,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -227,6 +257,16 @@ class _ScrambleDialogState extends State<ScrambleDialog> {
   /// How many steps are applied, or null for the whole scramble.
   int? _upTo;
 
+  /// How many steps the move under the pointer would apply, or null when the
+  /// pointer is not over the moves.
+  ///
+  /// Shown over [_upTo] rather than replacing it, so hovering only previews:
+  /// moving off the moves returns to whatever was tapped.
+  int? _hovered;
+
+  /// What is drawn: the hovered step while there is one, otherwise the tapped one.
+  int? get _shown => _hovered ?? _upTo;
+
   /// The notation, one entry per step that can be stopped at.
   late List<String> _steps = widget.puzzle.scrambler.stepsOf(widget.scramble);
 
@@ -235,6 +275,7 @@ class _ScrambleDialogState extends State<ScrambleDialog> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.scramble != widget.scramble) {
       _upTo = null;
+      _hovered = null;
       _steps = widget.puzzle.scrambler.stepsOf(widget.scramble);
     }
   }
@@ -254,7 +295,7 @@ class _ScrambleDialogState extends State<ScrambleDialog> {
   /// The state to draw: part way through when a step is selected, otherwise
   /// the finished scramble.
   List<int> get _state {
-    final upTo = _upTo;
+    final upTo = _shown;
     if (upTo == null) return widget.scramble.state;
     return widget.puzzle.scrambler.stateAfter(widget.scramble, upTo);
   }
@@ -284,9 +325,13 @@ class _ScrambleDialogState extends State<ScrambleDialog> {
   Widget _moves(BuildContext context, FDialogStyle style) => ScrambleTokens(
     puzzle: widget.puzzle,
     steps: _steps,
-    applied: _upTo,
-    selected: _upTo,
+    applied: _shown,
+    selected: _shown,
     onTap: (index) => _select(index + 1),
+    onHover: (index) {
+      final hovered = index == null ? null : index + 1;
+      if (hovered != _hovered) setState(() => _hovered = hovered);
+    },
   );
 
   @override
