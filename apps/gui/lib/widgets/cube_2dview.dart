@@ -3,15 +3,13 @@ import "dart:math" show cos, sin, pi;
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/foundation.dart" show listEquals;
 import "package:flutter/widgets.dart";
-import "package:forui/forui.dart";
 
-/// One puzzle drawn in a given state.
-///
-/// [heroTag] is optional because two Heroes sharing a tag on screen at once is
-/// an error: the timer page's view flies into its full-screen preview, while a
-/// copy shown inside a dialog just sits there.
-class PuzzleStateView extends StatelessWidget {
-  const PuzzleStateView({super.key, required this.puzzle, required this.state, this.heroTag});
+import "../utils.dart";
+
+class Cube2DView extends StatelessWidget {
+  static const Curve heroFlightCurve = Curves.fastOutSlowIn;
+
+  const Cube2DView({super.key, required this.puzzle, required this.state, required this.settings});
 
   final Puzzle puzzle;
 
@@ -19,91 +17,58 @@ class PuzzleStateView extends StatelessWidget {
   /// state part way through a scramble.
   final List<int> state;
 
-  final Object? heroTag;
+  final SettingsEntry settings;
+
+  List<Color> _colorsFor(Puzzle puzzle) {
+    return switch (puzzle) {
+      .cube2 || .cube3 || .cube4 || .cube5 || .cube6 || .cube7 => [
+        settings.cubeColorU.toColor(),
+        settings.cubeColorR.toColor(),
+        settings.cubeColorF.toColor(),
+        settings.cubeColorD.toColor(),
+        settings.cubeColorL.toColor(),
+        settings.cubeColorB.toColor(),
+      ],
+      .pyraminx => [
+        settings.pyraminxColorR.toColor(),
+        settings.pyraminxColorL.toColor(),
+        settings.pyraminxColorB.toColor(),
+        settings.pyraminxColorU.toColor(),
+      ],
+      .clock => throw StateError("Clock colors should not call `_colorsFor()`"),
+      // TODO: implement colors for other puzzles
+      _ => throw UnimplementedError("Colors for $puzzle are not implemented yet."),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
     final layout = puzzle.scrambler.layout;
 
-    final view = AspectRatio(
-      aspectRatio: layout.width / layout.height,
-      child: CustomPaint(
-        isComplex: true,
-        painter: switch (layout) {
-          final PuzzleLayout puzzleLayout => PuzzlePainter(
-            layout: puzzleLayout,
-            state: state,
-            // colors: colorsFor(scrambler.id),
-            colors: [
-              Color(0xFFFFFFFF), // U
-              Color(0xFFB71C1C), // R
-              Color(0xFF2E7D32), // F
-              Color(0xFFFDD835), // D
-              Color(0xFFEF6C00), // L
-              Color(0xFF1565C0), // B
-            ],
-          ),
-          final ClockLayout clockLayout => ClockPainter(layout: clockLayout, state: state),
-        },
+    return Hero(
+      tag: "cube_2d_view-$puzzle",
+      curve: heroFlightCurve,
+      child: AspectRatio(
+        aspectRatio: layout.width / layout.height,
+        child: CustomPaint(
+          isComplex: true,
+          painter: switch (layout) {
+            final PuzzleLayout puzzleLayout => PuzzlePainter(
+              layout: puzzleLayout,
+              state: state,
+              colors: _colorsFor(puzzle),
+            ),
+            final ClockLayout clockLayout => ClockPainter(
+              layout: clockLayout,
+              state: state,
+              color: ClockPainterColor(
+                lightFace: settings.clockColorFront.toColor(),
+                darkFace: settings.clockColorBack.toColor(),
+              ),
+            ),
+          },
+        ),
       ),
-    );
-
-    return heroTag == null ? view : Hero(tag: heroTag!, curve: heroFlightCurve, child: view);
-  }
-}
-
-/// The curve every flight between the timer page and the scramble viewer uses.
-///
-/// Stated in one place so the puzzle and the moves travel together. This is
-/// [Hero]'s own default; it is named here so both flights can be retuned at
-/// once.
-const Curve heroFlightCurve = Curves.fastOutSlowIn;
-
-/// The hero tag a puzzle's view flies under.
-///
-/// One per puzzle, shared by the thumbnail and whatever enlarges it, so the two
-/// are the same object moving rather than two copies.
-Object puzzleHeroTag(Puzzle puzzle) => "cube_2d_view-$puzzle";
-
-/// The current scramble as a thumbnail.
-///
-/// [onPress] is the caller's, not this widget's: what tapping a puzzle opens is
-/// the page's business, and routing from in here would make this widget depend
-/// on the dialog that in turn depends on it.
-class Cube2DView extends StatelessWidget {
-  const Cube2DView({super.key, required this.history, this.onPress});
-
-  final ScrambleHistory history;
-  final ValueChanged<Scramble>? onPress;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Keyed on the history: FutureBuilder holds on to the old snapshot's data
-      // when its future changes, and drawing the previous puzzle's state
-      // through this puzzle's layout reads off the end of it.
-      key: ObjectKey(history),
-      future: history.current,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text("打亂失敗：${snapshot.error}");
-        }
-
-        final scramble = snapshot.data;
-        if (scramble == null) {
-          return const FCircularProgress();
-        }
-
-        final press = onPress;
-        return FTappable(
-          onPress: press == null ? null : () => press(scramble),
-          child: PuzzleStateView(
-            puzzle: history.puzzle,
-            state: scramble.state,
-            heroTag: puzzleHeroTag(history.puzzle),
-          ),
-        );
-      },
     );
   }
 }
@@ -184,30 +149,6 @@ class PuzzlePainter extends CustomPainter {
     return false;
   }
 }
-
-// TODO: put these color in settings
-// // 3x3 / 2x2：U R F D L B，WCA 標準配色
-// const List<Color> cubeColors = [
-//   Colors.white,   // U
-//   Color(0xFFB71C1C), // R
-//   Color(0xFF2E7D32), // F
-//   Color(0xFFFDD835), // D
-//   Color(0xFFEF6C00), // L
-//   Color(0xFF1565C0), // B
-// ];
-
-// // Pyraminx 只有四個面
-// const List<Color> pyraminxColors = [
-//   Color(0xFF2E7D32),
-//   Color(0xFFB71C1C),
-//   Color(0xFF1565C0),
-//   Colors.yellow,
-// ];
-
-// const List<Color> clockColors = [
-//   Color(0xFF3F82FF),
-//   Color(0xFFD3F5FF),
-// ];
 
 class ClockPainterColor {
   const ClockPainterColor({

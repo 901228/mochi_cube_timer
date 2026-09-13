@@ -104,7 +104,7 @@ class ScrambleTokens extends StatelessWidget {
             onTap: tap == null ? null : () => tap(i),
             child: Hero(
               tag: "scramble-$puzzle-$i",
-              curve: heroFlightCurve,
+              curve: Cube2DView.heroFlightCurve,
               flightShuttleBuilder: _flight,
               child: _Token(
                 text: steps[i],
@@ -138,7 +138,12 @@ const Duration _transition = Duration(milliseconds: 300);
 /// The dialog's own scale is switched off, since the hero already animates the
 /// only thing that moves; leaving it on would land the flight in a card that is
 /// still growing.
-Future<void> showScrambleDialog(BuildContext context, {required Puzzle puzzle, required Scramble scramble}) {
+Future<void> showScrambleDialog(
+  BuildContext context, {
+  required Puzzle puzzle,
+  required Scramble scramble,
+  required SettingsEntry settings,
+}) {
   final routeStyle = context.theme.dialogRouteStyle;
 
   return Navigator.of(context).push(
@@ -167,7 +172,7 @@ Future<void> showScrambleDialog(BuildContext context, {required Puzzle puzzle, r
           ),
           FadeTransition(
             opacity: animation,
-            child: ScrambleDialog(puzzle: puzzle, scramble: scramble),
+            child: ScrambleDialog(puzzle: puzzle, scramble: scramble, settings: settings),
           ),
         ],
       ),
@@ -208,10 +213,11 @@ class _Token extends StatelessWidget {
 /// Stateful only to remember which step is picked; [ScrambleTokens] does the
 /// laying out and the tapping.
 class ScrambleDialog extends StatefulWidget {
-  const ScrambleDialog({super.key, required this.puzzle, required this.scramble});
+  const ScrambleDialog({super.key, required this.puzzle, required this.scramble, required this.settings});
 
   final Puzzle puzzle;
   final Scramble scramble;
+  final SettingsEntry settings;
 
   @override
   State<ScrambleDialog> createState() => _ScrambleDialogState();
@@ -307,7 +313,7 @@ class _ScrambleDialogState extends State<ScrambleDialog> {
               ),
             ),
             _moves(context, style),
-            PuzzleStateView(puzzle: widget.puzzle, state: _state, heroTag: puzzleHeroTag(widget.puzzle)),
+            Cube2DView(puzzle: widget.puzzle, state: _state, settings: widget.settings),
           ],
         ),
       ),
