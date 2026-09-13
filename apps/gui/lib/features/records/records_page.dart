@@ -2,7 +2,7 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import "../../utils.dart";
+import "../../shared/utils.dart";
 
 class RecordsPage extends StatelessWidget {
   const RecordsPage({super.key});
@@ -36,6 +36,8 @@ class _RecordsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dao = context.read<AppDatabase>().recordsDao;
+
+    // TODO: records list
 
     return StreamBuilder(
       stream: dao.watchSession(sessionId, puzzle),

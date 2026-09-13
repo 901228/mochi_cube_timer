@@ -3,8 +3,9 @@ import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 
-import "../../../utils.dart";
-import "../../../widgets.dart";
+import "../../shared/puzzles.dart";
+import "../../shared/utils.dart";
+import "scramble_dialog.dart";
 import "timer_body.dart";
 
 class TimerPage extends StatelessWidget {

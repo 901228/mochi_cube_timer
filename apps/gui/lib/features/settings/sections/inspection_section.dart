@@ -4,12 +4,12 @@ import "package:flutter/widgets.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
-import "../settings.page.dart";
+import "../settings_tile.dart";
 
-class InspectionSettingsPage extends StatelessWidget {
+class InspectionSettingsSections extends StatelessWidget {
   final SettingsEntry settings;
   final SettingsDao dao;
-  const InspectionSettingsPage({super.key, required this.settings, required this.dao});
+  const InspectionSettingsSections({super.key, required this.settings, required this.dao});
 
   @override
   Widget build(BuildContext context) {

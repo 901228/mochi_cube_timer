@@ -6,8 +6,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
-import "../../utils.dart";
-import "../../widgets.dart";
+import "../../shared/utils.dart";
+import "../../shared/widgets.dart";
 
 // 放在 top-level：用 closure 的話每次 build 都是新物件，style 會一直被判定為不相等
 ImageFilter _menuBarrier(BuildContext _, double animation) => ColorFilter.mode(

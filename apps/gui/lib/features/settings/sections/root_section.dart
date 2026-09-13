@@ -1,11 +1,14 @@
+import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
-import "../settings.page.dart";
+import "../settings_tile.dart";
 
-class RootSettingsPage extends StatelessWidget {
-  const RootSettingsPage({super.key});
+class RootSettingsSections extends StatelessWidget {
+  final SettingsEntry settings;
+  final SettingsDao dao;
+  const RootSettingsSections({super.key, required this.settings, required this.dao});
 
   @override
   Widget build(BuildContext context) {

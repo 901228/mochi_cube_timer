@@ -1,0 +1,55 @@
+import "package:forui/forui.dart";
+import "package:go_router/go_router.dart";
+
+import "../features/home/animated_branch_container.dart";
+import "../features/home/home_shell.dart";
+import "../features/records/records_page.dart";
+import "../features/settings/settings_page.dart";
+import "../features/stats/stats_page.dart";
+import "../features/timer/timer_page.dart";
+
+final router = GoRouter(
+  initialLocation: "/",
+  routes: [
+    GoRoute(path: "/", redirect: (_, _) => "/timer"),
+
+    GoRoute(
+      path: "/settings",
+      name: "settings",
+      builder: (_, _) => const SettingsPage(section: "root"),
+      routes: [
+        GoRoute(
+          path: ":section",
+          redirect: (_, state) =>
+              settingsSections.containsKey(state.pathParameters["section"]) ? null : "/settings",
+          builder: (_, state) => SettingsPage(section: state.pathParameters["section"]!),
+        ),
+      ],
+    ),
+
+    StatefulShellRoute(
+      builder: (context, state, navigationShell) => HomeShell(
+        pages: [
+          (name: "Timer", icon: FLucideIcons.timer, path: "/timer"),
+          (name: "Records", icon: FLucideIcons.library, path: "/records"),
+          (name: "Stats", icon: FLucideIcons.chartLine, path: "/stats"),
+        ],
+        navigationShell: navigationShell,
+      ),
+      navigatorContainerBuilder: (context, navigationShell, children) =>
+          AnimatedBranchContainer(currentIndex: navigationShell.currentIndex, children: children),
+
+      branches: [
+        StatefulShellBranch(
+          routes: [GoRoute(path: "/timer", name: "timer", builder: (context, state) => TimerPage())],
+        ),
+        StatefulShellBranch(
+          routes: [GoRoute(path: "/records", name: "records", builder: (context, state) => RecordsPage())],
+        ),
+        StatefulShellBranch(
+          routes: [GoRoute(path: "/stats", name: "stats", builder: (context, state) => StatsPage())],
+        ),
+      ],
+    ),
+  ],
+);

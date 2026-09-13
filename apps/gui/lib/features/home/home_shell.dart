@@ -4,13 +4,13 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
-import "../utils.dart";
-import "home/puzzle_selection_dialog.dart";
-import "home/session_selection_dialog.dart";
-import "home/sidebar.dart";
+import "../../shared/utils.dart";
+import "home_sidebar.dart";
+import "puzzle_selection_dialog.dart";
+import "session_selection_dialog.dart";
 
-class PageFrame extends StatelessWidget {
-  const PageFrame({super.key, required this.pages, required this.navigationShell});
+class HomeShell extends StatelessWidget {
+  const HomeShell({super.key, required this.pages, required this.navigationShell});
   final List<({String name, IconData icon, String path})> pages;
   final StatefulNavigationShell navigationShell;
 

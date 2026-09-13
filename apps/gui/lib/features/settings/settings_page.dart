@@ -4,52 +4,16 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
-import "../utils.dart";
-import "settings/cube_colors.settings.dart";
-import "settings/inspection.settings.page.dart";
-import "settings/root.settings.page.dart";
+import "../../shared/utils.dart";
+import "sections/cube_colors_section.dart";
+import "sections/inspection_section.dart";
+import "sections/root_section.dart";
 
-final Map<String, Widget Function(SettingsEntry, SettingsDao)> settingsPages = {
-  "root": (settings, dao) => RootSettingsPage(),
-  "inspection": (settings, dao) => InspectionSettingsPage(settings: settings, dao: dao),
-  "cube-colors": (settings, dao) => CubeColorsSettingsPage(settings: settings, dao: dao),
+final Map<String, Widget Function(SettingsEntry, SettingsDao)> settingsSections = {
+  "root": (settings, dao) => RootSettingsSections(settings: settings, dao: dao),
+  "inspection": (settings, dao) => InspectionSettingsSections(settings: settings, dao: dao),
+  "cube-colors": (settings, dao) => CubeColorsSettingsSections(settings: settings, dao: dao),
 };
-
-const groupSpacing = 16.0;
-
-class SettingsTile extends StatelessWidget with FTileMixin {
-  static const _contentHeight = 32.0;
-
-  const SettingsTile({
-    super.key,
-    required this.title,
-    this.subtitle,
-    this.icon,
-    this.suffix,
-    this.onPress,
-    this.enabled,
-  });
-
-  final String title;
-  final String? subtitle;
-  final Icon? icon;
-  final Widget? suffix;
-  final VoidCallback? onPress;
-  final bool? enabled;
-
-  @override
-  Widget build(BuildContext context) => FTile(
-    enabled: enabled,
-    prefix: icon,
-    title: SizedBox(
-      height: _contentHeight,
-      child: Align(alignment: Alignment.centerLeft, child: Text(title)),
-    ),
-    subtitle: subtitle != null ? Text(subtitle!) : null,
-    suffix: suffix,
-    onPress: onPress,
-  );
-}
 
 class SettingsPage extends StatelessWidget {
   final String section;
@@ -96,7 +60,7 @@ class SettingsPage extends StatelessWidget {
           final settings = snapshot.data!;
           return Padding(
             padding: context.theme.style.pagePadding,
-            child: SingleChildScrollView(child: settingsPages[section]!(settings, dao)),
+            child: SingleChildScrollView(child: settingsSections[section]!(settings, dao)),
           );
         },
       ),

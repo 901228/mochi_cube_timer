@@ -5,9 +5,9 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
-import "../../../theme.dart";
-import "../../../utils.dart";
-import "../../../widgets.dart";
+import "../../shared/utils.dart";
+import "../../shared/widgets.dart";
+import "../../theme.dart";
 import "timer_text.dart";
 
 // TODO: push a new page when record started
