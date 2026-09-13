@@ -69,6 +69,150 @@ class $SettingsTable extends Settings
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _cubeColorUMeta = const VerificationMeta(
+    'cubeColorU',
+  );
+  @override
+  late final GeneratedColumn<int> cubeColorU = GeneratedColumn<int>(
+    'cube_color_u',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.cubeColors.U),
+  );
+  static const VerificationMeta _cubeColorRMeta = const VerificationMeta(
+    'cubeColorR',
+  );
+  @override
+  late final GeneratedColumn<int> cubeColorR = GeneratedColumn<int>(
+    'cube_color_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.cubeColors.R),
+  );
+  static const VerificationMeta _cubeColorFMeta = const VerificationMeta(
+    'cubeColorF',
+  );
+  @override
+  late final GeneratedColumn<int> cubeColorF = GeneratedColumn<int>(
+    'cube_color_f',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.cubeColors.F),
+  );
+  static const VerificationMeta _cubeColorDMeta = const VerificationMeta(
+    'cubeColorD',
+  );
+  @override
+  late final GeneratedColumn<int> cubeColorD = GeneratedColumn<int>(
+    'cube_color_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.cubeColors.D),
+  );
+  static const VerificationMeta _cubeColorLMeta = const VerificationMeta(
+    'cubeColorL',
+  );
+  @override
+  late final GeneratedColumn<int> cubeColorL = GeneratedColumn<int>(
+    'cube_color_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.cubeColors.L),
+  );
+  static const VerificationMeta _cubeColorBMeta = const VerificationMeta(
+    'cubeColorB',
+  );
+  @override
+  late final GeneratedColumn<int> cubeColorB = GeneratedColumn<int>(
+    'cube_color_b',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.cubeColors.B),
+  );
+  static const VerificationMeta _pyraminxColorUMeta = const VerificationMeta(
+    'pyraminxColorU',
+  );
+  @override
+  late final GeneratedColumn<int> pyraminxColorU = GeneratedColumn<int>(
+    'pyraminx_color_u',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.pyraminxColors.U),
+  );
+  static const VerificationMeta _pyraminxColorBMeta = const VerificationMeta(
+    'pyraminxColorB',
+  );
+  @override
+  late final GeneratedColumn<int> pyraminxColorB = GeneratedColumn<int>(
+    'pyraminx_color_b',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.pyraminxColors.B),
+  );
+  static const VerificationMeta _pyraminxColorRMeta = const VerificationMeta(
+    'pyraminxColorR',
+  );
+  @override
+  late final GeneratedColumn<int> pyraminxColorR = GeneratedColumn<int>(
+    'pyraminx_color_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.pyraminxColors.R),
+  );
+  static const VerificationMeta _pyraminxColorLMeta = const VerificationMeta(
+    'pyraminxColorL',
+  );
+  @override
+  late final GeneratedColumn<int> pyraminxColorL = GeneratedColumn<int>(
+    'pyraminx_color_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.pyraminxColors.L),
+  );
+  static const VerificationMeta _clockColorFrontMeta = const VerificationMeta(
+    'clockColorFront',
+  );
+  @override
+  late final GeneratedColumn<int> clockColorFront = GeneratedColumn<int>(
+    'clock_color_front',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.clockColors.front),
+  );
+  static const VerificationMeta _clockColorBackMeta = const VerificationMeta(
+    'clockColorBack',
+  );
+  @override
+  late final GeneratedColumn<int> clockColorBack = GeneratedColumn<int>(
+    'clock_color_back',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.clockColors.back),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -76,6 +220,18 @@ class $SettingsTable extends Settings
     inspectDuration,
     alertEnabled,
     locale,
+    cubeColorU,
+    cubeColorR,
+    cubeColorF,
+    cubeColorD,
+    cubeColorL,
+    cubeColorB,
+    pyraminxColorU,
+    pyraminxColorB,
+    pyraminxColorR,
+    pyraminxColorL,
+    clockColorFront,
+    clockColorBack,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -125,6 +281,114 @@ class $SettingsTable extends Settings
         locale.isAcceptableOrUnknown(data['locale']!, _localeMeta),
       );
     }
+    if (data.containsKey('cube_color_u')) {
+      context.handle(
+        _cubeColorUMeta,
+        cubeColorU.isAcceptableOrUnknown(
+          data['cube_color_u']!,
+          _cubeColorUMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cube_color_r')) {
+      context.handle(
+        _cubeColorRMeta,
+        cubeColorR.isAcceptableOrUnknown(
+          data['cube_color_r']!,
+          _cubeColorRMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cube_color_f')) {
+      context.handle(
+        _cubeColorFMeta,
+        cubeColorF.isAcceptableOrUnknown(
+          data['cube_color_f']!,
+          _cubeColorFMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cube_color_d')) {
+      context.handle(
+        _cubeColorDMeta,
+        cubeColorD.isAcceptableOrUnknown(
+          data['cube_color_d']!,
+          _cubeColorDMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cube_color_l')) {
+      context.handle(
+        _cubeColorLMeta,
+        cubeColorL.isAcceptableOrUnknown(
+          data['cube_color_l']!,
+          _cubeColorLMeta,
+        ),
+      );
+    }
+    if (data.containsKey('cube_color_b')) {
+      context.handle(
+        _cubeColorBMeta,
+        cubeColorB.isAcceptableOrUnknown(
+          data['cube_color_b']!,
+          _cubeColorBMeta,
+        ),
+      );
+    }
+    if (data.containsKey('pyraminx_color_u')) {
+      context.handle(
+        _pyraminxColorUMeta,
+        pyraminxColorU.isAcceptableOrUnknown(
+          data['pyraminx_color_u']!,
+          _pyraminxColorUMeta,
+        ),
+      );
+    }
+    if (data.containsKey('pyraminx_color_b')) {
+      context.handle(
+        _pyraminxColorBMeta,
+        pyraminxColorB.isAcceptableOrUnknown(
+          data['pyraminx_color_b']!,
+          _pyraminxColorBMeta,
+        ),
+      );
+    }
+    if (data.containsKey('pyraminx_color_r')) {
+      context.handle(
+        _pyraminxColorRMeta,
+        pyraminxColorR.isAcceptableOrUnknown(
+          data['pyraminx_color_r']!,
+          _pyraminxColorRMeta,
+        ),
+      );
+    }
+    if (data.containsKey('pyraminx_color_l')) {
+      context.handle(
+        _pyraminxColorLMeta,
+        pyraminxColorL.isAcceptableOrUnknown(
+          data['pyraminx_color_l']!,
+          _pyraminxColorLMeta,
+        ),
+      );
+    }
+    if (data.containsKey('clock_color_front')) {
+      context.handle(
+        _clockColorFrontMeta,
+        clockColorFront.isAcceptableOrUnknown(
+          data['clock_color_front']!,
+          _clockColorFrontMeta,
+        ),
+      );
+    }
+    if (data.containsKey('clock_color_back')) {
+      context.handle(
+        _clockColorBackMeta,
+        clockColorBack.isAcceptableOrUnknown(
+          data['clock_color_back']!,
+          _clockColorBackMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -154,6 +418,54 @@ class $SettingsTable extends Settings
         DriftSqlType.string,
         data['${effectivePrefix}locale'],
       ),
+      cubeColorU: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cube_color_u'],
+      )!,
+      cubeColorR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cube_color_r'],
+      )!,
+      cubeColorF: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cube_color_f'],
+      )!,
+      cubeColorD: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cube_color_d'],
+      )!,
+      cubeColorL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cube_color_l'],
+      )!,
+      cubeColorB: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}cube_color_b'],
+      )!,
+      pyraminxColorU: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pyraminx_color_u'],
+      )!,
+      pyraminxColorB: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pyraminx_color_b'],
+      )!,
+      pyraminxColorR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pyraminx_color_r'],
+      )!,
+      pyraminxColorL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}pyraminx_color_l'],
+      )!,
+      clockColorFront: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}clock_color_front'],
+      )!,
+      clockColorBack: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}clock_color_back'],
+      )!,
     );
   }
 
@@ -180,12 +492,42 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   ///
   /// `null` => system default
   final String? locale;
+
+  /// cube colors
+  final int cubeColorU;
+  final int cubeColorR;
+  final int cubeColorF;
+  final int cubeColorD;
+  final int cubeColorL;
+  final int cubeColorB;
+
+  /// pyraminx colors
+  final int pyraminxColorU;
+  final int pyraminxColorB;
+  final int pyraminxColorR;
+  final int pyraminxColorL;
+
+  /// clock colors
+  final int clockColorFront;
+  final int clockColorBack;
   const SettingsEntry({
     required this.id,
     required this.inspectionEnabled,
     required this.inspectDuration,
     required this.alertEnabled,
     this.locale,
+    required this.cubeColorU,
+    required this.cubeColorR,
+    required this.cubeColorF,
+    required this.cubeColorD,
+    required this.cubeColorL,
+    required this.cubeColorB,
+    required this.pyraminxColorU,
+    required this.pyraminxColorB,
+    required this.pyraminxColorR,
+    required this.pyraminxColorL,
+    required this.clockColorFront,
+    required this.clockColorBack,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -197,6 +539,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     if (!nullToAbsent || locale != null) {
       map['locale'] = Variable<String>(locale);
     }
+    map['cube_color_u'] = Variable<int>(cubeColorU);
+    map['cube_color_r'] = Variable<int>(cubeColorR);
+    map['cube_color_f'] = Variable<int>(cubeColorF);
+    map['cube_color_d'] = Variable<int>(cubeColorD);
+    map['cube_color_l'] = Variable<int>(cubeColorL);
+    map['cube_color_b'] = Variable<int>(cubeColorB);
+    map['pyraminx_color_u'] = Variable<int>(pyraminxColorU);
+    map['pyraminx_color_b'] = Variable<int>(pyraminxColorB);
+    map['pyraminx_color_r'] = Variable<int>(pyraminxColorR);
+    map['pyraminx_color_l'] = Variable<int>(pyraminxColorL);
+    map['clock_color_front'] = Variable<int>(clockColorFront);
+    map['clock_color_back'] = Variable<int>(clockColorBack);
     return map;
   }
 
@@ -209,6 +563,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       locale: locale == null && nullToAbsent
           ? const Value.absent()
           : Value(locale),
+      cubeColorU: Value(cubeColorU),
+      cubeColorR: Value(cubeColorR),
+      cubeColorF: Value(cubeColorF),
+      cubeColorD: Value(cubeColorD),
+      cubeColorL: Value(cubeColorL),
+      cubeColorB: Value(cubeColorB),
+      pyraminxColorU: Value(pyraminxColorU),
+      pyraminxColorB: Value(pyraminxColorB),
+      pyraminxColorR: Value(pyraminxColorR),
+      pyraminxColorL: Value(pyraminxColorL),
+      clockColorFront: Value(clockColorFront),
+      clockColorBack: Value(clockColorBack),
     );
   }
 
@@ -223,6 +589,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       inspectDuration: serializer.fromJson<int>(json['inspectDuration']),
       alertEnabled: serializer.fromJson<bool>(json['alertEnabled']),
       locale: serializer.fromJson<String?>(json['locale']),
+      cubeColorU: serializer.fromJson<int>(json['cubeColorU']),
+      cubeColorR: serializer.fromJson<int>(json['cubeColorR']),
+      cubeColorF: serializer.fromJson<int>(json['cubeColorF']),
+      cubeColorD: serializer.fromJson<int>(json['cubeColorD']),
+      cubeColorL: serializer.fromJson<int>(json['cubeColorL']),
+      cubeColorB: serializer.fromJson<int>(json['cubeColorB']),
+      pyraminxColorU: serializer.fromJson<int>(json['pyraminxColorU']),
+      pyraminxColorB: serializer.fromJson<int>(json['pyraminxColorB']),
+      pyraminxColorR: serializer.fromJson<int>(json['pyraminxColorR']),
+      pyraminxColorL: serializer.fromJson<int>(json['pyraminxColorL']),
+      clockColorFront: serializer.fromJson<int>(json['clockColorFront']),
+      clockColorBack: serializer.fromJson<int>(json['clockColorBack']),
     );
   }
   @override
@@ -234,6 +612,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'inspectDuration': serializer.toJson<int>(inspectDuration),
       'alertEnabled': serializer.toJson<bool>(alertEnabled),
       'locale': serializer.toJson<String?>(locale),
+      'cubeColorU': serializer.toJson<int>(cubeColorU),
+      'cubeColorR': serializer.toJson<int>(cubeColorR),
+      'cubeColorF': serializer.toJson<int>(cubeColorF),
+      'cubeColorD': serializer.toJson<int>(cubeColorD),
+      'cubeColorL': serializer.toJson<int>(cubeColorL),
+      'cubeColorB': serializer.toJson<int>(cubeColorB),
+      'pyraminxColorU': serializer.toJson<int>(pyraminxColorU),
+      'pyraminxColorB': serializer.toJson<int>(pyraminxColorB),
+      'pyraminxColorR': serializer.toJson<int>(pyraminxColorR),
+      'pyraminxColorL': serializer.toJson<int>(pyraminxColorL),
+      'clockColorFront': serializer.toJson<int>(clockColorFront),
+      'clockColorBack': serializer.toJson<int>(clockColorBack),
     };
   }
 
@@ -243,12 +633,36 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     int? inspectDuration,
     bool? alertEnabled,
     Value<String?> locale = const Value.absent(),
+    int? cubeColorU,
+    int? cubeColorR,
+    int? cubeColorF,
+    int? cubeColorD,
+    int? cubeColorL,
+    int? cubeColorB,
+    int? pyraminxColorU,
+    int? pyraminxColorB,
+    int? pyraminxColorR,
+    int? pyraminxColorL,
+    int? clockColorFront,
+    int? clockColorBack,
   }) => SettingsEntry(
     id: id ?? this.id,
     inspectionEnabled: inspectionEnabled ?? this.inspectionEnabled,
     inspectDuration: inspectDuration ?? this.inspectDuration,
     alertEnabled: alertEnabled ?? this.alertEnabled,
     locale: locale.present ? locale.value : this.locale,
+    cubeColorU: cubeColorU ?? this.cubeColorU,
+    cubeColorR: cubeColorR ?? this.cubeColorR,
+    cubeColorF: cubeColorF ?? this.cubeColorF,
+    cubeColorD: cubeColorD ?? this.cubeColorD,
+    cubeColorL: cubeColorL ?? this.cubeColorL,
+    cubeColorB: cubeColorB ?? this.cubeColorB,
+    pyraminxColorU: pyraminxColorU ?? this.pyraminxColorU,
+    pyraminxColorB: pyraminxColorB ?? this.pyraminxColorB,
+    pyraminxColorR: pyraminxColorR ?? this.pyraminxColorR,
+    pyraminxColorL: pyraminxColorL ?? this.pyraminxColorL,
+    clockColorFront: clockColorFront ?? this.clockColorFront,
+    clockColorBack: clockColorBack ?? this.clockColorBack,
   );
   SettingsEntry copyWithCompanion(SettingsCompanion data) {
     return SettingsEntry(
@@ -263,6 +677,42 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ? data.alertEnabled.value
           : this.alertEnabled,
       locale: data.locale.present ? data.locale.value : this.locale,
+      cubeColorU: data.cubeColorU.present
+          ? data.cubeColorU.value
+          : this.cubeColorU,
+      cubeColorR: data.cubeColorR.present
+          ? data.cubeColorR.value
+          : this.cubeColorR,
+      cubeColorF: data.cubeColorF.present
+          ? data.cubeColorF.value
+          : this.cubeColorF,
+      cubeColorD: data.cubeColorD.present
+          ? data.cubeColorD.value
+          : this.cubeColorD,
+      cubeColorL: data.cubeColorL.present
+          ? data.cubeColorL.value
+          : this.cubeColorL,
+      cubeColorB: data.cubeColorB.present
+          ? data.cubeColorB.value
+          : this.cubeColorB,
+      pyraminxColorU: data.pyraminxColorU.present
+          ? data.pyraminxColorU.value
+          : this.pyraminxColorU,
+      pyraminxColorB: data.pyraminxColorB.present
+          ? data.pyraminxColorB.value
+          : this.pyraminxColorB,
+      pyraminxColorR: data.pyraminxColorR.present
+          ? data.pyraminxColorR.value
+          : this.pyraminxColorR,
+      pyraminxColorL: data.pyraminxColorL.present
+          ? data.pyraminxColorL.value
+          : this.pyraminxColorL,
+      clockColorFront: data.clockColorFront.present
+          ? data.clockColorFront.value
+          : this.clockColorFront,
+      clockColorBack: data.clockColorBack.present
+          ? data.clockColorBack.value
+          : this.clockColorBack,
     );
   }
 
@@ -273,14 +723,43 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('inspectionEnabled: $inspectionEnabled, ')
           ..write('inspectDuration: $inspectDuration, ')
           ..write('alertEnabled: $alertEnabled, ')
-          ..write('locale: $locale')
+          ..write('locale: $locale, ')
+          ..write('cubeColorU: $cubeColorU, ')
+          ..write('cubeColorR: $cubeColorR, ')
+          ..write('cubeColorF: $cubeColorF, ')
+          ..write('cubeColorD: $cubeColorD, ')
+          ..write('cubeColorL: $cubeColorL, ')
+          ..write('cubeColorB: $cubeColorB, ')
+          ..write('pyraminxColorU: $pyraminxColorU, ')
+          ..write('pyraminxColorB: $pyraminxColorB, ')
+          ..write('pyraminxColorR: $pyraminxColorR, ')
+          ..write('pyraminxColorL: $pyraminxColorL, ')
+          ..write('clockColorFront: $clockColorFront, ')
+          ..write('clockColorBack: $clockColorBack')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, inspectionEnabled, inspectDuration, alertEnabled, locale);
+  int get hashCode => Object.hash(
+    id,
+    inspectionEnabled,
+    inspectDuration,
+    alertEnabled,
+    locale,
+    cubeColorU,
+    cubeColorR,
+    cubeColorF,
+    cubeColorD,
+    cubeColorL,
+    cubeColorB,
+    pyraminxColorU,
+    pyraminxColorB,
+    pyraminxColorR,
+    pyraminxColorL,
+    clockColorFront,
+    clockColorBack,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -289,7 +768,19 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.inspectionEnabled == this.inspectionEnabled &&
           other.inspectDuration == this.inspectDuration &&
           other.alertEnabled == this.alertEnabled &&
-          other.locale == this.locale);
+          other.locale == this.locale &&
+          other.cubeColorU == this.cubeColorU &&
+          other.cubeColorR == this.cubeColorR &&
+          other.cubeColorF == this.cubeColorF &&
+          other.cubeColorD == this.cubeColorD &&
+          other.cubeColorL == this.cubeColorL &&
+          other.cubeColorB == this.cubeColorB &&
+          other.pyraminxColorU == this.pyraminxColorU &&
+          other.pyraminxColorB == this.pyraminxColorB &&
+          other.pyraminxColorR == this.pyraminxColorR &&
+          other.pyraminxColorL == this.pyraminxColorL &&
+          other.clockColorFront == this.clockColorFront &&
+          other.clockColorBack == this.clockColorBack);
 }
 
 class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
@@ -298,12 +789,36 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<int> inspectDuration;
   final Value<bool> alertEnabled;
   final Value<String?> locale;
+  final Value<int> cubeColorU;
+  final Value<int> cubeColorR;
+  final Value<int> cubeColorF;
+  final Value<int> cubeColorD;
+  final Value<int> cubeColorL;
+  final Value<int> cubeColorB;
+  final Value<int> pyraminxColorU;
+  final Value<int> pyraminxColorB;
+  final Value<int> pyraminxColorR;
+  final Value<int> pyraminxColorL;
+  final Value<int> clockColorFront;
+  final Value<int> clockColorBack;
   const SettingsCompanion({
     this.id = const Value.absent(),
     this.inspectionEnabled = const Value.absent(),
     this.inspectDuration = const Value.absent(),
     this.alertEnabled = const Value.absent(),
     this.locale = const Value.absent(),
+    this.cubeColorU = const Value.absent(),
+    this.cubeColorR = const Value.absent(),
+    this.cubeColorF = const Value.absent(),
+    this.cubeColorD = const Value.absent(),
+    this.cubeColorL = const Value.absent(),
+    this.cubeColorB = const Value.absent(),
+    this.pyraminxColorU = const Value.absent(),
+    this.pyraminxColorB = const Value.absent(),
+    this.pyraminxColorR = const Value.absent(),
+    this.pyraminxColorL = const Value.absent(),
+    this.clockColorFront = const Value.absent(),
+    this.clockColorBack = const Value.absent(),
   });
   SettingsCompanion.insert({
     this.id = const Value.absent(),
@@ -311,6 +826,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.inspectDuration = const Value.absent(),
     this.alertEnabled = const Value.absent(),
     this.locale = const Value.absent(),
+    this.cubeColorU = const Value.absent(),
+    this.cubeColorR = const Value.absent(),
+    this.cubeColorF = const Value.absent(),
+    this.cubeColorD = const Value.absent(),
+    this.cubeColorL = const Value.absent(),
+    this.cubeColorB = const Value.absent(),
+    this.pyraminxColorU = const Value.absent(),
+    this.pyraminxColorB = const Value.absent(),
+    this.pyraminxColorR = const Value.absent(),
+    this.pyraminxColorL = const Value.absent(),
+    this.clockColorFront = const Value.absent(),
+    this.clockColorBack = const Value.absent(),
   });
   static Insertable<SettingsEntry> custom({
     Expression<int>? id,
@@ -318,6 +845,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<int>? inspectDuration,
     Expression<bool>? alertEnabled,
     Expression<String>? locale,
+    Expression<int>? cubeColorU,
+    Expression<int>? cubeColorR,
+    Expression<int>? cubeColorF,
+    Expression<int>? cubeColorD,
+    Expression<int>? cubeColorL,
+    Expression<int>? cubeColorB,
+    Expression<int>? pyraminxColorU,
+    Expression<int>? pyraminxColorB,
+    Expression<int>? pyraminxColorR,
+    Expression<int>? pyraminxColorL,
+    Expression<int>? clockColorFront,
+    Expression<int>? clockColorBack,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -325,6 +864,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (inspectDuration != null) 'inspect_duration': inspectDuration,
       if (alertEnabled != null) 'alert_enabled': alertEnabled,
       if (locale != null) 'locale': locale,
+      if (cubeColorU != null) 'cube_color_u': cubeColorU,
+      if (cubeColorR != null) 'cube_color_r': cubeColorR,
+      if (cubeColorF != null) 'cube_color_f': cubeColorF,
+      if (cubeColorD != null) 'cube_color_d': cubeColorD,
+      if (cubeColorL != null) 'cube_color_l': cubeColorL,
+      if (cubeColorB != null) 'cube_color_b': cubeColorB,
+      if (pyraminxColorU != null) 'pyraminx_color_u': pyraminxColorU,
+      if (pyraminxColorB != null) 'pyraminx_color_b': pyraminxColorB,
+      if (pyraminxColorR != null) 'pyraminx_color_r': pyraminxColorR,
+      if (pyraminxColorL != null) 'pyraminx_color_l': pyraminxColorL,
+      if (clockColorFront != null) 'clock_color_front': clockColorFront,
+      if (clockColorBack != null) 'clock_color_back': clockColorBack,
     });
   }
 
@@ -334,6 +885,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<int>? inspectDuration,
     Value<bool>? alertEnabled,
     Value<String?>? locale,
+    Value<int>? cubeColorU,
+    Value<int>? cubeColorR,
+    Value<int>? cubeColorF,
+    Value<int>? cubeColorD,
+    Value<int>? cubeColorL,
+    Value<int>? cubeColorB,
+    Value<int>? pyraminxColorU,
+    Value<int>? pyraminxColorB,
+    Value<int>? pyraminxColorR,
+    Value<int>? pyraminxColorL,
+    Value<int>? clockColorFront,
+    Value<int>? clockColorBack,
   }) {
     return SettingsCompanion(
       id: id ?? this.id,
@@ -341,6 +904,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       inspectDuration: inspectDuration ?? this.inspectDuration,
       alertEnabled: alertEnabled ?? this.alertEnabled,
       locale: locale ?? this.locale,
+      cubeColorU: cubeColorU ?? this.cubeColorU,
+      cubeColorR: cubeColorR ?? this.cubeColorR,
+      cubeColorF: cubeColorF ?? this.cubeColorF,
+      cubeColorD: cubeColorD ?? this.cubeColorD,
+      cubeColorL: cubeColorL ?? this.cubeColorL,
+      cubeColorB: cubeColorB ?? this.cubeColorB,
+      pyraminxColorU: pyraminxColorU ?? this.pyraminxColorU,
+      pyraminxColorB: pyraminxColorB ?? this.pyraminxColorB,
+      pyraminxColorR: pyraminxColorR ?? this.pyraminxColorR,
+      pyraminxColorL: pyraminxColorL ?? this.pyraminxColorL,
+      clockColorFront: clockColorFront ?? this.clockColorFront,
+      clockColorBack: clockColorBack ?? this.clockColorBack,
     );
   }
 
@@ -362,6 +937,42 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     if (locale.present) {
       map['locale'] = Variable<String>(locale.value);
     }
+    if (cubeColorU.present) {
+      map['cube_color_u'] = Variable<int>(cubeColorU.value);
+    }
+    if (cubeColorR.present) {
+      map['cube_color_r'] = Variable<int>(cubeColorR.value);
+    }
+    if (cubeColorF.present) {
+      map['cube_color_f'] = Variable<int>(cubeColorF.value);
+    }
+    if (cubeColorD.present) {
+      map['cube_color_d'] = Variable<int>(cubeColorD.value);
+    }
+    if (cubeColorL.present) {
+      map['cube_color_l'] = Variable<int>(cubeColorL.value);
+    }
+    if (cubeColorB.present) {
+      map['cube_color_b'] = Variable<int>(cubeColorB.value);
+    }
+    if (pyraminxColorU.present) {
+      map['pyraminx_color_u'] = Variable<int>(pyraminxColorU.value);
+    }
+    if (pyraminxColorB.present) {
+      map['pyraminx_color_b'] = Variable<int>(pyraminxColorB.value);
+    }
+    if (pyraminxColorR.present) {
+      map['pyraminx_color_r'] = Variable<int>(pyraminxColorR.value);
+    }
+    if (pyraminxColorL.present) {
+      map['pyraminx_color_l'] = Variable<int>(pyraminxColorL.value);
+    }
+    if (clockColorFront.present) {
+      map['clock_color_front'] = Variable<int>(clockColorFront.value);
+    }
+    if (clockColorBack.present) {
+      map['clock_color_back'] = Variable<int>(clockColorBack.value);
+    }
     return map;
   }
 
@@ -372,7 +983,19 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('inspectionEnabled: $inspectionEnabled, ')
           ..write('inspectDuration: $inspectDuration, ')
           ..write('alertEnabled: $alertEnabled, ')
-          ..write('locale: $locale')
+          ..write('locale: $locale, ')
+          ..write('cubeColorU: $cubeColorU, ')
+          ..write('cubeColorR: $cubeColorR, ')
+          ..write('cubeColorF: $cubeColorF, ')
+          ..write('cubeColorD: $cubeColorD, ')
+          ..write('cubeColorL: $cubeColorL, ')
+          ..write('cubeColorB: $cubeColorB, ')
+          ..write('pyraminxColorU: $pyraminxColorU, ')
+          ..write('pyraminxColorB: $pyraminxColorB, ')
+          ..write('pyraminxColorR: $pyraminxColorR, ')
+          ..write('pyraminxColorL: $pyraminxColorL, ')
+          ..write('clockColorFront: $clockColorFront, ')
+          ..write('clockColorBack: $clockColorBack')
           ..write(')'))
         .toString();
   }
@@ -1607,6 +2230,18 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<int> inspectDuration,
   Value<bool> alertEnabled,
   Value<String?> locale,
+  Value<int> cubeColorU,
+  Value<int> cubeColorR,
+  Value<int> cubeColorF,
+  Value<int> cubeColorD,
+  Value<int> cubeColorL,
+  Value<int> cubeColorB,
+  Value<int> pyraminxColorU,
+  Value<int> pyraminxColorB,
+  Value<int> pyraminxColorR,
+  Value<int> pyraminxColorL,
+  Value<int> clockColorFront,
+  Value<int> clockColorBack,
 });
 typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> id,
@@ -1614,6 +2249,18 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> inspectDuration,
   Value<bool> alertEnabled,
   Value<String?> locale,
+  Value<int> cubeColorU,
+  Value<int> cubeColorR,
+  Value<int> cubeColorF,
+  Value<int> cubeColorD,
+  Value<int> cubeColorL,
+  Value<int> cubeColorB,
+  Value<int> pyraminxColorU,
+  Value<int> pyraminxColorB,
+  Value<int> pyraminxColorR,
+  Value<int> pyraminxColorL,
+  Value<int> clockColorFront,
+  Value<int> clockColorBack,
 });
 
 class $$SettingsTableFilterComposer
@@ -1647,6 +2294,66 @@ class $$SettingsTableFilterComposer
 
   ColumnFilters<String> get locale => $composableBuilder(
     column: $table.locale,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cubeColorU => $composableBuilder(
+    column: $table.cubeColorU,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cubeColorR => $composableBuilder(
+    column: $table.cubeColorR,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cubeColorF => $composableBuilder(
+    column: $table.cubeColorF,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cubeColorD => $composableBuilder(
+    column: $table.cubeColorD,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cubeColorL => $composableBuilder(
+    column: $table.cubeColorL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get cubeColorB => $composableBuilder(
+    column: $table.cubeColorB,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pyraminxColorU => $composableBuilder(
+    column: $table.pyraminxColorU,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pyraminxColorB => $composableBuilder(
+    column: $table.pyraminxColorB,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pyraminxColorR => $composableBuilder(
+    column: $table.pyraminxColorR,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get pyraminxColorL => $composableBuilder(
+    column: $table.pyraminxColorL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get clockColorFront => $composableBuilder(
+    column: $table.clockColorFront,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get clockColorBack => $composableBuilder(
+    column: $table.clockColorBack,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1684,6 +2391,66 @@ class $$SettingsTableOrderingComposer
     column: $table.locale,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get cubeColorU => $composableBuilder(
+    column: $table.cubeColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cubeColorR => $composableBuilder(
+    column: $table.cubeColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cubeColorF => $composableBuilder(
+    column: $table.cubeColorF,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cubeColorD => $composableBuilder(
+    column: $table.cubeColorD,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cubeColorL => $composableBuilder(
+    column: $table.cubeColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get cubeColorB => $composableBuilder(
+    column: $table.cubeColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pyraminxColorU => $composableBuilder(
+    column: $table.pyraminxColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pyraminxColorB => $composableBuilder(
+    column: $table.pyraminxColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pyraminxColorR => $composableBuilder(
+    column: $table.pyraminxColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get pyraminxColorL => $composableBuilder(
+    column: $table.pyraminxColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get clockColorFront => $composableBuilder(
+    column: $table.clockColorFront,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get clockColorBack => $composableBuilder(
+    column: $table.clockColorBack,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SettingsTableAnnotationComposer
@@ -1715,6 +2482,66 @@ class $$SettingsTableAnnotationComposer
 
   GeneratedColumn<String> get locale =>
       $composableBuilder(column: $table.locale, builder: (column) => column);
+
+  GeneratedColumn<int> get cubeColorU => $composableBuilder(
+    column: $table.cubeColorU,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cubeColorR => $composableBuilder(
+    column: $table.cubeColorR,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cubeColorF => $composableBuilder(
+    column: $table.cubeColorF,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cubeColorD => $composableBuilder(
+    column: $table.cubeColorD,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cubeColorL => $composableBuilder(
+    column: $table.cubeColorL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get cubeColorB => $composableBuilder(
+    column: $table.cubeColorB,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get pyraminxColorU => $composableBuilder(
+    column: $table.pyraminxColorU,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get pyraminxColorB => $composableBuilder(
+    column: $table.pyraminxColorB,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get pyraminxColorR => $composableBuilder(
+    column: $table.pyraminxColorR,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get pyraminxColorL => $composableBuilder(
+    column: $table.pyraminxColorL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get clockColorFront => $composableBuilder(
+    column: $table.clockColorFront,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get clockColorBack => $composableBuilder(
+    column: $table.clockColorBack,
+    builder: (column) => column,
+  );
 }
 
 class $$SettingsTableTableManager
@@ -1753,12 +2580,36 @@ class $$SettingsTableTableManager
                 Value<int> inspectDuration = const Value.absent(),
                 Value<bool> alertEnabled = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
+                Value<int> cubeColorU = const Value.absent(),
+                Value<int> cubeColorR = const Value.absent(),
+                Value<int> cubeColorF = const Value.absent(),
+                Value<int> cubeColorD = const Value.absent(),
+                Value<int> cubeColorL = const Value.absent(),
+                Value<int> cubeColorB = const Value.absent(),
+                Value<int> pyraminxColorU = const Value.absent(),
+                Value<int> pyraminxColorB = const Value.absent(),
+                Value<int> pyraminxColorR = const Value.absent(),
+                Value<int> pyraminxColorL = const Value.absent(),
+                Value<int> clockColorFront = const Value.absent(),
+                Value<int> clockColorBack = const Value.absent(),
               }) => SettingsCompanion(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
                 inspectDuration: inspectDuration,
                 alertEnabled: alertEnabled,
                 locale: locale,
+                cubeColorU: cubeColorU,
+                cubeColorR: cubeColorR,
+                cubeColorF: cubeColorF,
+                cubeColorD: cubeColorD,
+                cubeColorL: cubeColorL,
+                cubeColorB: cubeColorB,
+                pyraminxColorU: pyraminxColorU,
+                pyraminxColorB: pyraminxColorB,
+                pyraminxColorR: pyraminxColorR,
+                pyraminxColorL: pyraminxColorL,
+                clockColorFront: clockColorFront,
+                clockColorBack: clockColorBack,
               ),
           createCompanionCallback:
               ({
@@ -1767,12 +2618,36 @@ class $$SettingsTableTableManager
                 Value<int> inspectDuration = const Value.absent(),
                 Value<bool> alertEnabled = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
+                Value<int> cubeColorU = const Value.absent(),
+                Value<int> cubeColorR = const Value.absent(),
+                Value<int> cubeColorF = const Value.absent(),
+                Value<int> cubeColorD = const Value.absent(),
+                Value<int> cubeColorL = const Value.absent(),
+                Value<int> cubeColorB = const Value.absent(),
+                Value<int> pyraminxColorU = const Value.absent(),
+                Value<int> pyraminxColorB = const Value.absent(),
+                Value<int> pyraminxColorR = const Value.absent(),
+                Value<int> pyraminxColorL = const Value.absent(),
+                Value<int> clockColorFront = const Value.absent(),
+                Value<int> clockColorBack = const Value.absent(),
               }) => SettingsCompanion.insert(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
                 inspectDuration: inspectDuration,
                 alertEnabled: alertEnabled,
                 locale: locale,
+                cubeColorU: cubeColorU,
+                cubeColorR: cubeColorR,
+                cubeColorF: cubeColorF,
+                cubeColorD: cubeColorD,
+                cubeColorL: cubeColorL,
+                cubeColorB: cubeColorB,
+                pyraminxColorU: pyraminxColorU,
+                pyraminxColorB: pyraminxColorB,
+                pyraminxColorR: pyraminxColorR,
+                pyraminxColorL: pyraminxColorL,
+                clockColorFront: clockColorFront,
+                clockColorBack: clockColorBack,
               ),
           withReferenceMapper: (p0) => p0
               .map(

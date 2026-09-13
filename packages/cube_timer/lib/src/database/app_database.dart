@@ -1,6 +1,7 @@
 import "package:drift/drift.dart";
 import "package:uuid/uuid.dart";
 
+import "../puzzle/colors.dart";
 import "../puzzle/puzzle.dart";
 import "daos/app_state.dao.dart";
 import "daos/records.dao.dart";
