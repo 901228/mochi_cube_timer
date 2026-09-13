@@ -4,6 +4,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
+import "../utils.dart";
 import "home/puzzle_selection_dialog.dart";
 import "home/session_selection_dialog.dart";
 import "home/sidebar.dart";
@@ -40,21 +41,14 @@ class PageFrame extends StatelessWidget {
             child: StreamBuilder<({Puzzle puzzle, SessionEntry session})>(
               stream: dao.watch(),
               builder: (context, snapshot) {
-                if (snapshot.error case final error?) {
-                  FlutterError.reportError(
-                    FlutterErrorDetails(
-                      exception: error,
-                      stack: snapshot.stackTrace,
-                      library: "mochi cube timer",
-                      context: ErrorDescription("watching the app state for the header title"),
-                    ),
-                  );
-                  return Icon(FLucideIcons.triangleAlert, color: theme.colors.destructive);
-                }
+                final w = streamHandler(
+                  context,
+                  snapshot,
+                  description: "watching the app state for the header title",
+                );
+                if (w != null) return w;
 
-                final data = snapshot.data;
-                if (data == null) return const FCircularProgress();
-
+                final data = snapshot.data!;
                 return Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: .center,
@@ -79,21 +73,14 @@ class PageFrame extends StatelessWidget {
             StreamBuilder<({Puzzle puzzle, SessionEntry session})>(
               stream: dao.watch(),
               builder: (context, snapshot) {
-                if (snapshot.error case final error?) {
-                  FlutterError.reportError(
-                    FlutterErrorDetails(
-                      exception: error,
-                      stack: snapshot.stackTrace,
-                      library: "mochi cube timer",
-                      context: ErrorDescription("watching the app state for the header title"),
-                    ),
-                  );
-                  return Icon(FLucideIcons.triangleAlert, color: theme.colors.destructive);
-                }
+                final w = streamHandler(
+                  context,
+                  snapshot,
+                  description: "watching the app state for the session picker",
+                );
+                if (w != null) return w;
 
-                final data = snapshot.data;
-                if (data == null) return const FCircularProgress();
-
+                final data = snapshot.data!;
                 return FHeaderAction(
                   icon: const Icon(FLucideIcons.shapes),
                   onPress: () => showFDialog(

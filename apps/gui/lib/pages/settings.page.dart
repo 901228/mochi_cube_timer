@@ -82,34 +82,18 @@ class SettingsPage extends StatelessWidget {
       child: StreamBuilder<SettingsEntry>(
         stream: dao.watch(),
         builder: (context, snapshot) {
-          final settings = snapshot.data;
-          if (settings == null) return Center(child: FCircularProgress());
+          final w = streamHandler(
+            context,
+            snapshot,
+            description: "watching the settings for the settings page",
+          );
+          if (w != null) return w;
 
+          final settings = snapshot.data!;
           return Padding(
             padding: context.theme.style.pagePadding,
             child: settingsPages[section]!(settings, dao),
           );
-
-          // return Padding(
-          //   padding: context.theme.style.pagePadding,
-          //   child: Column(
-          //     spacing: 16,
-          //     crossAxisAlignment: CrossAxisAlignment.stretch,
-          //     children: [
-          //       FTileGroup(
-          //         label: const Text("計時"),
-          //         children: [
-          //           SettingsTile(title: "Inspection", suffix: FSwitch()),
-          //           SettingsTile(title: "啟動前需長按", suffix: FSwitch()),
-          //         ],
-          //       ),
-
-          //       // 直接放在 group 外面
-          //       // InspectionDurationField(value: s.inspectionDuration, onCommit: ...),
-          //       FTileGroup(label: const Text("外觀"), children: []),
-          //     ],
-          //   ),
-          // );
         },
       ),
     );

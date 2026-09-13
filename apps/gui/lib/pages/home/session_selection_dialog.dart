@@ -6,6 +6,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
 
+import "../../utils.dart";
 import "../../widgets.dart";
 
 // 放在 top-level：用 closure 的話每次 build 都是新物件，style 會一直被判定為不相等
@@ -127,21 +128,10 @@ class _SessionSelectionDialogState extends State<SessionSelectionDialog> {
     return StreamBuilder(
       stream: dao.watchAll(),
       builder: (context, snapshot) {
-        if (snapshot.error case final error?) {
-          FlutterError.reportError(
-            FlutterErrorDetails(
-              exception: error,
-              stack: snapshot.stackTrace,
-              library: "mochi cube timer",
-              context: ErrorDescription("watching the sessions"),
-            ),
-          );
-          return Center(child: Icon(FLucideIcons.triangleAlert, color: context.theme.colors.destructive));
-        }
+        final w = streamHandler(context, snapshot, description: "watching the sessions");
+        if (w != null) return w;
 
-        var sessions = snapshot.data;
-        if (sessions == null) return const FCircularProgress();
-
+        final sessions = snapshot.data!;
         return AdaptiveDialog(
           style: widget.style,
           animation: widget.animation,
