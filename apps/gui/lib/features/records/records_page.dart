@@ -45,12 +45,22 @@ class _RecordsPageState extends State<_RecordsPage> {
   RecordsDao get recordsDao => context.read<AppDatabase>().recordsDao;
 
   RecordQuery _query = const RecordQuery();
-  late Stream<List<RecordEntry>> _stream = recordsDao.watchSession(
-    widget.sessionId,
-    widget.puzzle,
-    showArchived: widget.showArchived,
-    query: _query,
-  );
+  late Stream<List<RecordEntry>> _stream;
+
+  void _watchSession() {
+    _stream = recordsDao.watchSession(
+      widget.sessionId,
+      widget.puzzle,
+      showArchived: widget.showArchived,
+      query: _query,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _watchSession();
+  }
 
   @override
   void didUpdateWidget(_RecordsPage oldWidget) {
@@ -58,12 +68,7 @@ class _RecordsPageState extends State<_RecordsPage> {
     if (oldWidget.sessionId != widget.sessionId ||
         oldWidget.puzzle != widget.puzzle ||
         oldWidget.showArchived != widget.showArchived) {
-      _stream = recordsDao.watchSession(
-        widget.sessionId,
-        widget.puzzle,
-        showArchived: widget.showArchived,
-        query: _query,
-      );
+      _watchSession();
     }
   }
 
@@ -85,12 +90,7 @@ class _RecordsPageState extends State<_RecordsPage> {
               onChanged: (value) {
                 setState(() {
                   _query = value;
-                  _stream = recordsDao.watchSession(
-                    widget.sessionId,
-                    widget.puzzle,
-                    showArchived: widget.showArchived,
-                    query: _query,
-                  );
+                  _watchSession();
                 });
               },
               onAddRecord: () async {

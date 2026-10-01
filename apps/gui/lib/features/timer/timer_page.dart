@@ -54,11 +54,10 @@ class TimerPage extends StatelessWidget {
 }
 
 class _TimerView extends StatefulWidget {
-  const _TimerView({required this.puzzle, required this.sessionId, required this.settings});
-
   final Puzzle puzzle;
   final String sessionId;
   final SettingsEntry settings;
+  const _TimerView({required this.puzzle, required this.sessionId, required this.settings});
 
   @override
   State<_TimerView> createState() => _TimerViewState();
@@ -67,15 +66,26 @@ class _TimerView extends StatefulWidget {
 class _TimerViewState extends State<_TimerView> {
   late ScrambleHistory _history;
 
+  late Stream<SessionSummary> _summary;
+  late Stream<List<double>> _times;
+
+  void _watchStats() {
+    final dao = context.read<AppDatabase>().recordsDao;
+    _summary = dao.watchSummary(widget.sessionId, widget.puzzle);
+    _times = dao.watchTimes(widget.sessionId, widget.puzzle, limit: 50);
+  }
+
   @override
   void initState() {
     super.initState();
     _history = ScrambleHistory(widget.puzzle);
+    _watchStats();
   }
 
   @override
   void didUpdateWidget(_TimerView oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     if (oldWidget.puzzle != widget.puzzle) {
       setState(() {
         // change scramble
@@ -84,6 +94,11 @@ class _TimerViewState extends State<_TimerView> {
         // reset bloc
         context.read<TimerBloc>().add(TimerReset());
       });
+    }
+
+    if (oldWidget.sessionId != widget.sessionId || oldWidget.puzzle != widget.puzzle) {
+      // update stats
+      _watchStats();
     }
   }
 
@@ -141,6 +156,13 @@ class _TimerViewState extends State<_TimerView> {
     },
   );
 
+  String _statsDisplay(num? value) {
+    if (value == null) return "--";
+    if (value == double.infinity) return "DNF";
+
+    return (value / 1000).toStringAsFixed(2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<TimerBloc, TimerState>(
@@ -194,17 +216,29 @@ class _TimerViewState extends State<_TimerView> {
             children: [
               // left stats
               Expanded(
-                child: Column(
-                  mainAxisSize: .min,
-                  crossAxisAlignment: .start,
-                  textDirection: .ltr,
-                  children: [
-                    // TODO: stats
-                    _statusLine("Deviation", "0.74"),
-                    _statusLine("Mean", "1.50"),
-                    _statusLine("Best", "0.27"),
-                    _statusLine("Count", "6"),
-                  ],
+                child: StreamBuilder(
+                  stream: _summary,
+                  builder: (context, snapshot) {
+                    final w = streamHandler(
+                      context,
+                      snapshot,
+                      description: "watching the summary of the session",
+                    );
+                    if (w != null) return w;
+
+                    final summary = snapshot.data!;
+                    return Column(
+                      mainAxisSize: .min,
+                      crossAxisAlignment: .start,
+                      textDirection: .ltr,
+                      children: [
+                        _statusLine("Deviation", _statsDisplay(summary.deviation)),
+                        _statusLine("Mean", _statsDisplay(summary.mean)),
+                        _statusLine("Best", _statsDisplay(summary.best)),
+                        _statusLine("Count", summary.count.toString()),
+                      ],
+                    );
+                  },
                 ),
               ),
 
@@ -219,17 +253,30 @@ class _TimerViewState extends State<_TimerView> {
 
               // right stats
               Expanded(
-                child: Column(
-                  mainAxisSize: .min,
-                  crossAxisAlignment: .end,
-                  textDirection: .ltr,
-                  children: [
-                    // TODO: stats
-                    _statusLine("Ao5", "1.43"),
-                    _statusLine("Ao12", "--"),
-                    _statusLine("Ao50", "--"),
-                    _statusLine("Ao100", "--"),
-                  ],
+                child: StreamBuilder(
+                  stream: _times,
+                  builder: (context, snapshot) {
+                    final w = streamHandler(
+                      context,
+                      snapshot,
+                      description: "watching the times of the session",
+                    );
+                    if (w != null) return w;
+
+                    final times = snapshot.data!;
+                    return Column(
+                      mainAxisSize: .min,
+                      crossAxisAlignment: .end,
+                      textDirection: .ltr,
+                      children: [
+                        _statusLine("Mo3", _statsDisplay(times.mo(3))),
+                        _statusLine("Ao5", _statsDisplay(times.ao(5))),
+                        _statusLine("Ao12", _statsDisplay(times.ao(12))),
+                        _statusLine("Ao50", _statsDisplay(times.ao(50))),
+                        // _statusLine("Ao100", _statsDisplay(times.ao(100))),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
