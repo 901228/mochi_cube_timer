@@ -494,6 +494,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   final String? locale;
 
   /// cube colors
+  ///
+  /// all colors are stored as int32 in ARGB format, aligned to flutter's Color
   final int cubeColorU;
   final int cubeColorR;
   final int cubeColorF;
@@ -1354,8 +1356,23 @@ class $AppStateTable extends AppState
     ),
     defaultValue: const Constant(kDefaultSessionId),
   );
+  static const VerificationMeta _showArchivedMeta = const VerificationMeta(
+    'showArchived',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, puzzle, session];
+  late final GeneratedColumn<bool> showArchived = GeneratedColumn<bool>(
+    'show_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, puzzle, session, showArchived];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1375,6 +1392,15 @@ class $AppStateTable extends AppState
       context.handle(
         _sessionMeta,
         session.isAcceptableOrUnknown(data['session']!, _sessionMeta),
+      );
+    }
+    if (data.containsKey('show_archived')) {
+      context.handle(
+        _showArchivedMeta,
+        showArchived.isAcceptableOrUnknown(
+          data['show_archived']!,
+          _showArchivedMeta,
+        ),
       );
     }
     return context;
@@ -1400,6 +1426,10 @@ class $AppStateTable extends AppState
         DriftSqlType.string,
         data['${effectivePrefix}session'],
       )!,
+      showArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_archived'],
+      )!,
     );
   }
 
@@ -1420,10 +1450,14 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
 
   /// current session, or [kDefaultSessionId] for the default session
   final String session;
+
+  /// show recent or archived records in records page
+  final bool showArchived;
   const AppStateEntry({
     required this.id,
     required this.puzzle,
     required this.session,
+    required this.showArchived,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1435,6 +1469,7 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       );
     }
     map['session'] = Variable<String>(session);
+    map['show_archived'] = Variable<bool>(showArchived);
     return map;
   }
 
@@ -1443,6 +1478,7 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       id: Value(id),
       puzzle: Value(puzzle),
       session: Value(session),
+      showArchived: Value(showArchived),
     );
   }
 
@@ -1455,6 +1491,7 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       id: serializer.fromJson<int>(json['id']),
       puzzle: serializer.fromJson<Puzzle>(json['puzzle']),
       session: serializer.fromJson<String>(json['session']),
+      showArchived: serializer.fromJson<bool>(json['showArchived']),
     );
   }
   @override
@@ -1464,20 +1501,29 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       'id': serializer.toJson<int>(id),
       'puzzle': serializer.toJson<Puzzle>(puzzle),
       'session': serializer.toJson<String>(session),
+      'showArchived': serializer.toJson<bool>(showArchived),
     };
   }
 
-  AppStateEntry copyWith({int? id, Puzzle? puzzle, String? session}) =>
-      AppStateEntry(
-        id: id ?? this.id,
-        puzzle: puzzle ?? this.puzzle,
-        session: session ?? this.session,
-      );
+  AppStateEntry copyWith({
+    int? id,
+    Puzzle? puzzle,
+    String? session,
+    bool? showArchived,
+  }) => AppStateEntry(
+    id: id ?? this.id,
+    puzzle: puzzle ?? this.puzzle,
+    session: session ?? this.session,
+    showArchived: showArchived ?? this.showArchived,
+  );
   AppStateEntry copyWithCompanion(AppStateCompanion data) {
     return AppStateEntry(
       id: data.id.present ? data.id.value : this.id,
       puzzle: data.puzzle.present ? data.puzzle.value : this.puzzle,
       session: data.session.present ? data.session.value : this.session,
+      showArchived: data.showArchived.present
+          ? data.showArchived.value
+          : this.showArchived,
     );
   }
 
@@ -1486,45 +1532,52 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
     return (StringBuffer('AppStateEntry(')
           ..write('id: $id, ')
           ..write('puzzle: $puzzle, ')
-          ..write('session: $session')
+          ..write('session: $session, ')
+          ..write('showArchived: $showArchived')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, puzzle, session);
+  int get hashCode => Object.hash(id, puzzle, session, showArchived);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AppStateEntry &&
           other.id == this.id &&
           other.puzzle == this.puzzle &&
-          other.session == this.session);
+          other.session == this.session &&
+          other.showArchived == this.showArchived);
 }
 
 class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
   final Value<int> id;
   final Value<Puzzle> puzzle;
   final Value<String> session;
+  final Value<bool> showArchived;
   const AppStateCompanion({
     this.id = const Value.absent(),
     this.puzzle = const Value.absent(),
     this.session = const Value.absent(),
+    this.showArchived = const Value.absent(),
   });
   AppStateCompanion.insert({
     this.id = const Value.absent(),
     this.puzzle = const Value.absent(),
     this.session = const Value.absent(),
+    this.showArchived = const Value.absent(),
   });
   static Insertable<AppStateEntry> custom({
     Expression<int>? id,
     Expression<String>? puzzle,
     Expression<String>? session,
+    Expression<bool>? showArchived,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (puzzle != null) 'puzzle': puzzle,
       if (session != null) 'session': session,
+      if (showArchived != null) 'show_archived': showArchived,
     });
   }
 
@@ -1532,11 +1585,13 @@ class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
     Value<int>? id,
     Value<Puzzle>? puzzle,
     Value<String>? session,
+    Value<bool>? showArchived,
   }) {
     return AppStateCompanion(
       id: id ?? this.id,
       puzzle: puzzle ?? this.puzzle,
       session: session ?? this.session,
+      showArchived: showArchived ?? this.showArchived,
     );
   }
 
@@ -1554,6 +1609,9 @@ class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
     if (session.present) {
       map['session'] = Variable<String>(session.value);
     }
+    if (showArchived.present) {
+      map['show_archived'] = Variable<bool>(showArchived.value);
+    }
     return map;
   }
 
@@ -1562,7 +1620,8 @@ class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
     return (StringBuffer('AppStateCompanion(')
           ..write('id: $id, ')
           ..write('puzzle: $puzzle, ')
-          ..write('session: $session')
+          ..write('session: $session, ')
+          ..write('showArchived: $showArchived')
           ..write(')'))
         .toString();
   }
@@ -3049,11 +3108,13 @@ typedef $$AppStateTableCreateCompanionBuilder = AppStateCompanion Function({
   Value<int> id,
   Value<Puzzle> puzzle,
   Value<String> session,
+  Value<bool> showArchived,
 });
 typedef $$AppStateTableUpdateCompanionBuilder = AppStateCompanion Function({
   Value<int> id,
   Value<Puzzle> puzzle,
   Value<String> session,
+  Value<bool> showArchived,
 });
 
 final class $$AppStateTableReferences
@@ -3098,6 +3159,11 @@ class $$AppStateTableFilterComposer
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
 
+  ColumnFilters<bool> get showArchived => $composableBuilder(
+    column: $table.showArchived,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$SessionsTableFilterComposer get session {
     final $$SessionsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -3141,6 +3207,11 @@ class $$AppStateTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get showArchived => $composableBuilder(
+    column: $table.showArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SessionsTableOrderingComposer get session {
     final $$SessionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -3179,6 +3250,11 @@ class $$AppStateTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<Puzzle, String> get puzzle =>
       $composableBuilder(column: $table.puzzle, builder: (column) => column);
+
+  GeneratedColumn<bool> get showArchived => $composableBuilder(
+    column: $table.showArchived,
+    builder: (column) => column,
+  );
 
   $$SessionsTableAnnotationComposer get session {
     final $$SessionsTableAnnotationComposer composer = $composerBuilder(
@@ -3230,20 +3306,29 @@ class $$AppStateTableTableManager
               $$AppStateTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$AppStateTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<Puzzle> puzzle = const Value.absent(),
-            Value<String> session = const Value.absent(),
-          }) => AppStateCompanion(id: id, puzzle: puzzle, session: session),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<Puzzle> puzzle = const Value.absent(),
+                Value<String> session = const Value.absent(),
+                Value<bool> showArchived = const Value.absent(),
+              }) => AppStateCompanion(
+                id: id,
+                puzzle: puzzle,
+                session: session,
+                showArchived: showArchived,
+              ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<Puzzle> puzzle = const Value.absent(),
                 Value<String> session = const Value.absent(),
+                Value<bool> showArchived = const Value.absent(),
               }) => AppStateCompanion.insert(
                 id: id,
                 puzzle: puzzle,
                 session: session,
+                showArchived: showArchived,
               ),
           withReferenceMapper: (p0) => p0
               .map(
