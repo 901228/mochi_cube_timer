@@ -1,9 +1,9 @@
 import "dart:async";
 
 import "package:cube_timer/cube_timer.dart";
-import "package:cupertino_ui/cupertino_ui.dart";
 import "package:flutter/foundation.dart" show kIsWeb;
 import "package:flutter/services.dart" show BrowserContextMenu, rootBundle;
+import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
 import "package:go_router/go_router.dart";

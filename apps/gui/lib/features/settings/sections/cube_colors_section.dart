@@ -1,7 +1,7 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:drift/drift.dart" show Value;
 import "package:flutter/widgets.dart";
-import "package:forui/forui.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 import "../../../shared/utils.dart";
 import "../settings_tile.dart";
@@ -16,7 +16,7 @@ class CubeColorsSettingsSections extends StatelessWidget {
     return Column(
       spacing: groupSpacing,
       children: [
-        FTileGroup(
+        MochiTileGroup(
           label: const Text("Cube"),
           children: [
             ColorTile(
@@ -58,7 +58,7 @@ class CubeColorsSettingsSections extends StatelessWidget {
           ],
         ),
 
-        FTileGroup(
+        MochiTileGroup(
           label: const Text("Pyraminx"),
           children: [
             ColorTile(
@@ -88,7 +88,7 @@ class CubeColorsSettingsSections extends StatelessWidget {
           ],
         ),
 
-        FTileGroup(
+        MochiTileGroup(
           label: const Text("Clock"),
           children: [
             ColorTile(

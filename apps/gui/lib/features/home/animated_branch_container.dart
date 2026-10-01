@@ -1,24 +1,14 @@
+import "dart:ui";
+
 import "package:flutter/widgets.dart";
 
-class _KeepAlive extends StatefulWidget {
-  const _KeepAlive({required this.child});
-  final Widget child;
-
-  @override
-  State<_KeepAlive> createState() => _KeepAliveState();
-}
-
-class _KeepAliveState extends State<_KeepAlive> with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context); // 這行不能漏
-    return widget.child;
-  }
-}
-
+/// Slides between branches while keeping every branch attached to the render
+/// tree.
+///
+/// A PageView would drop the pages it scrolls away into its keep-alive bucket,
+/// which detaches their render objects. forui's RenderBounce removes its
+/// animation listener on detach and never adds it back on attach, so every
+/// FTappable in a page that was once offscreen lost its bounce.
 class AnimatedBranchContainer extends StatefulWidget {
   const AnimatedBranchContainer({super.key, required this.currentIndex, required this.children});
 
@@ -29,41 +19,65 @@ class AnimatedBranchContainer extends StatefulWidget {
   State<AnimatedBranchContainer> createState() => _AnimatedBranchContainerState();
 }
 
-class _AnimatedBranchContainerState extends State<AnimatedBranchContainer> {
-  late final PageController _pageController;
+class _AnimatedBranchContainerState extends State<AnimatedBranchContainer>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 300),
+    value: 1,
+  );
 
-  @override
-  void initState() {
-    super.initState();
+  /// The page position the running slide started from, which is fractional
+  /// when a slide is interrupted by another branch change.
+  late double _from = widget.currentIndex.toDouble();
 
-    _pageController = PageController(initialPage: widget.currentIndex);
-  }
+  double get _position =>
+      lerpDouble(_from, widget.currentIndex.toDouble(), Curves.easeOutCubic.transform(_controller.value))!;
 
   @override
   void didUpdateWidget(covariant AnimatedBranchContainer oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.currentIndex != widget.currentIndex) {
-      _pageController.animateToPage(
-        widget.currentIndex,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
-      );
+      _from = lerpDouble(
+        _from,
+        oldWidget.currentIndex.toDouble(),
+        Curves.easeOutCubic.transform(_controller.value),
+      )!;
+      _controller.forward(from: 0);
     }
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      children: widget.children.map((c) => _KeepAlive(child: c)).toList(),
+    return ClipRect(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          final position = _position;
+
+          return Stack(
+            fit: .expand,
+            children: [
+              for (final (i, child) in widget.children.indexed)
+                Offstage(
+                  key: ValueKey(i),
+                  offstage: (i - position).abs() >= 1,
+                  child: TickerMode(
+                    enabled: (i - position).abs() < 1,
+                    child: FractionalTranslation(translation: Offset(i - position, 0), child: child),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

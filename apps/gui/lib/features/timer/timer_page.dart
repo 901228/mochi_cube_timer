@@ -1,11 +1,11 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:forui/forui.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
-import "scramble_dialog.dart";
+import "../../theme.dart";
 import "timer_body.dart";
 
 class TimerPage extends StatelessWidget {
@@ -33,7 +33,7 @@ class TimerPage extends StatelessWidget {
           if (w != null) return w;
 
           final settings = snapshot.data!;
-          return StreamBuilder<({Puzzle puzzle, SessionEntry session})>(
+          return StreamBuilder(
             stream: db.appStateDao.watch(),
             builder: (context, snapshot) {
               final w = streamHandler(
@@ -77,33 +77,23 @@ class _TimerViewState extends State<_TimerView> {
   void didUpdateWidget(_TimerView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.puzzle != widget.puzzle) {
-      setState(() => _history = ScrambleHistory(widget.puzzle));
+      setState(() {
+        // change scramble
+        _history = ScrambleHistory(widget.puzzle);
+
+        // reset bloc
+        context.read<TimerBloc>().add(TimerReset());
+      });
     }
   }
 
   /// Both the scramble text and the thumbnail open the same viewer, so there is
   /// one way a puzzle gets enlarged rather than two that look alike.
   void _showScramble(Scramble scramble) =>
-      showScrambleDialog(context, puzzle: widget.puzzle, scramble: scramble, settings: widget.settings);
+      showScrambleModal(context, puzzle: widget.puzzle, scramble: scramble, settings: widget.settings);
 
   void _previous() => setState(_history.previous);
   void _next() => setState(_history.next);
-
-  FHeaderActionStyle get action => context.theme.headerStyles.nested.actionStyle;
-  double get spacing => context.theme.headerStyles.nested.actionSpacing;
-  Widget _actionButton(IconData icon, VoidCallback? onPress) => FTappable(
-    style: action.tappableStyle,
-    onPress: onPress,
-    child: Padding(
-      padding: action.padding,
-      child: IconTheme(
-        data: onPress == null
-            ? (action.iconStyle.variants[FTappableVariant.disabled] ?? action.iconStyle.base)
-            : action.iconStyle.base,
-        child: Icon(icon),
-      ),
-    ),
-  );
 
   Widget _statusLine(String label, String value) => Row(
     mainAxisSize: .min,
@@ -126,6 +116,7 @@ class _TimerViewState extends State<_TimerView> {
 
     bloc.add(TimerRecorded(sessionId: widget.sessionId, puzzle: widget.puzzle, notation: scramble.notation));
 
+    _next();
     // TODO: break record animation (or notification)
   }
 
@@ -143,7 +134,7 @@ class _TimerViewState extends State<_TimerView> {
 
       final scramble = snapshot.data;
       if (scramble == null) {
-        return const FCircularProgress();
+        return const MochiCircularProgress();
       }
 
       return builder(scramble);
@@ -155,42 +146,45 @@ class _TimerViewState extends State<_TimerView> {
     return BlocListener<TimerBloc, TimerState>(
       listenWhen: (previous, current) => previous is! TimerRunComplete && current is TimerRunComplete,
       listener: (context, state) => _record(state),
-      child: FScaffold(
-        childPad: false,
-        header: Padding(
-          padding: context.theme.style.pagePadding,
-          child: Column(
-            mainAxisSize: .min,
-            children: [
-              _withScramble(
-                (scramble) => FTappable(
-                  onPress: () => _showScramble(scramble),
-                  // The size lives on the DefaultTextStyle rather than on the
-                  // moves, so a hero's flight can read it off this context and
-                  // lerp towards the one the dialog uses. The weight is left
-                  // alone: ScrambleTokens sets its own, the same at both ends.
-                  child: DefaultTextStyle.merge(
-                    style: context.theme.typography.display.lg,
-                    child: ScrambleTokens(
-                      puzzle: widget.puzzle,
-                      steps: widget.puzzle.scrambler.stepsOf(scramble),
-                    ),
+      child: MochiScaffold(
+        header: Column(
+          mainAxisSize: .min,
+          children: [
+            _withScramble(
+              (scramble) => MochiTappable(
+                onPress: () => _showScramble(scramble),
+                // The size lives on the DefaultTextStyle rather than on the
+                // moves, so a hero's flight can read it off this context and
+                // lerp towards the one the dialog uses. The weight is left
+                // alone: ScrambleTokens sets its own, the same at both ends.
+                builder: (context, value, child) => DefaultTextStyle.merge(
+                  style: context.theme.timer.lg,
+                  child: ScrambleTokens(
+                    puzzle: widget.puzzle,
+                    steps: widget.puzzle.scrambler.stepsOf(scramble),
                   ),
                 ),
               ),
-              Row(
-                mainAxisSize: .max,
-                mainAxisAlignment: .end,
-                children: [
-                  _actionButton(FLucideIcons.pencil, () {
+            ),
+            Align(
+              alignment: .centerEnd,
+              child: MochiActionBar([
+                MochiAction(
+                  icon: TablerIcons.pencil,
+                  label: "Edit scramble",
+                  onPress: () {
                     // TODO: manually input the scramble
-                  }),
-                  _actionButton(FLucideIcons.chevronLeft, _history.hasPrevious ? _previous : null),
-                  _actionButton(FLucideIcons.chevronRight, _next),
-                ],
-              ),
-            ],
-          ),
+                  },
+                ),
+                MochiAction(
+                  icon: TablerIcons.chevronLeft,
+                  label: "Previous scramble",
+                  onPress: _history.hasPrevious ? _previous : null,
+                ),
+                MochiAction(icon: TablerIcons.chevronRight, label: "Next scramble", onPress: _next),
+              ], maxVisible: 3),
+            ),
+          ],
         ),
         footer: IntrinsicHeight(
           child: Row(
@@ -216,13 +210,10 @@ class _TimerViewState extends State<_TimerView> {
 
               // cube 2d view
               _withScramble(
-                (scramble) => FTappable(
+                (scramble) => MochiTappable(
                   onPress: () => _showScramble(scramble),
-                  child: Cube2DView(
-                    puzzle: _history.puzzle,
-                    state: scramble.state,
-                    settings: widget.settings,
-                  ),
+                  builder: (context, value, child) =>
+                      Cube2DView(puzzle: _history.puzzle, state: scramble.state, settings: widget.settings),
                 ),
               ),
 
@@ -245,7 +236,6 @@ class _TimerViewState extends State<_TimerView> {
           ),
         ),
 
-        resizeToAvoidBottomInset: true,
         child: Center(child: TimerBody()),
       ),
     );

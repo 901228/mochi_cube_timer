@@ -1,33 +1,26 @@
 import "package:flutter/widgets.dart";
-import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 class HomeSidebar extends StatelessWidget {
   const HomeSidebar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FSidebar(
-      header: Padding(
-        padding: const .symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: .start,
-          children: [
-            Padding(padding: const .fromLTRB(16, 8, 16, 16), child: const Text("Mochi Cube Timer")),
-            const FDivider(style: .delta(padding: .value(.zero))),
-          ],
-        ),
-      ),
+    return MochiSidebar(
+      header: MochiSidebarHeading(const Text("Mochi Cube Timer")),
       children: [
-        // FSidebarGroup(
+        // MochiSidebarGroup(
         //   label: const Text("Other"),
-        //   children: [FSidebarItem(label: const Text("Hello"), onPress: () {})],
+        //   children: [
+        //     MochiSidebarItem(icon: Icon(TablerIcons.accessPoint), label: const Text("Hello"), onPress: () {}),
+        //   ],
         // ),
-        FSidebarGroup(
+        MochiSidebarGroup(
           children: [
-            FSidebarItem(
+            MochiSidebarItem(
               label: const Text("Settings"),
-              icon: Icon(FLucideIcons.settings),
+              icon: Icon(TablerIcons.settings),
               onPress: () {
                 context.pop();
                 context.pushNamed("settings");

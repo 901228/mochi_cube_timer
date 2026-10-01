@@ -1,6 +1,6 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
-import "package:forui/forui.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 import "cube_2d_view.dart";
 
@@ -47,10 +47,13 @@ class ScrambleTokens extends StatelessWidget {
     this.selected,
     this.onTap,
     this.onHover,
+    this.alignment = .center,
   });
 
   final Puzzle puzzle;
   final List<String> steps;
+
+  final WrapAlignment alignment;
 
   /// How many moves count as done, or null for all of them.
   final int? applied;
@@ -135,7 +138,7 @@ class ScrambleTokens extends StatelessWidget {
         : EdgeInsets.zero;
 
     return Wrap(
-      alignment: .center,
+      alignment: alignment,
       spacing: interactive ? 0 : spacing,
       runSpacing: interactive ? 0 : runSpacing,
       children: [
@@ -156,11 +159,6 @@ class ScrambleTokens extends StatelessWidget {
                     text: steps[i],
                     style: TextStyle(
                       color: i < done ? theme.colors.foreground : theme.colors.mutedForeground,
-                      // Stated at both ends rather than inherited, so a flight
-                      // never has to change it. Comfortaa is a static family, so
-                      // TextStyle.lerp can only step between the weights that
-                      // exist; with the two sizes only 10% apart there is no
-                      // movement to hide those steps behind.
                       fontWeight: .w600,
                     ),
                   ),

@@ -1,5 +1,5 @@
-import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 import "../features/home/animated_branch_container.dart";
 import "../features/home/home_shell.dart";
@@ -26,13 +26,12 @@ final router = GoRouter(
         ),
       ],
     ),
-
     StatefulShellRoute(
       builder: (context, state, navigationShell) => HomeShell(
         pages: [
-          (name: "Timer", icon: FLucideIcons.timer, path: "/timer"),
-          (name: "Records", icon: FLucideIcons.library, path: "/records"),
-          (name: "Stats", icon: FLucideIcons.chartLine, path: "/stats"),
+          (name: "Timer", icon: TablerIcons.clockHour4, path: "/timer"),
+          (name: "Records", icon: TablerIcons.library, path: "/records"),
+          (name: "Stats", icon: TablerIcons.chartLine, path: "/stats"),
         ],
         navigationShell: navigationShell,
       ),

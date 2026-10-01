@@ -3,13 +3,14 @@ import "dart:math" show cos, sin, pi;
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/foundation.dart" show listEquals;
 import "package:flutter/widgets.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 import "../utils.dart";
 
 class Cube2DView extends StatelessWidget {
   static const Curve heroFlightCurve = Curves.fastOutSlowIn;
 
-  const Cube2DView({super.key, required this.puzzle, required this.state, required this.settings});
+  const Cube2DView({super.key, required this.puzzle, required this.state, this.settings});
 
   final Puzzle puzzle;
 
@@ -17,9 +18,9 @@ class Cube2DView extends StatelessWidget {
   /// state part way through a scramble.
   final List<int> state;
 
-  final SettingsEntry settings;
+  final SettingsEntry? settings;
 
-  List<Color> _colorsFor(Puzzle puzzle) {
+  List<Color> _colorsFor(Puzzle puzzle, SettingsEntry settings) {
     return switch (puzzle) {
       .cube2 || .cube3 || .cube4 || .cube5 || .cube6 || .cube7 => [
         settings.cubeColorU.toColor(),
@@ -41,8 +42,7 @@ class Cube2DView extends StatelessWidget {
     };
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _cube(SettingsEntry settings) {
     final layout = puzzle.scrambler.layout;
 
     return Hero(
@@ -56,7 +56,7 @@ class Cube2DView extends StatelessWidget {
             final PuzzleLayout puzzleLayout => PuzzlePainter(
               layout: puzzleLayout,
               state: state,
-              colors: _colorsFor(puzzle),
+              colors: _colorsFor(puzzle, settings),
             ),
             final ClockLayout clockLayout => ClockPainter(
               layout: clockLayout,
@@ -71,6 +71,25 @@ class Cube2DView extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return settings != null
+        ? _cube(settings!)
+        : StreamBuilder(
+            stream: context.read<AppDatabase>().settingsDao.watch(),
+            builder: (context, snapshot) {
+              final w = streamHandler(
+                context,
+                snapshot,
+                description: "watching the settings for the cube view",
+              );
+              if (w != null) return w;
+
+              return _cube(snapshot.data!);
+            },
+          );
+  }
 }
 
 class PuzzlePainter extends CustomPainter {
@@ -79,7 +98,7 @@ class PuzzlePainter extends CustomPainter {
     required this.state,
     required this.colors,
     this.stroke = const Color(0xFF000000),
-    this.inset = 0.1,
+    this.inset = 0,
   });
 
   final PuzzleLayout layout;

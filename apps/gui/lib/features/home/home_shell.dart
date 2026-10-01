@@ -1,8 +1,9 @@
+import "package:collection/collection.dart";
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/utils.dart";
 import "home_sidebar.dart";
@@ -16,94 +17,108 @@ class HomeShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.theme;
     final dao = context.read<AppDatabase>().appStateDao;
 
-    return FScaffold(
-      header: Padding(
-        padding: theme.headerStyles.nested.padding,
-        child: FHeader.nested(
-          style: .delta(
-            decoration: .shapeDelta(
-              color: theme.colors.background,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(color: theme.colors.border, width: 3),
-                borderRadius: theme.style.borderRadius.md,
-              ),
-            ),
-          ),
-          titleAlignment: .center,
-          title: FTappable(
-            onPress: () => showFDialog(
-              context: context,
-              builder: (_, style, animation) => PuzzleSelectionDialog(style: style, animation: animation),
-            ),
-            child: StreamBuilder<({Puzzle puzzle, SessionEntry session})>(
-              stream: dao.watch(),
-              builder: (context, snapshot) {
-                final w = streamHandler(
-                  context,
-                  snapshot,
-                  description: "watching the app state for the header title",
-                );
-                if (w != null) return w;
+    return MochiScaffold(
+      header: StreamBuilder(
+        stream: dao.watch(),
+        builder: (context, snapshot) {
+          final w = streamHandler(context, snapshot, description: "watching the app state for the header");
+          if (w != null) return w;
 
-                final data = snapshot.data!;
-                return Column(
+          final data = snapshot.data!;
+          return MochiHeader(
+            alignment: .center,
+            variant: .bordered,
+            title: MochiButton(
+              appearance: .soft,
+              scaleOnPress: false,
+              onPress: () => showMochiModal(
+                context,
+                title: const Text("Select a puzzle"),
+                body: PuzzleSelectionDialog(),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: .center,
                   children: [
-                    Text(data.puzzle.displayName, style: theme.typography.display.md),
-                    Text(
-                      data.session.name,
-                      style: theme.typography.display.sm.copyWith(color: theme.colors.mutedForeground),
+                    DefaultTextStyle.merge(
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      style: context.theme.typography.title.md,
+                      child: Text(data.puzzle.displayName),
+                    ),
+                    DefaultTextStyle.merge(
+                      textHeightBehavior: const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,
+                        applyHeightToLastDescent: false,
+                      ),
+                      style: context.theme.typography.title.sm.copyWith(
+                        color: context.colors.mutedForeground,
+                      ),
+                      child: Text(data.session.name),
                     ),
                   ],
-                );
-              },
+                ),
+              ),
             ),
-          ),
-          prefixes: [
-            FHeaderAction(
-              icon: const Icon(FLucideIcons.menu),
-              onPress: () => showFSheet(context: context, side: .ltr, builder: (context) => HomeSidebar()),
-            ),
-          ],
-          suffixes: [
-            StreamBuilder<({Puzzle puzzle, SessionEntry session})>(
-              stream: dao.watch(),
-              builder: (context, snapshot) {
-                final w = streamHandler(
-                  context,
-                  snapshot,
-                  description: "watching the app state for the session picker",
-                );
-                if (w != null) return w;
-
-                final data = snapshot.data!;
-                return FHeaderAction(
-                  icon: const Icon(FLucideIcons.shapes),
-                  onPress: () => showFDialog(
-                    context: context,
-                    builder: (_, style, animation) => SessionSelectionDialog(
-                      style: style,
-                      animation: animation,
-                      currentSessionId: data.session.id,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+            prefixes: [
+              MochiAction(
+                icon: TablerIcons.menu2,
+                label: "Menu",
+                onPress: () {
+                  showMochiSheet(context, side: .left, builder: (context) => HomeSidebar());
+                },
+              ),
+            ],
+            suffixes: [
+              if (pages[navigationShell.currentIndex].name.toLowerCase() != "timer")
+                MochiAction(
+                  icon: data.showArchived ? TablerIcons.archiveFilled : TablerIcons.archive,
+                  selected: data.showArchived,
+                  label: "Show archived records",
+                  onPress: () {
+                    dao.setShowArchived(!data.showArchived);
+                  },
+                ),
+              MochiAction(
+                icon: TablerIcons.stack2,
+                label: "Sessions",
+                onPress: () async {
+                  try {
+                    final data = await dao.current;
+                    if (context.mounted) {
+                      showSessionSelectionDialog(context, sessionId: data.session.id);
+                    }
+                  } catch (error, stack) {
+                    FlutterError.reportError(
+                      FlutterErrorDetails(
+                        exception: error,
+                        stack: stack,
+                        library: "mochi cube timer",
+                        context: ErrorDescription("reading the app state for the session picker"),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          );
+        },
       ),
-      footer: FBottomNavigationBar(
-        index: navigationShell.currentIndex,
-        onChange: (value) {
+      footer: MochiBottomNav<int>(
+        value: navigationShell.currentIndex,
+        onChanged: (value) {
           navigationShell.goBranch(value);
         },
-        children: pages
-            .map((data) => FBottomNavigationBarItem(label: Text(data.name), icon: Icon(data.icon)))
+        items: pages
+            .mapIndexed(
+              (i, data) => MochiBottomNavItem<int>(value: i, label: Text(data.name), icon: Icon(data.icon)),
+            )
             .toList(),
       ),
       child: navigationShell,

@@ -2,12 +2,10 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/flutter_svg.dart";
-import "package:forui/forui.dart";
+import "package:mochi_ui/mochi_ui/widgets.dart";
 
 class PuzzleSelectionDialog extends StatelessWidget {
-  final FDialogStyleDelta style;
-  final Animation<double> animation;
-  const PuzzleSelectionDialog({super.key, required this.style, required this.animation});
+  const PuzzleSelectionDialog({super.key});
 
   void _select(BuildContext context, Puzzle puzzle) {
     context.read<AppDatabase>().appStateDao.setPuzzle(puzzle);
@@ -16,71 +14,34 @@ class PuzzleSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FDialog(
-      style: style,
-      animation: animation,
-      builder: (context, style) => Padding(
-        padding: const .all(20),
-        child: Column(
-          mainAxisSize: .min,
-          spacing: 16,
-          children: [
-            Padding(
-              padding: const .all(8),
-              child: DefaultTextStyle.merge(
-                style: style.titleTextStyle,
-                child: const Text("Select a puzzle"),
-              ),
-            ),
-            // Flexible plus shrinkWrap so the dialog hugs its content, and only
-            // scrolls on a screen too short to fit every puzzle. Expanded would
-            // stretch it to the full screen height instead.
-            Flexible(
-              child: GridView.builder(
-                shrinkWrap: true,
-                padding: .zero,
-                itemCount: Puzzle.values.length,
-                // mainAxisExtent sets the cell height outright. Without it the
-                // delegate falls back to childAspectRatio, which derives the
-                // height from the width and makes every other value guesswork.
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisExtent: 92,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 16,
-                ),
-                // HACK: currently the scrambler of `sq1`, `skewb`, `minx`, `fto`, `777`, `666`, `555`, `444` is not completed, so we return null for them.
-                itemBuilder: (context, index) => _PuzzleTile(
-                  puzzle: Puzzle.values[index],
-                  style: style,
-                  onPress:
-                      {
-                        "sq1",
-                        "skewb",
-                        "minx",
-                        "fto",
-                        "777",
-                        "666",
-                        "555",
-                        "444",
-                      }.contains(Puzzle.values[index].id)
-                      ? null
-                      : () => _select(context, Puzzle.values[index]),
-                ),
-              ),
-            ),
-          ],
-        ),
+    return GridView.builder(
+      shrinkWrap: true,
+      padding: .zero,
+      itemCount: Puzzle.values.length,
+      // mainAxisExtent sets the cell height outright. Without it the
+      // delegate falls back to childAspectRatio, which derives the
+      // height from the width and makes every other value guesswork.
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisExtent: 92,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 16,
+      ),
+      // HACK: currently the scrambler of `sq1`, `skewb`, `minx`, `fto`, `777`, `666`, `555`, `444` is not completed, so we return null for them.
+      itemBuilder: (context, index) => _PuzzleTile(
+        puzzle: Puzzle.values[index],
+        onPress: {"sq1", "skewb", "minx", "fto", "777", "666", "555", "444"}.contains(Puzzle.values[index].id)
+            ? null
+            : () => _select(context, Puzzle.values[index]),
       ),
     );
   }
 }
 
 class _PuzzleTile extends StatelessWidget {
-  const _PuzzleTile({required this.puzzle, required this.style, this.onPress});
+  const _PuzzleTile({required this.puzzle, this.onPress});
 
   final Puzzle puzzle;
-  final FDialogStyle style;
   final VoidCallback? onPress;
 
   // TODO: add all puzzle scramble and remove this
@@ -99,13 +60,7 @@ class _PuzzleTile extends StatelessWidget {
       spacing: 4,
       children: [
         SvgPicture.asset("assets/cube_icons/${puzzle.id}.svg", width: 48, height: 48),
-        Text(
-          puzzle.displayName,
-          textAlign: .center,
-          maxLines: 2,
-          overflow: .ellipsis,
-          style: style.bodyTextStyle,
-        ),
+        Text(puzzle.displayName, textAlign: .center, maxLines: 2, overflow: .ellipsis),
       ],
     );
 
@@ -114,7 +69,7 @@ class _PuzzleTile extends StatelessWidget {
       content = ColorFiltered(colorFilter: _disabledFilter, child: content);
     }
 
-    return FTappable(onPress: onPress, semanticsLabel: puzzle.displayName, child: content);
+    return MochiTappable(onPress: onPress, semanticLabel: puzzle.displayName, builder: (_, _, _) => content);
   }
 }
 

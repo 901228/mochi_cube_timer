@@ -2,17 +2,17 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter/services.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
+import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
-import "../../shared/widgets.dart";
 import "../../theme.dart";
 import "timer_text.dart";
 
 // TODO: push a new page when record started
 
-class TimerBody extends StatelessWidget {
+class TimerBody extends StatefulWidget {
   final Color? color;
   final Color pressedColor;
   final Color holdingColor;
@@ -20,91 +20,129 @@ class TimerBody extends StatelessWidget {
   const TimerBody({
     super.key,
     this.color,
+    // TODO: put in settings
     this.pressedColor = const Color.fromARGB(255, 255, 121, 121),
     this.holdingColor = const Color.fromARGB(255, 255, 255, 121),
     this.acceptColor = const Color.fromARGB(255, 32, 226, 100),
   });
 
   @override
+  State<TimerBody> createState() => _TimerBodyState();
+}
+
+class _TimerBodyState extends State<TimerBody> {
+  /// Whether the space press currently held down was sent to the bloc, so its
+  /// release is delivered even if the page stopped being active in between.
+  bool _spaceHeld = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen app-wide instead of through a Focus: clicking any button moves
+    // focus away and never brings it back, which left the keys dead.
+    HardwareKeyboard.instance.addHandler(_handleKey);
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleKey);
+    super.dispose();
+  }
+
+  /// The timer takes keys only while its branch is shown and no dialog, sheet
+  /// or page sits on top of it, in the branch navigator or the root one.
+  bool get _active {
+    final shell = StatefulNavigationShell.maybeOf(context);
+    if (shell == null) return false;
+
+    final branch = shell.widget.route.branches[shell.currentIndex];
+    return branch.navigatorKey.currentState == Navigator.of(context) &&
+        (ModalRoute.of(context)?.isCurrent ?? false) &&
+        (ModalRoute.of(shell.context)?.isCurrent ?? false);
+  }
+
+  bool _handleKey(KeyEvent event) {
+    if (!mounted) return false;
+    final bloc = context.read<TimerBloc>();
+
+    if (event.logicalKey == LogicalKeyboardKey.space && event is KeyUpEvent && _spaceHeld) {
+      _spaceHeld = false;
+      bloc.add(TimerReleased());
+      return true;
+    }
+
+    if (!_active) return false;
+
+    switch (event.logicalKey) {
+      case LogicalKeyboardKey.space:
+        // Also swallows repeats, so a focused button never sees the space.
+        if (event is KeyDownEvent) {
+          _spaceHeld = true;
+          bloc.add(TimerPressed());
+        }
+        return true;
+      case LogicalKeyboardKey.escape:
+        if (event is KeyDownEvent) bloc.add(TimerReset());
+        return true;
+    }
+
+    return false;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final TimerBody(:color, :pressedColor, :holdingColor, :acceptColor) = widget;
+
     return BlocBuilder<TimerBloc, TimerState>(
       buildWhen: (prev, state) => prev.runtimeType != state.runtimeType || prev.hold != state.hold,
       builder: (context, state) {
         return DefaultTextStyle(
-          style: context.theme.typography.timer.xl8.copyWith(
+          style: context.theme.timer.xl8.copyWith(
             color: switch (state.hold) {
               .armed => acceptColor,
               .waiting => state is TimerRunInInspection ? holdingColor : pressedColor,
               .stopping => pressedColor, // complete and pressed
-              .none => state is TimerRunInInspection ? pressedColor : color,
+              .none => state is TimerRunInInspection ? pressedColor : (color ?? context.colors.foreground),
             },
           ),
-          child: Focus(
-            autofocus: true,
-            onFocusChange: (focused) {
-              if (!focused) context.read<TimerBloc>().add(TimerPressCanceled());
-            },
-            onKeyEvent: (node, event) {
-              // ignore repeat event
-              if (event is KeyRepeatEvent) {
-                return .handled;
-              }
-
-              switch (event.logicalKey) {
-                case .space:
-                  switch (event) {
-                    case KeyDownEvent():
-                      context.read<TimerBloc>().add(TimerPressed());
-                    case KeyUpEvent():
-                      context.read<TimerBloc>().add(TimerReleased());
-                  }
-                  return .handled;
-                case .escape:
-                  switch (event) {
-                    case KeyDownEvent():
+          textHeightBehavior: const TextHeightBehavior(
+            applyHeightToFirstAscent: false,
+            applyHeightToLastDescent: false,
+          ),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Listener(
+                  behavior: .opaque,
+                  onPointerDown: (_) {
+                    context.read<TimerBloc>().add(TimerPressed());
+                  },
+                  onPointerUp: (_) {
+                    context.read<TimerBloc>().add(TimerReleased());
+                  },
+                  onPointerCancel: (_) {
+                    context.read<TimerBloc>().add(TimerPressCanceled());
+                  },
+                  child: const SizedBox.expand(),
+                ),
+              ),
+              state is TimerRunInInspection
+                  ? const InspectionText()
+                  : (state is TimerInitial || state.hold == .armed
+                        ? const IgnorePointer(child: Center(child: Text("0.00")))
+                        : const RunTimeText()),
+              if (state is TimerRunInInspection || state is TimerRunInProgress)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: MochiButton.icon(
+                    icon: const Icon(TablerIcons.circleX),
+                    onPress: () {
                       context.read<TimerBloc>().add(TimerReset());
-                  }
-                  return .handled;
-              }
-
-              return .ignored;
-            },
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: FTappable(
-                    style: .delta(motion: FTappableMotion.none),
-                    behavior: .opaque,
-                    onPressDown: (_) {
-                      context.read<TimerBloc>().add(TimerPressed());
                     },
-                    onPressUp: (_) {
-                      context.read<TimerBloc>().add(TimerReleased());
-                    },
-                    onPressCancel: () {
-                      context.read<TimerBloc>().add(TimerPressCanceled());
-                    },
-                    child: const SizedBox.expand(),
                   ),
                 ),
-                state is TimerRunInInspection
-                    ? const InspectionText()
-                    : (state is TimerInitial || state.hold == .armed
-                          ? const IgnorePointer(child: Center(child: Text("0.00")))
-                          : const RunTimeText()),
-                if (state is TimerRunInInspection || state is TimerRunInProgress)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: FButton.icon(
-                      onPress: () {
-                        context.read<TimerBloc>().add(TimerReset());
-                      },
-                      child: const Icon(FLucideIcons.xCircle),
-                    ),
-                  ),
-              ],
-            ),
+            ],
           ),
         );
       },
@@ -128,9 +166,9 @@ class InspectionText extends StatelessWidget {
     final (firstAlertTime, secondAlertTime) = TimerConfig.alertTime(inspectionDuration);
 
     final colors = context.theme.colors;
-    final hintTextStyle = context.theme.typography.timer.sm;
-    final hintTextColor = colors.disable(hintTextStyle.color ?? colors.foreground);
-    final alertTextStyle = context.theme.typography.timer.xl4.copyWith(color: hintTextColor);
+    final hintTextStyle = context.theme.timer.sm;
+    final hintTextColor = colors.mutedForeground;
+    final alertTextStyle = context.theme.timer.xl4.copyWith(color: hintTextColor);
 
     return TimerText(
       time: Text(displayText),
@@ -147,32 +185,13 @@ class InspectionText extends StatelessWidget {
 class RunTimeText extends StatelessWidget {
   const RunTimeText({super.key});
 
-  Future<String?> _showCommentDialog(BuildContext context, String initComment) {
-    String comment = initComment;
-
-    return showFDialog<String?>(
-      context: context,
-      builder: (context, style, animation) => AdaptiveDialog(
-        style: style,
-        animation: animation,
-        title: Text(initComment.isEmpty ? "Add comment" : "Edit comment"),
-        body: FTextField(
-          control: .managed(
-            initial: TextEditingValue(text: initComment),
-            onChange: (value) => comment = value.text,
-          ),
-          hint: "Comment",
-          autofocus: true,
-          textInputAction: .done,
-          onSubmit: context.pop,
-        ),
-        actions: [
-          FButton(variant: .outline, onPress: () => context.pop(null), child: const Text("Cancel")),
-          FButton(variant: .primary, onPress: () => context.pop(comment), child: const Text("Confirm")),
-        ],
-      ),
-    );
-  }
+  Future<String?> _showCommentDialog(BuildContext context, String initComment) => showMochiPrompt(
+    context,
+    title: initComment.isEmpty ? "Add comment" : "Edit comment",
+    multiline: true,
+    hint: "Comment",
+    initialValue: initComment,
+  );
 
   Widget _actions(BuildContext context, Penalty penalty) {
     final bloc = context.read<TimerBloc>();
@@ -187,61 +206,45 @@ class RunTimeText extends StatelessWidget {
       mainAxisSize: .min,
       spacing: 8,
       children: [
-        FTooltip(
-          tipBuilder: (context, controller) => Text("Delete"),
-          child: FButton.icon(
-            onPress: () async {
-              final answer = await showConfirmDialog(
-                context,
-                title: "Delete record?",
-                message: "The current solve will be permanently deleted.",
-                confirmLabel: "Delete",
-                destructive: true,
-              );
+        MochiButton.icon(
+          onPress: () async {
+            final answer = await showMochiConfirm(
+              context,
+              title: "Delete record?",
+              message: "The current solve will be permanently deleted.",
+              confirmLabel: "Delete",
+              destructive: true,
+            );
 
-              if (answer) bloc.add(TimerDeleteRecord());
-            },
-            child: Icon(FLucideIcons.x),
-          ),
+            if (answer) bloc.add(TimerDeleteRecord());
+          },
+          tooltip: "Delete",
+          icon: const Icon(TablerIcons.x),
         ),
-        FTooltip(
-          tipBuilder: (context, controller) => Text("DNF"),
-          child: FButton.icon(
-            selected: penalty == .dnf,
-            onPress: () => bloc.add(TimerChangePenalty(penalty == .dnf ? .none : .dnf)),
-            child: Icon(FLucideIcons.ban),
-          ),
+        MochiButton.icon(
+          selected: penalty == .dnf,
+          onPress: () => bloc.add(TimerChangePenalty(penalty == .dnf ? .none : .dnf)),
+          tooltip: Penalty.dnf.displayName,
+          icon: Icon(Penalty.dnf.icon),
         ),
-        FTooltip(
-          tipBuilder: (context, controller) => Text("+2"),
-          child: FButton.icon(
-            selected: penalty == .plus2,
-            onPress: () => bloc.add(TimerChangePenalty(penalty == .plus2 ? .none : .plus2)),
-            child: Icon(FLucideIcons.clockPlus),
-          ),
+        MochiButton.icon(
+          selected: penalty == .plus2,
+          onPress: () => bloc.add(TimerChangePenalty(penalty == .plus2 ? .none : .plus2)),
+          tooltip: Penalty.plus2.displayName,
+          icon: Icon(Penalty.plus2.icon),
         ),
-        FTooltip(
-          tipBuilder: (context, controller) => Text("Comment"),
-          child: FButton.icon(
-            onPress: () async {
-              final newComment = await _showCommentDialog(context, comment);
-              if (newComment == null) return;
+        MochiButton.icon(
+          onPress: () async {
+            final newComment = await _showCommentDialog(context, comment);
+            if (newComment == null) return;
 
-              bloc.add(TimerChangeComment(newComment));
-            },
-            child: Icon(FLucideIcons.messageSquareMore),
-          ),
+            bloc.add(TimerChangeComment(newComment));
+          },
+          tooltip: "Comment",
+          icon: const Icon(TablerIcons.message),
         ),
       ],
     );
-  }
-
-  Widget plus2Text(BuildContext context) {
-    final colors = context.theme.colors;
-    final textStyle = context.theme.typography.timer.xl;
-    final textColor = colors.disable(textStyle.color ?? colors.foreground);
-
-    return Text("+2", style: textStyle.copyWith(color: textColor));
   }
 
   @override
@@ -252,6 +255,8 @@ class RunTimeText extends StatelessWidget {
       (TimerBloc bloc) => bloc.state is TimerRunComplete && bloc.state.hold == .none,
     );
 
+    final timeText = Text(duration.timerDisplayString(penalty));
+
     return TimerText(
       time: penalty == .plus2
           ? Row(
@@ -259,9 +264,16 @@ class RunTimeText extends StatelessWidget {
               crossAxisAlignment: .baseline,
               textBaseline: .ideographic,
               spacing: 16,
-              children: [Text((duration + Duration(seconds: 2)).timerString), plus2Text(context)],
+              children: [
+                timeText,
+                Icon(
+                  Penalty.plus2.icon,
+                  color: context.colors.mutedForeground,
+                  size: context.theme.timer.xl4.fontSize,
+                ),
+              ],
             )
-          : Text(penalty == .dnf ? "DNF" : duration.timerString),
+          : timeText,
       action: showActions ? _actions(context, penalty) : null,
     );
   }

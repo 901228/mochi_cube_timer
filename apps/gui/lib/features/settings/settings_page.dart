@@ -1,8 +1,8 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/utils.dart";
 import "sections/cube_colors_section.dart";
@@ -23,29 +23,23 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final dao = context.read<AppDatabase>().settingsDao;
 
-    return FScaffold(
-      header: FHeader.nested(
+    return MochiScaffold(
+      header: MochiHeader(
         title: IntrinsicWidth(
-          child: FBreadcrumb(
-            children: [
-              FBreadcrumbItem(
+          child: MochiBreadcrumb(
+            items: [
+              MochiBreadcrumbItem(
                 // HACK: only correct for 2 layers structure
                 onPress: section == "root" ? null : () => context.pop(),
-                child: const Text("Settings"),
+                label: const Text("Settings"),
               ),
               ?(section != "root"
-                  ? FBreadcrumbItem(child: Text(section.capitalized.replaceAll(RegExp(r"[-_]"), " ")))
+                  ? MochiBreadcrumbItem(label: Text(section.capitalized.replaceAll(RegExp(r"[-_]"), " ")))
                   : null),
             ],
           ),
         ),
-        prefixes: [
-          FHeaderAction.back(
-            onPress: () {
-              context.pop();
-            },
-          ),
-        ],
+        prefixes: [.back(onPress: () => context.pop())],
       ),
       child: StreamBuilder<SettingsEntry>(
         stream: dao.watch(),
@@ -58,10 +52,11 @@ class SettingsPage extends StatelessWidget {
           if (w != null) return w;
 
           final settings = snapshot.data!;
-          return Padding(
-            padding: context.theme.style.pagePadding,
-            child: SingleChildScrollView(child: settingsSections[section]!(settings, dao)),
-          );
+          // return Padding(
+          //   padding: context.theme.style.pagePadding,
+          //   child: SingleChildScrollView(child: settingsSections[section]!(settings, dao)),
+          // );
+          return SingleChildScrollView(child: settingsSections[section]!(settings, dao));
         },
       ),
     );

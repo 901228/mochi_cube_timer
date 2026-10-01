@@ -1,5 +1,5 @@
 import "package:flutter/widgets.dart";
-import "package:forui/forui.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 /// The widget to show for a snapshot that has no data yet, or `null` once it does.
 ///
@@ -17,10 +17,10 @@ Widget? streamHandler(BuildContext context, AsyncSnapshot snapshot, {required St
         context: ErrorDescription(description),
       ),
     );
-    return Center(child: Icon(FLucideIcons.triangleAlert, color: context.theme.colors.destructive));
+    return Center(child: Icon(TablerIcons.alertTriangle, color: context.theme.colors.danger.base));
   }
 
-  if (snapshot.data == null) return const Center(child: FCircularProgress());
+  if (snapshot.data == null) return const Center(child: MochiCircularProgress());
 
   return null;
 }

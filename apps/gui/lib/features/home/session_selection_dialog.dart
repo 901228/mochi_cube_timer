@@ -1,30 +1,36 @@
-import "dart:ui";
-
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:forui/forui.dart";
 import "package:go_router/go_router.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/utils.dart";
-import "../../shared/widgets.dart";
 
-// 放在 top-level：用 closure 的話每次 build 都是新物件，style 會一直被判定為不相等
-ImageFilter _menuBarrier(BuildContext _, double animation) => ColorFilter.mode(
-  Color.lerp(const Color(0x00000000), const Color(0x1A000000), animation)!,
-  BlendMode.srcOver,
-);
+Future<void> showSessionSelectionDialog(BuildContext context, {required String sessionId}) async {
+  final creating = ValueNotifier(false);
+
+  await showMochiModal(
+    context,
+    title: const Text("Select a session"),
+    titleSuffix: MochiActionBar([
+      MochiAction(
+        icon: TablerIcons.stackPlus,
+        label: "Create new session",
+        onPress: () {
+          creating.value = true;
+        },
+      ),
+    ]),
+    body: SessionSelectionDialog(currentSessionId: sessionId, creating: creating),
+  );
+
+  creating.dispose();
+}
 
 class SessionSelectionDialog extends StatefulWidget {
-  final FDialogStyleDelta style;
-  final Animation<double> animation;
   final String currentSessionId;
-  const SessionSelectionDialog({
-    super.key,
-    required this.style,
-    required this.animation,
-    required this.currentSessionId,
-  });
+  final ValueNotifier<bool> creating;
+  const SessionSelectionDialog({super.key, required this.currentSessionId, required this.creating});
 
   @override
   State<SessionSelectionDialog> createState() => _SessionSelectionDialogState();
@@ -33,171 +39,198 @@ class SessionSelectionDialog extends StatefulWidget {
 class _SessionSelectionDialogState extends State<SessionSelectionDialog> {
   late String sessionId = widget.currentSessionId;
 
-  Future<String?> _sessionNameDialog(BuildContext context, {required String title}) {
-    String name = "";
-
-    return showFDialog<String>(
-      context: context,
-      builder: (context, style, animation) => AdaptiveDialog(
-        style: style,
-        animation: animation,
-        title: Text(title),
-        body: FTextField(
-          control: .managed(onChange: (value) => name = value.text),
-          hint: "Session name",
-          autofocus: true,
-          textInputAction: .done,
-          onSubmit: context.pop,
-        ),
-        actions: [
-          FButton(variant: .outline, onPress: () => context.pop(null), child: const Text("Cancel")),
-          FButton(variant: .primary, onPress: () => context.pop(name), child: const Text("Confirm")),
-        ],
-      ),
-    );
-  }
-
-  EdgeInsetsGeometry suffixedPaddingOf(BuildContext context, {FItemVariant variant = .primary}) {
-    final styles = FInheritedItemData.maybeOf(context)?.styles ?? context.theme.itemStyles;
-    return styles.resolve({variant, context.platformVariant}).contentStyle.suffixedPadding;
-  }
-
-  List<FItemGroupMixin> _menu(
-    BuildContext context,
-    SessionEntry session, {
-    required FPopoverController controller,
-    required SessionsDao dao,
-    required AppStateDao appStateDao,
-  }) => [
-    .group(
-      children: [
-        .item(
-          prefix: Icon(FLucideIcons.edit),
-          title: Text("Rename"),
-          onPress: () async {
-            controller.hide(animated: false);
-
-            final newSessionName = await _sessionNameDialog(context, title: "Rename session");
-            if (newSessionName == null) return;
-
-            await dao.setName(session.id, newSessionName);
-          },
-        ),
-        .item(
-          variant: .destructive,
-          enabled: session.id != kDefaultSessionId,
-          prefix: Icon(FLucideIcons.trash2),
-          title: Text("Delete"),
-          onPress: () async {
-            controller.hide(animated: false);
-
-            final answer = await showConfirmDialog(
-              context,
-              title: "Delete session?",
-              message: 'All solves in "${session.name}" will be permanently deleted.',
-              confirmLabel: "Delete",
-              destructive: true,
-            );
-            if (answer) {
-              await dao.softDelete(session.id);
-              if (session.id == sessionId) {
-                await appStateDao.setSession(kDefaultSessionId);
-                if (mounted) {
-                  setState(() {
-                    sessionId = kDefaultSessionId;
-                  });
-                }
-              }
-            }
-          },
-        ),
-      ],
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    final dao = context.read<AppDatabase>().sessionsDao;
-    final stateDao = context.read<AppDatabase>().appStateDao;
-
-    final dir = Directionality.of(context);
-    final itemSuffixPadding = suffixedPaddingOf(context).resolve(dir);
-    final itemPaddingStart = dir == .ltr ? itemSuffixPadding.left : itemSuffixPadding.right;
-    final suffixPaddingHorizontal = itemSuffixPadding.vertical / 2;
-
     return StreamBuilder(
-      stream: dao.watchAll(),
+      stream: context.read<AppDatabase>().sessionsDao.watchAll(),
       builder: (context, snapshot) {
         final w = streamHandler(context, snapshot, description: "watching the sessions");
         if (w != null) return w;
 
         final sessions = snapshot.data!;
-        return AdaptiveDialog(
-          style: widget.style,
-          animation: widget.animation,
-          title: FHeader.nested(
-            title: Text("Select a session", style: context.theme.typography.display.lg),
-            suffixes: [
-              FHeaderAction(
-                icon: Icon(FLucideIcons.tagPlus),
-                onPress: () async {
-                  final sessionName = await _sessionNameDialog(context, title: "Create new session");
-                  if (sessionName == null) return;
-
-                  await dao.add(name: sessionName);
-                },
-              ),
-            ],
-          ),
-          body: FItemGroup.builder(
-            count: sessions.length,
-            itemBuilder: (context, i) {
-              final session = sessions[i];
-
-              return FContextMenu(
-                style: .delta(barrierFilter: () => _menuBarrier),
-                menuAnchor: .topLeft,
-                longPress: true,
-                menuBuilder: (context, controller, _) =>
-                    _menu(context, session, controller: controller, dao: dao, appStateDao: stateDao),
-                builder: (_, controller, _) {
-                  return FItem(
-                    style: .delta(
-                      padding: .add(.symmetric(vertical: 2)),
-                      contentStyle: .delta(suffixedPadding: .value(.directional(start: itemPaddingStart))),
-                    ),
-                    selected: session.id == sessionId,
-                    title: Text(session.name),
-                    prefix: Icon(FLucideIcons.tag),
-                    suffix: FPopoverMenu(
-                      style: .delta(barrierFilter: () => _menuBarrier),
-                      cutout: false,
-                      menuAnchor: .topRight,
-                      childAnchor: .bottomRight,
-                      menuBuilder: (context, controller, _) =>
-                          _menu(context, session, controller: controller, dao: dao, appStateDao: stateDao),
-                      builder: (_, controller, _) => FTappable(
-                        onPress: controller.toggle,
-                        child: Padding(
-                          padding: itemSuffixPadding.copyWith(
-                            left: suffixPaddingHorizontal,
-                            right: suffixPaddingHorizontal,
-                          ),
-                          child: Icon(FLucideIcons.ellipsisVertical),
-                        ),
-                      ),
-                    ),
-                    onPress: () {
-                      stateDao.setSession(session.id);
-                      context.pop();
+        return ValueListenableBuilder(
+          valueListenable: widget.creating,
+          builder: (_, isCreating, _) {
+            return MochiTileGroup(
+              children: [
+                for (final session in sessions)
+                  _SessionTile(
+                    currentSessionId: sessionId,
+                    session: session,
+                    afterDeletedCurrent: () {
+                      if (mounted) {
+                        setState(() {
+                          sessionId = kDefaultSessionId;
+                        });
+                      }
                     },
-                  );
-                },
-              );
-            },
-          ),
+                  ),
+                if (isCreating)
+                  _SessionNameEditTile(
+                    onCancel: () => widget.creating.value = false,
+                    onSave: (name) async {
+                      if (name.isNotEmpty) await context.read<AppDatabase>().sessionsDao.add(name: name);
+                      widget.creating.value = false;
+                    },
+                  ),
+              ],
+            );
+          },
         );
       },
+    );
+  }
+}
+
+class _SessionNameEditTile extends StatefulWidget {
+  final bool isSelected;
+  final String initialName;
+  final VoidCallback onCancel;
+  final ValueChanged<String> onSave;
+  const _SessionNameEditTile({
+    this.isSelected = false,
+    this.initialName = "",
+    required this.onCancel,
+    required this.onSave,
+  });
+
+  @override
+  State<_SessionNameEditTile> createState() => _SessionNameEditTileState();
+}
+
+class _SessionNameEditTileState extends State<_SessionNameEditTile> {
+  late final _controller = TextEditingController(text: widget.initialName);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Block the barrier tap / back button from closing the modal while a name is being edited
+    return PopScope(
+      canPop: false,
+      child: MochiTile(
+        selected: widget.isSelected,
+        prefix: Icon(TablerIcons.stack),
+        title: MochiTextField(controller: _controller, autofocus: true, onSubmitted: context.pop),
+        suffix: Row(
+          mainAxisSize: .min,
+          spacing: 8,
+          children: [
+            MochiButton(appearance: .outlined, onPress: widget.onCancel, child: const Text("Cancel")),
+            MochiButton(child: const Text("Save"), onPress: () => widget.onSave(_controller.text)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SessionTile extends StatefulWidget {
+  final String currentSessionId;
+  final SessionEntry session;
+  final VoidCallback afterDeletedCurrent;
+  const _SessionTile({
+    required this.currentSessionId,
+    required this.session,
+    required this.afterDeletedCurrent,
+  });
+
+  @override
+  State<_SessionTile> createState() => _SessionTileState();
+}
+
+class _SessionTileState extends State<_SessionTile> {
+  bool _isEditing = false;
+
+  late final dao = context.read<AppDatabase>().sessionsDao;
+  late final appStateDao = context.read<AppDatabase>().appStateDao;
+
+  List<Widget> _menu(BuildContext context) {
+    return [
+      MochiMenuItem(
+        prefix: Icon(TablerIcons.edit),
+        title: const Text("Rename"),
+        onPress: () {
+          setState(() {
+            _isEditing = true;
+          });
+        },
+      ),
+      MochiMenuDivider(),
+      MochiMenuItem(
+        intent: .danger,
+        enabled: widget.session.id != kDefaultSessionId,
+        prefix: Icon(TablerIcons.trash),
+        title: const Text("Delete"),
+        onPress: () async {
+          final answer = await showMochiConfirm(
+            context,
+            title: "Delete session?",
+            message: 'All solves in "${widget.session.name}" will be permanently deleted.',
+            confirmLabel: "Delete",
+            destructive: true,
+          );
+          if (answer) {
+            await dao.softDelete(widget.session.id);
+            if (widget.session.id == widget.currentSessionId) {
+              await appStateDao.setSession(kDefaultSessionId);
+              widget.afterDeletedCurrent();
+            }
+          }
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = widget.session.id == widget.currentSessionId;
+
+    return MochiContextMenu(
+      longPress: !_isEditing,
+      menuBuilder: _menu,
+      child: _isEditing
+          ? _SessionNameEditTile(
+              isSelected: isSelected,
+              initialName: widget.session.name,
+              onCancel: () {
+                setState(() {
+                  _isEditing = false;
+                });
+              },
+              onSave: (newName) async {
+                if (newName.isNotEmpty && newName != widget.session.name) {
+                  await dao.setName(widget.session.id, newName);
+                }
+
+                if (mounted) {
+                  setState(() {
+                    _isEditing = false;
+                  });
+                }
+              },
+            )
+          : MochiTile(
+              selected: isSelected,
+              prefix: Icon(TablerIcons.stack),
+              title: Text(widget.session.name),
+              suffix: MochiPopoverMenu(
+                menuBuilder: _menu,
+                builder: (context, anchor, child) => MochiButton.icon(
+                  appearance: .ghost,
+                  onPress: anchor.toggle,
+                  icon: Icon(TablerIcons.dotsVertical),
+                ),
+              ),
+              onPress: () {
+                appStateDao.setSession(widget.session.id);
+                context.pop();
+              },
+            ),
     );
   }
 }
