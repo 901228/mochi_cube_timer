@@ -1,4 +1,5 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:flutter/gestures.dart";
 import "package:flutter/services.dart";
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -34,6 +35,10 @@ class _TimerBodyState extends State<TimerBody> {
   /// Whether the space press currently held down was sent to the bloc, so its
   /// release is delivered even if the page stopped being active in between.
   bool _spaceHeld = false;
+
+  /// The pointer driving the timer. Other fingers and non-primary mouse
+  /// buttons are ignored so they can't send an extra press or release.
+  int? _pointer;
 
   @override
   void initState() {
@@ -114,13 +119,20 @@ class _TimerBodyState extends State<TimerBody> {
               Positioned.fill(
                 child: Listener(
                   behavior: .opaque,
-                  onPointerDown: (_) {
+                  onPointerDown: (e) {
+                    if (_pointer != null) return;
+                    if (e.kind == .mouse && e.buttons != kPrimaryButton) return;
+                    _pointer = e.pointer;
                     context.read<TimerBloc>().add(TimerPressed());
                   },
-                  onPointerUp: (_) {
+                  onPointerUp: (e) {
+                    if (e.pointer != _pointer) return;
+                    _pointer = null;
                     context.read<TimerBloc>().add(TimerReleased());
                   },
-                  onPointerCancel: (_) {
+                  onPointerCancel: (e) {
+                    if (e.pointer != _pointer) return;
+                    _pointer = null;
                     context.read<TimerBloc>().add(TimerPressCanceled());
                   },
                   child: const SizedBox.expand(),
