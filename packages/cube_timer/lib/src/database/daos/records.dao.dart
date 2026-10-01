@@ -1,3 +1,5 @@
+import "dart:math" as math;
+
 import "package:drift/drift.dart";
 
 import "../../puzzle/puzzle.dart";
@@ -34,28 +36,23 @@ class RecordQuery {
   RecordQuery clearFilters() => RecordQuery(comment: comment, sort: sort);
 }
 
+Expression<int> _effective($RecordsTable t) => CaseWhenExpression(
+  cases: [CaseWhen(t.penalty.equalsValue(Penalty.plus2), then: t.time + const Constant(2000))],
+  orElse: t.time,
+);
+
+Expression<bool> _scope($RecordsTable t, String session, Puzzle puzzle, {bool showArchived = false}) =>
+    t.session.equals(session) &
+    t.puzzle.equals(puzzle.id) &
+    t.deletedAt.isNull() &
+    t.archived.equals(showArchived);
+
 extension on RecordSort {
   List<OrderingTerm Function($RecordsTable)> get orderBy => switch (this) {
     .newest => [(t) => .desc(t.datetime)],
     .oldest => [(t) => .asc(t.datetime)],
-    .fastest => [
-      (t) => .asc(t.penalty.equalsValue(Penalty.dnf)),
-      (t) => .asc(
-        CaseWhenExpression(
-          cases: [CaseWhen(t.penalty.equalsValue(Penalty.plus2), then: t.time + const Constant(2000))],
-          orElse: t.time,
-        ),
-      ),
-    ],
-    .slowest => [
-      (t) => .desc(t.penalty.equalsValue(Penalty.dnf)),
-      (t) => .desc(
-        CaseWhenExpression(
-          cases: [CaseWhen(t.penalty.equalsValue(Penalty.plus2), then: t.time + const Constant(2000))],
-          orElse: t.time,
-        ),
-      ),
-    ],
+    .fastest => [(t) => .asc(t.penalty.equalsValue(Penalty.dnf)), (t) => .asc(_effective(t))],
+    .slowest => [(t) => .desc(t.penalty.equalsValue(Penalty.dnf)), (t) => .desc(_effective(t))],
   };
 }
 
@@ -70,21 +67,16 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
     RecordQuery query = const RecordQuery(),
   }) => select(records)
     ..where((t) {
-      var e = t.session.equals(session) & t.puzzle.equals(puzzle.id) & t.deletedAt.isNull();
-      if (showArchived) {
-        e = e & t.archived;
-      } else {
-        e = e & t.archived.not();
-      }
+      Expression<bool> base = _scope(t, session, puzzle, showArchived: showArchived);
 
-      if (query.comment.isNotEmpty) e &= t.comment.like("%${query.comment}%");
-      if (query.penalties.isNotEmpty) e &= t.penalty.isInValues(query.penalties);
-      if (query.from != null) e &= t.datetime.isBiggerOrEqualValue(query.from!);
+      if (query.comment.isNotEmpty) base &= t.comment.like("%${query.comment}%");
+      if (query.penalties.isNotEmpty) base &= t.penalty.isInValues(query.penalties);
+      if (query.from != null) base &= t.datetime.isBiggerOrEqualValue(query.from!);
       if (query.to != null) {
-        e &= t.datetime.isSmallerThanValue(query.to!.add(const Duration(days: 1)));
+        base &= t.datetime.isSmallerThanValue(query.to!.add(const Duration(days: 1)));
       }
 
-      return e;
+      return base;
     })
     ..orderBy(query.sort.orderBy);
 
@@ -127,7 +119,9 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
     );
     return row.id;
   }
+}
 
+extension RecordsDaoModify on RecordsDao {
   Future<void> _write(String id, RecordsCompanion patch) =>
       (update(records)..where((t) => t.id.equals(id))).write(patch);
   Future<void> _writeAll(List<String> ids, RecordsCompanion patch) =>
@@ -142,4 +136,65 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
   Future<void> archiveAll(List<String> ids) async => _writeAll(ids, RecordsCompanion(archived: Value(true)));
   Future<void> deleteAll(List<String> ids) async =>
       _writeAll(ids, RecordsCompanion(deletedAt: Value(DateTime.now())));
+}
+
+typedef SessionSummary = ({int count, double? mean, double? deviation, int? best});
+
+extension RecordsDaoStatistics on RecordsDao {
+  Stream<SessionSummary> watchSummary(String session, Puzzle puzzle, {bool showArchived = false}) {
+    final eff = _effective(records);
+    final solved = records.penalty.equalsValue(Penalty.dnf).not();
+
+    final count = records.id.count();
+    final solvedCount = records.id.count(filter: solved);
+    final mean = eff.avg(filter: solved);
+    final meanSq = (eff * eff).avg(filter: solved);
+    final best = eff.min(filter: solved);
+
+    final q = selectOnly(records)
+      ..addColumns([count, solvedCount, mean, meanSq, best])
+      ..where(_scope(records, session, puzzle, showArchived: showArchived));
+
+    return q.watchSingle().map((r) {
+      final n = r.read(solvedCount)!;
+      final m = r.read(mean);
+      final m2 = r.read(meanSq);
+      // sample standard deviation: divided by n-1
+      final sd = (n > 1 && m != null && m2 != null)
+          ? math.sqrt(math.max(0, (m2 - m * m) * n / (n - 1)))
+          : null;
+      return (count: r.read(count)!, mean: m, deviation: sd, best: r.read(best));
+    });
+  }
+
+  Stream<List<double>> watchTimes(String session, Puzzle puzzle, {bool showArchived = false, int? limit}) {
+    final eff = _effective(records);
+    final q = selectOnly(records)
+      ..addColumns([eff, records.penalty])
+      ..where(_scope(records, session, puzzle, showArchived: showArchived))
+      ..orderBy([OrderingTerm.desc(records.datetime)]);
+    if (limit != null) q.limit(limit);
+
+    return q.watch().map(
+      (rows) => [
+        for (final r in rows)
+          r.readWithConverter(records.penalty) == Penalty.dnf ? double.infinity : r.read(eff)!.toDouble(),
+      ],
+    );
+  }
+
+  static double? _trimmedMean(List<double> latestFirst, int n, {required int trim}) {
+    if (latestFirst.length < n) return null;
+    final xs = latestFirst.take(n).toList()..sort();
+    final kept = xs.sublist(trim, n - trim);
+    return kept.fold(0.0, (a, b) => a + b) / kept.length; // a DNF left after trimming makes the sum infinite
+  }
+
+  static double? mo(List<double> t, int n) => _trimmedMean(t, n, trim: 0);
+  static double? ao(List<double> t, int n) => _trimmedMean(t, n, trim: (n * 0.05).ceil());
+}
+
+extension StatisticsRecordTimeList on List<double> {
+  double? mo(int n) => RecordsDaoStatistics.mo(this, n);
+  double? ao(int n) => RecordsDaoStatistics.ao(this, n);
 }
