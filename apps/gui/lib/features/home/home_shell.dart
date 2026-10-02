@@ -6,6 +6,7 @@ import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../database/dao_provider.dart";
+import "../../shared/utils.dart";
 import "home_sidebar.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
@@ -22,19 +23,13 @@ class HomeShell extends StatelessWidget {
     return StreamBuilder(
       stream: dao.watch(),
       builder: (context, snapshot) {
-        // A failed stream is not a slow one; without this branch it arrives as a
-        // spinner that never stops.
-        if (snapshot.error case final error?) {
-          FlutterError.reportError(
-            FlutterErrorDetails(
-              exception: error,
-              stack: snapshot.stackTrace,
-              library: "mochi cube timer",
-              context: ErrorDescription("watching the app state for the home shell"),
-            ),
-          );
-          return Center(child: Icon(TablerIcons.alertTriangle, color: context.theme.colors.danger.base));
-        }
+        final w = streamHandler(
+          context,
+          snapshot,
+          description: "watching the app state for the home shell",
+          showCircularProgress: false,
+        );
+        if (w != null) return w;
 
         final data = snapshot.data;
         return MochiScaffold(
