@@ -1,5 +1,6 @@
 import "dart:math" as math;
 
+import "package:collection/collection.dart" show lowerBound;
 import "package:drift/drift.dart";
 
 import "../../puzzle/puzzle.dart";
@@ -138,7 +139,7 @@ extension RecordsDaoModify on RecordsDao {
       _writeAll(ids, RecordsCompanion(deletedAt: Value(DateTime.now())));
 }
 
-typedef SessionSummary = ({int count, double? mean, double? deviation, int? best});
+typedef SessionSummary = ({int count, double? mean, double? deviation, double? best});
 
 extension RecordsDaoStatistics on RecordsDao {
   Stream<SessionSummary> watchSummary(String session, Puzzle puzzle, {bool showArchived = false}) {
@@ -163,7 +164,7 @@ extension RecordsDaoStatistics on RecordsDao {
       final sd = (n > 1 && m != null && m2 != null)
           ? math.sqrt(math.max(0, (m2 - m * m) * n / (n - 1)))
           : null;
-      return (count: r.read(count)!, mean: m, deviation: sd, best: r.read(best));
+      return (count: r.read(count)!, mean: m, deviation: sd, best: r.read(best)?.toDouble());
     });
   }
 
@@ -190,11 +191,44 @@ extension RecordsDaoStatistics on RecordsDao {
     return kept.fold(0.0, (a, b) => a + b) / kept.length; // a DNF left after trimming makes the sum infinite
   }
 
+  /// Best trimmed mean over every run of [n] consecutive solves, or null if there are fewer than [n].
+  /// Keeps the window sorted and swaps one value per step, so each step costs O(n), not O(n log n).
+  static (double, List<double>)? _bestTrimmedMean(List<double> times, int n, {required int trim}) {
+    if (times.length < n) return null;
+
+    final window = times.take(n).toList()..sort();
+    var bestMean = double.infinity;
+    var bestStart = 0;
+    for (var i = 0; ; i++) {
+      var sum = 0.0;
+      for (var j = trim; j < n - trim; j++) {
+        sum += window[j];
+      }
+      final mean = sum / (n - 2 * trim);
+      if (mean < bestMean) {
+        bestMean = mean;
+        bestStart = i;
+      }
+
+      if (i + n >= times.length) return (bestMean, times.sublist(bestStart, bestStart + n));
+      window.removeAt(lowerBound(window, times[i]));
+      final next = times[i + n];
+      window.insert(lowerBound(window, next), next);
+    }
+  }
+
   static double? mo(List<double> t, int n) => _trimmedMean(t, n, trim: 0);
   static double? ao(List<double> t, int n) => _trimmedMean(t, n, trim: (n * 0.05).ceil());
+  static double? bestMo(List<double> t, int n) => _bestTrimmedMean(t, n, trim: 0)?.$1;
+  static double? bestAo(List<double> t, int n) => _bestTrimmedMean(t, n, trim: (n * 0.05).ceil())?.$1;
+  static (double, List<double>)? bestAoWithList(List<double> t, int n) =>
+      _bestTrimmedMean(t, n, trim: (n * 0.05).ceil());
 }
 
 extension StatisticsRecordTimeList on List<double> {
   double? mo(int n) => RecordsDaoStatistics.mo(this, n);
   double? ao(int n) => RecordsDaoStatistics.ao(this, n);
+  double? bestMo(int n) => RecordsDaoStatistics.bestMo(this, n);
+  double? bestAo(int n) => RecordsDaoStatistics.bestAo(this, n);
+  (double, List<double>)? bestAoWithList(int n) => RecordsDaoStatistics.bestAoWithList(this, n);
 }

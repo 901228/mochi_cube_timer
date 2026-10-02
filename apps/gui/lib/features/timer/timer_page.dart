@@ -145,7 +145,7 @@ class _TimerViewState extends State<_TimerView> {
     },
   );
 
-  String _statsDisplay(num? value) {
+  String _statsDisplay(double? value) {
     if (value == null) return "--";
     if (value == double.infinity) return "DNF";
 
