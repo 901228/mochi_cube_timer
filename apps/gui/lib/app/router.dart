@@ -16,24 +16,33 @@ final router = GoRouter(
     GoRoute(
       path: "/settings",
       name: "settings",
-      builder: (_, _) => const SettingsPage(section: "root"),
+      pageBuilder: (context, state) => MochiPage(
+        key: state.pageKey,
+        child: const SettingsPage(section: "root"),
+      ),
       routes: [
         GoRoute(
           path: ":section",
           redirect: (_, state) =>
               settingsSections.containsKey(state.pathParameters["section"]) ? null : "/settings",
-          builder: (_, state) => SettingsPage(section: state.pathParameters["section"]!),
+          pageBuilder: (context, state) => MochiPage(
+            key: state.pageKey,
+            child: SettingsPage(section: state.pathParameters["section"]!),
+          ),
         ),
       ],
     ),
     StatefulShellRoute(
-      builder: (context, state, navigationShell) => HomeShell(
-        pages: [
-          (name: "Timer", icon: TablerIcons.clockHour4, path: "/timer"),
-          (name: "Records", icon: TablerIcons.library, path: "/records"),
-          (name: "Stats", icon: TablerIcons.chartLine, path: "/stats"),
-        ],
-        navigationShell: navigationShell,
+      pageBuilder: (context, state, navigationShell) => MochiPage(
+        key: state.pageKey,
+        child: HomeShell(
+          pages: [
+            (name: "Timer", icon: TablerIcons.clockHour4, path: "/timer"),
+            (name: "Records", icon: TablerIcons.library, path: "/records"),
+            (name: "Stats", icon: TablerIcons.chartLine, path: "/stats"),
+          ],
+          navigationShell: navigationShell,
+        ),
       ),
       navigatorContainerBuilder: (context, navigationShell, children) =>
           AnimatedBranchContainer(currentIndex: navigationShell.currentIndex, children: children),
