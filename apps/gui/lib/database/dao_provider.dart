@@ -10,5 +10,5 @@ class AppStateProvider extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(AppStateProvider oldWidget) => true;
+  bool updateShouldNotify(AppStateProvider oldWidget) => state != oldWidget.state;
 }
