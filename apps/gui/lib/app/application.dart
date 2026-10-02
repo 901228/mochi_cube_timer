@@ -7,11 +7,16 @@ import "router.dart";
 class Application extends StatelessWidget {
   const new({super.key});
 
+  MochiTheme _customTheme(MochiTheme base) => base.copyWith(
+    extensions: [TimerTypography.standard],
+    defaults: MochiDefaults(transition: .slide),
+  );
+
   @override
   Widget build(BuildContext context) => MochiApp.router(
     title: "Mochi Cube Timer",
     routerConfig: router,
-    lightTheme: MochiTheme.light.copyWith(extensions: [TimerTypography.standard]),
-    darkTheme: MochiTheme.dark.copyWith(extensions: [TimerTypography.standard]),
+    lightTheme: _customTheme(MochiTheme.light),
+    darkTheme: _customTheme(MochiTheme.dark),
   );
 }
