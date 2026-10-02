@@ -3,6 +3,7 @@ import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../database/dao_provider.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
@@ -33,20 +34,8 @@ class TimerPage extends StatelessWidget {
           if (w != null) return w;
 
           final settings = snapshot.data!;
-          return StreamBuilder(
-            stream: db.appStateDao.watch(),
-            builder: (context, snapshot) {
-              final w = streamHandler(
-                context,
-                snapshot,
-                description: "watching the app state for the timer page",
-              );
-              if (w != null) return w;
-
-              final data = snapshot.data!;
-              return _TimerView(puzzle: data.puzzle, sessionId: data.session.id, settings: settings);
-            },
-          );
+          final data = AppStateProvider.of(context);
+          return _TimerView(puzzle: data.puzzle, sessionId: data.session.id, settings: settings);
         },
       ),
     );

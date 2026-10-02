@@ -5,7 +5,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
-import "../../shared/utils.dart";
+import "../../database/dao_provider.dart";
 import "home_sidebar.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
@@ -19,15 +19,26 @@ class HomeShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final dao = context.read<AppDatabase>().appStateDao;
 
-    return MochiScaffold(
-      header: StreamBuilder(
-        stream: dao.watch(),
-        builder: (context, snapshot) {
-          final w = streamHandler(context, snapshot, description: "watching the app state for the header");
-          if (w != null) return w;
+    return StreamBuilder(
+      stream: dao.watch(),
+      builder: (context, snapshot) {
+        // A failed stream is not a slow one; without this branch it arrives as a
+        // spinner that never stops.
+        if (snapshot.error case final error?) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: error,
+              stack: snapshot.stackTrace,
+              library: "mochi cube timer",
+              context: ErrorDescription("watching the app state for the home shell"),
+            ),
+          );
+          return Center(child: Icon(TablerIcons.alertTriangle, color: context.theme.colors.danger.base));
+        }
 
-          final data = snapshot.data!;
-          return MochiHeader(
+        final data = snapshot.data;
+        return MochiScaffold(
+          header: MochiHeader(
             alignment: .center,
             variant: .bordered,
             title: MochiButton(
@@ -38,33 +49,35 @@ class HomeShell extends StatelessWidget {
                 title: const Text("Select a puzzle"),
                 body: PuzzleSelectionDialog(),
               ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: .center,
-                  children: [
-                    DefaultTextStyle.merge(
-                      textHeightBehavior: const TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
+              child: data == null
+                  ? const Center(child: MochiCircularProgress())
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: .center,
+                        children: [
+                          DefaultTextStyle.merge(
+                            textHeightBehavior: const TextHeightBehavior(
+                              applyHeightToFirstAscent: false,
+                              applyHeightToLastDescent: false,
+                            ),
+                            style: context.theme.typography.title.md,
+                            child: Text(data.puzzle.displayName),
+                          ),
+                          DefaultTextStyle.merge(
+                            textHeightBehavior: const TextHeightBehavior(
+                              applyHeightToFirstAscent: false,
+                              applyHeightToLastDescent: false,
+                            ),
+                            style: context.theme.typography.title.sm.copyWith(
+                              color: context.colors.mutedForeground,
+                            ),
+                            child: Text(data.session.name),
+                          ),
+                        ],
                       ),
-                      style: context.theme.typography.title.md,
-                      child: Text(data.puzzle.displayName),
                     ),
-                    DefaultTextStyle.merge(
-                      textHeightBehavior: const TextHeightBehavior(
-                        applyHeightToFirstAscent: false,
-                        applyHeightToLastDescent: false,
-                      ),
-                      style: context.theme.typography.title.sm.copyWith(
-                        color: context.colors.mutedForeground,
-                      ),
-                      child: Text(data.session.name),
-                    ),
-                  ],
-                ),
-              ),
             ),
             prefixes: [
               MochiAction(
@@ -78,50 +91,44 @@ class HomeShell extends StatelessWidget {
             suffixes: [
               if (pages[navigationShell.currentIndex].name.toLowerCase() != "timer")
                 MochiAction(
-                  icon: data.showArchived ? TablerIcons.archiveFilled : TablerIcons.archive,
-                  selected: data.showArchived,
+                  icon: (data?.showArchived ?? false) ? TablerIcons.archiveFilled : TablerIcons.archive,
+                  enabled: data != null,
+                  selected: data?.showArchived ?? false,
                   label: "Show archived records",
-                  onPress: () {
-                    dao.setShowArchived(!data.showArchived);
-                  },
+                  onPress: data == null
+                      ? null
+                      : () {
+                          dao.setShowArchived(!data.showArchived);
+                        },
                 ),
               MochiAction(
                 icon: TablerIcons.stack2,
                 label: "Sessions",
-                onPress: () async {
-                  try {
-                    final data = await dao.current;
-                    if (context.mounted) {
-                      showSessionSelectionDialog(context, sessionId: data.session.id);
-                    }
-                  } catch (error, stack) {
-                    FlutterError.reportError(
-                      FlutterErrorDetails(
-                        exception: error,
-                        stack: stack,
-                        library: "mochi cube timer",
-                        context: ErrorDescription("reading the app state for the session picker"),
-                      ),
-                    );
-                  }
-                },
+                onPress: data == null
+                    ? null
+                    : () {
+                        showSessionSelectionDialog(context, sessionId: data.session.id);
+                      },
               ),
             ],
-          );
-        },
-      ),
-      footer: MochiBottomNav<int>(
-        value: navigationShell.currentIndex,
-        onChanged: (value) {
-          navigationShell.goBranch(value);
-        },
-        items: pages
-            .mapIndexed(
-              (i, data) => MochiBottomNavItem<int>(value: i, label: Text(data.name), icon: Icon(data.icon)),
-            )
-            .toList(),
-      ),
-      child: navigationShell,
+          ),
+          footer: MochiBottomNav<int>(
+            value: navigationShell.currentIndex,
+            onChanged: (value) {
+              navigationShell.goBranch(value);
+            },
+            items: pages
+                .mapIndexed(
+                  (i, data) =>
+                      MochiBottomNavItem<int>(value: i, label: Text(data.name), icon: Icon(data.icon)),
+                )
+                .toList(),
+          ),
+          child: data == null
+              ? const Center(child: MochiCircularProgress())
+              : AppStateProvider(state: data, child: navigationShell),
+        );
+      },
     );
     // );
   }

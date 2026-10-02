@@ -3,6 +3,7 @@ import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../database/dao_provider.dart";
 import "../../shared/utils.dart";
 import "record_search_bar.dart";
 import "records_list.dart";
@@ -12,22 +13,8 @@ class RecordsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dao = context.read<AppDatabase>().appStateDao;
-
-    return StreamBuilder(
-      stream: dao.watch(),
-      builder: (context, snapshot) {
-        final w = streamHandler(
-          context,
-          snapshot,
-          description: "watching the app state for the records page",
-        );
-        if (w != null) return w;
-
-        final data = snapshot.data!;
-        return _RecordsPage(puzzle: data.puzzle, sessionId: data.session.id, showArchived: data.showArchived);
-      },
-    );
+    final data = AppStateProvider.of(context);
+    return _RecordsPage(puzzle: data.puzzle, sessionId: data.session.id, showArchived: data.showArchived);
   }
 }
 
