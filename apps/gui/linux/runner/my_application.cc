@@ -57,6 +57,9 @@ static void my_application_activate(GApplication* application) {
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(
       project, self->dart_entrypoint_arguments);
+  // shortcut: Impeller on Linux has no MSAA before Flutter 3.49 (flutter#191379), so paths are
+  // jagged; drop this once 3.49 is stable.
+  fl_dart_project_set_enable_impeller(project, FALSE);
 
   FlView* view = fl_view_new(project);
   GdkRGBA background_color;
