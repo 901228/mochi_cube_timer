@@ -1,0 +1,47 @@
+# Builds an unsigned IPA of apps/gui, to be signed and sideloaded from Linux.
+name: iOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      # Side by side, so the relative path dependencies on mochi_ui and
+      # mochi_cube resolve as they do locally.
+      - uses: actions/checkout@v4
+        with:
+          path: mochi_cube_timer
+      - uses: actions/checkout@v4
+        with:
+          repository: 901228/mochi_ui
+          path: mochi_ui
+      - uses: actions/checkout@v4
+        with:
+          repository: 901228/mochi_cube
+          path: mochi_cube
+
+      - id: fvm
+        run: >-
+          echo "flutter=$(jq -r .flutter mochi_cube_timer/.fvmrc)"
+          >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          channel: stable
+          cache: true
+
+      - name: Build
+        working-directory: mochi_cube_timer/apps/gui
+        run: |
+          flutter build ios --release --no-codesign
+          mkdir Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qry mochi_cube_timer.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mochi_cube_timer-ipa
+          path: mochi_cube_timer/apps/gui/mochi_cube_timer.ipa
+          retention-days: 7

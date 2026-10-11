@@ -24,7 +24,7 @@ dependencies:
   # forui: ^0.26.0
 
   mochi_ui:
-    path: /home/harry/things/project/mochi_ui
+    path: ../../../mochi_ui
 
   cube_timer:
     path: ../../packages/cube_timer
