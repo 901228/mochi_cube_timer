@@ -5,4 +5,5 @@ library;
 
 export "src/database.dart";
 export "src/puzzle.dart";
+export "src/statistics/distribution.dart";
 export "src/timer.dart";

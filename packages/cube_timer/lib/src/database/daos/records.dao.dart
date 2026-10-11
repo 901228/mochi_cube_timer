@@ -141,6 +141,12 @@ extension RecordsDaoModify on RecordsDao {
 
 typedef SessionSummary = ({int count, double? mean, double? deviation, double? best});
 
+typedef SolveTime = ({double time, bool isDnf});
+
+extension SolveTimeValue on SolveTime {
+  double get value => isDnf ? double.infinity : time;
+}
+
 extension RecordsDaoStatistics on RecordsDao {
   Stream<SessionSummary> watchSummary(String session, Puzzle puzzle, {bool showArchived = false}) {
     final eff = _effective(records);
@@ -168,7 +174,7 @@ extension RecordsDaoStatistics on RecordsDao {
     });
   }
 
-  Stream<List<double>> watchTimes(String session, Puzzle puzzle, {bool showArchived = false, int? limit}) {
+  Stream<List<SolveTime>> watchTimes(String session, Puzzle puzzle, {bool showArchived = false, int? limit}) {
     final eff = _effective(records);
     final q = selectOnly(records)
       ..addColumns([eff, records.penalty])
@@ -179,24 +185,24 @@ extension RecordsDaoStatistics on RecordsDao {
     return q.watch().map(
       (rows) => [
         for (final r in rows)
-          r.readWithConverter(records.penalty) == Penalty.dnf ? double.infinity : r.read(eff)!.toDouble(),
+          (time: r.read(eff)!.toDouble(), isDnf: r.readWithConverter(records.penalty) == .dnf),
       ],
     );
   }
 
-  static double? _trimmedMean(List<double> latestFirst, int n, {required int trim}) {
+  static double? _trimmedMean(List<SolveTime> latestFirst, int n, {required int trim}) {
     if (latestFirst.length < n) return null;
-    final xs = latestFirst.take(n).toList()..sort();
+    final xs = latestFirst.take(n).map((s) => s.value).toList()..sort();
     final kept = xs.sublist(trim, n - trim);
     return kept.fold(0.0, (a, b) => a + b) / kept.length; // a DNF left after trimming makes the sum infinite
   }
 
   /// Best trimmed mean over every run of [n] consecutive solves, or null if there are fewer than [n].
   /// Keeps the window sorted and swaps one value per step, so each step costs O(n), not O(n log n).
-  static (double, List<double>)? _bestTrimmedMean(List<double> times, int n, {required int trim}) {
+  static (double, List<double>)? _bestTrimmedMean(List<SolveTime> times, int n, {required int trim}) {
     if (times.length < n) return null;
 
-    final window = times.take(n).toList()..sort();
+    final window = times.take(n).map((s) => s.value).toList()..sort();
     var bestMean = double.infinity;
     var bestStart = 0;
     for (var i = 0; ; i++) {
@@ -210,22 +216,24 @@ extension RecordsDaoStatistics on RecordsDao {
         bestStart = i;
       }
 
-      if (i + n >= times.length) return (bestMean, times.sublist(bestStart, bestStart + n));
-      window.removeAt(lowerBound(window, times[i]));
-      final next = times[i + n];
+      if (i + n >= times.length) {
+        return (bestMean, times.sublist(bestStart, bestStart + n).map((e) => e.value).toList());
+      }
+      window.removeAt(lowerBound(window, times[i].value));
+      final next = times[i + n].value;
       window.insert(lowerBound(window, next), next);
     }
   }
 
-  static double? mo(List<double> t, int n) => _trimmedMean(t, n, trim: 0);
-  static double? ao(List<double> t, int n) => _trimmedMean(t, n, trim: (n * 0.05).ceil());
-  static double? bestMo(List<double> t, int n) => _bestTrimmedMean(t, n, trim: 0)?.$1;
-  static double? bestAo(List<double> t, int n) => _bestTrimmedMean(t, n, trim: (n * 0.05).ceil())?.$1;
-  static (double, List<double>)? bestAoWithList(List<double> t, int n) =>
+  static double? mo(List<SolveTime> t, int n) => _trimmedMean(t, n, trim: 0);
+  static double? ao(List<SolveTime> t, int n) => _trimmedMean(t, n, trim: (n * 0.05).ceil());
+  static double? bestMo(List<SolveTime> t, int n) => _bestTrimmedMean(t, n, trim: 0)?.$1;
+  static double? bestAo(List<SolveTime> t, int n) => _bestTrimmedMean(t, n, trim: (n * 0.05).ceil())?.$1;
+  static (double, List<double>)? bestAoWithList(List<SolveTime> t, int n) =>
       _bestTrimmedMean(t, n, trim: (n * 0.05).ceil());
 }
 
-extension StatisticsRecordTimeList on List<double> {
+extension StatisticsRecordTimeList on List<SolveTime> {
   double? mo(int n) => RecordsDaoStatistics.mo(this, n);
   double? ao(int n) => RecordsDaoStatistics.ao(this, n);
   double? bestMo(int n) => RecordsDaoStatistics.bestMo(this, n);

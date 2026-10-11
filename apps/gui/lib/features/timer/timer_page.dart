@@ -56,7 +56,7 @@ class _TimerViewState extends State<_TimerView> {
   late ScrambleHistory _history;
 
   late Stream<SessionSummary> _summary;
-  late Stream<List<double>> _times;
+  late Stream<List<SolveTime>> _times;
 
   void _watchStats() {
     final dao = context.read<AppDatabase>().recordsDao;
