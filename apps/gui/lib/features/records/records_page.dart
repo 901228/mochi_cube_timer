@@ -1,5 +1,4 @@
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -62,6 +61,9 @@ class _RecordsPageState extends State<_RecordsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final inset = MediaQuery.paddingOf(context);
+    final pagePadding = context.theme.geometry.pagePadding;
+
     return StreamBuilder(
       stream: _stream,
       builder: (context, snapshot) {
@@ -69,56 +71,65 @@ class _RecordsPageState extends State<_RecordsPage> {
         if (w != null) return w;
 
         final records = snapshot.data!;
+        context.read<RecordSelectionCubit>().visible = records.map((e) => e.id);
 
-        return Column(
-          mainAxisSize: .max,
-          spacing: 8,
-          children: [
-            RecordSearchBar(
-              onChanged: (value) {
-                setState(() {
-                  _query = value;
-                  _watchSession();
-                });
-              },
-              onAddRecord: () async {
-                showMochiModal(context);
-                // TODO: manually add record
-              },
-              onArchiveAll: records.every((e) => e.archived)
-                  ? null
-                  : () async {
-                      final answer = await showMochiConfirm(
-                        context,
-                        title: "Archive all records?",
-                        message: "All solves will be archived.",
-                        confirmLabel: "Archive",
-                      );
-                      if (answer) {
-                        await recordsDao.archiveAll(records.map((e) => e.id).toList());
-                      }
-                    },
-              onDeleteAll: records.isEmpty
-                  ? null
-                  : () async {
-                      final answer = await showMochiConfirm(
-                        context,
-                        title: "Delete all records?",
-                        message: "All solves will be permanently deleted.",
-                        confirmLabel: "Delete",
-                        destructive: true,
-                      );
-                      if (answer) {
-                        await recordsDao.deleteAll(records.map((e) => e.id).toList());
-                      }
-                    },
-              onExportAll: records.isEmpty ? null : () => exportRecords(context, widget.session),
-            ),
+        return Padding(
+          padding: inset.copyWith(top: inset.top + pagePadding.top, bottom: 0),
+          child: Column(
+            mainAxisSize: .max,
+            children: [
+              RecordSearchBar(
+                onChanged: (value) {
+                  setState(() {
+                    _query = value;
+                    _watchSession();
+                  });
+                },
+                onAddRecord: () async {
+                  // TODO: manually add record
+                },
+                onArchiveAll: records.every((e) => e.archived)
+                    ? null
+                    : () async {
+                        final answer = await showMochiConfirm(
+                          context,
+                          title: "Archive all records?",
+                          message: "All solves will be archived.",
+                          confirmLabel: "Archive",
+                        );
+                        if (answer) {
+                          await recordsDao.archiveAll(records.map((e) => e.id));
+                        }
+                      },
+                onDeleteAll: records.isEmpty
+                    ? null
+                    : () async {
+                        final answer = await showMochiConfirm(
+                          context,
+                          title: "Delete all records?",
+                          message: "All solves will be permanently deleted.",
+                          confirmLabel: "Delete",
+                          destructive: true,
+                        );
+                        if (answer) {
+                          await recordsDao.deleteAll(records.map((e) => e.id));
+                        }
+                      },
+                onExportAll: records.isEmpty ? null : () => exportRecords(context, widget.session),
+              ),
 
-            Expanded(
-              child: SingleChildScrollView(child: RecordsList(records: records)),
-            ),
-          ],
+              MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: Expanded(
+                  child: SingleChildScrollView(
+                    padding: (pagePadding * 2).copyWith(bottom: pagePadding.bottom, top: pagePadding.top),
+                    child: RecordsList(records: records),
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

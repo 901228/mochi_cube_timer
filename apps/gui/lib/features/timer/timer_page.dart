@@ -1,5 +1,4 @@
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -154,125 +153,128 @@ class _TimerViewState extends State<_TimerView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<TimerBloc, TimerState>(
-      listenWhen: (previous, current) => previous is! TimerRunComplete && current is TimerRunComplete,
-      listener: (context, state) => _record(state),
-      child: MochiScaffold(
-        header: Column(
-          mainAxisSize: .min,
-          children: [
-            _withScramble(
-              (scramble) => MochiTappable(
-                onPress: () => _showScramble(scramble),
-                // The size lives on the DefaultTextStyle rather than on the
-                // moves, so a hero's flight can read it off this context and
-                // lerp towards the one the dialog uses. The weight is left
-                // alone: ScrambleTokens sets its own, the same at both ends.
-                builder: (context, value, child) => DefaultTextStyle.merge(
-                  style: context.theme.timer.lg,
-                  child: ScrambleTokens(
-                    puzzle: widget.puzzle,
-                    steps: widget.puzzle.scrambler.stepsOf(scramble),
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: .centerEnd,
-              child: MochiActionBar([
-                MochiAction(
-                  icon: TablerIcons.pencil,
-                  label: "Edit scramble",
-                  onPress: () {
-                    // TODO: manually input the scramble
-                  },
-                ),
-                MochiAction(
-                  icon: TablerIcons.chevronLeft,
-                  label: "Previous scramble",
-                  onPress: _history.hasPrevious ? _previous : null,
-                ),
-                MochiAction(icon: TablerIcons.chevronRight, label: "Next scramble", onPress: _next),
-              ], maxVisible: 3),
-            ),
-          ],
-        ),
-        footer: IntrinsicHeight(
-          child: Row(
-            mainAxisSize: .max,
-            mainAxisAlignment: .spaceBetween,
-            crossAxisAlignment: .stretch,
+    return Padding(
+      padding: context.theme.geometry.pagePadding,
+      child: BlocListener<TimerBloc, TimerState>(
+        listenWhen: (previous, current) => previous is! TimerRunComplete && current is TimerRunComplete,
+        listener: (context, state) => _record(state),
+        child: MochiScaffold(
+          header: Column(
+            mainAxisSize: .min,
             children: [
-              // left stats
-              Expanded(
-                child: StreamBuilder(
-                  stream: _summary,
-                  builder: (context, snapshot) {
-                    final w = streamHandler(
-                      context,
-                      snapshot,
-                      description: "watching the summary of the session",
-                    );
-                    if (w != null) return w;
-
-                    final summary = snapshot.data!;
-                    return Column(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .start,
-                      textDirection: .ltr,
-                      children: [
-                        _statusLine("Deviation", _statsDisplay(summary.deviation)),
-                        _statusLine("Mean", _statsDisplay(summary.mean)),
-                        _statusLine("Best", _statsDisplay(summary.best)),
-                        _statusLine("Count", summary.count.toString()),
-                      ],
-                    );
-                  },
-                ),
-              ),
-
-              // cube 2d view
               _withScramble(
                 (scramble) => MochiTappable(
                   onPress: () => _showScramble(scramble),
-                  builder: (context, value, child) =>
-                      Cube2DView(puzzle: _history.puzzle, state: scramble.state, settings: widget.settings),
+                  // The size lives on the DefaultTextStyle rather than on the
+                  // moves, so a hero's flight can read it off this context and
+                  // lerp towards the one the dialog uses. The weight is left
+                  // alone: ScrambleTokens sets its own, the same at both ends.
+                  builder: (context, value, child) => DefaultTextStyle.merge(
+                    style: context.theme.timer.lg,
+                    child: ScrambleTokens(
+                      puzzle: widget.puzzle,
+                      steps: widget.puzzle.scrambler.stepsOf(scramble),
+                    ),
+                  ),
                 ),
               ),
-
-              // right stats
-              Expanded(
-                child: StreamBuilder(
-                  stream: _times,
-                  builder: (context, snapshot) {
-                    final w = streamHandler(
-                      context,
-                      snapshot,
-                      description: "watching the times of the session",
-                    );
-                    if (w != null) return w;
-
-                    final times = snapshot.data!;
-                    return Column(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .end,
-                      textDirection: .ltr,
-                      children: [
-                        _statusLine("Mo3", _statsDisplay(times.mo(3))),
-                        _statusLine("Ao5", _statsDisplay(times.ao(5))),
-                        _statusLine("Ao12", _statsDisplay(times.ao(12))),
-                        _statusLine("Ao50", _statsDisplay(times.ao(50))),
-                        // _statusLine("Ao100", _statsDisplay(times.ao(100))),
-                      ],
-                    );
-                  },
-                ),
+              Align(
+                alignment: .centerEnd,
+                child: MochiActionBar([
+                  MochiAction(
+                    icon: TablerIcons.pencil,
+                    label: "Edit scramble",
+                    onPress: () {
+                      // TODO: manually input the scramble
+                    },
+                  ),
+                  MochiAction(
+                    icon: TablerIcons.chevronLeft,
+                    label: "Previous scramble",
+                    onPress: _history.hasPrevious ? _previous : null,
+                  ),
+                  MochiAction(icon: TablerIcons.chevronRight, label: "Next scramble", onPress: _next),
+                ], maxVisible: 3),
               ),
             ],
           ),
-        ),
+          footer: IntrinsicHeight(
+            child: Row(
+              mainAxisSize: .max,
+              mainAxisAlignment: .spaceBetween,
+              crossAxisAlignment: .stretch,
+              children: [
+                // left stats
+                Expanded(
+                  child: StreamBuilder(
+                    stream: _summary,
+                    builder: (context, snapshot) {
+                      final w = streamHandler(
+                        context,
+                        snapshot,
+                        description: "watching the summary of the session",
+                      );
+                      if (w != null) return w;
 
-        child: Center(child: TimerBody()),
+                      final summary = snapshot.data!;
+                      return Column(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .start,
+                        textDirection: .ltr,
+                        children: [
+                          _statusLine("Deviation", _statsDisplay(summary.deviation)),
+                          _statusLine("Mean", _statsDisplay(summary.mean)),
+                          _statusLine("Best", _statsDisplay(summary.best)),
+                          _statusLine("Count", summary.count.toString()),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+
+                // cube 2d view
+                _withScramble(
+                  (scramble) => MochiTappable(
+                    onPress: () => _showScramble(scramble),
+                    builder: (context, value, child) =>
+                        Cube2DView(puzzle: _history.puzzle, state: scramble.state, settings: widget.settings),
+                  ),
+                ),
+
+                // right stats
+                Expanded(
+                  child: StreamBuilder(
+                    stream: _times,
+                    builder: (context, snapshot) {
+                      final w = streamHandler(
+                        context,
+                        snapshot,
+                        description: "watching the times of the session",
+                      );
+                      if (w != null) return w;
+
+                      final times = snapshot.data!;
+                      return Column(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .end,
+                        textDirection: .ltr,
+                        children: [
+                          _statusLine("Mo3", _statsDisplay(times.mo(3))),
+                          _statusLine("Ao5", _statsDisplay(times.ao(5))),
+                          _statusLine("Ao12", _statsDisplay(times.ao(12))),
+                          _statusLine("Ao50", _statsDisplay(times.ao(50))),
+                          // _statusLine("Ao100", _statsDisplay(times.ao(100))),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          child: Center(child: TimerBody()),
+        ),
       ),
     );
   }

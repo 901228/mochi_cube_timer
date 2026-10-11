@@ -125,18 +125,24 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
 extension RecordsDaoModify on RecordsDao {
   Future<void> _write(String id, RecordsCompanion patch) =>
       (update(records)..where((t) => t.id.equals(id))).write(patch);
-  Future<void> _writeAll(List<String> ids, RecordsCompanion patch) =>
+  Future<void> _writeAll(Iterable<String> ids, RecordsCompanion patch) =>
       (update(records)..where((t) => t.id.isIn(ids))).write(patch);
 
   Future<void> setPenalty(String id, Penalty v) => _write(id, RecordsCompanion(penalty: Value(v)));
+  Future<void> setSession(String id, String v) => _write(id, RecordsCompanion(session: Value(v)));
   Future<void> setComment(String id, String? v) => _write(id, RecordsCompanion(comment: Value(v)));
   Future<void> setArchived(String id, bool v) => _write(id, RecordsCompanion(archived: Value(v)));
 
   Future<void> softDelete(String id) => _write(id, RecordsCompanion(deletedAt: Value(DateTime.now())));
 
-  Future<void> archiveAll(List<String> ids) async => _writeAll(ids, RecordsCompanion(archived: Value(true)));
-  Future<void> deleteAll(List<String> ids) async =>
+  Future<void> archiveAll(Iterable<String> ids) async =>
+      _writeAll(ids, RecordsCompanion(archived: Value(true)));
+  Future<void> deleteAll(Iterable<String> ids) async =>
       _writeAll(ids, RecordsCompanion(deletedAt: Value(DateTime.now())));
+  Future<void> setPenaltyAll(Iterable<String> ids, Penalty v) =>
+      _writeAll(ids, RecordsCompanion(penalty: Value(v)));
+  Future<void> setSessionAll(Iterable<String> ids, String v) =>
+      _writeAll(ids, RecordsCompanion(session: Value(v)));
 }
 
 typedef SessionSummary = ({int count, double? mean, double? deviation, double? best});

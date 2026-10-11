@@ -1,5 +1,4 @@
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -7,6 +6,39 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 import "record_detail_dialog.dart";
+
+/// null = not selecting.
+class RecordSelectionCubit extends Cubit<Set<String>?> {
+  RecordSelectionCubit() : super(null);
+
+  bool get active => state != null;
+
+  Iterable<String> visible = const [];
+
+  void start(String id) => emit({id});
+  void toggle(String id) {
+    final next = {...?state};
+    next.contains(id) ? next.remove(id) : next.add(id);
+    emit(next.isEmpty ? null : next);
+  }
+
+  void clear() => emit(null);
+  void selectAll() => emit(visible.toSet());
+
+  bool get isAllSelected => visible.isNotEmpty && state?.length == visible.length;
+  void toggleSelectAll() {
+    if (isAllSelected) {
+      emit({});
+    } else {
+      selectAll();
+    }
+  }
+}
+
+extension on Set<String>? {
+  bool get active => this != null;
+  bool contains(String id) => this?.contains(id) ?? false;
+}
 
 class RecordsList extends StatefulWidget {
   final List<RecordEntry> records;
@@ -17,39 +49,32 @@ class RecordsList extends StatefulWidget {
 }
 
 class _RecordsListState extends State<RecordsList> {
-  bool isSelectionMode = false;
-  Set<String> selected = {};
-
-  // TODO: popup a toast ahead the outer scaffold header within selection mode
-
   List<Widget> _menu(BuildContext context, RecordEntry record) {
     final dao = context.read<AppDatabase>().recordsDao;
-
-    MochiMenuItem penaltyItem(Penalty penalty) => MochiMenuItem(
-      prefix: Icon(penalty.icon),
-      title: Text(penalty.displayName),
-      selected: record.penalty == penalty,
-      onPress: () async {
-        if (record.penalty == penalty) return;
-        await dao.setPenalty(record.id, penalty);
-      },
-    );
 
     return [
       MochiMenuItem(
         prefix: const Icon(TablerIcons.listCheck),
         title: const Text("Select"),
         onPress: () {
-          setState(() {
-            isSelectionMode = true;
-            selected.add(record.id);
-          });
+          context.read<RecordSelectionCubit>().start(record.id);
         },
       ),
       MochiSubmenu(
         prefix: const Icon(TablerIcons.gavel),
         title: const Text("Penalty"),
-        menuBuilder: (context) => [penaltyItem(.none), penaltyItem(.dnf), penaltyItem(.plus2)],
+        menuBuilder: (context) => [
+          for (final penalty in Penalty.values)
+            MochiMenuItem(
+              prefix: Icon(penalty.icon),
+              title: Text(penalty.displayName),
+              selected: record.penalty == penalty,
+              onPress: () async {
+                if (record.penalty == penalty) return;
+                await dao.setPenalty(record.id, penalty);
+              },
+            ),
+        ],
       ),
       MochiSubmenu(
         prefix: const Icon(TablerIcons.arrowsRightLeft),
@@ -89,21 +114,15 @@ class _RecordsListState extends State<RecordsList> {
   }
 
   Widget _recordTile(RecordEntry record) {
+    final selected = context.watch<RecordSelectionCubit>().state;
+    final controller = context.read<RecordSelectionCubit>();
+
     final tile = MochiCard(
       padding: .all(10),
       selected: selected.contains(record.id),
       onPress: () {
-        if (isSelectionMode) {
-          setState(() {
-            if (selected.contains(record.id)) {
-              selected.remove(record.id);
-              if (selected.isEmpty) {
-                isSelectionMode = false;
-              }
-            } else {
-              selected.add(record.id);
-            }
-          });
+        if (selected.active) {
+          controller.toggle(record.id);
         } else {
           showRecordDetailDialog(context, recordId: record.id);
         }
@@ -141,9 +160,9 @@ class _RecordsListState extends State<RecordsList> {
       ),
     );
 
-    return isSelectionMode
+    return selected.active
         ? tile
-        : MochiContextMenu(longPress: true, menuBuilder: (context) => _menu(context, record), child: tile);
+        : MochiContextMenu(longPress: true, menuBuilder: (_) => _menu(context, record), child: tile);
   }
 
   @override
@@ -153,10 +172,11 @@ class _RecordsListState extends State<RecordsList> {
         applyHeightToFirstAscent: false,
         applyHeightToLastDescent: false,
       ),
+      // TODO: show hint text when there is no record
       child: GridView(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200,
-          childAspectRatio: 2.6,
+          maxCrossAxisExtent: 180,
+          childAspectRatio: 2.3,
           mainAxisSpacing: 16,
           crossAxisSpacing: 16,
         ),
