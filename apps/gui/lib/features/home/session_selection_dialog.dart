@@ -1,9 +1,9 @@
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 
 Future<void> showSessionSelectionDialog(BuildContext context, {required String sessionId}) async {
@@ -146,19 +146,25 @@ class _SessionTile extends StatefulWidget {
 class _SessionTileState extends State<_SessionTile> {
   bool _isEditing = false;
 
-  late final dao = context.read<AppDatabase>().sessionsDao;
-  late final appStateDao = context.read<AppDatabase>().appStateDao;
+  RecordsDao get recordsDao => context.read<AppDatabase>().recordsDao;
+  SessionsDao get sessionsDao => context.read<AppDatabase>().sessionsDao;
+  AppStateDao get appStateDao => context.read<AppDatabase>().appStateDao;
 
   List<Widget> _menu(BuildContext context) {
     return [
       MochiMenuItem(
-        prefix: Icon(TablerIcons.edit),
+        prefix: const Icon(TablerIcons.edit),
         title: const Text("Rename"),
         onPress: () {
           setState(() {
             _isEditing = true;
           });
         },
+      ),
+      MochiMenuItem(
+        prefix: const Icon(TablerIcons.packageExport),
+        title: const Text("Export"),
+        onPress: () => exportRecords(context, widget.session),
       ),
       MochiMenuDivider(),
       MochiMenuItem(
@@ -175,7 +181,7 @@ class _SessionTileState extends State<_SessionTile> {
             destructive: true,
           );
           if (answer) {
-            await dao.softDelete(widget.session.id);
+            await sessionsDao.softDelete(widget.session.id);
             if (widget.session.id == widget.currentSessionId) {
               await appStateDao.setSession(kDefaultSessionId);
               widget.afterDeletedCurrent();
@@ -204,7 +210,7 @@ class _SessionTileState extends State<_SessionTile> {
               },
               onSave: (newName) async {
                 if (newName.isNotEmpty && newName != widget.session.name) {
-                  await dao.setName(widget.session.id, newName);
+                  await sessionsDao.setName(widget.session.id, newName);
                 }
 
                 if (mounted) {

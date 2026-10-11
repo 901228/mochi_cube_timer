@@ -1,5 +1,4 @@
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/widgets.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/puzzles.dart";
@@ -32,12 +31,14 @@ class RecordSearchBar extends StatefulWidget {
   final VoidCallback? onAddRecord;
   final VoidCallback? onArchiveAll;
   final VoidCallback? onDeleteAll;
+  final VoidCallback? onExportAll;
   const RecordSearchBar({
     super.key,
     this.onChanged,
     required this.onAddRecord,
     required this.onArchiveAll,
     required this.onDeleteAll,
+    required this.onExportAll,
   });
 
   @override
@@ -82,16 +83,14 @@ class _RecordSearchBarState extends State<RecordSearchBar> {
               ),
             ),
           ),
-          MochiActionBar(scaleOnPress: false, [
+          MochiActionBar(scaleOnPress: false, maxVisible: 2, [
+            MochiAction(icon: TablerIcons.arrowDownToArc, label: "Archive", onPress: widget.onArchiveAll),
+            MochiAction(icon: TablerIcons.packageExport, label: "Export", onPress: widget.onExportAll),
             MochiAction(
               icon: TablerIcons.trashFilled,
-              label: "Delete all records",
+              label: "Delete all",
+              intent: .danger,
               onPress: widget.onDeleteAll,
-            ),
-            MochiAction(
-              icon: TablerIcons.arrowDownToArc,
-              label: "Archive all records",
-              onPress: widget.onArchiveAll,
             ),
           ]),
         ],

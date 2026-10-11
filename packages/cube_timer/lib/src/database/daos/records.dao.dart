@@ -240,3 +240,43 @@ extension StatisticsRecordTimeList on List<SolveTime> {
   double? bestAo(int n) => RecordsDaoStatistics.bestAo(this, n);
   (double, List<double>)? bestAoWithList(int n) => RecordsDaoStatistics.bestAoWithList(this, n);
 }
+
+typedef RecordExport = ({
+  String? comment,
+  int datetime,
+  String id,
+  Penalty penalty,
+  Puzzle puzzle,
+  String scramble,
+  SessionEntry session,
+  int time,
+});
+
+extension RecordsDaoData on RecordsDao {
+  Future<List<RecordExport>> export(String session, Puzzle puzzle, {bool includeDeleted = false}) =>
+      (select(records)..where((t) {
+            Expression<bool> base = t.session.equals(session) & t.puzzle.equals(puzzle.id);
+            if (!includeDeleted) {
+              base &= t.deletedAt.isNull();
+            }
+
+            return base;
+          }))
+          .join([innerJoin(sessions, sessions.id.equalsExp(records.session))])
+          .map((row) {
+            final record = row.readTable(records);
+            final session = row.readTable(sessions);
+
+            return (
+              id: record.id,
+              puzzle: record.puzzle,
+              session: session,
+              scramble: record.scramble,
+              time: record.time,
+              datetime: record.datetime.millisecondsSinceEpoch,
+              penalty: record.penalty,
+              comment: record.comment,
+            );
+          })
+          .get();
+}

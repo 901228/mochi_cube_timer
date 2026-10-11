@@ -4,6 +4,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../database/dao_provider.dart";
+import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "record_search_bar.dart";
 import "records_list.dart";
@@ -14,15 +15,15 @@ class RecordsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = AppStateProvider.of(context);
-    return _RecordsPage(puzzle: data.puzzle, sessionId: data.session.id, showArchived: data.showArchived);
+    return _RecordsPage(puzzle: data.puzzle, session: data.session, showArchived: data.showArchived);
   }
 }
 
 class _RecordsPage extends StatefulWidget {
   final Puzzle puzzle;
-  final String sessionId;
+  final SessionEntry session;
   final bool showArchived;
-  const _RecordsPage({required this.puzzle, required this.sessionId, required this.showArchived});
+  const _RecordsPage({required this.puzzle, required this.session, required this.showArchived});
 
   @override
   State<_RecordsPage> createState() => _RecordsPageState();
@@ -36,7 +37,7 @@ class _RecordsPageState extends State<_RecordsPage> {
 
   void _watchSession() {
     _stream = recordsDao.watchSession(
-      widget.sessionId,
+      widget.session.id,
       widget.puzzle,
       showArchived: widget.showArchived,
       query: _query,
@@ -52,7 +53,7 @@ class _RecordsPageState extends State<_RecordsPage> {
   @override
   void didUpdateWidget(_RecordsPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.sessionId != widget.sessionId ||
+    if (oldWidget.session.id != widget.session.id ||
         oldWidget.puzzle != widget.puzzle ||
         oldWidget.showArchived != widget.showArchived) {
       _watchSession();
@@ -111,6 +112,7 @@ class _RecordsPageState extends State<_RecordsPage> {
                         await recordsDao.deleteAll(records.map((e) => e.id).toList());
                       }
                     },
+              onExportAll: records.isEmpty ? null : () => exportRecords(context, widget.session),
             ),
 
             Expanded(
