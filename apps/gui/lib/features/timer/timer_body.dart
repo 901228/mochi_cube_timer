@@ -1,7 +1,6 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/services.dart";
-import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
@@ -87,7 +86,7 @@ class _TimerBodyState extends State<TimerBody> {
         }
         return true;
       case LogicalKeyboardKey.escape:
-        if (event is KeyDownEvent) bloc.add(TimerReset());
+        if (event is KeyDownEvent) bloc.add(TimerCanceled());
         return true;
     }
 
@@ -150,7 +149,7 @@ class _TimerBodyState extends State<TimerBody> {
                   child: MochiButton.icon(
                     icon: const Icon(TablerIcons.circleX),
                     onPress: () {
-                      context.read<TimerBloc>().add(TimerReset());
+                      context.read<TimerBloc>().add(TimerCanceled());
                     },
                   ),
                 ),

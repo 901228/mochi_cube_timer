@@ -23,6 +23,10 @@ final class TimerReset extends TimerEvent {
   const TimerReset();
 }
 
+final class TimerCanceled extends TimerEvent {
+  const TimerCanceled();
+}
+
 class _TimerTicked extends TimerEvent {
   const _TimerTicked({required this.elapsed});
 

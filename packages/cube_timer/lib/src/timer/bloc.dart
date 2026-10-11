@@ -23,6 +23,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerReleased>(_onReleased);
     on<TimerPressCanceled>(_onPressCanceled);
     on<TimerReset>(_onReset);
+    on<TimerCanceled>(_onTimerCanceled);
     on<_TimerHoldArmed>(_onHoldArmed);
     on<_TimerTicked>(_onTicked);
     on<TimerRecorded>(_onRecorded);
@@ -192,6 +193,16 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _cancelHold();
     _stopTicker();
     emit(const TimerInitial());
+  }
+
+  void _onTimerCanceled(TimerCanceled event, Emitter<TimerState> emit) {
+    _cancelHold();
+    _stopTicker();
+    if (state is TimerRunInProgress) {
+      emit(TimerRunComplete(state.elapsed, penalty: Penalty.dnf, recordId: null));
+    } else {
+      emit(const TimerInitial());
+    }
   }
 
   void _onTicked(_TimerTicked event, Emitter<TimerState> emit) {
