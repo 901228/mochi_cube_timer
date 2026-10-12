@@ -41,4 +41,9 @@ class ScrambleHistory {
     _index++;
     if (_index == _entries.length) _entries.add(puzzle.getScramble());
   }
+
+  void add(String scramble) {
+    _entries.add(Future.sync(() => puzzle.scrambler.parse(scramble)));
+    _index = _entries.length - 1;
+  }
 }

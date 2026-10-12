@@ -9,6 +9,7 @@ import "../../database/dao_provider.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../records/records_list.dart";
+import "../timer/scramble_cubit.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
 
@@ -296,7 +297,10 @@ class HomeShell extends StatelessWidget {
                 ? const Center(child: MochiCircularProgress())
                 : AppStateProvider(
                     state: data.appState,
-                    child: SessionsProvider(state: data.sessions, child: navigationShell),
+                    child: SessionsProvider(
+                      state: data.sessions,
+                      child: _ScrambleScope(puzzle: data.appState.puzzle, child: navigationShell),
+                    ),
                   ),
           );
         },
@@ -304,4 +308,33 @@ class HomeShell extends StatelessWidget {
     );
     // );
   }
+}
+
+/// Provides the [ScrambleCubit], following the puzzle without rebuilding the pages under it.
+class _ScrambleScope extends StatefulWidget {
+  const _ScrambleScope({required this.puzzle, required this.child});
+  final Puzzle puzzle;
+  final Widget child;
+
+  @override
+  State<_ScrambleScope> createState() => _ScrambleScopeState();
+}
+
+class _ScrambleScopeState extends State<_ScrambleScope> {
+  late final _cubit = ScrambleCubit(widget.puzzle);
+
+  @override
+  void didUpdateWidget(_ScrambleScope old) {
+    super.didUpdateWidget(old);
+    _cubit.usePuzzle(widget.puzzle);
+  }
+
+  @override
+  void dispose() {
+    _cubit.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider.value(value: _cubit, child: widget.child);
 }

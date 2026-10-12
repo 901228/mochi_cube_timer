@@ -6,6 +6,7 @@ import "../../database/dao_provider.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
+import "scramble_cubit.dart";
 import "timer_body.dart";
 
 class TimerPage extends StatelessWidget {
@@ -52,8 +53,6 @@ class _TimerView extends StatefulWidget {
 }
 
 class _TimerViewState extends State<_TimerView> {
-  late ScrambleHistory _history;
-
   late Stream<SessionSummary> _summary;
   late Stream<List<SolveTime>> _times;
 
@@ -66,7 +65,6 @@ class _TimerViewState extends State<_TimerView> {
   @override
   void initState() {
     super.initState();
-    _history = ScrambleHistory(widget.puzzle);
     _watchStats();
   }
 
@@ -75,13 +73,8 @@ class _TimerViewState extends State<_TimerView> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.puzzle != widget.puzzle) {
-      setState(() {
-        // change scramble
-        _history = ScrambleHistory(widget.puzzle);
-
-        // reset bloc
-        context.read<TimerBloc>().add(TimerReset());
-      });
+      // the scramble follows the puzzle in ScrambleCubit
+      context.read<TimerBloc>().add(TimerReset());
     }
 
     if (oldWidget.sessionId != widget.sessionId || oldWidget.puzzle != widget.puzzle) {
@@ -94,9 +87,6 @@ class _TimerViewState extends State<_TimerView> {
   /// one way a puzzle gets enlarged rather than two that look alike.
   void _showScramble(Scramble scramble) =>
       showScrambleModal(context, puzzle: widget.puzzle, scramble: scramble, settings: widget.settings);
-
-  void _previous() => setState(_history.previous);
-  void _next() => setState(_history.next);
 
   Widget _statusLine(String label, String value) => Row(
     mainAxisSize: .min,
@@ -115,11 +105,12 @@ class _TimerViewState extends State<_TimerView> {
 
   void _record(TimerState state) async {
     final bloc = context.read<TimerBloc>();
-    final scramble = await _history.current;
+    final scrambles = context.read<ScrambleCubit>();
+    final scramble = await scrambles.state;
 
     bloc.add(TimerRecorded(sessionId: widget.sessionId, puzzle: widget.puzzle, notation: scramble.notation));
 
-    _next();
+    scrambles.next();
     // TODO: break record animation (or notification)
   }
 
@@ -128,8 +119,8 @@ class _TimerViewState extends State<_TimerView> {
     // builder. FutureBuilder keeps the old snapshot's data when its
     // future changes, which would pair the previous puzzle's scramble
     // with the new puzzle for a frame.
-    key: ObjectKey(_history),
-    future: _history.current,
+    key: ValueKey(context.watch<ScrambleCubit>().puzzle),
+    future: context.watch<ScrambleCubit>().state,
     builder: (context, snapshot) {
       if (snapshot.hasError) {
         return Text("打亂失敗：${snapshot.error}");
@@ -153,6 +144,8 @@ class _TimerViewState extends State<_TimerView> {
 
   @override
   Widget build(BuildContext context) {
+    final scrambles = context.watch<ScrambleCubit>();
+
     return Padding(
       padding: context.theme.geometry.pagePadding,
       child: BlocListener<TimerBloc, TimerState>(
@@ -184,16 +177,27 @@ class _TimerViewState extends State<_TimerView> {
                   MochiAction(
                     icon: TablerIcons.pencil,
                     label: "Edit scramble",
-                    onPress: () {
-                      // TODO: manually input the scramble
+                    onPress: () async {
+                      final newScramble = await showMochiPrompt(
+                        context,
+                        title: "Enter scramble",
+                        hint: "Scramble",
+                      );
+                      if (newScramble != null && context.mounted) {
+                        context.read<ScrambleCubit>().add(newScramble);
+                      }
                     },
                   ),
                   MochiAction(
                     icon: TablerIcons.chevronLeft,
                     label: "Previous scramble",
-                    onPress: _history.hasPrevious ? _previous : null,
+                    onPress: scrambles.hasPrevious ? scrambles.previous : null,
                   ),
-                  MochiAction(icon: TablerIcons.chevronRight, label: "Next scramble", onPress: _next),
+                  MochiAction(
+                    icon: TablerIcons.chevronRight,
+                    label: "Next scramble",
+                    onPress: scrambles.next,
+                  ),
                 ], maxVisible: 3),
               ),
             ],
@@ -236,8 +240,11 @@ class _TimerViewState extends State<_TimerView> {
                 _withScramble(
                   (scramble) => MochiTappable(
                     onPress: () => _showScramble(scramble),
-                    builder: (context, value, child) =>
-                        Cube2DView(puzzle: _history.puzzle, state: scramble.state, settings: widget.settings),
+                    builder: (context, value, child) => Cube2DView(
+                      puzzle: scrambles.puzzle,
+                      state: scramble.state,
+                      settings: widget.settings,
+                    ),
                   ),
                 ),
 
