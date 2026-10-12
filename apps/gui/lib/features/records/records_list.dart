@@ -130,9 +130,10 @@ class _RecordsListState extends State<RecordsList> {
   Widget _recordTile(RecordEntry record) {
     final selected = context.watch<RecordSelectionCubit>().state;
     final controller = context.read<RecordSelectionCubit>();
+    final g = context.theme.geometry;
 
     final tile = MochiCard(
-      padding: .all(10),
+      padding: .all(g.space.xs),
       selected: selected.contains(record.id),
       onPress: () {
         if (selected.active) {
@@ -181,22 +182,29 @@ class _RecordsListState extends State<RecordsList> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTextStyle.merge(
-      textHeightBehavior: const TextHeightBehavior(
-        applyHeightToFirstAscent: false,
-        applyHeightToLastDescent: false,
-      ),
-      // TODO: show hint text when there is no record
-      child: GridView(
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 180,
-          childAspectRatio: 2.3,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-        ),
-        shrinkWrap: true,
-        children: widget.records.map(_recordTile).toList(),
-      ),
-    );
+    final mobile = context.responsive(mobile: true, tablet: false);
+
+    return widget.records.isEmpty
+        ? Center(child: Text("No records yet"))
+        : SingleChildScrollView(
+            padding: context.theme.geometry.pagePadding,
+            child: DefaultTextStyle.merge(
+              textHeightBehavior: const TextHeightBehavior(
+                applyHeightToFirstAscent: false,
+                applyHeightToLastDescent: false,
+              ),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: mobile ? 160 : 180,
+                  childAspectRatio: mobile ? 1.8 : 2.3,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                ),
+                shrinkWrap: true,
+                itemCount: widget.records.length,
+                itemBuilder: (context, index) => _recordTile(widget.records[index]),
+              ),
+            ),
+          );
   }
 }

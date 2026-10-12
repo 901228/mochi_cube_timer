@@ -62,7 +62,6 @@ class _RecordsPageState extends State<_RecordsPage> {
   @override
   Widget build(BuildContext context) {
     final inset = MediaQuery.paddingOf(context);
-    final pagePadding = context.theme.geometry.pagePadding;
 
     return StreamBuilder(
       stream: _stream,
@@ -74,7 +73,7 @@ class _RecordsPageState extends State<_RecordsPage> {
         context.read<RecordSelectionCubit>().visible = records.map((e) => e.id);
 
         return Padding(
-          padding: inset.copyWith(top: inset.top + pagePadding.top, bottom: 0),
+          padding: inset.copyWith(top: inset.top + context.theme.geometry.pagePadding.top, bottom: 0),
           child: Column(
             mainAxisSize: .max,
             children: [
@@ -121,12 +120,7 @@ class _RecordsPageState extends State<_RecordsPage> {
               MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
-                child: Expanded(
-                  child: SingleChildScrollView(
-                    padding: (pagePadding * 2).copyWith(bottom: pagePadding.bottom, top: pagePadding.top),
-                    child: RecordsList(records: records),
-                  ),
-                ),
+                child: Expanded(child: RecordsList(records: records)),
               ),
             ],
           ),
