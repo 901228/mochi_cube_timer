@@ -9,6 +9,7 @@ import "../../theme.dart";
 import "../records/search_bar/record_add_dialog.dart";
 import "scramble_cubit.dart";
 import "timer_body.dart";
+import "timer_focus.dart";
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -97,10 +98,7 @@ class _TimerViewState extends State<_TimerView> {
         style: context.theme.typography.body.sm.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
       ),
       const SizedBox(width: 8),
-      Text(
-        value,
-        style: context.theme.typography.body.sm.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
-      ),
+      Text(value, style: context.theme.typography.body.sm.copyWith(fontFeatures: const [FontFeature.tabularFigures()])),
     ],
   );
 
@@ -147,12 +145,13 @@ class _TimerViewState extends State<_TimerView> {
   Widget build(BuildContext context) {
     final scrambles = context.watch<ScrambleCubit>();
 
-    return Padding(
+    Widget page(bool running) => Padding(
       padding: context.theme.geometry.pagePadding,
       child: BlocListener<TimerBloc, TimerState>(
         listenWhen: (previous, current) => previous is! TimerRunComplete && current is TimerRunComplete,
         listener: (context, state) => _record(state),
         child: MochiScaffold(
+          immersive: running,
           header: Column(
             mainAxisSize: .min,
             children: [
@@ -165,10 +164,7 @@ class _TimerViewState extends State<_TimerView> {
                   // alone: ScrambleTokens sets its own, the same at both ends.
                   builder: (context, value, child) => DefaultTextStyle.merge(
                     style: context.theme.timer.lg,
-                    child: ScrambleTokens(
-                      puzzle: widget.puzzle,
-                      steps: widget.puzzle.scrambler.stepsOf(scramble),
-                    ),
+                    child: ScrambleTokens(puzzle: widget.puzzle, steps: widget.puzzle.scrambler.stepsOf(scramble)),
                   ),
                 ),
               ),
@@ -194,11 +190,7 @@ class _TimerViewState extends State<_TimerView> {
                       icon: TablerIcons.pencil,
                       label: "Edit scramble",
                       onPress: () async {
-                        final newScramble = await showMochiPrompt(
-                          context,
-                          title: "Enter scramble",
-                          hint: "Scramble",
-                        );
+                        final newScramble = await showMochiPrompt(context, title: "Enter scramble", hint: "Scramble");
                         if (newScramble != null && context.mounted) {
                           context.read<ScrambleCubit>().add(newScramble);
                         }
@@ -209,11 +201,7 @@ class _TimerViewState extends State<_TimerView> {
                       label: "Previous scramble",
                       onPress: scrambles.hasPrevious ? scrambles.previous : null,
                     ),
-                    MochiAction(
-                      icon: TablerIcons.chevronRight,
-                      label: "Next scramble",
-                      onPress: scrambles.next,
-                    ),
+                    MochiAction(icon: TablerIcons.chevronRight, label: "Next scramble", onPress: scrambles.next),
                   ], maxVisible: 3),
                 ],
               ),
@@ -230,11 +218,7 @@ class _TimerViewState extends State<_TimerView> {
                   child: StreamBuilder(
                     stream: _summary,
                     builder: (context, snapshot) {
-                      final w = streamHandler(
-                        context,
-                        snapshot,
-                        description: "watching the summary of the session",
-                      );
+                      final w = streamHandler(context, snapshot, description: "watching the summary of the session");
                       if (w != null) return w;
 
                       final summary = snapshot.data!;
@@ -257,11 +241,8 @@ class _TimerViewState extends State<_TimerView> {
                 _withScramble(
                   (scramble) => MochiTappable(
                     onPress: () => _showScramble(scramble),
-                    builder: (context, value, child) => Cube2DView(
-                      puzzle: scrambles.puzzle,
-                      state: scramble.state,
-                      settings: widget.settings,
-                    ),
+                    builder: (context, value, child) =>
+                        Cube2DView(puzzle: scrambles.puzzle, state: scramble.state, settings: widget.settings),
                   ),
                 ),
 
@@ -270,11 +251,7 @@ class _TimerViewState extends State<_TimerView> {
                   child: StreamBuilder(
                     stream: _times,
                     builder: (context, snapshot) {
-                      final w = streamHandler(
-                        context,
-                        snapshot,
-                        description: "watching the times of the session",
-                      );
+                      final w = streamHandler(context, snapshot, description: "watching the times of the session");
                       if (w != null) return w;
 
                       final times = snapshot.data!;
@@ -296,8 +273,38 @@ class _TimerViewState extends State<_TimerView> {
               ],
             ),
           ),
-
           child: Center(child: TimerBody()),
+        ),
+      ),
+    );
+
+    return BlocListener<TimerBloc, TimerState>(
+      listenWhen: (previous, current) => previous.runtimeType != current.runtimeType,
+      listener: (context, state) => context.read<TimerFocusCubit>().follow(state),
+      child: BlocBuilder<TimerFocusCubit, bool>(
+        builder: (context, running) => Stack(
+          children: [
+            page(running),
+            // While a solve runs, a press anywhere stops it, not only on the time. Kept on the
+            // tree so the press that stops it is still let go here.
+            Positioned.fill(
+              child: IgnorePointer(ignoring: !running, child: const TimerPressArea()),
+            ),
+            if (running)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: SafeArea(
+                  child: Padding(
+                    padding: context.theme.geometry.pagePadding,
+                    child: MochiButton.icon(
+                      icon: const Icon(TablerIcons.circleX),
+                      onPress: () => context.read<TimerBloc>().add(TimerCanceled()),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );

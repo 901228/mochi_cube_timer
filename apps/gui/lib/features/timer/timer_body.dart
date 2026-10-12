@@ -10,8 +10,6 @@ import "../../shared/utils.dart";
 import "../../theme.dart";
 import "timer_text.dart";
 
-// TODO: push a new page when record started
-
 class TimerBody extends StatefulWidget {
   final Color? color;
   final Color pressedColor;
@@ -34,10 +32,6 @@ class _TimerBodyState extends State<TimerBody> {
   /// Whether the space press currently held down was sent to the bloc, so its
   /// release is delivered even if the page stopped being active in between.
   bool _spaceHeld = false;
-
-  /// The pointer driving the timer. Other fingers and non-primary mouse
-  /// buttons are ignored so they can't send an extra press or release.
-  int? _pointer;
 
   @override
   void initState() {
@@ -115,50 +109,54 @@ class _TimerBodyState extends State<TimerBody> {
           ),
           child: Stack(
             children: [
-              Positioned.fill(
-                child: Listener(
-                  behavior: .opaque,
-                  onPointerDown: (e) {
-                    if (_pointer != null) return;
-                    if (e.kind == .mouse && e.buttons != kPrimaryButton) return;
-                    _pointer = e.pointer;
-                    context.read<TimerBloc>().add(TimerPressed());
-                  },
-                  onPointerUp: (e) {
-                    if (e.pointer != _pointer) return;
-                    _pointer = null;
-                    context.read<TimerBloc>().add(TimerReleased());
-                  },
-                  onPointerCancel: (e) {
-                    if (e.pointer != _pointer) return;
-                    _pointer = null;
-                    context.read<TimerBloc>().add(TimerPressCanceled());
-                  },
-                  child: const SizedBox.expand(),
-                ),
-              ),
+              const Positioned.fill(child: TimerPressArea()),
               state is TimerRunInInspection
                   ? const InspectionText()
                   : (state is TimerInitial || state.hold == .armed
                         ? const IgnorePointer(child: Center(child: Text("0.00")))
                         : const RunTimeText()),
-              if (state is TimerRunInInspection || state is TimerRunInProgress)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: MochiButton.icon(
-                    icon: const Icon(TablerIcons.circleX),
-                    onPress: () {
-                      context.read<TimerBloc>().add(TimerCanceled());
-                    },
-                  ),
-                ),
             ],
           ),
         );
       },
     );
   }
+}
+
+/// Takes the presses that drive the timer.
+class TimerPressArea extends StatefulWidget {
+  const TimerPressArea({super.key});
+
+  @override
+  State<TimerPressArea> createState() => _TimerPressAreaState();
+}
+
+class _TimerPressAreaState extends State<TimerPressArea> {
+  /// The pointer driving the timer. Other fingers and non-primary mouse
+  /// buttons are ignored so they can't send an extra press or release.
+  int? _pointer;
+
+  @override
+  Widget build(BuildContext context) => Listener(
+    behavior: .opaque,
+    onPointerDown: (e) {
+      if (_pointer != null) return;
+      if (e.kind == .mouse && e.buttons != kPrimaryButton) return;
+      _pointer = e.pointer;
+      context.read<TimerBloc>().add(TimerPressed());
+    },
+    onPointerUp: (e) {
+      if (e.pointer != _pointer) return;
+      _pointer = null;
+      context.read<TimerBloc>().add(TimerReleased());
+    },
+    onPointerCancel: (e) {
+      if (e.pointer != _pointer) return;
+      _pointer = null;
+      context.read<TimerBloc>().add(TimerPressCanceled());
+    },
+    child: const SizedBox.expand(),
+  );
 }
 
 class InspectionText extends StatelessWidget {

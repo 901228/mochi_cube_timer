@@ -10,6 +10,7 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../records/records_list.dart";
 import "../timer/scramble_cubit.dart";
+import "../timer/timer_focus.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
 
@@ -155,8 +156,11 @@ class HomeShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => RecordSelectionCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => RecordSelectionCubit()),
+        BlocProvider(create: (context) => TimerFocusCubit()),
+      ],
       child: StreamBuilder(
         stream: context.read<AppDatabase>().appStateDao.watch().combineLatest(
           context.read<AppDatabase>().sessionsDao.watchAll(),
@@ -174,6 +178,7 @@ class HomeShell extends StatelessWidget {
           final data = snapshot.data;
           return MochiScaffold(
             extendBody: true,
+            immersive: context.watch<TimerFocusCubit>().state,
             padding: .zero,
             header: MochiHeader(
               alignment: .center,
