@@ -98,7 +98,7 @@ class _RecordsPageState extends State<_RecordsPage> {
                           confirmLabel: "Archive",
                         );
                         if (answer) {
-                          await recordsDao.archiveAll(records.map((e) => e.id));
+                          await recordsDao.setArchivedAll(records.map((e) => e.id), true);
                         }
                       },
                 onDeleteAll: records.isEmpty

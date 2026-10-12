@@ -3,6 +3,7 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
+import "package:stream_transform/stream_transform.dart";
 
 import "../../database/dao_provider.dart";
 import "../../shared/puzzles.dart";
@@ -16,7 +17,10 @@ class HomeShell extends StatelessWidget {
   final List<({String name, IconData icon, String path})> pages;
   final StatefulNavigationShell navigationShell;
 
-  Widget _selectionHeader(AppStateDaoReturn? data) => BlocBuilder<RecordSelectionCubit, Set<String>?>(
+  Widget _selectionHeader(
+    BuildContext context,
+    ({AppStateDaoReturn appState, List<SessionEntry> sessions})? data,
+  ) => BlocBuilder<RecordSelectionCubit, Set<String>?>(
     buildWhen: (_, next) => next != null,
     builder: (context, state) {
       final recordsDao = context.read<AppDatabase>().recordsDao;
@@ -69,11 +73,32 @@ class HomeShell extends StatelessWidget {
                 MochiAction.menu(
                   icon: TablerIcons.arrowsRightLeft,
                   label: "Move To",
-                  children: [
-                    // TODO: sessions
-                  ],
+                  children: (data?.sessions ?? <SessionEntry>[])
+                      .map(
+                        (e) => MochiAction(
+                          icon: TablerIcons.stack,
+                          label: e.name,
+                          selected: e.id == data?.appState.session.id,
+                          onPress: () async {
+                            if (e.id == data?.appState.session.id) return;
+
+                            final answer = await showMochiConfirm(
+                              context,
+                              title: "Move all records to ${e.name}?",
+                            );
+                            if (answer) {
+                              await recordsDao.setSessionAll(state, e.id);
+                              await recordsDao.setArchivedAll(state, false);
+                              if (context.mounted) {
+                                selection.clear();
+                              }
+                            }
+                          },
+                        ),
+                      )
+                      .toList(),
                 ),
-                if (!(data?.showArchived ?? false))
+                if (!(data?.appState.showArchived ?? false))
                   MochiAction(
                     icon: TablerIcons.arrowDownToArc,
                     label: "Archive",
@@ -85,7 +110,7 @@ class HomeShell extends StatelessWidget {
                         confirmLabel: "Archive",
                       );
                       if (answer) {
-                        await recordsDao.archiveAll(state);
+                        await recordsDao.setArchivedAll(state, true);
                         if (context.mounted) {
                           selection.clear();
                         }
@@ -132,12 +157,15 @@ class HomeShell extends StatelessWidget {
     return BlocProvider(
       create: (context) => RecordSelectionCubit(),
       child: StreamBuilder(
-        stream: context.read<AppDatabase>().appStateDao.watch(),
+        stream: context.read<AppDatabase>().appStateDao.watch().combineLatest(
+          context.read<AppDatabase>().sessionsDao.watchAll(),
+          (appState, sessions) => (appState: appState, sessions: sessions),
+        ),
         builder: (context, snapshot) {
           final w = streamHandler(
             context,
             snapshot,
-            description: "watching the app state for the home shell",
+            description: "watching the app state and sessions for the home shell",
             showCircularProgress: false,
           );
           if (w != null) return w;
@@ -172,13 +200,13 @@ class HomeShell extends StatelessWidget {
                             children: [
                               DefaultTextStyle.merge(
                                 style: context.theme.typography.title.md,
-                                child: Text(data.puzzle.displayName),
+                                child: Text(data.appState.puzzle.displayName),
                               ),
                               DefaultTextStyle.merge(
                                 style: context.theme.typography.title.sm.copyWith(
                                   color: context.colors.mutedForeground,
                                 ),
-                                child: Text(data.session.name),
+                                child: Text(data.appState.session.name),
                               ),
                             ],
                           ),
@@ -188,24 +216,30 @@ class HomeShell extends StatelessWidget {
               suffixes: [
                 if (pages[navigationShell.currentIndex].name.toLowerCase() != "timer")
                   MochiAction(
-                    icon: (data?.showArchived ?? false) ? TablerIcons.archiveFilled : TablerIcons.archive,
+                    icon: (data?.appState.showArchived ?? false)
+                        ? TablerIcons.archiveFilled
+                        : TablerIcons.archive,
                     enabled: data != null,
-                    selected: data?.showArchived ?? false,
+                    selected: data?.appState.showArchived ?? false,
                     label: "Show archived records",
                     onPress: data == null
                         ? null
-                        : () => context.read<AppDatabase>().appStateDao.setShowArchived(!data.showArchived),
+                        : () => context.read<AppDatabase>().appStateDao.setShowArchived(
+                            !data.appState.showArchived,
+                          ),
                   ),
                 MochiAction(
                   icon: TablerIcons.stack2,
                   label: "Sessions",
                   onPress: data == null
                       ? null
-                      : () => showSessionSelectionDialog(context, sessionId: data.session.id),
+                      : () => showSessionSelectionDialog(context, sessionId: data.appState.session.id),
                 ),
               ],
             ),
-            headerOverlay: context.watch<RecordSelectionCubit>().active ? _selectionHeader(data) : null,
+            headerOverlay: context.watch<RecordSelectionCubit>().active
+                ? _selectionHeader(context, data)
+                : null,
             footer: MochiBottomNav<int>(
               value: navigationShell.currentIndex,
               onChanged: (value) {
@@ -260,7 +294,10 @@ class HomeShell extends StatelessWidget {
             ),
             child: data == null
                 ? const Center(child: MochiCircularProgress())
-                : AppStateProvider(state: data, child: navigationShell),
+                : AppStateProvider(
+                    state: data.appState,
+                    child: SessionsProvider(state: data.sessions, child: navigationShell),
+                  ),
           );
         },
       ),

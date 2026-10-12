@@ -2,6 +2,7 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../database/dao_provider.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
@@ -51,6 +52,8 @@ class RecordsList extends StatefulWidget {
 class _RecordsListState extends State<RecordsList> {
   List<Widget> _menu(BuildContext context, RecordEntry record) {
     final dao = context.read<AppDatabase>().recordsDao;
+    final sessions = SessionsProvider.of(context);
+    final appState = AppStateProvider.of(context);
 
     return [
       MochiMenuItem(
@@ -79,9 +82,20 @@ class _RecordsListState extends State<RecordsList> {
       MochiSubmenu(
         prefix: const Icon(TablerIcons.arrowsRightLeft),
         title: const Text("Move to"),
-        menuBuilder: (context) => [
-          // TODO: sessions
-        ],
+        menuBuilder: (context) => sessions
+            .map(
+              (e) => MochiMenuItem(
+                prefix: const Icon(TablerIcons.stack),
+                title: Text(e.name),
+                selected: e.id == appState.session.id,
+                onPress: () async {
+                  if (e.id == appState.session.id) return;
+                  await dao.setSession(record.id, e.id);
+                  await dao.setArchived(record.id, false);
+                },
+              ),
+            )
+            .toList(),
       ),
       MochiMenuItem(
         prefix: Icon(record.archived ? TablerIcons.archiveOff : TablerIcons.archive),

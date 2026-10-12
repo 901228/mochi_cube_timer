@@ -135,8 +135,8 @@ extension RecordsDaoModify on RecordsDao {
 
   Future<void> softDelete(String id) => _write(id, RecordsCompanion(deletedAt: Value(DateTime.now())));
 
-  Future<void> archiveAll(Iterable<String> ids) async =>
-      _writeAll(ids, RecordsCompanion(archived: Value(true)));
+  Future<void> setArchivedAll(Iterable<String> ids, bool v) async =>
+      _writeAll(ids, RecordsCompanion(archived: Value(v)));
   Future<void> deleteAll(Iterable<String> ids) async =>
       _writeAll(ids, RecordsCompanion(deletedAt: Value(DateTime.now())));
   Future<void> setPenaltyAll(Iterable<String> ids, Penalty v) =>
