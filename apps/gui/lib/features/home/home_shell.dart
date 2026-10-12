@@ -242,18 +242,21 @@ class HomeShell extends StatelessWidget {
                   )
                   .toList(),
             ),
-            drawer: MochiSidebar(
-              children: [
-                MochiSidebarHeading(Text("Mochi Cube Timer")),
-                MochiSidebarItem(
-                  label: const Text("Settings"),
-                  icon: Icon(TablerIcons.settings),
-                  onPress: () {
-                    context.pop();
-                    context.pushNamed("settings");
-                  },
-                ),
-              ],
+            // Under the scaffold, for MochiScaffold.of: the drawer is not a route to pop.
+            drawer: Builder(
+              builder: (context) => MochiSidebar(
+                children: [
+                  MochiSidebarHeading(Text("Mochi Cube Timer")),
+                  MochiSidebarItem(
+                    label: const Text("Settings"),
+                    icon: Icon(TablerIcons.settings),
+                    onPress: () {
+                      MochiScaffold.of(context).closeDrawer();
+                      context.pushNamed("settings");
+                    },
+                  ),
+                ],
+              ),
             ),
             child: data == null
                 ? const Center(child: MochiCircularProgress())
