@@ -108,6 +108,7 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
     required String scramble,
     required int time,
     Penalty penalty = .none,
+    String? comment,
   }) async {
     final row = await into(records).insertReturning(
       RecordsCompanion.insert(
@@ -116,6 +117,7 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
         scramble: scramble,
         time: time,
         penalty: penalty,
+        comment: Value(comment),
       ),
     );
     return row.id;

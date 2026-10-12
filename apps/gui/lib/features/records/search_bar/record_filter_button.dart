@@ -10,6 +10,7 @@ class _RecordFilterButton extends StatelessWidget {
 
     return MochiButton.icon(
       appearance: .ghost,
+      intent: .neutral,
       size: .sm,
       focusNode: focusNode,
       selected: active > 0,

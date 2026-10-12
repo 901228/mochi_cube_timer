@@ -6,6 +6,7 @@ import "../../database/dao_provider.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
+import "../records/search_bar/record_add_dialog.dart";
 import "scramble_cubit.dart";
 import "timer_body.dart";
 
@@ -171,34 +172,50 @@ class _TimerViewState extends State<_TimerView> {
                   ),
                 ),
               ),
-              Align(
-                alignment: .centerEnd,
-                child: MochiActionBar([
-                  MochiAction(
-                    icon: TablerIcons.pencil,
-                    label: "Edit scramble",
+              Row(
+                mainAxisSize: .max,
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  MochiButton.icon(
+                    size: .sm,
+                    intent: .neutral,
+                    icon: Icon(TablerIcons.squarePlus),
                     onPress: () async {
-                      final newScramble = await showMochiPrompt(
-                        context,
-                        title: "Enter scramble",
-                        hint: "Scramble",
-                      );
-                      if (newScramble != null && context.mounted) {
-                        context.read<ScrambleCubit>().add(newScramble);
+                      final answer = await showAddRecordModal(context);
+                      if (answer == null) return;
+
+                      if (context.mounted) {
+                        showMochiToast(context, title: const Text("Record added"));
                       }
                     },
                   ),
-                  MochiAction(
-                    icon: TablerIcons.chevronLeft,
-                    label: "Previous scramble",
-                    onPress: scrambles.hasPrevious ? scrambles.previous : null,
-                  ),
-                  MochiAction(
-                    icon: TablerIcons.chevronRight,
-                    label: "Next scramble",
-                    onPress: scrambles.next,
-                  ),
-                ], maxVisible: 3),
+                  MochiActionBar([
+                    MochiAction(
+                      icon: TablerIcons.pencil,
+                      label: "Edit scramble",
+                      onPress: () async {
+                        final newScramble = await showMochiPrompt(
+                          context,
+                          title: "Enter scramble",
+                          hint: "Scramble",
+                        );
+                        if (newScramble != null && context.mounted) {
+                          context.read<ScrambleCubit>().add(newScramble);
+                        }
+                      },
+                    ),
+                    MochiAction(
+                      icon: TablerIcons.chevronLeft,
+                      label: "Previous scramble",
+                      onPress: scrambles.hasPrevious ? scrambles.previous : null,
+                    ),
+                    MochiAction(
+                      icon: TablerIcons.chevronRight,
+                      label: "Next scramble",
+                      onPress: scrambles.next,
+                    ),
+                  ], maxVisible: 3),
+                ],
               ),
             ],
           ),

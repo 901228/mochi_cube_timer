@@ -7,6 +7,7 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "record_search_bar.dart";
 import "records_list.dart";
+import "search_bar/record_add_dialog.dart";
 
 class RecordsPage extends StatelessWidget {
   const RecordsPage({super.key});
@@ -85,7 +86,12 @@ class _RecordsPageState extends State<_RecordsPage> {
                   });
                 },
                 onAddRecord: () async {
-                  // TODO: manually add record
+                  final answer = await showAddRecordModal(context);
+                  if (answer == null) return;
+
+                  if (context.mounted) {
+                    showMochiToast(context, title: const Text("Record added"));
+                  }
                 },
                 onArchiveAll: records.every((e) => e.archived)
                     ? null
