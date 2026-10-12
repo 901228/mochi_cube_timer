@@ -131,6 +131,7 @@ class TimesDistributionGraph extends StatelessWidget {
                 size: constraints.biggest,
                 painter: _MedianLine(
                   x: x - 1,
+                  y: -10,
                   bottomPadding: _labelsSize,
                   lineColor: c.foreground.withValues(alpha: 0.6),
                   lineWidth: 3,
@@ -150,7 +151,7 @@ class TimesDistributionGraph extends StatelessWidget {
 }
 
 class _MedianLine extends CustomPainter {
-  final double x;
+  final double x, y;
 
   final Color lineColor;
   final double lineWidth;
@@ -164,6 +165,7 @@ class _MedianLine extends CustomPainter {
 
   _MedianLine({
     required this.x,
+    this.y = 0,
 
     required this.lineColor,
     this.lineWidth = 2,
@@ -195,16 +197,17 @@ class _MedianLine extends CustomPainter {
       ..strokeWidth = lineWidth
       ..strokeCap = .round
       ..strokeJoin = .round;
-    for (var y = labelPainter.height + spacing; y < size.height - bottomPadding; y += dash + gap) {
-      canvas.drawLine(Offset(x, y), Offset(x, (y + dash).clamp(0, size.height)), paint);
+    for (var yy = labelPainter.height + spacing + y; yy < size.height - bottomPadding; yy += dash + gap) {
+      canvas.drawLine(Offset(x, yy), Offset(x, (yy + dash).clamp(0, size.height)), paint);
     }
 
-    labelPainter.paint(canvas, Offset(x - labelPainter.width / 2, 0));
+    labelPainter.paint(canvas, Offset(x - labelPainter.width / 2, y));
   }
 
   @override
   bool shouldRepaint(_MedianLine old) =>
       old.x != x ||
+      old.y != y ||
       old.lineColor != lineColor ||
       old.lineWidth != lineWidth ||
       old.dash != dash ||

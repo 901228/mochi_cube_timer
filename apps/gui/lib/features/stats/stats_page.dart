@@ -32,6 +32,8 @@ class _StatsPage extends StatefulWidget {
   State<_StatsPage> createState() => _StatsPageState();
 }
 
+// TODO: number increasing animation ?
+
 class _StatsPageState extends State<_StatsPage> {
   late Stream<StatsReturn> _stream;
 
@@ -77,12 +79,10 @@ class _StatsPageState extends State<_StatsPage> {
   MochiColors get colors => context.theme.colors;
   MochiTypeface get timer => context.theme.timer;
 
-  Widget _summaryText(double? value, {Color? color}) => Text(
-    _statsString(value),
-    style: timer.xl6.copyWith(fontWeight: .bold, color: color),
-  );
+  TextStyle timesStyle({Color? color}) => timer.xl4.copyWith(fontWeight: .bold, color: color);
 
-  Widget _timesText(double? value) => Text(_statsString(value), style: timer.xl5.copyWith(fontWeight: .bold));
+  Widget _summaryText(double? value, {Color? color}) =>
+      Text(_statsString(value), style: timesStyle(color: color));
 
   Widget _card({required String title, required Widget child}) => MochiCard(
     elevation: .md,
@@ -92,9 +92,24 @@ class _StatsPageState extends State<_StatsPage> {
     child: child,
   );
 
+  Widget _statsTile({required String title, required String description}) => DefaultTextHeightBehavior(
+    textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
+    child: Row(
+      mainAxisSize: .max,
+      mainAxisAlignment: .spaceBetween,
+      children: [
+        DefaultTextStyle(
+          style: context.theme.typography.body.xs.copyWith(color: colors.mutedForeground),
+          child: Text(description),
+        ),
+        DefaultTextStyle.merge(style: timesStyle(), child: Text(title)),
+      ],
+    ),
+  );
+
   List<Widget> _bestAo5Times(List<double> values) {
     final sortedValues = values.indexed.sorted((a, b) => a.$2.compareTo(b.$2));
-    final style = timer.xl3.copyWith(fontWeight: .bold);
+    final style = timer.xl2.copyWith(fontWeight: .bold);
 
     Widget timesText(double? value, [bool firstLast = false]) {
       final valueString = _statsString(value);
@@ -129,23 +144,20 @@ class _StatsPageState extends State<_StatsPage> {
 
         final currentStats = _card(
           title: "Current Stats",
-          child: MochiTileGroup(
-            divider: .none,
+          child: Column(
+            mainAxisAlignment: .spaceAround,
             children: [
-              for (final (label, value) in [
-                ("Mo3", data?.times.mo(3)),
-                ("Ao5", data?.times.ao(5)),
-                ("Ao12", data?.times.ao(12)),
-                ("Ao50", data?.times.ao(50)),
-                ("Ao100", data?.times.ao(100)),
-              ])
-                MochiTile(title: _timesText(value), details: Text(label)),
-            ],
+              ("Mo3", data?.times.mo(3)),
+              ("Ao5", data?.times.ao(5)),
+              ("Ao12", data?.times.ao(12)),
+              ("Ao50", data?.times.ao(50)),
+              ("Ao100", data?.times.ao(100)),
+            ].map((v) => _statsTile(title: _statsString(v.$2), description: v.$1)).toList(),
           ),
         );
         final solveCount = _card(
           title: "Solve Count",
-          child: Text(data?.summary.count.toString() ?? "--", style: timer.xl6.copyWith(fontWeight: .bold)),
+          child: Text(data?.summary.count.toString() ?? "--", style: timer.xl5.copyWith(fontWeight: .bold)),
         );
         final solveMean = _card(title: "Solve Mean", child: _summaryText(data?.summary.mean));
         final solveDeviation = _card(title: "Solve Deviation", child: _summaryText(data?.summary.deviation));
@@ -159,29 +171,26 @@ class _StatsPageState extends State<_StatsPage> {
         );
         final bestStats = _card(
           title: "Best Stats",
-          child: MochiTileGroup(
-            divider: .none,
+          child: Column(
+            mainAxisAlignment: .spaceAround,
             children: [
-              for (final (label, value) in [
-                ("Mo3", data?.times.bestMo(3)),
-                ("Ao5", data?.times.bestAo(5)),
-                ("Ao12", data?.times.bestAo(12)),
-              ])
-                MochiTile(title: _timesText(value), details: Text(label)),
-            ],
+              ("Mo3", data?.times.bestMo(3)),
+              ("Ao5", data?.times.bestAo(5)),
+              ("Ao12", data?.times.bestAo(12)),
+            ].map((v) => _statsTile(title: _statsString(v.$2), description: v.$1)).toList(),
           ),
         );
         final bestAo5Data = data?.times.bestAoWithList(5);
         final bestAo5 = _card(
           title: "Best Ao5",
           child: bestAo5Data == null
-              ? Center(child: _timesText(null))
+              ? Center(child: _summaryText(null))
               : Column(
-                  mainAxisAlignment: .spaceEvenly,
+                  mainAxisAlignment: .spaceAround,
                   crossAxisAlignment: .start,
                   children: [
                     _summaryText(bestAo5Data.$1, color: colors.primary.base),
-                    SizedBox(height: geometry.space.sm),
+                    SizedBox(height: geometry.space.xs),
                     ..._bestAo5Times(bestAo5Data.$2),
                   ],
                 ),
