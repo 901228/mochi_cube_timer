@@ -3,6 +3,7 @@ analyzer:
     - build/**
     - web/**
     - linux/**
+    - ios/**
 include:
   - package:flutter_lints/flutter.yaml
   - ../../analysis_options.yaml

@@ -28,6 +28,7 @@ class InspectionSettingsSections extends StatelessWidget {
               suffix: MochiSwitch(value: settings.inspectionEnabled, onChanged: dao.setInspectionEnabled),
             ),
             SettingsTile(
+              enabled: settings.inspectionEnabled,
               title: "Inspection duration (seconds)",
               subtitle: "Default duration: 15 seconds",
               suffix: Text(settings.inspectDuration.toString()),

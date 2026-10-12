@@ -1,4 +1,3 @@
-import "package:cube_timer/cube_timer.dart";
 import "package:test/test.dart";
 
 void main() {

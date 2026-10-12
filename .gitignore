@@ -43,3 +43,6 @@ app.*.map.json
 .fvm/
 # Widget Preview related
 .widget_preview/
+
+# pi agent
+.pi/

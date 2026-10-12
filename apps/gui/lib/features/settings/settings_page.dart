@@ -24,6 +24,7 @@ class SettingsPage extends StatelessWidget {
 
     return MochiScaffold(
       header: MochiHeader(
+        variant: .bordered,
         title: IntrinsicWidth(
           child: MochiBreadcrumb(
             items: [
