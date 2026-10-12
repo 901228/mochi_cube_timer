@@ -6,7 +6,9 @@ import "package:mochi_ui/mochi_ui.dart";
 import "../utils/csv.dart";
 
 // TODO: add a dialog ? (select whether include deleted records & archived records)
-void exportRecords(BuildContext context, SessionEntry session) async {
+Future<void> exportRecords(BuildContext context, SessionEntry session) async {
+  final toastContext = Navigator.of(context, rootNavigator: true).context;
+
   RecordsDao recordsDao = context.read<AppDatabase>().recordsDao;
   AppStateDao appStateDao = context.read<AppDatabase>().appStateDao;
 
@@ -31,9 +33,22 @@ void exportRecords(BuildContext context, SessionEntry session) async {
     );
 
     if (saveFile != null) {
-      if (context.mounted) {
-        // FIXME: didn't show
-        showMochiToast(context, title: Text("Export session records to `${saveFile.path}`"));
+      if (toastContext.mounted) {
+        showMochiToast(
+          toastContext,
+          title: const Text("Session exported"),
+          description: Text.rich(
+            TextSpan(
+              text: "Export session records to ",
+              children: [
+                TextSpan(
+                  text: saveFile.path,
+                  style: TextStyle(fontWeight: .bold, color: toastContext.theme.colors.primary.base),
+                ),
+              ],
+            ),
+          ),
+        );
       }
     } else {
       // User canceled the picker

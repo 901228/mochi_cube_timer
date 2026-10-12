@@ -150,7 +150,7 @@ class _SessionTileState extends State<_SessionTile> {
   SessionsDao get sessionsDao => context.read<AppDatabase>().sessionsDao;
   AppStateDao get appStateDao => context.read<AppDatabase>().appStateDao;
 
-  List<Widget> _menu(BuildContext context) {
+  List<Widget> _menu(BuildContext _) {
     return [
       MochiMenuItem(
         prefix: const Icon(TablerIcons.edit),
