@@ -1,6 +1,6 @@
 import "dart:ui";
 
-import "package:flutter/widgets.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
 /// Slides between branches while keeping every branch attached to the render
 /// tree.
@@ -21,29 +21,25 @@ class AnimatedBranchContainer extends StatefulWidget {
 
 class _AnimatedBranchContainerState extends State<AnimatedBranchContainer>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 300),
-    value: 1,
-  );
+  /// The theme's transition, which the bottom bar's indicator also slides on, so the two move
+  /// together.
+  late final AnimationController _controller = AnimationController(vsync: this, value: 1);
+
+  Curve _curve = Curves.easeOutCubic;
 
   /// The page position the running slide started from, which is fractional
   /// when a slide is interrupted by another branch change.
   late double _from = widget.currentIndex.toDouble();
 
   double get _position =>
-      lerpDouble(_from, widget.currentIndex.toDouble(), Curves.easeOutCubic.transform(_controller.value))!;
+      lerpDouble(_from, widget.currentIndex.toDouble(), _curve.transform(_controller.value))!;
 
   @override
   void didUpdateWidget(covariant AnimatedBranchContainer oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.currentIndex != widget.currentIndex) {
-      _from = lerpDouble(
-        _from,
-        oldWidget.currentIndex.toDouble(),
-        Curves.easeOutCubic.transform(_controller.value),
-      )!;
+      _from = lerpDouble(_from, oldWidget.currentIndex.toDouble(), _curve.transform(_controller.value))!;
       _controller.forward(from: 0);
     }
   }
@@ -52,6 +48,15 @@ class _AnimatedBranchContainerState extends State<AnimatedBranchContainer>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final motion = context.theme.motion;
+    _controller.duration = motion.transitionDuration;
+    _curve = motion.transitionCurve;
   }
 
   @override
