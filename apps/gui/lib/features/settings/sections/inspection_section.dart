@@ -1,9 +1,9 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/services.dart";
-import "package:flutter/widgets.dart";
 import "package:go_router/go_router.dart";
-import "package:mochi_ui/mochi_ui/widgets.dart";
+import "package:mochi_ui/mochi_ui.dart";
 
+import "../../timer/alert.dart";
 import "../settings_tile.dart";
 
 class InspectionSettingsSections extends StatelessWidget {
@@ -49,18 +49,43 @@ class InspectionSettingsSections extends StatelessWidget {
         MochiTileGroup(
           label: const Text("Alert"),
           children: [
-            // TODO: alert
             SettingsTile(
               title: "Alert time left",
-              subtitle:
-                  "Timer will alert you once ${firstAlertTime.inSeconds} and ${secondAlertTime.inSeconds} seconds of inspection have passed",
+              subtitle: Text.rich(
+                TextSpan(
+                  text: "Timer will alert you once ",
+                  children: [
+                    TextSpan(
+                      text: firstAlertTime.inSeconds.toString(),
+                      style: TextStyle(fontWeight: .bold, color: context.colors.primary.base),
+                    ),
+                    const TextSpan(text: " and "),
+                    TextSpan(
+                      text: secondAlertTime.inSeconds.toString(),
+                      style: TextStyle(fontWeight: .bold, color: context.colors.primary.base),
+                    ),
+                    const TextSpan(text: " seconds of inspection have passed"),
+                  ],
+                ),
+              ),
               suffix: MochiSwitch(value: settings.alertEnabled, onChanged: dao.setAlertEnabled),
             ),
             SettingsTile(
-              enabled: false,
+              enabled: settings.alertEnabled,
               title: "Alert type",
               subtitle: "Choose how the timer will alert you",
-              // TODO:
+              suffix: SizedBox(
+                width: 180,
+                child: MochiMultiSelect<AlertType>(
+                  enabled: settings.alertEnabled,
+                  // The default has vibration even where it is not offered.
+                  values: settings.alertTypes.where((e) => e.supported).toSet(),
+                  onChanged: dao.setAlertTypes,
+                  options: AlertType.values
+                      .map((e) => MochiSelectOption(value: e, label: e.displayName, enabled: e.supported))
+                      .toList(),
+                ),
+              ),
             ),
           ],
         ),

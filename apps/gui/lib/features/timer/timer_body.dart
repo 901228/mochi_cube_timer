@@ -15,9 +15,13 @@ class TimerBody extends StatefulWidget {
   final Color pressedColor;
   final Color holdingColor;
   final Color acceptColor;
+
+  /// Whether inspection shows its alerts as text.
+  final bool alertText;
   const TimerBody({
     super.key,
     this.color,
+    this.alertText = true,
     // TODO: put in settings
     this.pressedColor = const Color.fromARGB(255, 255, 121, 121),
     this.holdingColor = const Color.fromARGB(255, 255, 255, 121),
@@ -89,7 +93,7 @@ class _TimerBodyState extends State<TimerBody> {
 
   @override
   Widget build(BuildContext context) {
-    final TimerBody(:color, :pressedColor, :holdingColor, :acceptColor) = widget;
+    final TimerBody(:color, :pressedColor, :holdingColor, :acceptColor, :alertText) = widget;
 
     return BlocBuilder<TimerBloc, TimerState>(
       buildWhen: (prev, state) => prev.runtimeType != state.runtimeType || prev.hold != state.hold,
@@ -111,7 +115,7 @@ class _TimerBodyState extends State<TimerBody> {
             children: [
               const Positioned.fill(child: TimerPressArea()),
               state is TimerRunInInspection
-                  ? const InspectionText()
+                  ? InspectionText(alertText: alertText)
                   : (state is TimerInitial || state.hold == .armed
                         ? const IgnorePointer(child: Center(child: Text("0.00")))
                         : const RunTimeText()),
@@ -160,7 +164,9 @@ class _TimerPressAreaState extends State<TimerPressArea> {
 }
 
 class InspectionText extends StatelessWidget {
-  const InspectionText({super.key});
+  const InspectionText({super.key, this.alertText = true});
+
+  final bool alertText;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +188,9 @@ class InspectionText extends StatelessWidget {
     return TimerText(
       time: Text(displayText),
       hint: Text("INSPECTION", style: hintTextStyle.copyWith(color: hintTextColor)),
-      rightHint: elapsedSeconds == firstAlertTime.inSeconds
+      rightHint: !alertText
+          ? null
+          : elapsedSeconds == firstAlertTime.inSeconds
           ? Text("${firstAlertTime.inSeconds}s!", style: alertTextStyle)
           : elapsedSeconds == secondAlertTime.inSeconds
           ? Text("${secondAlertTime.inSeconds}s!!", style: alertTextStyle)

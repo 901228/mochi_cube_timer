@@ -13,10 +13,10 @@ class SettingsTile extends StatelessWidget {
     this.suffix,
     this.onPress,
     this.enabled = true,
-  });
+  }) : assert(subtitle == null || subtitle is String || subtitle is Widget);
 
   final String title;
-  final String? subtitle;
+  final dynamic subtitle;
   final Icon? icon;
   final Widget? suffix;
   final VoidCallback? onPress;
@@ -30,7 +30,7 @@ class SettingsTile extends StatelessWidget {
       height: _contentHeight,
       child: Align(alignment: Alignment.centerLeft, child: Text(title)),
     ),
-    subtitle: subtitle != null ? Text(subtitle!) : null,
+    subtitle: subtitle == null ? null : (subtitle is String ? Text(subtitle) : subtitle),
     suffix: suffix is Text
         ? Padding(padding: const EdgeInsetsGeometry.directional(end: 4.0), child: suffix)
         : suffix,
