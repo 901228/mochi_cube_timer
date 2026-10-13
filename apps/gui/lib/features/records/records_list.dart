@@ -186,24 +186,23 @@ class _RecordsListState extends State<RecordsList> {
 
     return widget.records.isEmpty
         ? Center(child: Text("No records yet"))
-        : SingleChildScrollView(
-            padding: context.theme.geometry.pagePadding,
-            child: DefaultTextStyle.merge(
-              textHeightBehavior: const TextHeightBehavior(
-                applyHeightToFirstAscent: false,
-                applyHeightToLastDescent: false,
+        : DefaultTextStyle.merge(
+            textHeightBehavior: const TextHeightBehavior(
+              applyHeightToFirstAscent: false,
+              applyHeightToLastDescent: false,
+            ),
+            // The grid scrolls itself, with the padding inside it, so the tiles' shadows are not
+            // clipped at its edges and the bottom bar's height is still kept clear.
+            child: GridView.builder(
+              padding: context.theme.geometry.pagePadding + MediaQuery.paddingOf(context),
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: mobile ? 160 : 180,
+                childAspectRatio: mobile ? 1.8 : 2.3,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
               ),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: mobile ? 160 : 180,
-                  childAspectRatio: mobile ? 1.8 : 2.3,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                ),
-                shrinkWrap: true,
-                itemCount: widget.records.length,
-                itemBuilder: (context, index) => _recordTile(widget.records[index]),
-              ),
+              itemCount: widget.records.length,
+              itemBuilder: (context, index) => _recordTile(widget.records[index]),
             ),
           );
   }
