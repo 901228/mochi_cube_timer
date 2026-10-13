@@ -5,10 +5,12 @@ import "package:flutter/foundation.dart" show kIsWeb;
 import "package:flutter/services.dart" show BrowserContextMenu, rootBundle;
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:flutter_web_plugins/url_strategy.dart";
 import "package:go_router/go_router.dart";
 
 import "app/application.dart";
+import "app/splash_cover.dart";
 import "database/connection.dart";
 
 void main() {
@@ -16,7 +18,8 @@ void main() {
   usePathUrlStrategy();
   GoRouter.optionURLReflectsImperativeAPIs = true;
 
-  WidgetsFlutterBinding.ensureInitialized();
+  // Kept up until SplashCover, drawn the same, takes over from it.
+  FlutterNativeSplash.preserve(widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
 
   // A long press opens the browser's own context menu, which cancels Flutter's long press gesture.
   if (kIsWeb) unawaited(BrowserContextMenu.disableContextMenu());
@@ -37,5 +40,10 @@ void main() {
   // database
   final db = AppDatabase(openConnection());
 
-  runApp(RepositoryProvider.value(value: db, child: const Application()));
+  runApp(
+    RepositoryProvider.value(
+      value: db,
+      child: SplashCover(ready: db.appStateDao.watch().first, child: const Application()),
+    ),
+  );
 }

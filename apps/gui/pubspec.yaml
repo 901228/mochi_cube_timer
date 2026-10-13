@@ -42,6 +42,7 @@ dependencies:
 
   fl_chart: ^1.2.0
   vibration: ^3.2.1
+  flutter_native_splash: ^2.4.8
 
 dev_dependencies:
   flutter_test:
@@ -50,7 +51,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
   flutter_launcher_icons: ^0.14.4
-  flutter_native_splash: ^2.4.7
 
 flutter_native_splash:
   color: "#EFF1F5" # latte base
@@ -93,6 +93,7 @@ flutter:
   assets:
     - assets/tables/
     - assets/cube_icons/
+    - assets/icon/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
