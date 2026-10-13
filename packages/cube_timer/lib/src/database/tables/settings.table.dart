@@ -1,6 +1,7 @@
 import "package:drift/drift.dart";
 
 import "../../puzzle/colors.dart";
+import "converters.dart";
 
 @DataClassName("SettingsEntry")
 class Settings extends Table {
@@ -15,6 +16,10 @@ class Settings extends Table {
 
   /// whether to enable alert
   BoolColumn get alertEnabled => boolean().withDefault(const Constant(true))();
+
+  /// how the alert is given
+  TextColumn get alertTypes =>
+      text().map(const AlertTypesConverter()).withDefault(const Constant("text,vibration"))();
 
   /// locale
   ///
@@ -40,6 +45,11 @@ class Settings extends Table {
   /// clock colors
   IntColumn get clockColorFront => integer().withDefault(Constant(DefaultColors.clockColors.front))();
   IntColumn get clockColorBack => integer().withDefault(Constant(DefaultColors.clockColors.back))();
+
+  /// timer colors
+  IntColumn get timerPressedColor => integer().withDefault(Constant(DefaultColors.timerColors.pressed))();
+  IntColumn get timerHoldingColor => integer().withDefault(Constant(DefaultColors.timerColors.holding))();
+  IntColumn get timerAcceptColor => integer().withDefault(Constant(DefaultColors.timerColors.accept))();
 
   @override
   Set<Column> get primaryKey => {id};

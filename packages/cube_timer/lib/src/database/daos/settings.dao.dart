@@ -1,6 +1,7 @@
 import "package:drift/drift.dart";
 
 import "../app_database.dart";
+import "../../timer/alert.dart";
 import "../tables/settings.table.dart";
 
 part "settings.dao.g.dart";
@@ -22,4 +23,6 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
       _write(SettingsCompanion(inspectDuration: Value(d.inSeconds)));
 
   Future<void> setAlertEnabled(bool v) => _write(SettingsCompanion(alertEnabled: Value(v)));
+
+  Future<void> setAlertTypes(Set<AlertType> v) => _write(SettingsCompanion(alertTypes: Value(v)));
 }

@@ -60,6 +60,16 @@ class $SettingsTable extends Settings
     ),
     defaultValue: const Constant(true),
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<Set<AlertType>, String>
+  alertTypes = GeneratedColumn<String>(
+    'alert_types',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant("text,vibration"),
+  ).withConverter<Set<AlertType>>($SettingsTable.$converteralertTypes);
   static const VerificationMeta _localeMeta = const VerificationMeta('locale');
   @override
   late final GeneratedColumn<String> locale = GeneratedColumn<String>(
@@ -213,12 +223,49 @@ class $SettingsTable extends Settings
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.clockColors.back),
   );
+  static const VerificationMeta _timerPressedColorMeta = const VerificationMeta(
+    'timerPressedColor',
+  );
+  @override
+  late final GeneratedColumn<int> timerPressedColor = GeneratedColumn<int>(
+    'timer_pressed_color',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.timerColors.pressed),
+  );
+  static const VerificationMeta _timerHoldingColorMeta = const VerificationMeta(
+    'timerHoldingColor',
+  );
+  @override
+  late final GeneratedColumn<int> timerHoldingColor = GeneratedColumn<int>(
+    'timer_holding_color',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.timerColors.holding),
+  );
+  static const VerificationMeta _timerAcceptColorMeta = const VerificationMeta(
+    'timerAcceptColor',
+  );
+  @override
+  late final GeneratedColumn<int> timerAcceptColor = GeneratedColumn<int>(
+    'timer_accept_color',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.timerColors.accept),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     inspectionEnabled,
     inspectDuration,
     alertEnabled,
+    alertTypes,
     locale,
     cubeColorU,
     cubeColorR,
@@ -232,6 +279,9 @@ class $SettingsTable extends Settings
     pyraminxColorL,
     clockColorFront,
     clockColorBack,
+    timerPressedColor,
+    timerHoldingColor,
+    timerAcceptColor,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -389,6 +439,33 @@ class $SettingsTable extends Settings
         ),
       );
     }
+    if (data.containsKey('timer_pressed_color')) {
+      context.handle(
+        _timerPressedColorMeta,
+        timerPressedColor.isAcceptableOrUnknown(
+          data['timer_pressed_color']!,
+          _timerPressedColorMeta,
+        ),
+      );
+    }
+    if (data.containsKey('timer_holding_color')) {
+      context.handle(
+        _timerHoldingColorMeta,
+        timerHoldingColor.isAcceptableOrUnknown(
+          data['timer_holding_color']!,
+          _timerHoldingColorMeta,
+        ),
+      );
+    }
+    if (data.containsKey('timer_accept_color')) {
+      context.handle(
+        _timerAcceptColorMeta,
+        timerAcceptColor.isAcceptableOrUnknown(
+          data['timer_accept_color']!,
+          _timerAcceptColorMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -414,6 +491,12 @@ class $SettingsTable extends Settings
         DriftSqlType.bool,
         data['${effectivePrefix}alert_enabled'],
       )!,
+      alertTypes: $SettingsTable.$converteralertTypes.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}alert_types'],
+        )!,
+      ),
       locale: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}locale'],
@@ -466,6 +549,18 @@ class $SettingsTable extends Settings
         DriftSqlType.int,
         data['${effectivePrefix}clock_color_back'],
       )!,
+      timerPressedColor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}timer_pressed_color'],
+      )!,
+      timerHoldingColor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}timer_holding_color'],
+      )!,
+      timerAcceptColor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}timer_accept_color'],
+      )!,
     );
   }
 
@@ -473,6 +568,9 @@ class $SettingsTable extends Settings
   $SettingsTable createAlias(String alias) {
     return $SettingsTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<Set<AlertType>, String> $converteralertTypes =
+      const AlertTypesConverter();
 }
 
 class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
@@ -487,6 +585,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
 
   /// whether to enable alert
   final bool alertEnabled;
+
+  /// how the alert is given
+  final Set<AlertType> alertTypes;
 
   /// locale
   ///
@@ -512,11 +613,17 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   /// clock colors
   final int clockColorFront;
   final int clockColorBack;
+
+  /// timer colors
+  final int timerPressedColor;
+  final int timerHoldingColor;
+  final int timerAcceptColor;
   const SettingsEntry({
     required this.id,
     required this.inspectionEnabled,
     required this.inspectDuration,
     required this.alertEnabled,
+    required this.alertTypes,
     this.locale,
     required this.cubeColorU,
     required this.cubeColorR,
@@ -530,6 +637,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.pyraminxColorL,
     required this.clockColorFront,
     required this.clockColorBack,
+    required this.timerPressedColor,
+    required this.timerHoldingColor,
+    required this.timerAcceptColor,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -538,6 +648,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['inspection_enabled'] = Variable<bool>(inspectionEnabled);
     map['inspect_duration'] = Variable<int>(inspectDuration);
     map['alert_enabled'] = Variable<bool>(alertEnabled);
+    {
+      map['alert_types'] = Variable<String>(
+        $SettingsTable.$converteralertTypes.toSql(alertTypes),
+      );
+    }
     if (!nullToAbsent || locale != null) {
       map['locale'] = Variable<String>(locale);
     }
@@ -553,6 +668,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['pyraminx_color_l'] = Variable<int>(pyraminxColorL);
     map['clock_color_front'] = Variable<int>(clockColorFront);
     map['clock_color_back'] = Variable<int>(clockColorBack);
+    map['timer_pressed_color'] = Variable<int>(timerPressedColor);
+    map['timer_holding_color'] = Variable<int>(timerHoldingColor);
+    map['timer_accept_color'] = Variable<int>(timerAcceptColor);
     return map;
   }
 
@@ -562,6 +680,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       inspectionEnabled: Value(inspectionEnabled),
       inspectDuration: Value(inspectDuration),
       alertEnabled: Value(alertEnabled),
+      alertTypes: Value(alertTypes),
       locale: locale == null && nullToAbsent
           ? const Value.absent()
           : Value(locale),
@@ -577,6 +696,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       pyraminxColorL: Value(pyraminxColorL),
       clockColorFront: Value(clockColorFront),
       clockColorBack: Value(clockColorBack),
+      timerPressedColor: Value(timerPressedColor),
+      timerHoldingColor: Value(timerHoldingColor),
+      timerAcceptColor: Value(timerAcceptColor),
     );
   }
 
@@ -590,6 +712,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       inspectionEnabled: serializer.fromJson<bool>(json['inspectionEnabled']),
       inspectDuration: serializer.fromJson<int>(json['inspectDuration']),
       alertEnabled: serializer.fromJson<bool>(json['alertEnabled']),
+      alertTypes: serializer.fromJson<Set<AlertType>>(json['alertTypes']),
       locale: serializer.fromJson<String?>(json['locale']),
       cubeColorU: serializer.fromJson<int>(json['cubeColorU']),
       cubeColorR: serializer.fromJson<int>(json['cubeColorR']),
@@ -603,6 +726,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       pyraminxColorL: serializer.fromJson<int>(json['pyraminxColorL']),
       clockColorFront: serializer.fromJson<int>(json['clockColorFront']),
       clockColorBack: serializer.fromJson<int>(json['clockColorBack']),
+      timerPressedColor: serializer.fromJson<int>(json['timerPressedColor']),
+      timerHoldingColor: serializer.fromJson<int>(json['timerHoldingColor']),
+      timerAcceptColor: serializer.fromJson<int>(json['timerAcceptColor']),
     );
   }
   @override
@@ -613,6 +739,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'inspectionEnabled': serializer.toJson<bool>(inspectionEnabled),
       'inspectDuration': serializer.toJson<int>(inspectDuration),
       'alertEnabled': serializer.toJson<bool>(alertEnabled),
+      'alertTypes': serializer.toJson<Set<AlertType>>(alertTypes),
       'locale': serializer.toJson<String?>(locale),
       'cubeColorU': serializer.toJson<int>(cubeColorU),
       'cubeColorR': serializer.toJson<int>(cubeColorR),
@@ -626,6 +753,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'pyraminxColorL': serializer.toJson<int>(pyraminxColorL),
       'clockColorFront': serializer.toJson<int>(clockColorFront),
       'clockColorBack': serializer.toJson<int>(clockColorBack),
+      'timerPressedColor': serializer.toJson<int>(timerPressedColor),
+      'timerHoldingColor': serializer.toJson<int>(timerHoldingColor),
+      'timerAcceptColor': serializer.toJson<int>(timerAcceptColor),
     };
   }
 
@@ -634,6 +764,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     bool? inspectionEnabled,
     int? inspectDuration,
     bool? alertEnabled,
+    Set<AlertType>? alertTypes,
     Value<String?> locale = const Value.absent(),
     int? cubeColorU,
     int? cubeColorR,
@@ -647,11 +778,15 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     int? pyraminxColorL,
     int? clockColorFront,
     int? clockColorBack,
+    int? timerPressedColor,
+    int? timerHoldingColor,
+    int? timerAcceptColor,
   }) => SettingsEntry(
     id: id ?? this.id,
     inspectionEnabled: inspectionEnabled ?? this.inspectionEnabled,
     inspectDuration: inspectDuration ?? this.inspectDuration,
     alertEnabled: alertEnabled ?? this.alertEnabled,
+    alertTypes: alertTypes ?? this.alertTypes,
     locale: locale.present ? locale.value : this.locale,
     cubeColorU: cubeColorU ?? this.cubeColorU,
     cubeColorR: cubeColorR ?? this.cubeColorR,
@@ -665,6 +800,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     pyraminxColorL: pyraminxColorL ?? this.pyraminxColorL,
     clockColorFront: clockColorFront ?? this.clockColorFront,
     clockColorBack: clockColorBack ?? this.clockColorBack,
+    timerPressedColor: timerPressedColor ?? this.timerPressedColor,
+    timerHoldingColor: timerHoldingColor ?? this.timerHoldingColor,
+    timerAcceptColor: timerAcceptColor ?? this.timerAcceptColor,
   );
   SettingsEntry copyWithCompanion(SettingsCompanion data) {
     return SettingsEntry(
@@ -678,6 +816,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       alertEnabled: data.alertEnabled.present
           ? data.alertEnabled.value
           : this.alertEnabled,
+      alertTypes: data.alertTypes.present
+          ? data.alertTypes.value
+          : this.alertTypes,
       locale: data.locale.present ? data.locale.value : this.locale,
       cubeColorU: data.cubeColorU.present
           ? data.cubeColorU.value
@@ -715,6 +856,15 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       clockColorBack: data.clockColorBack.present
           ? data.clockColorBack.value
           : this.clockColorBack,
+      timerPressedColor: data.timerPressedColor.present
+          ? data.timerPressedColor.value
+          : this.timerPressedColor,
+      timerHoldingColor: data.timerHoldingColor.present
+          ? data.timerHoldingColor.value
+          : this.timerHoldingColor,
+      timerAcceptColor: data.timerAcceptColor.present
+          ? data.timerAcceptColor.value
+          : this.timerAcceptColor,
     );
   }
 
@@ -725,6 +875,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('inspectionEnabled: $inspectionEnabled, ')
           ..write('inspectDuration: $inspectDuration, ')
           ..write('alertEnabled: $alertEnabled, ')
+          ..write('alertTypes: $alertTypes, ')
           ..write('locale: $locale, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
@@ -737,17 +888,21 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('pyraminxColorR: $pyraminxColorR, ')
           ..write('pyraminxColorL: $pyraminxColorL, ')
           ..write('clockColorFront: $clockColorFront, ')
-          ..write('clockColorBack: $clockColorBack')
+          ..write('clockColorBack: $clockColorBack, ')
+          ..write('timerPressedColor: $timerPressedColor, ')
+          ..write('timerHoldingColor: $timerHoldingColor, ')
+          ..write('timerAcceptColor: $timerAcceptColor')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     inspectionEnabled,
     inspectDuration,
     alertEnabled,
+    alertTypes,
     locale,
     cubeColorU,
     cubeColorR,
@@ -761,7 +916,10 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     pyraminxColorL,
     clockColorFront,
     clockColorBack,
-  );
+    timerPressedColor,
+    timerHoldingColor,
+    timerAcceptColor,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -770,6 +928,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.inspectionEnabled == this.inspectionEnabled &&
           other.inspectDuration == this.inspectDuration &&
           other.alertEnabled == this.alertEnabled &&
+          other.alertTypes == this.alertTypes &&
           other.locale == this.locale &&
           other.cubeColorU == this.cubeColorU &&
           other.cubeColorR == this.cubeColorR &&
@@ -782,7 +941,10 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.pyraminxColorR == this.pyraminxColorR &&
           other.pyraminxColorL == this.pyraminxColorL &&
           other.clockColorFront == this.clockColorFront &&
-          other.clockColorBack == this.clockColorBack);
+          other.clockColorBack == this.clockColorBack &&
+          other.timerPressedColor == this.timerPressedColor &&
+          other.timerHoldingColor == this.timerHoldingColor &&
+          other.timerAcceptColor == this.timerAcceptColor);
 }
 
 class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
@@ -790,6 +952,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<bool> inspectionEnabled;
   final Value<int> inspectDuration;
   final Value<bool> alertEnabled;
+  final Value<Set<AlertType>> alertTypes;
   final Value<String?> locale;
   final Value<int> cubeColorU;
   final Value<int> cubeColorR;
@@ -803,11 +966,15 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<int> pyraminxColorL;
   final Value<int> clockColorFront;
   final Value<int> clockColorBack;
+  final Value<int> timerPressedColor;
+  final Value<int> timerHoldingColor;
+  final Value<int> timerAcceptColor;
   const SettingsCompanion({
     this.id = const Value.absent(),
     this.inspectionEnabled = const Value.absent(),
     this.inspectDuration = const Value.absent(),
     this.alertEnabled = const Value.absent(),
+    this.alertTypes = const Value.absent(),
     this.locale = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
@@ -821,12 +988,16 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.pyraminxColorL = const Value.absent(),
     this.clockColorFront = const Value.absent(),
     this.clockColorBack = const Value.absent(),
+    this.timerPressedColor = const Value.absent(),
+    this.timerHoldingColor = const Value.absent(),
+    this.timerAcceptColor = const Value.absent(),
   });
   SettingsCompanion.insert({
     this.id = const Value.absent(),
     this.inspectionEnabled = const Value.absent(),
     this.inspectDuration = const Value.absent(),
     this.alertEnabled = const Value.absent(),
+    this.alertTypes = const Value.absent(),
     this.locale = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
@@ -840,12 +1011,16 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.pyraminxColorL = const Value.absent(),
     this.clockColorFront = const Value.absent(),
     this.clockColorBack = const Value.absent(),
+    this.timerPressedColor = const Value.absent(),
+    this.timerHoldingColor = const Value.absent(),
+    this.timerAcceptColor = const Value.absent(),
   });
   static Insertable<SettingsEntry> custom({
     Expression<int>? id,
     Expression<bool>? inspectionEnabled,
     Expression<int>? inspectDuration,
     Expression<bool>? alertEnabled,
+    Expression<String>? alertTypes,
     Expression<String>? locale,
     Expression<int>? cubeColorU,
     Expression<int>? cubeColorR,
@@ -859,12 +1034,16 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<int>? pyraminxColorL,
     Expression<int>? clockColorFront,
     Expression<int>? clockColorBack,
+    Expression<int>? timerPressedColor,
+    Expression<int>? timerHoldingColor,
+    Expression<int>? timerAcceptColor,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (inspectionEnabled != null) 'inspection_enabled': inspectionEnabled,
       if (inspectDuration != null) 'inspect_duration': inspectDuration,
       if (alertEnabled != null) 'alert_enabled': alertEnabled,
+      if (alertTypes != null) 'alert_types': alertTypes,
       if (locale != null) 'locale': locale,
       if (cubeColorU != null) 'cube_color_u': cubeColorU,
       if (cubeColorR != null) 'cube_color_r': cubeColorR,
@@ -878,6 +1057,9 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (pyraminxColorL != null) 'pyraminx_color_l': pyraminxColorL,
       if (clockColorFront != null) 'clock_color_front': clockColorFront,
       if (clockColorBack != null) 'clock_color_back': clockColorBack,
+      if (timerPressedColor != null) 'timer_pressed_color': timerPressedColor,
+      if (timerHoldingColor != null) 'timer_holding_color': timerHoldingColor,
+      if (timerAcceptColor != null) 'timer_accept_color': timerAcceptColor,
     });
   }
 
@@ -886,6 +1068,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<bool>? inspectionEnabled,
     Value<int>? inspectDuration,
     Value<bool>? alertEnabled,
+    Value<Set<AlertType>>? alertTypes,
     Value<String?>? locale,
     Value<int>? cubeColorU,
     Value<int>? cubeColorR,
@@ -899,12 +1082,16 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<int>? pyraminxColorL,
     Value<int>? clockColorFront,
     Value<int>? clockColorBack,
+    Value<int>? timerPressedColor,
+    Value<int>? timerHoldingColor,
+    Value<int>? timerAcceptColor,
   }) {
     return SettingsCompanion(
       id: id ?? this.id,
       inspectionEnabled: inspectionEnabled ?? this.inspectionEnabled,
       inspectDuration: inspectDuration ?? this.inspectDuration,
       alertEnabled: alertEnabled ?? this.alertEnabled,
+      alertTypes: alertTypes ?? this.alertTypes,
       locale: locale ?? this.locale,
       cubeColorU: cubeColorU ?? this.cubeColorU,
       cubeColorR: cubeColorR ?? this.cubeColorR,
@@ -918,6 +1105,9 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       pyraminxColorL: pyraminxColorL ?? this.pyraminxColorL,
       clockColorFront: clockColorFront ?? this.clockColorFront,
       clockColorBack: clockColorBack ?? this.clockColorBack,
+      timerPressedColor: timerPressedColor ?? this.timerPressedColor,
+      timerHoldingColor: timerHoldingColor ?? this.timerHoldingColor,
+      timerAcceptColor: timerAcceptColor ?? this.timerAcceptColor,
     );
   }
 
@@ -935,6 +1125,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     }
     if (alertEnabled.present) {
       map['alert_enabled'] = Variable<bool>(alertEnabled.value);
+    }
+    if (alertTypes.present) {
+      map['alert_types'] = Variable<String>(
+        $SettingsTable.$converteralertTypes.toSql(alertTypes.value),
+      );
     }
     if (locale.present) {
       map['locale'] = Variable<String>(locale.value);
@@ -975,6 +1170,15 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     if (clockColorBack.present) {
       map['clock_color_back'] = Variable<int>(clockColorBack.value);
     }
+    if (timerPressedColor.present) {
+      map['timer_pressed_color'] = Variable<int>(timerPressedColor.value);
+    }
+    if (timerHoldingColor.present) {
+      map['timer_holding_color'] = Variable<int>(timerHoldingColor.value);
+    }
+    if (timerAcceptColor.present) {
+      map['timer_accept_color'] = Variable<int>(timerAcceptColor.value);
+    }
     return map;
   }
 
@@ -985,6 +1189,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('inspectionEnabled: $inspectionEnabled, ')
           ..write('inspectDuration: $inspectDuration, ')
           ..write('alertEnabled: $alertEnabled, ')
+          ..write('alertTypes: $alertTypes, ')
           ..write('locale: $locale, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
@@ -997,7 +1202,10 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('pyraminxColorR: $pyraminxColorR, ')
           ..write('pyraminxColorL: $pyraminxColorL, ')
           ..write('clockColorFront: $clockColorFront, ')
-          ..write('clockColorBack: $clockColorBack')
+          ..write('clockColorBack: $clockColorBack, ')
+          ..write('timerPressedColor: $timerPressedColor, ')
+          ..write('timerHoldingColor: $timerHoldingColor, ')
+          ..write('timerAcceptColor: $timerAcceptColor')
           ..write(')'))
         .toString();
   }
@@ -2288,6 +2496,7 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<bool> inspectionEnabled,
   Value<int> inspectDuration,
   Value<bool> alertEnabled,
+  Value<Set<AlertType>> alertTypes,
   Value<String?> locale,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
@@ -2301,12 +2510,16 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<int> pyraminxColorL,
   Value<int> clockColorFront,
   Value<int> clockColorBack,
+  Value<int> timerPressedColor,
+  Value<int> timerHoldingColor,
+  Value<int> timerAcceptColor,
 });
 typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> id,
   Value<bool> inspectionEnabled,
   Value<int> inspectDuration,
   Value<bool> alertEnabled,
+  Value<Set<AlertType>> alertTypes,
   Value<String?> locale,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
@@ -2320,6 +2533,9 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> pyraminxColorL,
   Value<int> clockColorFront,
   Value<int> clockColorBack,
+  Value<int> timerPressedColor,
+  Value<int> timerHoldingColor,
+  Value<int> timerAcceptColor,
 });
 
 class $$SettingsTableFilterComposer
@@ -2349,6 +2565,12 @@ class $$SettingsTableFilterComposer
   ColumnFilters<bool> get alertEnabled => $composableBuilder(
     column: $table.alertEnabled,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Set<AlertType>, Set<AlertType>, String>
+  get alertTypes => $composableBuilder(
+    column: $table.alertTypes,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<String> get locale => $composableBuilder(
@@ -2415,6 +2637,21 @@ class $$SettingsTableFilterComposer
     column: $table.clockColorBack,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<int> get timerPressedColor => $composableBuilder(
+    column: $table.timerPressedColor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get timerHoldingColor => $composableBuilder(
+    column: $table.timerHoldingColor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get timerAcceptColor => $composableBuilder(
+    column: $table.timerAcceptColor,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$SettingsTableOrderingComposer
@@ -2443,6 +2680,11 @@ class $$SettingsTableOrderingComposer
 
   ColumnOrderings<bool> get alertEnabled => $composableBuilder(
     column: $table.alertEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get alertTypes => $composableBuilder(
+    column: $table.alertTypes,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2510,6 +2752,21 @@ class $$SettingsTableOrderingComposer
     column: $table.clockColorBack,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get timerPressedColor => $composableBuilder(
+    column: $table.timerPressedColor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get timerHoldingColor => $composableBuilder(
+    column: $table.timerHoldingColor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get timerAcceptColor => $composableBuilder(
+    column: $table.timerAcceptColor,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SettingsTableAnnotationComposer
@@ -2538,6 +2795,12 @@ class $$SettingsTableAnnotationComposer
     column: $table.alertEnabled,
     builder: (column) => column,
   );
+
+  GeneratedColumnWithTypeConverter<Set<AlertType>, String> get alertTypes =>
+      $composableBuilder(
+        column: $table.alertTypes,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<String> get locale =>
       $composableBuilder(column: $table.locale, builder: (column) => column);
@@ -2601,6 +2864,21 @@ class $$SettingsTableAnnotationComposer
     column: $table.clockColorBack,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get timerPressedColor => $composableBuilder(
+    column: $table.timerPressedColor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get timerHoldingColor => $composableBuilder(
+    column: $table.timerHoldingColor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get timerAcceptColor => $composableBuilder(
+    column: $table.timerAcceptColor,
+    builder: (column) => column,
+  );
 }
 
 class $$SettingsTableTableManager
@@ -2638,6 +2916,7 @@ class $$SettingsTableTableManager
                 Value<bool> inspectionEnabled = const Value.absent(),
                 Value<int> inspectDuration = const Value.absent(),
                 Value<bool> alertEnabled = const Value.absent(),
+                Value<Set<AlertType>> alertTypes = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
@@ -2651,11 +2930,15 @@ class $$SettingsTableTableManager
                 Value<int> pyraminxColorL = const Value.absent(),
                 Value<int> clockColorFront = const Value.absent(),
                 Value<int> clockColorBack = const Value.absent(),
+                Value<int> timerPressedColor = const Value.absent(),
+                Value<int> timerHoldingColor = const Value.absent(),
+                Value<int> timerAcceptColor = const Value.absent(),
               }) => SettingsCompanion(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
                 inspectDuration: inspectDuration,
                 alertEnabled: alertEnabled,
+                alertTypes: alertTypes,
                 locale: locale,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,
@@ -2669,6 +2952,9 @@ class $$SettingsTableTableManager
                 pyraminxColorL: pyraminxColorL,
                 clockColorFront: clockColorFront,
                 clockColorBack: clockColorBack,
+                timerPressedColor: timerPressedColor,
+                timerHoldingColor: timerHoldingColor,
+                timerAcceptColor: timerAcceptColor,
               ),
           createCompanionCallback:
               ({
@@ -2676,6 +2962,7 @@ class $$SettingsTableTableManager
                 Value<bool> inspectionEnabled = const Value.absent(),
                 Value<int> inspectDuration = const Value.absent(),
                 Value<bool> alertEnabled = const Value.absent(),
+                Value<Set<AlertType>> alertTypes = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
@@ -2689,11 +2976,15 @@ class $$SettingsTableTableManager
                 Value<int> pyraminxColorL = const Value.absent(),
                 Value<int> clockColorFront = const Value.absent(),
                 Value<int> clockColorBack = const Value.absent(),
+                Value<int> timerPressedColor = const Value.absent(),
+                Value<int> timerHoldingColor = const Value.absent(),
+                Value<int> timerAcceptColor = const Value.absent(),
               }) => SettingsCompanion.insert(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
                 inspectDuration: inspectDuration,
                 alertEnabled: alertEnabled,
+                alertTypes: alertTypes,
                 locale: locale,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,
@@ -2707,6 +2998,9 @@ class $$SettingsTableTableManager
                 pyraminxColorL: pyraminxColorL,
                 clockColorFront: clockColorFront,
                 clockColorBack: clockColorBack,
+                timerPressedColor: timerPressedColor,
+                timerHoldingColor: timerHoldingColor,
+                timerAcceptColor: timerAcceptColor,
               ),
           withReferenceMapper: (p0) => p0
               .map(

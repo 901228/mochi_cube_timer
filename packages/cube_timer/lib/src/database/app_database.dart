@@ -3,6 +3,8 @@ import "package:uuid/uuid.dart";
 
 import "../puzzle/colors.dart";
 import "../puzzle/puzzle.dart";
+import "../timer/alert.dart";
+import "app_database.steps.dart";
 import "daos/app_state.dao.dart";
 import "daos/records.dao.dart";
 import "daos/sessions.dao.dart";
@@ -22,14 +24,22 @@ part "app_database.g.dart";
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
+  // Bumped with every change to the tables: run `dart run drift_dev make-migrations` before and
+  // after, and add the step below.
   @override
-  // Stays at 1 until the first release; until then the schema is changed in
-  // place and local databases are deleted rather than migrated.
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
+        await m.addColumn(schema.settings, schema.settings.alertTypes);
+        await m.addColumn(schema.settings, schema.settings.timerPressedColor);
+        await m.addColumn(schema.settings, schema.settings.timerHoldingColor);
+        await m.addColumn(schema.settings, schema.settings.timerAcceptColor);
+      },
+    ),
     beforeOpen: (_) async {
       // Off by default in SQLite, so the references() on Records and AppState
       // would otherwise be documentation rather than a constraint.
