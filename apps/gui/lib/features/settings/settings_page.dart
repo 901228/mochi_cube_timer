@@ -23,6 +23,7 @@ class SettingsPage extends StatelessWidget {
     final dao = context.read<AppDatabase>().settingsDao;
 
     return MochiScaffold(
+      extendBody: true,
       header: MochiHeader(
         variant: .bordered,
         title: IntrinsicWidth(
@@ -56,7 +57,10 @@ class SettingsPage extends StatelessWidget {
           //   padding: context.theme.style.pagePadding,
           //   child: SingleChildScrollView(child: settingsSections[section]!(settings, dao)),
           // );
-          return SingleChildScrollView(child: settingsSections[section]!(settings, dao));
+          return SingleChildScrollView(
+            padding: MediaQuery.paddingOf(context),
+            child: settingsSections[section]!(settings, dao),
+          );
         },
       ),
     );
