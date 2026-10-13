@@ -1,6 +1,6 @@
 {
-    "name": "gui",
-    "short_name": "gui",
+    "name": "Mochi Cube Timer",
+    "short_name": "Mochi Timer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#EFF1F5",
