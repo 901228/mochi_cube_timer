@@ -74,18 +74,15 @@ class InspectionSettingsSections extends StatelessWidget {
               enabled: settings.alertEnabled,
               title: "Alert type",
               subtitle: "Choose how the timer will alert you",
-              suffix: SizedBox(
-                width: 180,
-                child: MochiMultiSelect<AlertType>(
-                  enabled: settings.alertEnabled,
-                  hint: "None",
-                  // The default has vibration even where it is not offered.
-                  values: settings.alertTypes.where((e) => e.supported).toSet(),
-                  onChanged: dao.setAlertTypes,
-                  options: AlertType.values
-                      .map((e) => MochiSelectOption(value: e, label: e.displayName, enabled: e.supported))
-                      .toList(),
-                ),
+              suffix: MochiMultiSelect<AlertType>(
+                enabled: settings.alertEnabled,
+                hint: "None",
+                // The default has vibration even where it is not offered.
+                values: settings.alertTypes.where((e) => e.supported).toSet(),
+                onChanged: dao.setAlertTypes,
+                options: AlertType.values
+                    .map((e) => MochiSelectOption(value: e, label: e.displayName, enabled: e.supported))
+                    .toList(),
               ),
             ),
           ],

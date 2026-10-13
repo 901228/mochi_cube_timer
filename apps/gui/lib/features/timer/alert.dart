@@ -3,6 +3,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
+import "package:vibration/vibration.dart";
 
 extension AlertTypeName on AlertType {
   String get displayName => switch (this) {
@@ -11,7 +12,7 @@ extension AlertTypeName on AlertType {
     .vibration => "Vibration",
   };
 
-  /// Vibration needs a phone; elsewhere HapticFeedback does nothing.
+  /// Vibration needs a phone; elsewhere it does nothing.
   bool get supported => switch (this) {
     .vibration => !kIsWeb && (defaultTargetPlatform == .iOS || defaultTargetPlatform == .android),
     _ => true,
@@ -28,11 +29,18 @@ int inspectionAlertStage(TimerState state, Duration inspectionDuration) {
   return elapsed >= second.inSeconds ? 2 : (elapsed >= first.inSeconds ? 1 : 0);
 }
 
-/// Impacts rather than [HapticFeedback.vibrate], which iOS mutes with the ringer; the count tells
-/// the alerts apart without looking.
-Future<void> _buzz(int times) async {
-  for (var i = 0; i < times; i++) {
-    if (i > 0) await Future<void>.delayed(const Duration(milliseconds: 80));
+/// One unbroken buzz per alert, longer and stronger as inspection runs out, so they can be told
+/// apart without looking. Not [HapticFeedback.vibrate], which iOS mutes with the ringer, nor
+/// repeated impacts, which feel like separate taps.
+Future<void> _buzz(int stage) async {
+  final (duration, amplitude) = switch (stage) {
+    1 => (200, 128),
+    2 => (400, 255),
+    _ => (800, 255),
+  };
+  if (await Vibration.hasCustomVibrationsSupport()) {
+    await Vibration.vibrate(duration: duration, amplitude: amplitude);
+  } else {
     await HapticFeedback.heavyImpact();
   }
 }
@@ -56,7 +64,7 @@ class InspectionAlerts extends StatelessWidget {
     listener: (context, state) {
       final duration = context.read<TimerBloc>().runConfig.inspectionDuration;
       if (settings.alertTypes.contains(AlertType.vibration)) {
-        _buzz(const [0, 1, 2, 4][inspectionAlertStage(state, duration)]);
+        _buzz(inspectionAlertStage(state, duration));
       }
       // TODO: audio
     },
