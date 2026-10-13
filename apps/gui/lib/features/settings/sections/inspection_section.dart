@@ -78,6 +78,7 @@ class InspectionSettingsSections extends StatelessWidget {
                 width: 180,
                 child: MochiMultiSelect<AlertType>(
                   enabled: settings.alertEnabled,
+                  hint: "None",
                   // The default has vibration even where it is not offered.
                   values: settings.alertTypes.where((e) => e.supported).toSet(),
                   onChanged: dao.setAlertTypes,

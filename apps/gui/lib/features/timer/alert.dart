@@ -18,12 +18,23 @@ extension AlertTypeName on AlertType {
   };
 }
 
-/// How many of the inspection alerts [state] is past: 0, 1 or 2.
+/// How many of the inspection alerts [state] is past: 0 to 3, the last being the +2 at the end.
 int inspectionAlertStage(TimerState state, Duration inspectionDuration) {
   if (state is! TimerRunInInspection) return 0;
-  final elapsed = inspectionDuration.inSeconds - (state.inspection / 1000).ceil();
+  final left = (state.inspection / 1000).ceil();
+  if (left <= 0) return 3;
+  final elapsed = inspectionDuration.inSeconds - left;
   final (first, second) = TimerConfig.alertTime(inspectionDuration);
   return elapsed >= second.inSeconds ? 2 : (elapsed >= first.inSeconds ? 1 : 0);
+}
+
+/// Impacts rather than [HapticFeedback.vibrate], which iOS mutes with the ringer; the count tells
+/// the alerts apart without looking.
+Future<void> _buzz(int times) async {
+  for (var i = 0; i < times; i++) {
+    if (i > 0) await Future<void>.delayed(const Duration(milliseconds: 80));
+    await HapticFeedback.heavyImpact();
+  }
 }
 
 /// Gives the inspection alerts that are not text, once each as inspection passes them.
@@ -45,8 +56,7 @@ class InspectionAlerts extends StatelessWidget {
     listener: (context, state) {
       final duration = context.read<TimerBloc>().runConfig.inspectionDuration;
       if (settings.alertTypes.contains(AlertType.vibration)) {
-        // The second is the longer buzz, so the two can be told apart without looking.
-        inspectionAlertStage(state, duration) == 1 ? HapticFeedback.heavyImpact() : HapticFeedback.vibrate();
+        _buzz(const [0, 1, 2, 4][inspectionAlertStage(state, duration)]);
       }
       // TODO: audio
     },

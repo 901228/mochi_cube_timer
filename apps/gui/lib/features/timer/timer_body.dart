@@ -190,6 +190,8 @@ class InspectionText extends StatelessWidget {
       hint: Text("INSPECTION", style: hintTextStyle.copyWith(color: hintTextColor)),
       rightHint: !alertText
           ? null
+          : seconds <= 0
+          ? Text("GO!", style: alertTextStyle)
           : elapsedSeconds == firstAlertTime.inSeconds
           ? Text("${firstAlertTime.inSeconds}s!", style: alertTextStyle)
           : elapsedSeconds == secondAlertTime.inSeconds
