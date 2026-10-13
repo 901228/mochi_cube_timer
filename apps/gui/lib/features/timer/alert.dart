@@ -34,9 +34,9 @@ int inspectionAlertStage(TimerState state, Duration inspectionDuration) {
 /// repeated impacts, which feel like separate taps.
 Future<void> _buzz(int stage) async {
   final (duration, amplitude) = switch (stage) {
-    1 => (200, 128),
+    1 => (200, 204),
     2 => (400, 255),
-    _ => (800, 255),
+    _ => (1500, 255),
   };
   if (await Vibration.hasCustomVibrationsSupport()) {
     await Vibration.vibrate(duration: duration, amplitude: amplitude);
