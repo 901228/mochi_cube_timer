@@ -43,6 +43,7 @@ dependencies:
   fl_chart: ^1.2.0
   vibration: ^3.2.1
   flutter_native_splash: ^2.4.8
+  flutter_tts: ^4.2.5
 
 dev_dependencies:
   flutter_test:

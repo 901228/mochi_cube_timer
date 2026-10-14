@@ -2,6 +2,7 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_tts/flutter_tts.dart";
 import "package:mochi_ui/mochi_ui.dart";
 import "package:vibration/vibration.dart";
 
@@ -12,10 +13,11 @@ extension AlertTypeName on AlertType {
     .vibration => "Vibration",
   };
 
-  /// Vibration needs a phone; elsewhere it does nothing.
+  /// Vibration needs a phone; elsewhere it does nothing. flutter_tts has no Linux voice.
   bool get supported => switch (this) {
     .vibration => !kIsWeb && (defaultTargetPlatform == .iOS || defaultTargetPlatform == .android),
-    _ => true,
+    .audio => kIsWeb || defaultTargetPlatform != .linux,
+    .text => true,
   };
 }
 
@@ -45,6 +47,29 @@ Future<void> _buzz(int stage) async {
   }
 }
 
+/// Top-level, so set up on the first alert spoken: iOS keeps speech quiet under the Silent switch unless it
+/// plays back, and mixing leaves music the user has on playing.
+final Future<FlutterTts> _tts = () async {
+  final tts = FlutterTts();
+  await tts.setLanguage("en-US");
+  await tts.setIosAudioCategory(IosTextToSpeechAudioCategory.playback, [
+    IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+  ]);
+  return tts;
+}();
+
+/// Calls out the time passed, as a judge does; the +2 has its own text and buzz, and nothing to
+/// say that the time does not already.
+Future<void> _speak(int stage, Duration inspectionDuration) async {
+  final (first, second) = TimerConfig.alertTime(inspectionDuration);
+  final seconds = switch (stage) {
+    1 => first.inSeconds,
+    2 => second.inSeconds,
+    _ => null,
+  };
+  if (seconds != null) await (await _tts).speak("$seconds seconds");
+}
+
 /// Gives the inspection alerts that are not text, once each as inspection passes them.
 ///
 /// A listener rather than part of a build, which may run any number of times in that second.
@@ -63,10 +88,10 @@ class InspectionAlerts extends StatelessWidget {
     },
     listener: (context, state) {
       final duration = context.read<TimerBloc>().runConfig.inspectionDuration;
-      if (settings.alertTypes.contains(AlertType.vibration)) {
-        _buzz(inspectionAlertStage(state, duration));
-      }
-      // TODO: audio
+      final stage = inspectionAlertStage(state, duration);
+      final types = settings.alertTypes.where((e) => e.supported);
+      if (types.contains(AlertType.vibration)) _buzz(stage);
+      if (types.contains(AlertType.audio)) _speak(stage, duration);
     },
     child: child,
   );
