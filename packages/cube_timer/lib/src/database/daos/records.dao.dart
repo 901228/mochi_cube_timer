@@ -155,7 +155,47 @@ extension SolveTimeValue on SolveTime {
   double get value => isDnf ? double.infinity : time;
 }
 
+/// How many solves of a session count, and the quickest and slowest of them (a +2 included,
+/// a DNF not).
+typedef RecordExtremes = ({int solved, int? best, int? worst});
+
+enum RecordBreakKind { best, worst }
+
+/// A solve that beat the best or the worst of its session, and by how many milliseconds.
+typedef RecordBreak = ({RecordBreakKind kind, int by});
+
+/// Before this many solved times, nearly every solve would be a record, which is only noise.
+const kMinSolvesForRecord = 4;
+
+extension RecordExtremesBreak on RecordExtremes {
+  /// What a solve of [time] and [penalty] breaks, given the session as it stood before it.
+  RecordBreak? breakBy(int time, Penalty penalty) {
+    if (penalty == Penalty.dnf || solved < kMinSolvesForRecord) return null;
+
+    final effective = time + (penalty == Penalty.plus2 ? 2000 : 0);
+    if (best case final best? when effective < best) return (kind: .best, by: best - effective);
+    if (worst case final worst? when effective > worst) return (kind: .worst, by: effective - worst);
+    return null;
+  }
+}
+
 extension RecordsDaoStatistics on RecordsDao {
+  Future<RecordExtremes> extremes(String session, Puzzle puzzle) async {
+    final eff = _effective(records);
+    final solved = records.penalty.equalsValue(Penalty.dnf).not();
+
+    final count = records.id.count(filter: solved);
+    final best = eff.min(filter: solved);
+    final worst = eff.max(filter: solved);
+
+    final row =
+        await (selectOnly(records)
+              ..addColumns([count, best, worst])
+              ..where(_scope(records, session, puzzle)))
+            .getSingle();
+    return (solved: row.read(count)!, best: row.read(best), worst: row.read(worst));
+  }
+
   Stream<SessionSummary> watchSummary(String session, Puzzle puzzle, {bool showArchived = false}) {
     final eff = _effective(records);
     final solved = records.penalty.equalsValue(Penalty.dnf).not();

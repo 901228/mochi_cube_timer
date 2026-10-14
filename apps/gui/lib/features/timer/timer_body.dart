@@ -1,4 +1,5 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -8,6 +9,7 @@ import "package:mochi_ui/mochi_ui.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
+import "record_break.dart";
 import "timer_text.dart";
 
 class TimerBody extends StatefulWidget {
@@ -16,7 +18,16 @@ class TimerBody extends StatefulWidget {
 
   /// Whether inspection shows its alerts as text.
   final bool alertText;
-  const TimerBody({super.key, this.color, this.alertText = true, required this.settings});
+
+  /// What the solve just finished broke, if anything.
+  final ValueListenable<RecordBreak?> recordBreak;
+  const TimerBody({
+    super.key,
+    this.color,
+    this.alertText = true,
+    required this.settings,
+    required this.recordBreak,
+  });
 
   @override
   State<TimerBody> createState() => _TimerBodyState();
@@ -83,7 +94,7 @@ class _TimerBodyState extends State<TimerBody> {
 
   @override
   Widget build(BuildContext context) {
-    final TimerBody(:color, :settings, :alertText) = widget;
+    final TimerBody(:color, :settings, :alertText, :recordBreak) = widget;
 
     final pressedColor = settings.timerPressedColor.toColor();
     final holdingColor = settings.timerHoldingColor.toColor();
@@ -107,12 +118,13 @@ class _TimerBodyState extends State<TimerBody> {
           ),
           child: Stack(
             children: [
+              Positioned.fill(child: RecordRipple(record: recordBreak)),
               const Positioned.fill(child: TimerPressArea()),
               state is TimerRunInInspection
                   ? InspectionText(alertText: alertText)
                   : (state is TimerInitial || state.hold == .armed
                         ? const IgnorePointer(child: Center(child: Text("0.00")))
-                        : const RunTimeText()),
+                        : RunTimeText(recordBreak: recordBreak)),
             ],
           ),
         );
@@ -196,7 +208,9 @@ class InspectionText extends StatelessWidget {
 }
 
 class RunTimeText extends StatelessWidget {
-  const RunTimeText({super.key});
+  const RunTimeText({super.key, required this.recordBreak});
+
+  final ValueListenable<RecordBreak?> recordBreak;
 
   Future<String?> _showCommentDialog(BuildContext context, String initComment) => showMochiPrompt(
     context,
@@ -287,6 +301,17 @@ class RunTimeText extends StatelessWidget {
               ],
             )
           : timeText,
+      hint: ValueListenableBuilder(
+        valueListenable: recordBreak,
+        builder: (context, record, _) => record == null
+            ? const SizedBox.shrink()
+            : Text(
+                recordBreakText(record),
+                style: context.theme.timer.sm.copyWith(
+                  color: record.kind == .best ? context.colors.primary.base : context.colors.mutedForeground,
+                ),
+              ),
+      ),
       action: showActions ? _actions(context, penalty) : null,
     );
   }

@@ -31,20 +31,31 @@ int inspectionAlertStage(TimerState state, Duration inspectionDuration) {
   return elapsed >= second.inSeconds ? 2 : (elapsed >= first.inSeconds ? 1 : 0);
 }
 
-/// One unbroken buzz per alert, longer and stronger as inspection runs out, so they can be told
-/// apart without looking. Not [HapticFeedback.vibrate], which iOS mutes with the ringer, nor
-/// repeated impacts, which feel like separate taps.
-Future<void> _buzz(int stage) async {
-  final (duration, amplitude) = switch (stage) {
-    1 => (200, 204),
-    2 => (400, 255),
-    _ => (1500, 255),
-  };
+/// One unbroken buzz, not [HapticFeedback.vibrate], which iOS mutes with the ringer, nor repeated
+/// impacts, which feel like separate taps.
+Future<void> buzz({required int duration, int amplitude = 255}) async {
   if (await Vibration.hasCustomVibrationsSupport()) {
     await Vibration.vibrate(duration: duration, amplitude: amplitude);
   } else {
     await HapticFeedback.heavyImpact();
   }
+}
+
+extension SettingsVibration on SettingsEntry {
+  /// Whether the user wants alerts, with vibration among them, where it can be given.
+  bool get vibrates =>
+      alertEnabled && alertTypes.contains(AlertType.vibration) && AlertType.vibration.supported;
+}
+
+/// A buzz per inspection alert, longer and stronger as inspection runs out, so they can be told
+/// apart without looking.
+Future<void> _buzz(int stage) {
+  final (duration, amplitude) = switch (stage) {
+    1 => (200, 204),
+    2 => (400, 255),
+    _ => (1500, 255),
+  };
+  return buzz(duration: duration, amplitude: amplitude);
 }
 
 /// Top-level, so set up on the first alert spoken: iOS keeps speech quiet under the Silent switch unless it

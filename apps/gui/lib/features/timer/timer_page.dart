@@ -59,6 +59,15 @@ class _TimerViewState extends State<_TimerView> {
   late Stream<SessionSummary> _summary;
   late Stream<List<SolveTime>> _times;
 
+  /// What the solve on screen broke; the timer shows it and rings for it.
+  final _recordBreak = ValueNotifier<RecordBreak?>(null);
+
+  @override
+  void dispose() {
+    _recordBreak.dispose();
+    super.dispose();
+  }
+
   void _watchStats() {
     final dao = context.read<AppDatabase>().recordsDao;
     _summary = dao.watchSummary(widget.sessionId, widget.puzzle);
@@ -109,12 +118,26 @@ class _TimerViewState extends State<_TimerView> {
   void _record(TimerState state) async {
     final bloc = context.read<TimerBloc>();
     final scrambles = context.read<ScrambleCubit>();
+    final dao = context.read<AppDatabase>().recordsDao;
     final scramble = await scrambles.state;
+    // Read before the solve is written, or it would be compared with itself.
+    final before = await dao.extremes(widget.sessionId, widget.puzzle);
 
     bloc.add(TimerRecorded(sessionId: widget.sessionId, puzzle: widget.puzzle, notation: scramble.notation));
 
     scrambles.next();
-    // TODO: break record (& break worst record) animation (or notification)
+    _announce(bloc, before.breakBy(state.elapsed, state.penalty));
+    // TODO: the same for a best average (ao5, ao12, ...), after the best single
+  }
+
+  void _announce(TimerBloc bloc, RecordBreak? record) {
+    final settings = widget.settings;
+    final wanted = record?.kind == .best ? settings.recordBestAlert : settings.recordWorstAlert;
+    // The solve may have been reset while it was being looked up, and its record shown to the next.
+    if (record == null || !wanted || !mounted || bloc.state is! TimerRunComplete) return;
+
+    _recordBreak.value = record;
+    if (record.kind == .best && settings.vibrates) buzz(duration: 100);
   }
 
   Widget _withScramble(Widget Function(Scramble scramble) builder) => FutureBuilder(
@@ -303,6 +326,7 @@ class _TimerViewState extends State<_TimerView> {
             child: TimerBody(
               alertText: widget.settings.alertEnabled && widget.settings.alertTypes.contains(AlertType.text),
               settings: widget.settings,
+              recordBreak: _recordBreak,
             ),
           ),
         ),
@@ -311,7 +335,10 @@ class _TimerViewState extends State<_TimerView> {
 
     return BlocListener<TimerBloc, TimerState>(
       listenWhen: (previous, current) => previous.runtimeType != current.runtimeType,
-      listener: (context, state) => context.read<TimerFocusCubit>().follow(state),
+      listener: (context, state) {
+        context.read<TimerFocusCubit>().follow(state);
+        if (state is! TimerRunComplete) _recordBreak.value = null;
+      },
       child: InspectionAlerts(
         settings: widget.settings,
         child: BlocBuilder<TimerFocusCubit, bool>(
