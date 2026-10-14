@@ -21,6 +21,12 @@ class Settings extends Table {
   TextColumn get alertTypes =>
       text().map(const AlertTypesConverter()).withDefault(const Constant("text,vibration"))();
 
+  /// whether a new best solve of the session is announced
+  BoolColumn get recordBestAlert => boolean().withDefault(const Constant(true))();
+
+  /// whether a new worst solve of the session is announced
+  BoolColumn get recordWorstAlert => boolean().withDefault(const Constant(true))();
+
   /// locale
   ///
   /// `null` => system default

@@ -70,6 +70,36 @@ class $SettingsTable extends Settings
     requiredDuringInsert: false,
     defaultValue: const Constant("text,vibration"),
   ).withConverter<Set<AlertType>>($SettingsTable.$converteralertTypes);
+  static const VerificationMeta _recordBestAlertMeta = const VerificationMeta(
+    'recordBestAlert',
+  );
+  @override
+  late final GeneratedColumn<bool> recordBestAlert = GeneratedColumn<bool>(
+    'record_best_alert',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("record_best_alert" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _recordWorstAlertMeta = const VerificationMeta(
+    'recordWorstAlert',
+  );
+  @override
+  late final GeneratedColumn<bool> recordWorstAlert = GeneratedColumn<bool>(
+    'record_worst_alert',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("record_worst_alert" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   static const VerificationMeta _localeMeta = const VerificationMeta('locale');
   @override
   late final GeneratedColumn<String> locale = GeneratedColumn<String>(
@@ -266,6 +296,8 @@ class $SettingsTable extends Settings
     inspectDuration,
     alertEnabled,
     alertTypes,
+    recordBestAlert,
+    recordWorstAlert,
     locale,
     cubeColorU,
     cubeColorR,
@@ -322,6 +354,24 @@ class $SettingsTable extends Settings
         alertEnabled.isAcceptableOrUnknown(
           data['alert_enabled']!,
           _alertEnabledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('record_best_alert')) {
+      context.handle(
+        _recordBestAlertMeta,
+        recordBestAlert.isAcceptableOrUnknown(
+          data['record_best_alert']!,
+          _recordBestAlertMeta,
+        ),
+      );
+    }
+    if (data.containsKey('record_worst_alert')) {
+      context.handle(
+        _recordWorstAlertMeta,
+        recordWorstAlert.isAcceptableOrUnknown(
+          data['record_worst_alert']!,
+          _recordWorstAlertMeta,
         ),
       );
     }
@@ -497,6 +547,14 @@ class $SettingsTable extends Settings
           data['${effectivePrefix}alert_types'],
         )!,
       ),
+      recordBestAlert: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}record_best_alert'],
+      )!,
+      recordWorstAlert: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}record_worst_alert'],
+      )!,
       locale: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}locale'],
@@ -589,6 +647,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   /// how the alert is given
   final Set<AlertType> alertTypes;
 
+  /// whether a new best solve of the session is announced
+  final bool recordBestAlert;
+
+  /// whether a new worst solve of the session is announced
+  final bool recordWorstAlert;
+
   /// locale
   ///
   /// `null` => system default
@@ -624,6 +688,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.inspectDuration,
     required this.alertEnabled,
     required this.alertTypes,
+    required this.recordBestAlert,
+    required this.recordWorstAlert,
     this.locale,
     required this.cubeColorU,
     required this.cubeColorR,
@@ -653,6 +719,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
         $SettingsTable.$converteralertTypes.toSql(alertTypes),
       );
     }
+    map['record_best_alert'] = Variable<bool>(recordBestAlert);
+    map['record_worst_alert'] = Variable<bool>(recordWorstAlert);
     if (!nullToAbsent || locale != null) {
       map['locale'] = Variable<String>(locale);
     }
@@ -681,6 +749,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       inspectDuration: Value(inspectDuration),
       alertEnabled: Value(alertEnabled),
       alertTypes: Value(alertTypes),
+      recordBestAlert: Value(recordBestAlert),
+      recordWorstAlert: Value(recordWorstAlert),
       locale: locale == null && nullToAbsent
           ? const Value.absent()
           : Value(locale),
@@ -713,6 +783,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       inspectDuration: serializer.fromJson<int>(json['inspectDuration']),
       alertEnabled: serializer.fromJson<bool>(json['alertEnabled']),
       alertTypes: serializer.fromJson<Set<AlertType>>(json['alertTypes']),
+      recordBestAlert: serializer.fromJson<bool>(json['recordBestAlert']),
+      recordWorstAlert: serializer.fromJson<bool>(json['recordWorstAlert']),
       locale: serializer.fromJson<String?>(json['locale']),
       cubeColorU: serializer.fromJson<int>(json['cubeColorU']),
       cubeColorR: serializer.fromJson<int>(json['cubeColorR']),
@@ -740,6 +812,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'inspectDuration': serializer.toJson<int>(inspectDuration),
       'alertEnabled': serializer.toJson<bool>(alertEnabled),
       'alertTypes': serializer.toJson<Set<AlertType>>(alertTypes),
+      'recordBestAlert': serializer.toJson<bool>(recordBestAlert),
+      'recordWorstAlert': serializer.toJson<bool>(recordWorstAlert),
       'locale': serializer.toJson<String?>(locale),
       'cubeColorU': serializer.toJson<int>(cubeColorU),
       'cubeColorR': serializer.toJson<int>(cubeColorR),
@@ -765,6 +839,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     int? inspectDuration,
     bool? alertEnabled,
     Set<AlertType>? alertTypes,
+    bool? recordBestAlert,
+    bool? recordWorstAlert,
     Value<String?> locale = const Value.absent(),
     int? cubeColorU,
     int? cubeColorR,
@@ -787,6 +863,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     inspectDuration: inspectDuration ?? this.inspectDuration,
     alertEnabled: alertEnabled ?? this.alertEnabled,
     alertTypes: alertTypes ?? this.alertTypes,
+    recordBestAlert: recordBestAlert ?? this.recordBestAlert,
+    recordWorstAlert: recordWorstAlert ?? this.recordWorstAlert,
     locale: locale.present ? locale.value : this.locale,
     cubeColorU: cubeColorU ?? this.cubeColorU,
     cubeColorR: cubeColorR ?? this.cubeColorR,
@@ -819,6 +897,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       alertTypes: data.alertTypes.present
           ? data.alertTypes.value
           : this.alertTypes,
+      recordBestAlert: data.recordBestAlert.present
+          ? data.recordBestAlert.value
+          : this.recordBestAlert,
+      recordWorstAlert: data.recordWorstAlert.present
+          ? data.recordWorstAlert.value
+          : this.recordWorstAlert,
       locale: data.locale.present ? data.locale.value : this.locale,
       cubeColorU: data.cubeColorU.present
           ? data.cubeColorU.value
@@ -876,6 +960,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('inspectDuration: $inspectDuration, ')
           ..write('alertEnabled: $alertEnabled, ')
           ..write('alertTypes: $alertTypes, ')
+          ..write('recordBestAlert: $recordBestAlert, ')
+          ..write('recordWorstAlert: $recordWorstAlert, ')
           ..write('locale: $locale, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
@@ -903,6 +989,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     inspectDuration,
     alertEnabled,
     alertTypes,
+    recordBestAlert,
+    recordWorstAlert,
     locale,
     cubeColorU,
     cubeColorR,
@@ -929,6 +1017,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.inspectDuration == this.inspectDuration &&
           other.alertEnabled == this.alertEnabled &&
           other.alertTypes == this.alertTypes &&
+          other.recordBestAlert == this.recordBestAlert &&
+          other.recordWorstAlert == this.recordWorstAlert &&
           other.locale == this.locale &&
           other.cubeColorU == this.cubeColorU &&
           other.cubeColorR == this.cubeColorR &&
@@ -953,6 +1043,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<int> inspectDuration;
   final Value<bool> alertEnabled;
   final Value<Set<AlertType>> alertTypes;
+  final Value<bool> recordBestAlert;
+  final Value<bool> recordWorstAlert;
   final Value<String?> locale;
   final Value<int> cubeColorU;
   final Value<int> cubeColorR;
@@ -975,6 +1067,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.inspectDuration = const Value.absent(),
     this.alertEnabled = const Value.absent(),
     this.alertTypes = const Value.absent(),
+    this.recordBestAlert = const Value.absent(),
+    this.recordWorstAlert = const Value.absent(),
     this.locale = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
@@ -998,6 +1092,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.inspectDuration = const Value.absent(),
     this.alertEnabled = const Value.absent(),
     this.alertTypes = const Value.absent(),
+    this.recordBestAlert = const Value.absent(),
+    this.recordWorstAlert = const Value.absent(),
     this.locale = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
@@ -1021,6 +1117,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<int>? inspectDuration,
     Expression<bool>? alertEnabled,
     Expression<String>? alertTypes,
+    Expression<bool>? recordBestAlert,
+    Expression<bool>? recordWorstAlert,
     Expression<String>? locale,
     Expression<int>? cubeColorU,
     Expression<int>? cubeColorR,
@@ -1044,6 +1142,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (inspectDuration != null) 'inspect_duration': inspectDuration,
       if (alertEnabled != null) 'alert_enabled': alertEnabled,
       if (alertTypes != null) 'alert_types': alertTypes,
+      if (recordBestAlert != null) 'record_best_alert': recordBestAlert,
+      if (recordWorstAlert != null) 'record_worst_alert': recordWorstAlert,
       if (locale != null) 'locale': locale,
       if (cubeColorU != null) 'cube_color_u': cubeColorU,
       if (cubeColorR != null) 'cube_color_r': cubeColorR,
@@ -1069,6 +1169,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<int>? inspectDuration,
     Value<bool>? alertEnabled,
     Value<Set<AlertType>>? alertTypes,
+    Value<bool>? recordBestAlert,
+    Value<bool>? recordWorstAlert,
     Value<String?>? locale,
     Value<int>? cubeColorU,
     Value<int>? cubeColorR,
@@ -1092,6 +1194,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       inspectDuration: inspectDuration ?? this.inspectDuration,
       alertEnabled: alertEnabled ?? this.alertEnabled,
       alertTypes: alertTypes ?? this.alertTypes,
+      recordBestAlert: recordBestAlert ?? this.recordBestAlert,
+      recordWorstAlert: recordWorstAlert ?? this.recordWorstAlert,
       locale: locale ?? this.locale,
       cubeColorU: cubeColorU ?? this.cubeColorU,
       cubeColorR: cubeColorR ?? this.cubeColorR,
@@ -1130,6 +1234,12 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       map['alert_types'] = Variable<String>(
         $SettingsTable.$converteralertTypes.toSql(alertTypes.value),
       );
+    }
+    if (recordBestAlert.present) {
+      map['record_best_alert'] = Variable<bool>(recordBestAlert.value);
+    }
+    if (recordWorstAlert.present) {
+      map['record_worst_alert'] = Variable<bool>(recordWorstAlert.value);
     }
     if (locale.present) {
       map['locale'] = Variable<String>(locale.value);
@@ -1190,6 +1300,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('inspectDuration: $inspectDuration, ')
           ..write('alertEnabled: $alertEnabled, ')
           ..write('alertTypes: $alertTypes, ')
+          ..write('recordBestAlert: $recordBestAlert, ')
+          ..write('recordWorstAlert: $recordWorstAlert, ')
           ..write('locale: $locale, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
@@ -2497,6 +2609,8 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<int> inspectDuration,
   Value<bool> alertEnabled,
   Value<Set<AlertType>> alertTypes,
+  Value<bool> recordBestAlert,
+  Value<bool> recordWorstAlert,
   Value<String?> locale,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
@@ -2520,6 +2634,8 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> inspectDuration,
   Value<bool> alertEnabled,
   Value<Set<AlertType>> alertTypes,
+  Value<bool> recordBestAlert,
+  Value<bool> recordWorstAlert,
   Value<String?> locale,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
@@ -2571,6 +2687,16 @@ class $$SettingsTableFilterComposer
   get alertTypes => $composableBuilder(
     column: $table.alertTypes,
     builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<bool> get recordBestAlert => $composableBuilder(
+    column: $table.recordBestAlert,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get recordWorstAlert => $composableBuilder(
+    column: $table.recordWorstAlert,
+    builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get locale => $composableBuilder(
@@ -2688,6 +2814,16 @@ class $$SettingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get recordBestAlert => $composableBuilder(
+    column: $table.recordBestAlert,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get recordWorstAlert => $composableBuilder(
+    column: $table.recordWorstAlert,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get locale => $composableBuilder(
     column: $table.locale,
     builder: (column) => ColumnOrderings(column),
@@ -2801,6 +2937,16 @@ class $$SettingsTableAnnotationComposer
         column: $table.alertTypes,
         builder: (column) => column,
       );
+
+  GeneratedColumn<bool> get recordBestAlert => $composableBuilder(
+    column: $table.recordBestAlert,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get recordWorstAlert => $composableBuilder(
+    column: $table.recordWorstAlert,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get locale =>
       $composableBuilder(column: $table.locale, builder: (column) => column);
@@ -2917,6 +3063,8 @@ class $$SettingsTableTableManager
                 Value<int> inspectDuration = const Value.absent(),
                 Value<bool> alertEnabled = const Value.absent(),
                 Value<Set<AlertType>> alertTypes = const Value.absent(),
+                Value<bool> recordBestAlert = const Value.absent(),
+                Value<bool> recordWorstAlert = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
@@ -2939,6 +3087,8 @@ class $$SettingsTableTableManager
                 inspectDuration: inspectDuration,
                 alertEnabled: alertEnabled,
                 alertTypes: alertTypes,
+                recordBestAlert: recordBestAlert,
+                recordWorstAlert: recordWorstAlert,
                 locale: locale,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,
@@ -2963,6 +3113,8 @@ class $$SettingsTableTableManager
                 Value<int> inspectDuration = const Value.absent(),
                 Value<bool> alertEnabled = const Value.absent(),
                 Value<Set<AlertType>> alertTypes = const Value.absent(),
+                Value<bool> recordBestAlert = const Value.absent(),
+                Value<bool> recordWorstAlert = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
@@ -2985,6 +3137,8 @@ class $$SettingsTableTableManager
                 inspectDuration: inspectDuration,
                 alertEnabled: alertEnabled,
                 alertTypes: alertTypes,
+                recordBestAlert: recordBestAlert,
+                recordWorstAlert: recordWorstAlert,
                 locale: locale,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,

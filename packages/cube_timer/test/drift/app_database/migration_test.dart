@@ -8,6 +8,7 @@ import "package:test/test.dart";
 import "generated/schema.dart";
 import "generated/schema_v1.dart" as v1;
 import "generated/schema_v2.dart" as v2;
+import "generated/schema_v3.dart" as v3;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -142,6 +143,70 @@ void main() {
             penalty: record.penalty,
             comment: record.comment,
             archived: record.archived,
+          ),
+        ]);
+      },
+    );
+  });
+
+  test("v2 to v3 keeps the settings, and announces new bests and worsts by default", () async {
+    const old = v2.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "audio",
+      locale: "zh_TW",
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 2,
+      newVersion: 3,
+      createOld: v2.DatabaseAtV2.new,
+      createNew: v3.DatabaseAtV3.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        expect(await newDb.select(newDb.settings).get(), [
+          v3.SettingsData(
+            id: 0,
+            inspectionEnabled: 0,
+            inspectDuration: 8,
+            alertEnabled: 0,
+            alertTypes: "audio",
+            recordBestAlert: 1,
+            recordWorstAlert: 1,
+            locale: "zh_TW",
+            cubeColorU: 0xFF123456,
+            cubeColorR: 1,
+            cubeColorF: 2,
+            cubeColorD: 3,
+            cubeColorL: 4,
+            cubeColorB: 5,
+            pyraminxColorU: 6,
+            pyraminxColorB: 7,
+            pyraminxColorR: 8,
+            pyraminxColorL: 9,
+            clockColorFront: 10,
+            clockColorBack: 11,
+            timerPressedColor: 12,
+            timerHoldingColor: 13,
+            timerAcceptColor: 14,
           ),
         ]);
       },

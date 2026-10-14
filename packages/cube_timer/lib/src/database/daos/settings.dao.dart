@@ -25,4 +25,8 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
   Future<void> setAlertEnabled(bool v) => _write(SettingsCompanion(alertEnabled: Value(v)));
 
   Future<void> setAlertTypes(Set<AlertType> v) => _write(SettingsCompanion(alertTypes: Value(v)));
+
+  Future<void> setRecordBestAlert(bool v) => _write(SettingsCompanion(recordBestAlert: Value(v)));
+
+  Future<void> setRecordWorstAlert(bool v) => _write(SettingsCompanion(recordWorstAlert: Value(v)));
 }

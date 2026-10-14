@@ -518,8 +518,175 @@ i1.GeneratedColumn<int> _column_35(String aliasedName) =>
       $customConstraints: 'NOT NULL DEFAULT 0 CHECK (archived IN (0, 1))',
       defaultValue: const i1.CustomExpression('0'),
     );
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    settings,
+    sessions,
+    appState,
+    records,
+    recordsSessionPuzzle,
+  ];
+  late final Shape4 settings = Shape4(
+    source: i0.VersionedTable(
+      entityName: 'settings',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_36,
+        _column_37,
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+        _column_18,
+        _column_19,
+        _column_20,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 sessions = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'sessions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [_column_21, _column_22, _column_23, _column_24],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 appState = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'app_state',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [_column_0, _column_25, _column_26, _column_27],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape3 records = Shape3(
+    source: i0.VersionedTable(
+      entityName: 'records',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_21,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+        _column_24,
+        _column_35,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index recordsSessionPuzzle = i1.Index(
+    'records_session_puzzle',
+    'CREATE INDEX records_session_puzzle ON records (session, puzzle, datetime)',
+  );
+}
+
+class Shape4 extends i0.VersionedTable {
+  Shape4({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get inspectionEnabled =>
+      columnsByName['inspection_enabled']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get inspectDuration =>
+      columnsByName['inspect_duration']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get alertEnabled =>
+      columnsByName['alert_enabled']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get alertTypes =>
+      columnsByName['alert_types']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get recordBestAlert =>
+      columnsByName['record_best_alert']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get recordWorstAlert =>
+      columnsByName['record_worst_alert']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get locale =>
+      columnsByName['locale']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get cubeColorU =>
+      columnsByName['cube_color_u']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get cubeColorR =>
+      columnsByName['cube_color_r']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get cubeColorF =>
+      columnsByName['cube_color_f']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get cubeColorD =>
+      columnsByName['cube_color_d']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get cubeColorL =>
+      columnsByName['cube_color_l']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get cubeColorB =>
+      columnsByName['cube_color_b']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get pyraminxColorU =>
+      columnsByName['pyraminx_color_u']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get pyraminxColorB =>
+      columnsByName['pyraminx_color_b']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get pyraminxColorR =>
+      columnsByName['pyraminx_color_r']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get pyraminxColorL =>
+      columnsByName['pyraminx_color_l']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get clockColorFront =>
+      columnsByName['clock_color_front']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get clockColorBack =>
+      columnsByName['clock_color_back']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get timerPressedColor =>
+      columnsByName['timer_pressed_color']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get timerHoldingColor =>
+      columnsByName['timer_holding_color']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get timerAcceptColor =>
+      columnsByName['timer_accept_color']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_36(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'record_best_alert',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'NOT NULL DEFAULT 1 CHECK (record_best_alert IN (0, 1))',
+      defaultValue: const i1.CustomExpression('1'),
+    );
+i1.GeneratedColumn<int> _column_37(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'record_worst_alert',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'NOT NULL DEFAULT 1 CHECK (record_worst_alert IN (0, 1))',
+      defaultValue: const i1.CustomExpression('1'),
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -528,6 +695,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -536,6 +708,7 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from1To2: from1To2),
+  step: migrationSteps(from1To2: from1To2, from2To3: from2To3),
 );
