@@ -4,16 +4,16 @@ import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/utils.dart";
-import "sections/cube_colors_section.dart";
-import "sections/inspection_section.dart";
+import "sections/general_section.dart";
+import "sections/puzzle_section.dart";
 import "sections/root_section.dart";
-import "sections/timer_colors_section.dart";
+import "sections/timer_section.dart";
 
 final Map<String, Widget Function(SettingsEntry, SettingsDao)> settingsSections = {
   "root": (settings, dao) => RootSettingsSections(settings: settings, dao: dao),
-  "inspection": (settings, dao) => InspectionSettingsSections(settings: settings, dao: dao),
-  "cube-colors": (settings, dao) => CubeColorsSettingsSections(settings: settings, dao: dao),
-  "timer-colors": (settings, dao) => TimerColorsSettingsSections(settings: settings, dao: dao),
+  "general": (settings, dao) => GeneralSettingsSections(settings: settings, dao: dao),
+  "timer": (settings, dao) => TimerSettingsSections(settings: settings, dao: dao),
+  "puzzle": (settings, dao) => PuzzleSettingsSections(settings: settings, dao: dao),
 };
 
 class SettingsPage extends StatelessWidget {

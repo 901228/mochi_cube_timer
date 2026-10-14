@@ -14,53 +14,22 @@ class RootSettingsSections extends StatelessWidget {
     return Column(
       spacing: groupSpacing,
       children: [
-        MochiTileGroup(
-          label: const Text("Locale"),
-          children: [
-            SettingsTile(
-              title: "Locale",
-              icon: Icon(TablerIcons.language),
-              suffix: Icon(TablerIcons.flag), // TODO: get locale icon
-            ),
-          ],
-        ),
-
-        MochiTileGroup(
-          label: const Text("Timer"),
-          children: [
-            SettingsTile(
-              title: "Inspection",
-              icon: Icon(TablerIcons.clockHour4),
-              suffix: Icon(TablerIcons.chevronRight),
-              onPress: () => context.push("/settings/inspection"),
-            ),
-          ],
-        ),
-
-        MochiTileGroup(
-          label: const Text("Appearance"),
-          children: [
-            // TODO: app theme
-            // SettingsTile(
-            //   title: "App theme",
-            //   icon: Icon(TablerIcons.palette),
-            //   // suffix: Icon(TablerIcons.circleWithColor),
-            //   onPress: () => showMochiModal,
-            // ),
-            SettingsTile(
-              title: "Timer colors",
-              icon: Icon(TablerIcons.clockRecord),
-              suffix: Icon(TablerIcons.chevronRight),
-              onPress: () => context.push("/settings/timer-colors"),
-            ),
-            SettingsTile(
-              title: "Cube colors",
-              icon: Icon(TablerIcons.paint),
-              suffix: Icon(TablerIcons.chevronRight),
-              onPress: () => context.push("/settings/cube-colors"),
-            ),
-          ],
-        ),
+        for (final (title, icon, section) in [
+          ("General", TablerIcons.settings, "general"),
+          ("Timer", TablerIcons.clockHour4, "timer"),
+          ("Puzzle", TablerIcons.cube, "puzzle"),
+        ])
+          MochiTileGroup(
+            label: Text(title),
+            children: [
+              SettingsTile(
+                title: title,
+                icon: Icon(icon),
+                suffix: Icon(TablerIcons.chevronRight),
+                onPress: () => context.push("/settings/$section"),
+              ),
+            ],
+          ),
       ],
     );
   }

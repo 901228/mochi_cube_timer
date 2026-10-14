@@ -5,10 +5,10 @@ import "package:mochi_ui/mochi_ui.dart";
 import "../../../shared/utils.dart";
 import "../settings_tile.dart";
 
-class CubeColorsSettingsSections extends StatelessWidget {
+class PuzzleSettingsSections extends StatelessWidget {
   final SettingsEntry settings;
   final SettingsDao dao;
-  const CubeColorsSettingsSections({super.key, required this.settings, required this.dao});
+  const PuzzleSettingsSections({super.key, required this.settings, required this.dao});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class CubeColorsSettingsSections extends StatelessWidget {
       spacing: groupSpacing,
       children: [
         MochiTileGroup(
-          label: const Text("Cube"),
+          label: const Text("Cube colors"),
           children: [
             ColorTile(
               title: "Up",
@@ -58,7 +58,7 @@ class CubeColorsSettingsSections extends StatelessWidget {
         ),
 
         MochiTileGroup(
-          label: const Text("Pyraminx"),
+          label: const Text("Pyraminx colors"),
           children: [
             ColorTile(
               title: "Up",
@@ -88,7 +88,7 @@ class CubeColorsSettingsSections extends StatelessWidget {
         ),
 
         MochiTileGroup(
-          label: const Text("Clock"),
+          label: const Text("Clock colors"),
           children: [
             ColorTile(
               title: "Front",

@@ -1,15 +1,17 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:drift/drift.dart" show Value;
 import "package:flutter/services.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../../shared/utils.dart";
 import "../../timer/alert.dart";
 import "../settings_tile.dart";
 
-class InspectionSettingsSections extends StatelessWidget {
+class TimerSettingsSections extends StatelessWidget {
   final SettingsEntry settings;
   final SettingsDao dao;
-  const InspectionSettingsSections({super.key, required this.settings, required this.dao});
+  const TimerSettingsSections({super.key, required this.settings, required this.dao});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class InspectionSettingsSections extends StatelessWidget {
       spacing: groupSpacing,
       children: [
         MochiTileGroup(
-          label: const Text("Inpsection"),
+          label: const Text("Inspection"),
           children: [
             SettingsTile(
               title: "Inspection",
@@ -84,6 +86,46 @@ class InspectionSettingsSections extends StatelessWidget {
                     .map((e) => MochiSelectOption(value: e, label: e.displayName, enabled: e.supported))
                     .toList(),
               ),
+            ),
+          ],
+        ),
+
+        MochiTileGroup(
+          label: const Text("Records"),
+          children: [
+            SettingsTile(
+              title: "New best alert",
+              subtitle: "Announce a solve that beats the best of the session",
+              suffix: MochiSwitch(value: settings.recordBestAlert, onChanged: dao.setRecordBestAlert),
+            ),
+            SettingsTile(
+              title: "New worst alert",
+              subtitle: "Announce a solve that is slower than the worst of the session",
+              suffix: MochiSwitch(value: settings.recordWorstAlert, onChanged: dao.setRecordWorstAlert),
+            ),
+          ],
+        ),
+
+        MochiTileGroup(
+          label: const Text("Colors"),
+          children: [
+            ColorTile(
+              title: "Pressed",
+              color: settings.timerPressedColor.toColor(),
+              defaultColor: DefaultColors.timerColors.pressed.toColor(),
+              onSubmit: (c) => dao.save(SettingsCompanion(timerPressedColor: Value(c.toARGB32()))),
+            ),
+            ColorTile(
+              title: "Holding",
+              color: settings.timerHoldingColor.toColor(),
+              defaultColor: DefaultColors.timerColors.holding.toColor(),
+              onSubmit: (c) => dao.save(SettingsCompanion(timerHoldingColor: Value(c.toARGB32()))),
+            ),
+            ColorTile(
+              title: "Accept",
+              color: settings.timerAcceptColor.toColor(),
+              defaultColor: DefaultColors.timerColors.accept.toColor(),
+              onSubmit: (c) => dao.save(SettingsCompanion(timerAcceptColor: Value(c.toARGB32()))),
             ),
           ],
         ),
