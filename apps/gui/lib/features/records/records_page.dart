@@ -35,6 +35,13 @@ class _RecordsPageState extends State<_RecordsPage> {
   RecordQuery _query = const RecordQuery();
   late Stream<List<RecordEntry>> _stream;
 
+  /// For the best solve to be marked, whatever the query shows.
+  late Stream<SessionSummary> _summary;
+
+  void _watchSummary() {
+    _summary = recordsDao.watchSummary(widget.session.id, widget.puzzle, showArchived: widget.showArchived);
+  }
+
   void _watchSession() {
     _stream = recordsDao.watchSession(
       widget.session.id,
@@ -48,6 +55,7 @@ class _RecordsPageState extends State<_RecordsPage> {
   void initState() {
     super.initState();
     _watchSession();
+    _watchSummary();
   }
 
   @override
@@ -57,6 +65,7 @@ class _RecordsPageState extends State<_RecordsPage> {
         oldWidget.puzzle != widget.puzzle ||
         oldWidget.showArchived != widget.showArchived) {
       _watchSession();
+      _watchSummary();
     }
   }
 
@@ -128,7 +137,13 @@ class _RecordsPageState extends State<_RecordsPage> {
               MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
-                child: Expanded(child: RecordsList(records: records)),
+                child: Expanded(
+                  child: StreamBuilder(
+                    stream: _summary,
+                    builder: (context, summary) =>
+                        RecordsList(records: records, best: summary.data?.best?.round()),
+                  ),
+                ),
               ),
             ],
           ),

@@ -43,7 +43,10 @@ extension on Set<String>? {
 
 class RecordsList extends StatefulWidget {
   final List<RecordEntry> records;
-  const RecordsList({super.key, required this.records});
+
+  /// The best time of the session in milliseconds, which the solves that made it are marked with.
+  final int? best;
+  const RecordsList({super.key, required this.records, this.best});
 
   @override
   State<RecordsList> createState() => _RecordsListState();
@@ -127,6 +130,9 @@ class _RecordsListState extends State<RecordsList> {
     ];
   }
 
+  bool _isBest(RecordEntry record) =>
+      record.penalty != .dnf && record.time + (record.penalty == .plus2 ? 2000 : 0) == widget.best;
+
   Widget _recordTile(RecordEntry record) {
     final selected = context.watch<RecordSelectionCubit>().state;
     final controller = context.read<RecordSelectionCubit>();
@@ -154,6 +160,13 @@ class _RecordsListState extends State<RecordsList> {
             top: 0,
             child: Text(record.datetime.toLocal().monthDayString),
           ),
+          if (_isBest(record))
+            Positioned.directional(
+              textDirection: Directionality.of(context),
+              end: 0,
+              top: 0,
+              child: Icon(TablerIcons.trophy, color: context.colors.primary.base, size: 16),
+            ),
           if (record.penalty == .plus2)
             Positioned.directional(
               textDirection: Directionality.of(context),
