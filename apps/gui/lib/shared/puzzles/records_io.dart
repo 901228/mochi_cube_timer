@@ -5,16 +5,66 @@ import "package:mochi_ui/mochi_ui.dart";
 
 import "../utils/csv.dart";
 
-// TODO: add a dialog ? (select whether include deleted records & archived records)
 Future<void> exportRecords(BuildContext context, SessionEntry session) async {
   final toastContext = Navigator.of(context, rootNavigator: true).context;
+  bool includeDeleted = false;
 
+  final g = context.theme.geometry;
+
+  showMochiModal(
+    context,
+    title: Column(
+      crossAxisAlignment: .start,
+      children: [
+        const Text("Export session"),
+        Text(
+          "Export as CSV",
+          style: context.theme.typography.title.sm.copyWith(color: context.theme.colors.mutedForeground),
+        ),
+      ],
+    ),
+    body: Padding(
+      padding: .only(top: g.space.xs),
+      child: StatefulBuilder(
+        builder: (context, setState) => Column(
+          crossAxisAlignment: .start,
+          spacing: g.space.xs,
+          children: [
+            MochiCheckbox(
+              value: includeDeleted,
+              onChanged: (value) => setState(() => includeDeleted = value!),
+              label: const Text("Include deleted records"),
+            ),
+          ],
+        ),
+      ),
+    ),
+    actions: [
+      MochiButton(
+        prefix: Icon(TablerIcons.check),
+        child: Text("Export"),
+        onPress: () async {
+          await _exportRecords(context, toastContext, session, includeDeleted: includeDeleted);
+
+          if (context.mounted) Navigator.of(context, rootNavigator: true).pop(true);
+        },
+      ),
+    ],
+  );
+}
+
+Future<void> _exportRecords(
+  BuildContext context,
+  BuildContext toastContext,
+  SessionEntry session, {
+  bool includeDeleted = false,
+}) async {
   RecordsDao recordsDao = context.read<AppDatabase>().recordsDao;
   AppStateDao appStateDao = context.read<AppDatabase>().appStateDao;
 
   try {
     final appState = await appStateDao.current;
-    final records = await recordsDao.export(session.id, appState.puzzle);
+    final records = await recordsDao.export(session.id, appState.puzzle, includeDeleted: includeDeleted);
     final rows = records.map(
       (e) => [e.session.name, e.puzzle.id, e.scramble, e.time, e.datetime, e.penalty.name, e.comment],
     );
