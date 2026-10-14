@@ -27,6 +27,9 @@ class Settings extends Table {
   /// whether a new worst solve of the session is announced
   BoolColumn get recordWorstAlert => boolean().withDefault(const Constant(true))();
 
+  /// whether a new best average (Mo3, Ao5, Ao12) of the session is announced
+  BoolColumn get recordAverageAlert => boolean().withDefault(const Constant(true))();
+
   /// locale
   ///
   /// `null` => system default

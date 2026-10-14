@@ -100,6 +100,20 @@ class $SettingsTable extends Settings
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _recordAverageAlertMeta =
+      const VerificationMeta('recordAverageAlert');
+  @override
+  late final GeneratedColumn<bool> recordAverageAlert = GeneratedColumn<bool>(
+    'record_average_alert',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("record_average_alert" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   static const VerificationMeta _localeMeta = const VerificationMeta('locale');
   @override
   late final GeneratedColumn<String> locale = GeneratedColumn<String>(
@@ -298,6 +312,7 @@ class $SettingsTable extends Settings
     alertTypes,
     recordBestAlert,
     recordWorstAlert,
+    recordAverageAlert,
     locale,
     cubeColorU,
     cubeColorR,
@@ -372,6 +387,15 @@ class $SettingsTable extends Settings
         recordWorstAlert.isAcceptableOrUnknown(
           data['record_worst_alert']!,
           _recordWorstAlertMeta,
+        ),
+      );
+    }
+    if (data.containsKey('record_average_alert')) {
+      context.handle(
+        _recordAverageAlertMeta,
+        recordAverageAlert.isAcceptableOrUnknown(
+          data['record_average_alert']!,
+          _recordAverageAlertMeta,
         ),
       );
     }
@@ -555,6 +579,10 @@ class $SettingsTable extends Settings
         DriftSqlType.bool,
         data['${effectivePrefix}record_worst_alert'],
       )!,
+      recordAverageAlert: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}record_average_alert'],
+      )!,
       locale: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}locale'],
@@ -653,6 +681,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   /// whether a new worst solve of the session is announced
   final bool recordWorstAlert;
 
+  /// whether a new best average (Mo3, Ao5, Ao12) of the session is announced
+  final bool recordAverageAlert;
+
   /// locale
   ///
   /// `null` => system default
@@ -690,6 +721,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.alertTypes,
     required this.recordBestAlert,
     required this.recordWorstAlert,
+    required this.recordAverageAlert,
     this.locale,
     required this.cubeColorU,
     required this.cubeColorR,
@@ -721,6 +753,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     }
     map['record_best_alert'] = Variable<bool>(recordBestAlert);
     map['record_worst_alert'] = Variable<bool>(recordWorstAlert);
+    map['record_average_alert'] = Variable<bool>(recordAverageAlert);
     if (!nullToAbsent || locale != null) {
       map['locale'] = Variable<String>(locale);
     }
@@ -751,6 +784,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       alertTypes: Value(alertTypes),
       recordBestAlert: Value(recordBestAlert),
       recordWorstAlert: Value(recordWorstAlert),
+      recordAverageAlert: Value(recordAverageAlert),
       locale: locale == null && nullToAbsent
           ? const Value.absent()
           : Value(locale),
@@ -785,6 +819,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       alertTypes: serializer.fromJson<Set<AlertType>>(json['alertTypes']),
       recordBestAlert: serializer.fromJson<bool>(json['recordBestAlert']),
       recordWorstAlert: serializer.fromJson<bool>(json['recordWorstAlert']),
+      recordAverageAlert: serializer.fromJson<bool>(json['recordAverageAlert']),
       locale: serializer.fromJson<String?>(json['locale']),
       cubeColorU: serializer.fromJson<int>(json['cubeColorU']),
       cubeColorR: serializer.fromJson<int>(json['cubeColorR']),
@@ -814,6 +849,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'alertTypes': serializer.toJson<Set<AlertType>>(alertTypes),
       'recordBestAlert': serializer.toJson<bool>(recordBestAlert),
       'recordWorstAlert': serializer.toJson<bool>(recordWorstAlert),
+      'recordAverageAlert': serializer.toJson<bool>(recordAverageAlert),
       'locale': serializer.toJson<String?>(locale),
       'cubeColorU': serializer.toJson<int>(cubeColorU),
       'cubeColorR': serializer.toJson<int>(cubeColorR),
@@ -841,6 +877,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     Set<AlertType>? alertTypes,
     bool? recordBestAlert,
     bool? recordWorstAlert,
+    bool? recordAverageAlert,
     Value<String?> locale = const Value.absent(),
     int? cubeColorU,
     int? cubeColorR,
@@ -865,6 +902,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     alertTypes: alertTypes ?? this.alertTypes,
     recordBestAlert: recordBestAlert ?? this.recordBestAlert,
     recordWorstAlert: recordWorstAlert ?? this.recordWorstAlert,
+    recordAverageAlert: recordAverageAlert ?? this.recordAverageAlert,
     locale: locale.present ? locale.value : this.locale,
     cubeColorU: cubeColorU ?? this.cubeColorU,
     cubeColorR: cubeColorR ?? this.cubeColorR,
@@ -903,6 +941,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       recordWorstAlert: data.recordWorstAlert.present
           ? data.recordWorstAlert.value
           : this.recordWorstAlert,
+      recordAverageAlert: data.recordAverageAlert.present
+          ? data.recordAverageAlert.value
+          : this.recordAverageAlert,
       locale: data.locale.present ? data.locale.value : this.locale,
       cubeColorU: data.cubeColorU.present
           ? data.cubeColorU.value
@@ -962,6 +1003,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('alertTypes: $alertTypes, ')
           ..write('recordBestAlert: $recordBestAlert, ')
           ..write('recordWorstAlert: $recordWorstAlert, ')
+          ..write('recordAverageAlert: $recordAverageAlert, ')
           ..write('locale: $locale, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
@@ -991,6 +1033,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     alertTypes,
     recordBestAlert,
     recordWorstAlert,
+    recordAverageAlert,
     locale,
     cubeColorU,
     cubeColorR,
@@ -1019,6 +1062,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.alertTypes == this.alertTypes &&
           other.recordBestAlert == this.recordBestAlert &&
           other.recordWorstAlert == this.recordWorstAlert &&
+          other.recordAverageAlert == this.recordAverageAlert &&
           other.locale == this.locale &&
           other.cubeColorU == this.cubeColorU &&
           other.cubeColorR == this.cubeColorR &&
@@ -1045,6 +1089,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<Set<AlertType>> alertTypes;
   final Value<bool> recordBestAlert;
   final Value<bool> recordWorstAlert;
+  final Value<bool> recordAverageAlert;
   final Value<String?> locale;
   final Value<int> cubeColorU;
   final Value<int> cubeColorR;
@@ -1069,6 +1114,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.alertTypes = const Value.absent(),
     this.recordBestAlert = const Value.absent(),
     this.recordWorstAlert = const Value.absent(),
+    this.recordAverageAlert = const Value.absent(),
     this.locale = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
@@ -1094,6 +1140,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.alertTypes = const Value.absent(),
     this.recordBestAlert = const Value.absent(),
     this.recordWorstAlert = const Value.absent(),
+    this.recordAverageAlert = const Value.absent(),
     this.locale = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
@@ -1119,6 +1166,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<String>? alertTypes,
     Expression<bool>? recordBestAlert,
     Expression<bool>? recordWorstAlert,
+    Expression<bool>? recordAverageAlert,
     Expression<String>? locale,
     Expression<int>? cubeColorU,
     Expression<int>? cubeColorR,
@@ -1144,6 +1192,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (alertTypes != null) 'alert_types': alertTypes,
       if (recordBestAlert != null) 'record_best_alert': recordBestAlert,
       if (recordWorstAlert != null) 'record_worst_alert': recordWorstAlert,
+      if (recordAverageAlert != null)
+        'record_average_alert': recordAverageAlert,
       if (locale != null) 'locale': locale,
       if (cubeColorU != null) 'cube_color_u': cubeColorU,
       if (cubeColorR != null) 'cube_color_r': cubeColorR,
@@ -1171,6 +1221,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<Set<AlertType>>? alertTypes,
     Value<bool>? recordBestAlert,
     Value<bool>? recordWorstAlert,
+    Value<bool>? recordAverageAlert,
     Value<String?>? locale,
     Value<int>? cubeColorU,
     Value<int>? cubeColorR,
@@ -1196,6 +1247,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       alertTypes: alertTypes ?? this.alertTypes,
       recordBestAlert: recordBestAlert ?? this.recordBestAlert,
       recordWorstAlert: recordWorstAlert ?? this.recordWorstAlert,
+      recordAverageAlert: recordAverageAlert ?? this.recordAverageAlert,
       locale: locale ?? this.locale,
       cubeColorU: cubeColorU ?? this.cubeColorU,
       cubeColorR: cubeColorR ?? this.cubeColorR,
@@ -1240,6 +1292,9 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     }
     if (recordWorstAlert.present) {
       map['record_worst_alert'] = Variable<bool>(recordWorstAlert.value);
+    }
+    if (recordAverageAlert.present) {
+      map['record_average_alert'] = Variable<bool>(recordAverageAlert.value);
     }
     if (locale.present) {
       map['locale'] = Variable<String>(locale.value);
@@ -1302,6 +1357,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('alertTypes: $alertTypes, ')
           ..write('recordBestAlert: $recordBestAlert, ')
           ..write('recordWorstAlert: $recordWorstAlert, ')
+          ..write('recordAverageAlert: $recordAverageAlert, ')
           ..write('locale: $locale, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
@@ -2611,6 +2667,7 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<Set<AlertType>> alertTypes,
   Value<bool> recordBestAlert,
   Value<bool> recordWorstAlert,
+  Value<bool> recordAverageAlert,
   Value<String?> locale,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
@@ -2636,6 +2693,7 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<Set<AlertType>> alertTypes,
   Value<bool> recordBestAlert,
   Value<bool> recordWorstAlert,
+  Value<bool> recordAverageAlert,
   Value<String?> locale,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
@@ -2696,6 +2754,11 @@ class $$SettingsTableFilterComposer
 
   ColumnFilters<bool> get recordWorstAlert => $composableBuilder(
     column: $table.recordWorstAlert,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get recordAverageAlert => $composableBuilder(
+    column: $table.recordAverageAlert,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2824,6 +2887,11 @@ class $$SettingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get recordAverageAlert => $composableBuilder(
+    column: $table.recordAverageAlert,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get locale => $composableBuilder(
     column: $table.locale,
     builder: (column) => ColumnOrderings(column),
@@ -2948,6 +3016,11 @@ class $$SettingsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get recordAverageAlert => $composableBuilder(
+    column: $table.recordAverageAlert,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get locale =>
       $composableBuilder(column: $table.locale, builder: (column) => column);
 
@@ -3065,6 +3138,7 @@ class $$SettingsTableTableManager
                 Value<Set<AlertType>> alertTypes = const Value.absent(),
                 Value<bool> recordBestAlert = const Value.absent(),
                 Value<bool> recordWorstAlert = const Value.absent(),
+                Value<bool> recordAverageAlert = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
@@ -3089,6 +3163,7 @@ class $$SettingsTableTableManager
                 alertTypes: alertTypes,
                 recordBestAlert: recordBestAlert,
                 recordWorstAlert: recordWorstAlert,
+                recordAverageAlert: recordAverageAlert,
                 locale: locale,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,
@@ -3115,6 +3190,7 @@ class $$SettingsTableTableManager
                 Value<Set<AlertType>> alertTypes = const Value.absent(),
                 Value<bool> recordBestAlert = const Value.absent(),
                 Value<bool> recordWorstAlert = const Value.absent(),
+                Value<bool> recordAverageAlert = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
@@ -3139,6 +3215,7 @@ class $$SettingsTableTableManager
                 alertTypes: alertTypes,
                 recordBestAlert: recordBestAlert,
                 recordWorstAlert: recordWorstAlert,
+                recordAverageAlert: recordAverageAlert,
                 locale: locale,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,

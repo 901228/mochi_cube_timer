@@ -9,6 +9,7 @@ import "generated/schema.dart";
 import "generated/schema_v1.dart" as v1;
 import "generated/schema_v2.dart" as v2;
 import "generated/schema_v3.dart" as v3;
+import "generated/schema_v4.dart" as v4;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -191,6 +192,73 @@ void main() {
             alertTypes: "audio",
             recordBestAlert: 1,
             recordWorstAlert: 1,
+            locale: "zh_TW",
+            cubeColorU: 0xFF123456,
+            cubeColorR: 1,
+            cubeColorF: 2,
+            cubeColorD: 3,
+            cubeColorL: 4,
+            cubeColorB: 5,
+            pyraminxColorU: 6,
+            pyraminxColorB: 7,
+            pyraminxColorR: 8,
+            pyraminxColorL: 9,
+            clockColorFront: 10,
+            clockColorBack: 11,
+            timerPressedColor: 12,
+            timerHoldingColor: 13,
+            timerAcceptColor: 14,
+          ),
+        ]);
+      },
+    );
+  });
+
+  test("v3 to v4 keeps the settings, and announces new best averages by default", () async {
+    const old = v3.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "audio",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      locale: "zh_TW",
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 3,
+      newVersion: 4,
+      createOld: v3.DatabaseAtV3.new,
+      createNew: v4.DatabaseAtV4.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        expect(await newDb.select(newDb.settings).get(), [
+          v4.SettingsData(
+            id: 0,
+            inspectionEnabled: 0,
+            inspectDuration: 8,
+            alertEnabled: 0,
+            alertTypes: "audio",
+            recordBestAlert: 0,
+            recordWorstAlert: 0,
+            recordAverageAlert: 1,
             locale: "zh_TW",
             cubeColorU: 0xFF123456,
             cubeColorR: 1,
