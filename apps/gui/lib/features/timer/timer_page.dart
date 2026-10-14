@@ -302,6 +302,7 @@ class _TimerViewState extends State<_TimerView> {
           child: Center(
             child: TimerBody(
               alertText: widget.settings.alertEnabled && widget.settings.alertTypes.contains(AlertType.text),
+              settings: widget.settings,
             ),
           ),
         ),

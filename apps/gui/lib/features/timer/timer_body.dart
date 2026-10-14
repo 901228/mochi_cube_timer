@@ -12,21 +12,11 @@ import "timer_text.dart";
 
 class TimerBody extends StatefulWidget {
   final Color? color;
-  final Color pressedColor;
-  final Color holdingColor;
-  final Color acceptColor;
+  final SettingsEntry settings;
 
   /// Whether inspection shows its alerts as text.
   final bool alertText;
-  const TimerBody({
-    super.key,
-    this.color,
-    this.alertText = true,
-    // TODO: put in settings
-    this.pressedColor = const Color.fromARGB(255, 255, 121, 121),
-    this.holdingColor = const Color.fromARGB(255, 255, 255, 121),
-    this.acceptColor = const Color.fromARGB(255, 32, 226, 100),
-  });
+  const TimerBody({super.key, this.color, this.alertText = true, required this.settings});
 
   @override
   State<TimerBody> createState() => _TimerBodyState();
@@ -93,7 +83,11 @@ class _TimerBodyState extends State<TimerBody> {
 
   @override
   Widget build(BuildContext context) {
-    final TimerBody(:color, :pressedColor, :holdingColor, :acceptColor, :alertText) = widget;
+    final TimerBody(:color, :settings, :alertText) = widget;
+
+    final pressedColor = settings.timerPressedColor.toColor();
+    final holdingColor = settings.timerHoldingColor.toColor();
+    final acceptColor = settings.timerAcceptColor.toColor();
 
     return BlocBuilder<TimerBloc, TimerState>(
       buildWhen: (prev, state) => prev.runtimeType != state.runtimeType || prev.hold != state.hold,

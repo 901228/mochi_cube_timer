@@ -40,6 +40,19 @@ class RootSettingsSections extends StatelessWidget {
         MochiTileGroup(
           label: const Text("Appearance"),
           children: [
+            // TODO: app theme
+            // SettingsTile(
+            //   title: "App theme",
+            //   icon: Icon(TablerIcons.palette),
+            //   // suffix: Icon(TablerIcons.circleWithColor),
+            //   onPress: () => showMochiModal,
+            // ),
+            SettingsTile(
+              title: "Timer colors",
+              icon: Icon(TablerIcons.clockRecord),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/timer-colors"),
+            ),
             SettingsTile(
               title: "Cube colors",
               icon: Icon(TablerIcons.paint),

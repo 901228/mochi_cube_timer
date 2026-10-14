@@ -7,11 +7,13 @@ import "../../shared/utils.dart";
 import "sections/cube_colors_section.dart";
 import "sections/inspection_section.dart";
 import "sections/root_section.dart";
+import "sections/timer_colors_section.dart";
 
 final Map<String, Widget Function(SettingsEntry, SettingsDao)> settingsSections = {
   "root": (settings, dao) => RootSettingsSections(settings: settings, dao: dao),
   "inspection": (settings, dao) => InspectionSettingsSections(settings: settings, dao: dao),
   "cube-colors": (settings, dao) => CubeColorsSettingsSections(settings: settings, dao: dao),
+  "timer-colors": (settings, dao) => TimerColorsSettingsSections(settings: settings, dao: dao),
 };
 
 class SettingsPage extends StatelessWidget {
@@ -53,10 +55,6 @@ class SettingsPage extends StatelessWidget {
           if (w != null) return w;
 
           final settings = snapshot.data!;
-          // return Padding(
-          //   padding: context.theme.style.pagePadding,
-          //   child: SingleChildScrollView(child: settingsSections[section]!(settings, dao)),
-          // );
           return SingleChildScrollView(
             padding: MediaQuery.paddingOf(context),
             child: settingsSections[section]!(settings, dao),
