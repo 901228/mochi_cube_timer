@@ -11,6 +11,10 @@ String recordBreakText(RecordBreak record) {
   };
 }
 
+/// The best averages a solve set, in words: how far each went past the old best.
+String averageBreakText(List<AverageBreak> averages) =>
+    "New best ${averages.map((b) => "${b.kind.label} −${(b.by / 1000).toStringAsFixed(2)}").join(" · ")}";
+
 /// One ring that spreads from the middle and fades, each time a new best is announced. Draws
 /// nothing the rest of the time, and lets presses through to the timer.
 class RecordRipple extends StatefulWidget {

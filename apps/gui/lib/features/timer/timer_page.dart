@@ -62,9 +62,13 @@ class _TimerViewState extends State<_TimerView> {
   /// What the solve on screen broke; the timer shows it and rings for it.
   final _recordBreak = ValueNotifier<RecordBreak?>(null);
 
+  /// The best averages it set, which the timer shows and the statistics beside it light up.
+  final _averageBreaks = ValueNotifier<List<AverageBreak>>(const []);
+
   @override
   void dispose() {
     _recordBreak.dispose();
+    _averageBreaks.dispose();
     super.dispose();
   }
 
@@ -100,20 +104,22 @@ class _TimerViewState extends State<_TimerView> {
   void _showScramble(Scramble scramble) =>
       showScrambleModal(context, puzzle: widget.puzzle, scramble: scramble, settings: widget.settings);
 
-  Widget _statusLine(String label, String value) => Row(
-    mainAxisSize: .min,
-    children: [
-      Text(
-        "$label:",
-        style: context.theme.typography.body.sm.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
-      ),
-      const SizedBox(width: 8),
-      Text(
-        value,
-        style: context.theme.typography.body.sm.copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
-      ),
-    ],
-  );
+  Widget _statusLine(String label, String value, {bool highlight = false}) {
+    final style = context.theme.typography.body.sm.copyWith(
+      fontFeatures: const [FontFeature.tabularFigures()],
+      color: highlight ? context.colors.primary.base : null,
+      fontWeight: highlight ? .bold : null,
+      decoration: highlight ? .underline : null,
+    );
+    return Row(
+      mainAxisSize: .min,
+      children: [
+        Text("$label:", style: style),
+        const SizedBox(width: 8),
+        Text(value, style: style),
+      ],
+    );
+  }
 
   void _record(TimerState state) async {
     final bloc = context.read<TimerBloc>();
@@ -121,23 +127,33 @@ class _TimerViewState extends State<_TimerView> {
     final dao = context.read<AppDatabase>().recordsDao;
     final scramble = await scrambles.state;
     // Read before the solve is written, or it would be compared with itself.
-    final before = await dao.extremes(widget.sessionId, widget.puzzle);
+    final extremes = await dao.extremes(widget.sessionId, widget.puzzle);
+    final times = await dao.watchTimes(widget.sessionId, widget.puzzle).first;
 
     bloc.add(TimerRecorded(sessionId: widget.sessionId, puzzle: widget.puzzle, notation: scramble.notation));
 
     scrambles.next();
-    _announce(bloc, before.breakBy(state.elapsed, state.penalty));
-    // TODO: the same for a best average (ao5, ao12, ...), after the best single
+    _announce(
+      bloc,
+      extremes.breakBy(state.elapsed, state.penalty),
+      averageBreaks(times, (
+        time: (state.elapsed + (state.penalty == .plus2 ? 2000 : 0)).toDouble(),
+        isDnf: state.penalty == .dnf,
+      )),
+    );
   }
 
-  void _announce(TimerBloc bloc, RecordBreak? record) {
+  void _announce(TimerBloc bloc, RecordBreak? record, List<AverageBreak> averages) {
     final settings = widget.settings;
-    final wanted = record?.kind == .best ? settings.recordBestAlert : settings.recordWorstAlert;
     // The solve may have been reset while it was being looked up, and its record shown to the next.
-    if (record == null || !wanted || !mounted || bloc.state is! TimerRunComplete) return;
+    if (!mounted || bloc.state is! TimerRunComplete) return;
 
-    _recordBreak.value = record;
-    if (record.kind == .best && settings.vibrates) buzz(duration: 100);
+    if (record != null && (record.kind == .best ? settings.recordBestAlert : settings.recordWorstAlert)) {
+      _recordBreak.value = record;
+      if (record.kind == .best && settings.vibrates) buzz(duration: 100);
+    }
+    // Only shown, not buzzed: a best average is not the thing to look up from the cube for.
+    if (settings.recordAverageAlert) _averageBreaks.value = averages;
   }
 
   Widget _withScramble(Widget Function(Scramble scramble) builder) => FutureBuilder(
@@ -304,17 +320,28 @@ class _TimerViewState extends State<_TimerView> {
                       if (w != null) return w;
 
                       final times = snapshot.data!;
-                      return Column(
-                        mainAxisSize: .min,
-                        crossAxisAlignment: .end,
-                        textDirection: .ltr,
-                        children: [
-                          _statusLine("Mo3", _statsDisplay(times.mo(3))),
-                          _statusLine("Ao5", _statsDisplay(times.ao(5))),
-                          _statusLine("Ao12", _statsDisplay(times.ao(12))),
-                          _statusLine("Ao50", _statsDisplay(times.ao(50))),
-                          // _statusLine("Ao100", _statsDisplay(times.ao(100))),
-                        ],
+                      return ValueListenableBuilder(
+                        valueListenable: _averageBreaks,
+                        builder: (context, broken, _) {
+                          Widget average(AverageKind kind) => _statusLine(
+                            kind.label,
+                            _statsDisplay(kind.of(times)),
+                            highlight: broken.any((b) => b.kind == kind),
+                          );
+
+                          return Column(
+                            mainAxisSize: .min,
+                            crossAxisAlignment: .end,
+                            textDirection: .ltr,
+                            children: [
+                              average(.mo3),
+                              average(.ao5),
+                              average(.ao12),
+                              _statusLine("Ao50", _statsDisplay(times.ao(50))),
+                              // _statusLine("Ao100", _statsDisplay(times.ao(100))),
+                            ],
+                          );
+                        },
                       );
                     },
                   ),
@@ -327,6 +354,7 @@ class _TimerViewState extends State<_TimerView> {
               alertText: widget.settings.alertEnabled && widget.settings.alertTypes.contains(AlertType.text),
               settings: widget.settings,
               recordBreak: _recordBreak,
+              averageBreaks: _averageBreaks,
             ),
           ),
         ),
@@ -337,7 +365,10 @@ class _TimerViewState extends State<_TimerView> {
       listenWhen: (previous, current) => previous.runtimeType != current.runtimeType,
       listener: (context, state) {
         context.read<TimerFocusCubit>().follow(state);
-        if (state is! TimerRunComplete) _recordBreak.value = null;
+        if (state is! TimerRunComplete) {
+          _recordBreak.value = null;
+          _averageBreaks.value = const [];
+        }
       },
       child: InspectionAlerts(
         settings: widget.settings,

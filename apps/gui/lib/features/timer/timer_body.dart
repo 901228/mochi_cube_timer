@@ -21,12 +21,16 @@ class TimerBody extends StatefulWidget {
 
   /// What the solve just finished broke, if anything.
   final ValueListenable<RecordBreak?> recordBreak;
+
+  /// The best averages it set, if any.
+  final ValueListenable<List<AverageBreak>> averageBreaks;
   const TimerBody({
     super.key,
     this.color,
     this.alertText = true,
     required this.settings,
     required this.recordBreak,
+    required this.averageBreaks,
   });
 
   @override
@@ -94,7 +98,7 @@ class _TimerBodyState extends State<TimerBody> {
 
   @override
   Widget build(BuildContext context) {
-    final TimerBody(:color, :settings, :alertText, :recordBreak) = widget;
+    final TimerBody(:color, :settings, :alertText, :recordBreak, :averageBreaks) = widget;
 
     final pressedColor = settings.timerPressedColor.toColor();
     final holdingColor = settings.timerHoldingColor.toColor();
@@ -124,7 +128,7 @@ class _TimerBodyState extends State<TimerBody> {
                   ? InspectionText(alertText: alertText)
                   : (state is TimerInitial || state.hold == .armed
                         ? const IgnorePointer(child: Center(child: Text("0.00")))
-                        : RunTimeText(recordBreak: recordBreak)),
+                        : RunTimeText(recordBreak: recordBreak, averageBreaks: averageBreaks)),
             ],
           ),
         );
@@ -208,9 +212,10 @@ class InspectionText extends StatelessWidget {
 }
 
 class RunTimeText extends StatelessWidget {
-  const RunTimeText({super.key, required this.recordBreak});
+  const RunTimeText({super.key, required this.recordBreak, required this.averageBreaks});
 
   final ValueListenable<RecordBreak?> recordBreak;
+  final ValueListenable<List<AverageBreak>> averageBreaks;
 
   Future<String?> _showCommentDialog(BuildContext context, String initComment) => showMochiPrompt(
     context,
@@ -301,16 +306,29 @@ class RunTimeText extends StatelessWidget {
               ],
             )
           : timeText,
-      hint: ValueListenableBuilder(
-        valueListenable: recordBreak,
-        builder: (context, record, _) => record == null
-            ? const SizedBox.shrink()
-            : Text(
-                recordBreakText(record),
-                style: context.theme.timer.sm.copyWith(
-                  color: record.kind == .best ? context.colors.primary.base : context.colors.mutedForeground,
+      hint: ListenableBuilder(
+        listenable: Listenable.merge([recordBreak, averageBreaks]),
+        builder: (context, _) {
+          final record = recordBreak.value;
+          final averages = averageBreaks.value;
+          final style = context.theme.timer.sm;
+          return Column(
+            mainAxisSize: .min,
+            children: [
+              if (record != null)
+                Text(
+                  recordBreakText(record),
+                  style: style.copyWith(
+                    color: record.kind == .best
+                        ? context.colors.primary.base
+                        : context.colors.mutedForeground,
+                  ),
                 ),
-              ),
+              if (averages.isNotEmpty)
+                Text(averageBreakText(averages), style: style.copyWith(color: context.colors.primary.base)),
+            ],
+          );
+        },
       ),
       action: showActions ? _actions(context, penalty) : null,
     );

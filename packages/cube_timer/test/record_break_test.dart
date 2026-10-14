@@ -29,6 +29,33 @@ void main() {
     });
   });
 
+  group("averageBreaks", () {
+    // Latest first, in ms.
+    SolveTime solved(int ms) => (time: ms.toDouble(), isDnf: false);
+    final steady = List.filled(12, solved(10000));
+
+    test("a solve that lowers an average below any before it breaks it, by how far", () {
+      // One fast solve is trimmed away of the Ao5 and Ao12, but not of the Mo3.
+      expect(averageBreaks(steady, solved(8000)).map((b) => (b.kind, b.by)), [(AverageKind.mo3, 667)]);
+
+      final twice = [solved(8000), ...List.filled(11, solved(10000))];
+      expect(averageBreaks(twice, solved(8000)).map((b) => (b.kind, b.by)), [
+        (AverageKind.mo3, 667),
+        (AverageKind.ao5, 667),
+        (AverageKind.ao12, 200),
+      ]);
+    });
+
+    test("no break when the average is only level with the best, or there is no best to beat", () {
+      expect(averageBreaks(steady, solved(10000)), isEmpty);
+      expect(averageBreaks([solved(9000), solved(9000), solved(9000)], solved(1000)), isEmpty);
+    });
+
+    test("a DNF that is not trimmed away breaks nothing", () {
+      expect(averageBreaks(steady, (time: 0, isDnf: true)), isEmpty);
+    });
+  });
+
   test("extremes are of the solved times in the session and puzzle, penalties included", () async {
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(db.close);

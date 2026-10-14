@@ -179,6 +179,41 @@ extension RecordExtremesBreak on RecordExtremes {
   }
 }
 
+/// The averages that are announced, and how many solves each spans.
+enum AverageKind {
+  mo3("Mo3", 3),
+  ao5("Ao5", 5),
+  ao12("Ao12", 12);
+
+  const AverageKind(this.label, this.size);
+
+  final String label;
+  final int size;
+
+  /// The average of the latest solves, or null if there are fewer than [size].
+  double? of(List<SolveTime> latestFirst) => this == mo3 ? latestFirst.mo(size) : latestFirst.ao(size);
+
+  /// The best average over any [size] solves in a row.
+  double? bestOf(List<SolveTime> latestFirst) =>
+      this == mo3 ? latestFirst.bestMo(size) : latestFirst.bestAo(size);
+}
+
+/// A best average that the latest solve set, and by how many milliseconds.
+typedef AverageBreak = ({AverageKind kind, int by});
+
+/// The averages that [solve] sets a new best of, given the session [before] it, latest first.
+/// Needs a previous best to beat, so the first time there are enough solves is not one.
+List<AverageBreak> averageBreaks(List<SolveTime> before, SolveTime solve) {
+  final after = [solve, ...before];
+  return [
+    for (final kind in AverageKind.values)
+      if (before.length >= math.max(kind.size, kMinSolvesForRecord))
+        if (kind.of(after) case final now? when now.isFinite)
+          if (kind.bestOf(before) case final previous? when now < previous)
+            (kind: kind, by: (previous - now).round()),
+  ];
+}
+
 extension RecordsDaoStatistics on RecordsDao {
   Future<RecordExtremes> extremes(String session, Puzzle puzzle) async {
     final eff = _effective(records);

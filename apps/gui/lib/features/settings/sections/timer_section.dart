@@ -103,6 +103,11 @@ class TimerSettingsSections extends StatelessWidget {
               subtitle: "Announce a solve that is slower than the worst of the session",
               suffix: MochiSwitch(value: settings.recordWorstAlert, onChanged: dao.setRecordWorstAlert),
             ),
+            SettingsTile(
+              title: "New best average alert",
+              subtitle: "Announce a Mo3, Ao5 or Ao12 that beats the best of the session",
+              suffix: MochiSwitch(value: settings.recordAverageAlert, onChanged: dao.setRecordAverageAlert),
+            ),
           ],
         ),
 
