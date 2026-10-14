@@ -121,6 +121,8 @@ class _RecordsPageState extends State<_RecordsPage> {
                         }
                       },
                 onExportAll: records.isEmpty ? null : () => exportRecords(context, widget.session),
+                // Enabled when empty too: an empty session is where an import is wanted most.
+                onImport: () => importRecords(context, session: widget.session),
               ),
 
               MediaQuery.removePadding(

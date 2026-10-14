@@ -20,6 +20,11 @@ Future<void> showSessionSelectionDialog(BuildContext context, {required String s
           creating.value = true;
         },
       ),
+      MochiAction(
+        icon: TablerIcons.packageImport,
+        label: "Import to new session",
+        onPress: () => importRecords(context),
+      ),
     ]),
     body: SessionSelectionDialog(currentSessionId: sessionId, creating: creating),
   );

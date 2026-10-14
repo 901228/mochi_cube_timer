@@ -260,7 +260,33 @@ typedef RecordExport = ({
   int time,
 });
 
+typedef RecordImport = ({
+  String? comment,
+  int datetime,
+  Penalty penalty,
+  Puzzle puzzle,
+  String scramble,
+  int time,
+});
+
 extension RecordsDaoData on RecordsDao {
+  /// Adds [rows] to [session] in one write, each with a new id: the export carries none, so a file
+  /// imported twice is added twice.
+  Future<void> importAll(String session, Iterable<RecordImport> rows) => batch(
+    (b) => b.insertAll(records, [
+      for (final r in rows)
+        RecordsCompanion.insert(
+          session: session,
+          puzzle: r.puzzle,
+          scramble: r.scramble,
+          time: r.time,
+          penalty: r.penalty,
+          comment: Value(r.comment),
+          datetime: Value(DateTime.fromMillisecondsSinceEpoch(r.datetime)),
+        ),
+    ]),
+  );
+
   Future<List<RecordExport>> export(String session, Puzzle puzzle, {bool includeDeleted = false}) =>
       (select(records)..where((t) {
             Expression<bool> base = t.session.equals(session) & t.puzzle.equals(puzzle.id);

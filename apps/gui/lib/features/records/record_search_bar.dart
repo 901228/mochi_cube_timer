@@ -32,6 +32,7 @@ class RecordSearchBar extends StatefulWidget {
   final VoidCallback? onArchiveAll;
   final VoidCallback? onDeleteAll;
   final VoidCallback? onExportAll;
+  final VoidCallback? onImport;
   const RecordSearchBar({
     super.key,
     this.onChanged,
@@ -39,6 +40,7 @@ class RecordSearchBar extends StatefulWidget {
     required this.onArchiveAll,
     required this.onDeleteAll,
     required this.onExportAll,
+    required this.onImport,
   });
 
   @override
@@ -85,6 +87,7 @@ class _RecordSearchBarState extends State<RecordSearchBar> {
           ),
           MochiActionBar(scaleOnPress: false, maxVisible: 2, [
             MochiAction(icon: TablerIcons.arrowDownToArc, label: "Archive", onPress: widget.onArchiveAll),
+            MochiAction(icon: TablerIcons.packageImport, label: "Import", onPress: widget.onImport),
             MochiAction(icon: TablerIcons.packageExport, label: "Export", onPress: widget.onExportAll),
             MochiAction(
               icon: TablerIcons.trashFilled,

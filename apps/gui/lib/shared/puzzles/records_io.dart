@@ -1,9 +1,101 @@
+import "dart:convert" show utf8;
+
 import "package:cube_timer/cube_timer.dart";
 import "package:file_picker/file_picker.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../utils/csv.dart";
+
+/// The rows [parseRecordsCsv] could read, and how many it could not.
+typedef ParsedRecords = ({List<RecordImport> records, int skipped});
+
+/// Reads what [exportRecords] writes. Columns are found by header, so their order does not matter;
+/// the Session column is ignored, as the records go wherever the caller puts them.
+///
+/// Throws a [FormatException] if the header lacks a column a record cannot do without.
+ParsedRecords parseRecordsCsv(String text) {
+  final rows = fromCsv(text).where((r) => r.any((c) => c.toString().trim().isNotEmpty)).toList();
+  final header = rows.isEmpty ? <String>[] : [for (final c in rows.first) c.toString().trim().toLowerCase()];
+  final index = {
+    for (final name in ["puzzle", "scramble", "time", "datetime", "penalty", "comment"])
+      name: header.indexOf(name),
+  };
+  if (["puzzle", "scramble", "time", "datetime"].any((name) => index[name] == -1)) {
+    throw const FormatException("Not a records file: needs Puzzle, Scramble, Time and Datetime columns");
+  }
+
+  final records = <RecordImport>[];
+  var skipped = 0;
+  for (final row in rows.skip(1)) {
+    String cell(String name) =>
+        index[name]! < row.length && index[name]! >= 0 ? row[index[name]!].toString() : "";
+    try {
+      records.add((
+        puzzle: Puzzle.fromId(cell("puzzle")),
+        scramble: cell("scramble"),
+        time: int.parse(cell("time")),
+        datetime: int.parse(cell("datetime")),
+        penalty: cell("penalty").isEmpty ? Penalty.none : Penalty.values.byName(cell("penalty")),
+        comment: cell("comment").isEmpty ? null : cell("comment"),
+      ));
+    } on FormatException {
+      skipped++;
+    } on ArgumentError {
+      skipped++;
+    }
+  }
+  return (records: records, skipped: skipped);
+}
+
+/// Picks a csv and adds its records to [session], or to a new session named after the file if
+/// [session] is null.
+Future<void> importRecords(BuildContext context, {SessionEntry? session}) async {
+  final toastContext = Navigator.of(context, rootNavigator: true).context;
+  final db = context.read<AppDatabase>();
+
+  try {
+    final picked = await FilePicker.pickFiles(
+      dialogTitle: "Pick a csv file of records",
+      type: .custom,
+      allowedExtensions: ["csv"],
+    );
+    if (picked.isEmpty) return;
+
+    final file = picked.first;
+    final (:records, :skipped) = parseRecordsCsv(utf8.decode(await file.readAsBytes(), allowMalformed: true));
+    if (!context.mounted) return;
+
+    final fileName = file.name.replaceFirst(RegExp(r"\.csv$", caseSensitive: false), "");
+    final name = session?.name ?? (fileName.isEmpty ? "Imported" : fileName);
+    final answer = await showMochiConfirm(
+      context,
+      title: "Import records?",
+      message:
+          "${records.length} records will be added to ${session == null ? "a new session " : ""}\"$name\"."
+          "${skipped > 0 ? " $skipped unreadable rows will be skipped." : ""}",
+      confirmLabel: "Import",
+    );
+    if (!answer) return;
+
+    await db.recordsDao.importAll(session?.id ?? await db.sessionsDao.add(name: name), records);
+    if (toastContext.mounted) {
+      showMochiToast(
+        toastContext,
+        title: const Text("Records imported"),
+        description: Text("Added ${records.length} records to \"$name\"."),
+      );
+    }
+  } on FormatException catch (e) {
+    if (toastContext.mounted) {
+      showMochiToast(toastContext, title: const Text("Can't import this file"), description: Text(e.message));
+    }
+  } catch (e) {
+    FlutterError.reportError(
+      FlutterErrorDetails(exception: e, context: ErrorDescription("Importing records")),
+    );
+  }
+}
 
 Future<void> exportRecords(BuildContext context, SessionEntry session) async {
   final toastContext = Navigator.of(context, rootNavigator: true).context;
