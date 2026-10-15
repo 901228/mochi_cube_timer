@@ -124,7 +124,6 @@ class HomeShell extends StatelessWidget {
                   label: "Delete",
                   intent: .danger,
                   onPress: () async {
-                    debugPrint("FAQ");
                     final answer = await showMochiConfirm(
                       context,
                       title: "Delete all records?",

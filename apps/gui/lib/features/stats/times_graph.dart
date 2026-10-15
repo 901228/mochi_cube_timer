@@ -83,7 +83,6 @@ class _TimesGraphState extends State<TimesGraph> with SingleTickerProviderStateM
             for (final (i, s) in times.indexed)
               s.isDnf ? c.mutedForeground : Color.lerp(base.first, base.last, i / (n - 1))!,
           ];
-    // final lineStops = n < 2 ? null : [for (var i = 0; i < n; i++) i / (n - 1)];
 
     return AspectRatio(
       aspectRatio: widget.aspectRatio,
