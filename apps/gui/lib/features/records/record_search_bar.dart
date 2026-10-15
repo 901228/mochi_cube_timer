@@ -1,4 +1,5 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/puzzles.dart";
@@ -24,6 +25,14 @@ extension on RecordSort {
 
 extension on RecordQuery {
   MochiDateRange? get dates => (from != null && to != null) ? MochiDateRange(from!, to) : null;
+}
+
+/// Where the search bar ends, from the top of the screen, once it is laid out; null while it is not on
+/// screen. The selection header covers everything down to it.
+class SearchBarBottomCubit extends Cubit<double?> {
+  SearchBarBottomCubit() : super(null);
+
+  void report(double bottom) => emit(bottom);
 }
 
 class RecordSearchBar extends StatefulWidget {
@@ -55,8 +64,18 @@ class _RecordSearchBarState extends State<RecordSearchBar> {
     widget.onChanged?.call(query);
   }
 
+  void _reportBottom() {
+    if (!mounted) return;
+    final box = context.findRenderObject();
+    if (box is! RenderBox || !box.hasSize) return;
+    context.read<SearchBarBottomCubit>().report(box.localToGlobal(Offset(0, box.size.height)).dy);
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Only known once laid out, so after this frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _reportBottom());
+
     return Padding(
       padding: const .all(8.0),
       child: Row(

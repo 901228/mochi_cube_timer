@@ -8,6 +8,7 @@ import "package:stream_transform/stream_transform.dart";
 import "../../database/dao_provider.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
+import "../records/record_search_bar.dart";
 import "../records/records_list.dart";
 import "../timer/scramble_cubit.dart";
 import "../timer/timer_focus.dart";
@@ -29,7 +30,11 @@ class HomeShell extends StatelessWidget {
       final selection = context.read<RecordSelectionCubit>();
 
       return Container(
-        height: 130,
+        // Down to the search bar's bottom plus a few px, so the edge does not line up with it.
+        height: switch (context.watch<SearchBarBottomCubit>().state) {
+          final bottom? => bottom + 8,
+          null => null,
+        },
         padding: EdgeInsets.all(context.theme.geometry.space.xs),
         child: MochiCard(
           appearance: .elevated,
@@ -159,6 +164,7 @@ class HomeShell extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => RecordSelectionCubit()),
         BlocProvider(create: (context) => TimerFocusCubit()),
+        BlocProvider(create: (context) => SearchBarBottomCubit()),
       ],
       child: StreamBuilder(
         stream: context.read<AppDatabase>().appStateDao.watch().combineLatest(
