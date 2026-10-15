@@ -18,6 +18,8 @@ Future<void> showRecordDetailDialog(
   body: RecordDetailDialog(recordId: recordId, sessions: sessions, isBest: isBest),
   title: Text("Record Detail"),
   titleSuffix: MochiActionBar([.close(onPress: context.pop)]),
+  // It ends in plain tiles, and the room under them is better spent on the content.
+  safeEdge: false,
 );
 
 class RecordDetailDialog extends StatelessWidget {
@@ -170,8 +172,7 @@ class RecordDetailDialog extends StatelessWidget {
             // The dialog closes once the record is not where it was opened from: moved or deleted.
             Align(
               alignment: .centerEnd,
-              child: MochiActionBar(maxVisible: 3,
-               [
+              child: MochiActionBar(maxVisible: 3, [
                 MochiAction.menu(
                   icon: TablerIcons.arrowsRightLeft,
                   label: "Move to",

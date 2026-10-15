@@ -26,8 +26,12 @@ Future<void> showScrambleModal(
     .dialog => _showScrambleDialog(context, content),
     .sheet => showMochiSheet(
       context,
-      builder: (context) =>
-          MochiSheet(title: const Text("Scramble"), semanticLabel: "Scramble", child: content),
+      builder: (context) => MochiSheet(
+        title: const Text("Scramble"),
+        semanticLabel: "Scramble",
+        safeEdge: false,
+        child: content,
+      ),
     ),
   };
 }
