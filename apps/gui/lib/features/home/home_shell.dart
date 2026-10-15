@@ -35,7 +35,9 @@ class HomeShell extends StatelessWidget {
           final bottom? => bottom + 8,
           null => null,
         },
-        padding: EdgeInsets.all(context.theme.geometry.space.xs),
+        // Under the status bar, which the overlay has to clear by itself with `extendBody`.
+        padding: EdgeInsets.all(context.theme.geometry.space.xs)
+            .copyWith(top: MediaQuery.paddingOf(context).top + context.theme.geometry.space.xs),
         child: MochiCard(
           appearance: .elevated,
           elevation: .lg,
