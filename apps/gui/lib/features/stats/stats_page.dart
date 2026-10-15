@@ -32,8 +32,6 @@ class _StatsPage extends StatefulWidget {
   State<_StatsPage> createState() => _StatsPageState();
 }
 
-// TODO: number increasing animation ?
-
 class _StatsPageState extends State<_StatsPage> {
   late Stream<StatsReturn> _stream;
 
@@ -75,14 +73,28 @@ class _StatsPageState extends State<_StatsPage> {
     }
   }
 
+  /// A number that counts up from 0, and again whenever what it shows changes to another session,
+  /// puzzle or archive view, rather than counting from the previous one's figure.
+  Widget _number(String id, double? value, {TextStyle? style, String Function(double value)? format}) =>
+      Align(
+        alignment: .centerStart,
+        child: MochiAnimatedNumber(
+          key: ValueKey((widget.sessionId, widget.puzzle, widget.showArchived, id)),
+          value: value,
+          format: format ?? (v) => _statsString(v),
+          fallback: _statsString(value == null || value.isFinite ? null : value),
+          style: style,
+        ),
+      );
+
   MochiGeometry get geometry => context.theme.geometry;
   MochiColors get colors => context.theme.colors;
   MochiTypeface get timer => context.theme.timer;
 
   TextStyle timesStyle({Color? color}) => timer.xl4.copyWith(fontWeight: .bold, color: color);
 
-  Widget _summaryText(double? value, {Color? color}) =>
-      Text(_statsString(value), style: timesStyle(color: color));
+  Widget _summaryText(String id, double? value, {Color? color}) =>
+      _number(id, value, style: timesStyle(color: color));
 
   Widget _card({required String title, required Widget child}) => MochiCard(
     elevation: .md,
@@ -92,20 +104,24 @@ class _StatsPageState extends State<_StatsPage> {
     child: child,
   );
 
-  Widget _statsTile({required String title, required String description}) => DefaultTextHeightBehavior(
-    textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
-    child: Row(
-      mainAxisSize: .max,
-      mainAxisAlignment: .spaceBetween,
-      children: [
-        DefaultTextStyle(
-          style: context.theme.typography.body.xs.copyWith(color: colors.mutedForeground),
-          child: Text(description),
+  Widget _statsTile({required String id, required double? value, required String description}) =>
+      DefaultTextHeightBehavior(
+        textHeightBehavior: TextHeightBehavior(
+          applyHeightToFirstAscent: false,
+          applyHeightToLastDescent: false,
         ),
-        DefaultTextStyle.merge(style: timesStyle(), child: Text(title)),
-      ],
-    ),
-  );
+        child: Row(
+          mainAxisSize: .max,
+          mainAxisAlignment: .spaceBetween,
+          children: [
+            DefaultTextStyle(
+              style: context.theme.typography.body.xs.copyWith(color: colors.mutedForeground),
+              child: Text(description),
+            ),
+            _number(id, value, style: timesStyle()),
+          ],
+        ),
+      );
 
   List<Widget> _bestAo5Times(List<double> values) {
     final sortedValues = values.indexed.sorted((a, b) => a.$2.compareTo(b.$2));
@@ -152,22 +168,30 @@ class _StatsPageState extends State<_StatsPage> {
               ("Ao12", data?.times.ao(12)),
               ("Ao50", data?.times.ao(50)),
               ("Ao100", data?.times.ao(100)),
-            ].map((v) => _statsTile(title: _statsString(v.$2), description: v.$1)).toList(),
+            ].map((v) => _statsTile(id: "current ${v.$1}", value: v.$2, description: v.$1)).toList(),
           ),
         );
         final solveCount = _card(
           title: "Solve Count",
-          child: Text(data?.summary.count.toString() ?? "--", style: timer.xl5.copyWith(fontWeight: .bold)),
+          child: _number(
+            "count",
+            data?.summary.count.toDouble(),
+            style: timer.xl5.copyWith(fontWeight: .bold),
+            format: (v) => v.round().toString(),
+          ),
         );
-        final solveMean = _card(title: "Solve Mean", child: _summaryText(data?.summary.mean));
-        final solveDeviation = _card(title: "Solve Deviation", child: _summaryText(data?.summary.deviation));
+        final solveMean = _card(title: "Solve Mean", child: _summaryText("mean", data?.summary.mean));
+        final solveDeviation = _card(
+          title: "Solve Deviation",
+          child: _summaryText("deviation", data?.summary.deviation),
+        );
         final bestSingle = MochiCard(
           elevation: .md,
           color: colors.primary.base,
           padding: .all(geometry.space.sm),
           title: Text("Best Single", style: TextStyle(color: colors.primary.soft)),
           titleGap: 0,
-          child: _summaryText(data?.summary.best, color: colors.primary.onBase),
+          child: _summaryText("best", data?.summary.best, color: colors.primary.onBase),
         );
         final bestStats = _card(
           title: "Best Stats",
@@ -177,19 +201,19 @@ class _StatsPageState extends State<_StatsPage> {
               ("Mo3", data?.times.bestMo(3)),
               ("Ao5", data?.times.bestAo(5)),
               ("Ao12", data?.times.bestAo(12)),
-            ].map((v) => _statsTile(title: _statsString(v.$2), description: v.$1)).toList(),
+            ].map((v) => _statsTile(id: "best ${v.$1}", value: v.$2, description: v.$1)).toList(),
           ),
         );
         final bestAo5Data = data?.times.bestAoWithList(5);
         final bestAo5 = _card(
           title: "Best Ao5",
           child: bestAo5Data == null
-              ? Center(child: _summaryText(null))
+              ? Center(child: _summaryText("best ao5", null))
               : Column(
                   mainAxisAlignment: .spaceAround,
                   crossAxisAlignment: .start,
                   children: [
-                    _summaryText(bestAo5Data.$1, color: colors.primary.base),
+                    _summaryText("best ao5", bestAo5Data.$1, color: colors.primary.base),
                     SizedBox(height: geometry.space.xs),
                     ..._bestAo5Times(bestAo5Data.$2),
                   ],
