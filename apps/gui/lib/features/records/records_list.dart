@@ -1,4 +1,5 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -143,11 +144,23 @@ class _RecordsListState extends State<RecordsList> {
     final tile = MochiCard(
       padding: .all(g.space.xs),
       selected: selected.contains(record.id),
+      // Straight into selecting, as on a phone's gallery; the menu is for the right click.
+      onLongPress: selected.active
+          ? null
+          : () {
+              HapticFeedback.selectionClick();
+              controller.start(record.id);
+            },
       onPress: () {
         if (selected.active) {
           controller.toggle(record.id);
         } else {
-          showRecordDetailDialog(context, recordId: record.id, isBest: isBest);
+          showRecordDetailDialog(
+            context,
+            recordId: record.id,
+            sessions: SessionsProvider.of(context),
+            isBest: isBest,
+          );
         }
       },
       child: Stack(
@@ -192,7 +205,7 @@ class _RecordsListState extends State<RecordsList> {
 
     return selected.active
         ? tile
-        : MochiContextMenu(longPress: true, menuBuilder: (_) => _menu(context, record), child: tile);
+        : MochiContextMenu(longPress: false, menuBuilder: (_) => _menu(context, record), child: tile);
   }
 
   @override

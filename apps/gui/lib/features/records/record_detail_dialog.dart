@@ -8,18 +8,25 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 
-Future<void> showRecordDetailDialog(BuildContext context, {required String recordId, bool isBest = false}) =>
-    showMochiModal(
-      context,
-      body: RecordDetailDialog(recordId: recordId, isBest: isBest),
-      title: Text("Record Detail"),
-      titleSuffix: MochiActionBar([.close(onPress: context.pop)]),
-    );
+Future<void> showRecordDetailDialog(
+  BuildContext context, {
+  required String recordId,
+  required List<SessionEntry> sessions,
+  bool isBest = false,
+}) => showMochiModal(
+  context,
+  body: RecordDetailDialog(recordId: recordId, sessions: sessions, isBest: isBest),
+  title: Text("Record Detail"),
+  titleSuffix: MochiActionBar([.close(onPress: context.pop)]),
+);
 
 class RecordDetailDialog extends StatelessWidget {
   final String recordId;
+
+  /// What the record can be moved to.
+  final List<SessionEntry> sessions;
   final bool isBest;
-  const RecordDetailDialog({super.key, required this.recordId, this.isBest = false});
+  const RecordDetailDialog({super.key, required this.recordId, required this.sessions, this.isBest = false});
 
   Widget _tile({IconData? icon, required Widget body, VoidCallback? onMore}) => MochiTile(
     prefix: icon == null ? null : Icon(icon),
@@ -158,6 +165,57 @@ class RecordDetailDialog extends StatelessWidget {
               child: record.comment?.isNotEmpty ?? false
                   ? Text("${record.comment}")
                   : Center(child: Text("Comment something...")),
+            ),
+
+            // The dialog closes once the record is not where it was opened from: moved or deleted.
+            Align(
+              alignment: .centerEnd,
+              child: MochiActionBar(maxVisible: 3,
+               [
+                MochiAction.menu(
+                  icon: TablerIcons.arrowsRightLeft,
+                  label: "Move to",
+                  showLabel: true,
+                  children: [
+                    for (final session in sessions)
+                      MochiAction(
+                        icon: TablerIcons.stack,
+                        label: session.name,
+                        selected: session.id == record.session,
+                        onPress: () async {
+                          if (session.id == record.session) return;
+                          context.pop();
+                          await dao.setSession(record.id, session.id);
+                          await dao.setArchived(record.id, false);
+                        },
+                      ),
+                  ],
+                ),
+                MochiAction(
+                  icon: record.archived ? TablerIcons.archiveOff : TablerIcons.archive,
+                  label: record.archived ? "Unarchive" : "Archive",
+                  showLabel: true,
+                  onPress: () => dao.setArchived(record.id, !record.archived),
+                ),
+                MochiAction(
+                  icon: TablerIcons.trash,
+                  label: "Delete",
+                  showLabel: true,
+                  intent: .danger,
+                  onPress: () async {
+                    final answer = await showMochiConfirm(
+                      context,
+                      title: "Delete record?",
+                      message: "This record will be permanently deleted.",
+                      confirmLabel: "Delete",
+                      destructive: true,
+                    );
+                    if (!answer || !context.mounted) return;
+                    context.pop();
+                    await dao.softDelete(record.id);
+                  },
+                ),
+              ]),
             ),
           ],
         );
