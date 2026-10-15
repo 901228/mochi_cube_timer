@@ -49,108 +49,115 @@ class HomeShell extends StatelessWidget {
               applyHeightToFirstAscent: false,
               applyHeightToLastDescent: false,
             ),
-            child: MochiHeader(
-              variant: .plain,
-              title: Text("${state!.length} selected"),
-              actionSize: .md,
-              prefixes: [MochiAction(icon: TablerIcons.x, label: "Cancel", onPress: selection.clear)],
-              suffixFoldFrom: .start,
-              suffixes: [
-                MochiAction.menu(
-                  icon: TablerIcons.gavel,
-                  label: "Penalty",
-                  children: [
-                    for (final penalty in Penalty.values)
+            // The header at its own height, at the top, so its row is the one the title sits in; the card
+            // goes on down over the search bar beneath.
+            child: Column(
+              crossAxisAlignment: .stretch,
+              children: [
+                MochiHeader(
+                  variant: .plain,
+                  title: Text("${state!.length} selected"),
+                  actionSize: .md,
+                  prefixes: [MochiAction(icon: TablerIcons.x, label: "Cancel", onPress: selection.clear)],
+                  suffixFoldFrom: .start,
+                  suffixes: [
+                    MochiAction.menu(
+                      icon: TablerIcons.gavel,
+                      label: "Penalty",
+                      children: [
+                        for (final penalty in Penalty.values)
+                          MochiAction(
+                            icon: penalty.icon,
+                            label: penalty.displayName,
+                            onPress: () async {
+                              final answer = await showMochiConfirm(
+                                context,
+                                title: "Set all records Penalty to ${penalty.displayName}?",
+                              );
+                              if (answer) {
+                                await recordsDao.setPenaltyAll(state, penalty);
+                                if (context.mounted) {
+                                  selection.clear();
+                                }
+                              }
+                            },
+                          ),
+                      ],
+                    ),
+                    MochiAction.menu(
+                      icon: TablerIcons.arrowsRightLeft,
+                      label: "Move To",
+                      children: (data?.sessions ?? <SessionEntry>[])
+                          .map(
+                            (e) => MochiAction(
+                              icon: TablerIcons.stack,
+                              label: e.name,
+                              selected: e.id == data?.appState.session.id,
+                              onPress: () async {
+                                if (e.id == data?.appState.session.id) return;
+
+                                final answer = await showMochiConfirm(
+                                  context,
+                                  title: "Move all records to ${e.name}?",
+                                );
+                                if (answer) {
+                                  await recordsDao.setSessionAll(state, e.id);
+                                  await recordsDao.setArchivedAll(state, false);
+                                  if (context.mounted) {
+                                    selection.clear();
+                                  }
+                                }
+                              },
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    if (!(data?.appState.showArchived ?? false))
                       MochiAction(
-                        icon: penalty.icon,
-                        label: penalty.displayName,
+                        icon: TablerIcons.arrowDownToArc,
+                        label: "Archive",
                         onPress: () async {
                           final answer = await showMochiConfirm(
                             context,
-                            title: "Set all records Penalty to ${penalty.displayName}?",
+                            title: "Archive all records?",
+                            message: "All solves will be archived.",
+                            confirmLabel: "Archive",
                           );
                           if (answer) {
-                            await recordsDao.setPenaltyAll(state, penalty);
+                            await recordsDao.setArchivedAll(state, true);
                             if (context.mounted) {
                               selection.clear();
                             }
                           }
                         },
                       ),
-                  ],
-                ),
-                MochiAction.menu(
-                  icon: TablerIcons.arrowsRightLeft,
-                  label: "Move To",
-                  children: (data?.sessions ?? <SessionEntry>[])
-                      .map(
-                        (e) => MochiAction(
-                          icon: TablerIcons.stack,
-                          label: e.name,
-                          selected: e.id == data?.appState.session.id,
-                          onPress: () async {
-                            if (e.id == data?.appState.session.id) return;
-
-                            final answer = await showMochiConfirm(
-                              context,
-                              title: "Move all records to ${e.name}?",
-                            );
-                            if (answer) {
-                              await recordsDao.setSessionAll(state, e.id);
-                              await recordsDao.setArchivedAll(state, false);
-                              if (context.mounted) {
-                                selection.clear();
-                              }
-                            }
-                          },
-                        ),
-                      )
-                      .toList(),
-                ),
-                if (!(data?.appState.showArchived ?? false))
-                  MochiAction(
-                    icon: TablerIcons.arrowDownToArc,
-                    label: "Archive",
-                    onPress: () async {
-                      final answer = await showMochiConfirm(
-                        context,
-                        title: "Archive all records?",
-                        message: "All solves will be archived.",
-                        confirmLabel: "Archive",
-                      );
-                      if (answer) {
-                        await recordsDao.setArchivedAll(state, true);
-                        if (context.mounted) {
-                          selection.clear();
+                    MochiAction(
+                      icon: TablerIcons.trash,
+                      label: "Delete",
+                      intent: .danger,
+                      onPress: () async {
+                        final answer = await showMochiConfirm(
+                          context,
+                          title: "Delete all records?",
+                          message: "All solves will be permanently deleted.",
+                          confirmLabel: "Delete",
+                          destructive: true,
+                        );
+                        if (answer) {
+                          await recordsDao.deleteAll(state);
+                          if (context.mounted) {
+                            selection.clear();
+                          }
                         }
-                      }
-                    },
-                  ),
-                MochiAction(
-                  icon: TablerIcons.trash,
-                  label: "Delete",
-                  intent: .danger,
-                  onPress: () async {
-                    final answer = await showMochiConfirm(
-                      context,
-                      title: "Delete all records?",
-                      message: "All solves will be permanently deleted.",
-                      confirmLabel: "Delete",
-                      destructive: true,
-                    );
-                    if (answer) {
-                      await recordsDao.deleteAll(state);
-                      if (context.mounted) {
-                        selection.clear();
-                      }
-                    }
-                  },
-                ),
-                MochiAction(
-                  icon: selection.isAllSelected ? TablerIcons.deselect : TablerIcons.selectAll,
-                  label: selection.isAllSelected ? "Deselect all" : "Select all",
-                  enabled: data != null,
-                  onPress: selection.toggleSelectAll,
+                      },
+                    ),
+                    MochiAction(
+                      icon: selection.isAllSelected ? TablerIcons.deselect : TablerIcons.selectAll,
+                      label: selection.isAllSelected ? "Deselect all" : "Select all",
+                      enabled: data != null,
+                      onPress: selection.toggleSelectAll,
+                    ),
+                  ],
                 ),
               ],
             ),
