@@ -8,16 +8,18 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 
-Future<void> showRecordDetailDialog(BuildContext context, {required String recordId}) => showMochiModal(
-  context,
-  body: RecordDetailDialog(recordId: recordId),
-  title: Text("Record Detail"),
-  titleSuffix: MochiActionBar([.close(onPress: context.pop)]),
-);
+Future<void> showRecordDetailDialog(BuildContext context, {required String recordId, bool isBest = false}) =>
+    showMochiModal(
+      context,
+      body: RecordDetailDialog(recordId: recordId, isBest: isBest),
+      title: Text("Record Detail"),
+      titleSuffix: MochiActionBar([.close(onPress: context.pop)]),
+    );
 
 class RecordDetailDialog extends StatelessWidget {
   final String recordId;
-  const RecordDetailDialog({super.key, required this.recordId});
+  final bool isBest;
+  const RecordDetailDialog({super.key, required this.recordId, this.isBest = false});
 
   Widget _tile({IconData? icon, required Widget body, VoidCallback? onMore}) => MochiTile(
     prefix: icon == null ? null : Icon(icon),
@@ -27,6 +29,8 @@ class RecordDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
+    final timer = context.theme.timer;
     final dao = context.read<AppDatabase>().recordsDao;
 
     return StreamBuilder(
@@ -42,10 +46,9 @@ class RecordDetailDialog extends StatelessWidget {
         final record = snapshot.data!;
         final scramble = record.puzzle.scrambler.parse(record.scramble);
 
-        final timerText = Text(
-          style: context.theme.timer.xl4,
-          record.time.milliseconds.timerDisplayString(record.penalty),
-        );
+        final rawTimerText = record.time.milliseconds.timerString;
+        final timerText = record.time.milliseconds.timerDisplayString(record.penalty);
+        final timerTextStyle = timer.xl4.copyWith(color: c.primary.base);
 
         return Column(
           mainAxisSize: .min,
@@ -57,22 +60,28 @@ class RecordDetailDialog extends StatelessWidget {
                 applyHeightToFirstAscent: false,
                 applyHeightToLastDescent: false,
               ),
-              child: record.penalty != .plus2
-                  ? timerText
-                  : Row(
-                      mainAxisSize: .min,
-                      crossAxisAlignment: .baseline,
-                      textBaseline: .ideographic,
-                      spacing: 8,
-                      children: [
-                        timerText,
-                        Icon(
-                          Penalty.plus2.icon,
-                          color: context.theme.colors.mutedForeground,
-                          size: context.theme.timer.xl2.fontSize,
+              child: Row(
+                mainAxisSize: .max,
+                mainAxisAlignment: .spaceBetween,
+                crossAxisAlignment: .center,
+                children: [
+                  record.penalty == .none
+                      ? Text(timerText, style: timerTextStyle)
+                      : Text.rich(
+                          TextSpan(
+                            text: "$timerText ",
+                            style: timerTextStyle,
+                            children: [
+                              TextSpan(
+                                text: "($rawTimerText)",
+                                style: timer.xl.copyWith(color: c.mutedForeground),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                  if (isBest) Icon(TablerIcons.trophy, color: c.primary.base, size: timer.xl3.fontSize),
+                ],
+              ),
             ),
             MochiDivider(),
             Row(

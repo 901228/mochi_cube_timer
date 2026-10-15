@@ -138,6 +138,8 @@ class _RecordsListState extends State<RecordsList> {
     final controller = context.read<RecordSelectionCubit>();
     final g = context.theme.geometry;
 
+    final isBest = _isBest(record);
+
     final tile = MochiCard(
       padding: .all(g.space.xs),
       selected: selected.contains(record.id),
@@ -145,7 +147,7 @@ class _RecordsListState extends State<RecordsList> {
         if (selected.active) {
           controller.toggle(record.id);
         } else {
-          showRecordDetailDialog(context, recordId: record.id);
+          showRecordDetailDialog(context, recordId: record.id, isBest: isBest);
         }
       },
       child: Stack(
@@ -160,7 +162,7 @@ class _RecordsListState extends State<RecordsList> {
             top: 0,
             child: Text(record.datetime.toLocal().monthDayString),
           ),
-          if (_isBest(record))
+          if (isBest)
             Positioned.directional(
               textDirection: Directionality.of(context),
               end: 0,
