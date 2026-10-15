@@ -69,6 +69,13 @@ final Future<FlutterTts> _tts = () async {
   return tts;
 }();
 
+Future<void> speak(String text) async => (await _tts).speak(text);
+
+extension SettingsAudio on SettingsEntry {
+  /// Whether the user wants alerts, with audio among them, where it can be given.
+  bool get speaks => alertEnabled && alertTypes.contains(AlertType.audio) && AlertType.audio.supported;
+}
+
 /// Calls out the time passed, as a judge does; the +2 has its own text and buzz, and nothing to
 /// say that the time does not already.
 Future<void> _speak(int stage, Duration inspectionDuration) async {
@@ -78,7 +85,7 @@ Future<void> _speak(int stage, Duration inspectionDuration) async {
     2 => second.inSeconds,
     _ => null,
   };
-  if (seconds != null) await (await _tts).speak("$seconds seconds");
+  if (seconds != null) await speak("$seconds seconds");
 }
 
 /// Gives the inspection alerts that are not text, once each as inspection passes them.

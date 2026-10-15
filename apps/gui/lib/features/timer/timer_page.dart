@@ -148,12 +148,19 @@ class _TimerViewState extends State<_TimerView> {
     // The solve may have been reset while it was being looked up, and its record shown to the next.
     if (!mounted || bloc.state is! TimerRunComplete) return;
 
+    final said = <String>[];
     if (record != null && (record.kind == .best ? settings.recordBestAlert : settings.recordWorstAlert)) {
       _recordBreak.value = record;
+      said.add(record.kind == .best ? "New best" : "Worst solve");
       if (record.kind == .best && settings.vibrates) buzz(duration: 100);
     }
-    // Only shown, not buzzed: a best average is not the thing to look up from the cube for.
-    if (settings.recordAverageAlert) _averageBreaks.value = averages;
+    // Only shown and said, not buzzed: a best average is not the thing to look up from the cube for.
+    if (settings.recordAverageAlert) {
+      _averageBreaks.value = averages;
+      if (averages.isNotEmpty) said.add("New best ${averages.map((b) => b.kind.label).join(" and ")}");
+    }
+    // One sentence, as a second would cut off the first.
+    if (said.isNotEmpty && settings.speaks) speak(said.join(". "));
   }
 
   Widget _withScramble(Widget Function(Scramble scramble) builder) => FutureBuilder(
