@@ -49,8 +49,10 @@ class HomeShell extends StatelessWidget {
               applyHeightToFirstAscent: false,
               applyHeightToLastDescent: false,
             ),
-            child: Container(
-              decoration: BoxDecoration(border: .all(color: Color(0xffffffff))),
+            // A plain header adds the status bar's room to its own top; the card already clears it.
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
               child: MochiHeader(
                 variant: .plain,
                 title: Text("${state!.length} selected"),
