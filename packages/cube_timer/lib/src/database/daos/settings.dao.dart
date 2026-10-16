@@ -31,4 +31,9 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
   Future<void> setRecordWorstAlert(bool v) => _write(SettingsCompanion(recordWorstAlert: Value(v)));
 
   Future<void> setRecordAverageAlert(bool v) => _write(SettingsCompanion(recordAverageAlert: Value(v)));
+
+  Future<void> setThemeMode(AppThemeMode v) => _write(SettingsCompanion(themeMode: Value(v)));
+
+  /// Null goes back to the theme's own.
+  Future<void> setPrimaryColor(int? argb) => _write(SettingsCompanion(primaryColor: Value(argb)));
 }

@@ -123,6 +123,27 @@ class $SettingsTable extends Settings
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<AppThemeMode, String> themeMode =
+      GeneratedColumn<String>(
+        'theme_mode',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant("system"),
+      ).withConverter<AppThemeMode>($SettingsTable.$converterthemeMode);
+  static const VerificationMeta _primaryColorMeta = const VerificationMeta(
+    'primaryColor',
+  );
+  @override
+  late final GeneratedColumn<int> primaryColor = GeneratedColumn<int>(
+    'primary_color',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _cubeColorUMeta = const VerificationMeta(
     'cubeColorU',
   );
@@ -314,6 +335,8 @@ class $SettingsTable extends Settings
     recordWorstAlert,
     recordAverageAlert,
     locale,
+    themeMode,
+    primaryColor,
     cubeColorU,
     cubeColorR,
     cubeColorF,
@@ -403,6 +426,15 @@ class $SettingsTable extends Settings
       context.handle(
         _localeMeta,
         locale.isAcceptableOrUnknown(data['locale']!, _localeMeta),
+      );
+    }
+    if (data.containsKey('primary_color')) {
+      context.handle(
+        _primaryColorMeta,
+        primaryColor.isAcceptableOrUnknown(
+          data['primary_color']!,
+          _primaryColorMeta,
+        ),
       );
     }
     if (data.containsKey('cube_color_u')) {
@@ -587,6 +619,16 @@ class $SettingsTable extends Settings
         DriftSqlType.string,
         data['${effectivePrefix}locale'],
       ),
+      themeMode: $SettingsTable.$converterthemeMode.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}theme_mode'],
+        )!,
+      ),
+      primaryColor: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}primary_color'],
+      ),
       cubeColorU: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}cube_color_u'],
@@ -657,6 +699,8 @@ class $SettingsTable extends Settings
 
   static TypeConverter<Set<AlertType>, String> $converteralertTypes =
       const AlertTypesConverter();
+  static JsonTypeConverter2<AppThemeMode, String, String> $converterthemeMode =
+      const EnumNameConverter<AppThemeMode>(AppThemeMode.values);
 }
 
 class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
@@ -688,6 +732,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   ///
   /// `null` => system default
   final String? locale;
+
+  /// light, dark, or as the system is
+  final AppThemeMode themeMode;
+
+  /// the app's primary colour, as int32 ARGB
+  ///
+  /// `null` => the theme's own
+  final int? primaryColor;
 
   /// cube colors
   ///
@@ -723,6 +775,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.recordWorstAlert,
     required this.recordAverageAlert,
     this.locale,
+    required this.themeMode,
+    this.primaryColor,
     required this.cubeColorU,
     required this.cubeColorR,
     required this.cubeColorF,
@@ -757,6 +811,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     if (!nullToAbsent || locale != null) {
       map['locale'] = Variable<String>(locale);
     }
+    {
+      map['theme_mode'] = Variable<String>(
+        $SettingsTable.$converterthemeMode.toSql(themeMode),
+      );
+    }
+    if (!nullToAbsent || primaryColor != null) {
+      map['primary_color'] = Variable<int>(primaryColor);
+    }
     map['cube_color_u'] = Variable<int>(cubeColorU);
     map['cube_color_r'] = Variable<int>(cubeColorR);
     map['cube_color_f'] = Variable<int>(cubeColorF);
@@ -788,6 +850,10 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       locale: locale == null && nullToAbsent
           ? const Value.absent()
           : Value(locale),
+      themeMode: Value(themeMode),
+      primaryColor: primaryColor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryColor),
       cubeColorU: Value(cubeColorU),
       cubeColorR: Value(cubeColorR),
       cubeColorF: Value(cubeColorF),
@@ -821,6 +887,10 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       recordWorstAlert: serializer.fromJson<bool>(json['recordWorstAlert']),
       recordAverageAlert: serializer.fromJson<bool>(json['recordAverageAlert']),
       locale: serializer.fromJson<String?>(json['locale']),
+      themeMode: $SettingsTable.$converterthemeMode.fromJson(
+        serializer.fromJson<String>(json['themeMode']),
+      ),
+      primaryColor: serializer.fromJson<int?>(json['primaryColor']),
       cubeColorU: serializer.fromJson<int>(json['cubeColorU']),
       cubeColorR: serializer.fromJson<int>(json['cubeColorR']),
       cubeColorF: serializer.fromJson<int>(json['cubeColorF']),
@@ -851,6 +921,10 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'recordWorstAlert': serializer.toJson<bool>(recordWorstAlert),
       'recordAverageAlert': serializer.toJson<bool>(recordAverageAlert),
       'locale': serializer.toJson<String?>(locale),
+      'themeMode': serializer.toJson<String>(
+        $SettingsTable.$converterthemeMode.toJson(themeMode),
+      ),
+      'primaryColor': serializer.toJson<int?>(primaryColor),
       'cubeColorU': serializer.toJson<int>(cubeColorU),
       'cubeColorR': serializer.toJson<int>(cubeColorR),
       'cubeColorF': serializer.toJson<int>(cubeColorF),
@@ -879,6 +953,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     bool? recordWorstAlert,
     bool? recordAverageAlert,
     Value<String?> locale = const Value.absent(),
+    AppThemeMode? themeMode,
+    Value<int?> primaryColor = const Value.absent(),
     int? cubeColorU,
     int? cubeColorR,
     int? cubeColorF,
@@ -904,6 +980,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     recordWorstAlert: recordWorstAlert ?? this.recordWorstAlert,
     recordAverageAlert: recordAverageAlert ?? this.recordAverageAlert,
     locale: locale.present ? locale.value : this.locale,
+    themeMode: themeMode ?? this.themeMode,
+    primaryColor: primaryColor.present ? primaryColor.value : this.primaryColor,
     cubeColorU: cubeColorU ?? this.cubeColorU,
     cubeColorR: cubeColorR ?? this.cubeColorR,
     cubeColorF: cubeColorF ?? this.cubeColorF,
@@ -945,6 +1023,10 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ? data.recordAverageAlert.value
           : this.recordAverageAlert,
       locale: data.locale.present ? data.locale.value : this.locale,
+      themeMode: data.themeMode.present ? data.themeMode.value : this.themeMode,
+      primaryColor: data.primaryColor.present
+          ? data.primaryColor.value
+          : this.primaryColor,
       cubeColorU: data.cubeColorU.present
           ? data.cubeColorU.value
           : this.cubeColorU,
@@ -1005,6 +1087,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('recordWorstAlert: $recordWorstAlert, ')
           ..write('recordAverageAlert: $recordAverageAlert, ')
           ..write('locale: $locale, ')
+          ..write('themeMode: $themeMode, ')
+          ..write('primaryColor: $primaryColor, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
           ..write('cubeColorF: $cubeColorF, ')
@@ -1035,6 +1119,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     recordWorstAlert,
     recordAverageAlert,
     locale,
+    themeMode,
+    primaryColor,
     cubeColorU,
     cubeColorR,
     cubeColorF,
@@ -1064,6 +1150,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.recordWorstAlert == this.recordWorstAlert &&
           other.recordAverageAlert == this.recordAverageAlert &&
           other.locale == this.locale &&
+          other.themeMode == this.themeMode &&
+          other.primaryColor == this.primaryColor &&
           other.cubeColorU == this.cubeColorU &&
           other.cubeColorR == this.cubeColorR &&
           other.cubeColorF == this.cubeColorF &&
@@ -1091,6 +1179,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<bool> recordWorstAlert;
   final Value<bool> recordAverageAlert;
   final Value<String?> locale;
+  final Value<AppThemeMode> themeMode;
+  final Value<int?> primaryColor;
   final Value<int> cubeColorU;
   final Value<int> cubeColorR;
   final Value<int> cubeColorF;
@@ -1116,6 +1206,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.recordWorstAlert = const Value.absent(),
     this.recordAverageAlert = const Value.absent(),
     this.locale = const Value.absent(),
+    this.themeMode = const Value.absent(),
+    this.primaryColor = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
     this.cubeColorF = const Value.absent(),
@@ -1142,6 +1234,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.recordWorstAlert = const Value.absent(),
     this.recordAverageAlert = const Value.absent(),
     this.locale = const Value.absent(),
+    this.themeMode = const Value.absent(),
+    this.primaryColor = const Value.absent(),
     this.cubeColorU = const Value.absent(),
     this.cubeColorR = const Value.absent(),
     this.cubeColorF = const Value.absent(),
@@ -1168,6 +1262,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<bool>? recordWorstAlert,
     Expression<bool>? recordAverageAlert,
     Expression<String>? locale,
+    Expression<String>? themeMode,
+    Expression<int>? primaryColor,
     Expression<int>? cubeColorU,
     Expression<int>? cubeColorR,
     Expression<int>? cubeColorF,
@@ -1195,6 +1291,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (recordAverageAlert != null)
         'record_average_alert': recordAverageAlert,
       if (locale != null) 'locale': locale,
+      if (themeMode != null) 'theme_mode': themeMode,
+      if (primaryColor != null) 'primary_color': primaryColor,
       if (cubeColorU != null) 'cube_color_u': cubeColorU,
       if (cubeColorR != null) 'cube_color_r': cubeColorR,
       if (cubeColorF != null) 'cube_color_f': cubeColorF,
@@ -1223,6 +1321,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<bool>? recordWorstAlert,
     Value<bool>? recordAverageAlert,
     Value<String?>? locale,
+    Value<AppThemeMode>? themeMode,
+    Value<int?>? primaryColor,
     Value<int>? cubeColorU,
     Value<int>? cubeColorR,
     Value<int>? cubeColorF,
@@ -1249,6 +1349,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       recordWorstAlert: recordWorstAlert ?? this.recordWorstAlert,
       recordAverageAlert: recordAverageAlert ?? this.recordAverageAlert,
       locale: locale ?? this.locale,
+      themeMode: themeMode ?? this.themeMode,
+      primaryColor: primaryColor ?? this.primaryColor,
       cubeColorU: cubeColorU ?? this.cubeColorU,
       cubeColorR: cubeColorR ?? this.cubeColorR,
       cubeColorF: cubeColorF ?? this.cubeColorF,
@@ -1298,6 +1400,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     }
     if (locale.present) {
       map['locale'] = Variable<String>(locale.value);
+    }
+    if (themeMode.present) {
+      map['theme_mode'] = Variable<String>(
+        $SettingsTable.$converterthemeMode.toSql(themeMode.value),
+      );
+    }
+    if (primaryColor.present) {
+      map['primary_color'] = Variable<int>(primaryColor.value);
     }
     if (cubeColorU.present) {
       map['cube_color_u'] = Variable<int>(cubeColorU.value);
@@ -1359,6 +1469,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('recordWorstAlert: $recordWorstAlert, ')
           ..write('recordAverageAlert: $recordAverageAlert, ')
           ..write('locale: $locale, ')
+          ..write('themeMode: $themeMode, ')
+          ..write('primaryColor: $primaryColor, ')
           ..write('cubeColorU: $cubeColorU, ')
           ..write('cubeColorR: $cubeColorR, ')
           ..write('cubeColorF: $cubeColorF, ')
@@ -2669,6 +2781,8 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<bool> recordWorstAlert,
   Value<bool> recordAverageAlert,
   Value<String?> locale,
+  Value<AppThemeMode> themeMode,
+  Value<int?> primaryColor,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
   Value<int> cubeColorF,
@@ -2695,6 +2809,8 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<bool> recordWorstAlert,
   Value<bool> recordAverageAlert,
   Value<String?> locale,
+  Value<AppThemeMode> themeMode,
+  Value<int?> primaryColor,
   Value<int> cubeColorU,
   Value<int> cubeColorR,
   Value<int> cubeColorF,
@@ -2764,6 +2880,17 @@ class $$SettingsTableFilterComposer
 
   ColumnFilters<String> get locale => $composableBuilder(
     column: $table.locale,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<AppThemeMode, AppThemeMode, String>
+  get themeMode => $composableBuilder(
+    column: $table.themeMode,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<int> get primaryColor => $composableBuilder(
+    column: $table.primaryColor,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2897,6 +3024,16 @@ class $$SettingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get themeMode => $composableBuilder(
+    column: $table.themeMode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get primaryColor => $composableBuilder(
+    column: $table.primaryColor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get cubeColorU => $composableBuilder(
     column: $table.cubeColorU,
     builder: (column) => ColumnOrderings(column),
@@ -3024,6 +3161,14 @@ class $$SettingsTableAnnotationComposer
   GeneratedColumn<String> get locale =>
       $composableBuilder(column: $table.locale, builder: (column) => column);
 
+  GeneratedColumnWithTypeConverter<AppThemeMode, String> get themeMode =>
+      $composableBuilder(column: $table.themeMode, builder: (column) => column);
+
+  GeneratedColumn<int> get primaryColor => $composableBuilder(
+    column: $table.primaryColor,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get cubeColorU => $composableBuilder(
     column: $table.cubeColorU,
     builder: (column) => column,
@@ -3140,6 +3285,8 @@ class $$SettingsTableTableManager
                 Value<bool> recordWorstAlert = const Value.absent(),
                 Value<bool> recordAverageAlert = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
+                Value<AppThemeMode> themeMode = const Value.absent(),
+                Value<int?> primaryColor = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
                 Value<int> cubeColorF = const Value.absent(),
@@ -3165,6 +3312,8 @@ class $$SettingsTableTableManager
                 recordWorstAlert: recordWorstAlert,
                 recordAverageAlert: recordAverageAlert,
                 locale: locale,
+                themeMode: themeMode,
+                primaryColor: primaryColor,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,
                 cubeColorF: cubeColorF,
@@ -3192,6 +3341,8 @@ class $$SettingsTableTableManager
                 Value<bool> recordWorstAlert = const Value.absent(),
                 Value<bool> recordAverageAlert = const Value.absent(),
                 Value<String?> locale = const Value.absent(),
+                Value<AppThemeMode> themeMode = const Value.absent(),
+                Value<int?> primaryColor = const Value.absent(),
                 Value<int> cubeColorU = const Value.absent(),
                 Value<int> cubeColorR = const Value.absent(),
                 Value<int> cubeColorF = const Value.absent(),
@@ -3217,6 +3368,8 @@ class $$SettingsTableTableManager
                 recordWorstAlert: recordWorstAlert,
                 recordAverageAlert: recordAverageAlert,
                 locale: locale,
+                themeMode: themeMode,
+                primaryColor: primaryColor,
                 cubeColorU: cubeColorU,
                 cubeColorR: cubeColorR,
                 cubeColorF: cubeColorF,

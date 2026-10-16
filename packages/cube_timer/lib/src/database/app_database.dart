@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
   // Bumped with every change to the tables: run `dart run drift_dev make-migrations` before and
   // after, and add the step below.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -45,6 +45,10 @@ class AppDatabase extends _$AppDatabase {
       },
       from3To4: (m, schema) async {
         await m.addColumn(schema.settings, schema.settings.recordAverageAlert);
+      },
+      from4To5: (m, schema) async {
+        await m.addColumn(schema.settings, schema.settings.themeMode);
+        await m.addColumn(schema.settings, schema.settings.primaryColor);
       },
     ),
     beforeOpen: (_) async {

@@ -3,6 +3,9 @@ import "package:drift/drift.dart";
 import "../../puzzle/colors.dart";
 import "converters.dart";
 
+/// Whether the app is light, dark, or follows the system.
+enum AppThemeMode { system, light, dark }
+
 @DataClassName("SettingsEntry")
 class Settings extends Table {
   /// id
@@ -34,6 +37,14 @@ class Settings extends Table {
   ///
   /// `null` => system default
   TextColumn get locale => text().nullable()();
+
+  /// light, dark, or as the system is
+  TextColumn get themeMode => textEnum<AppThemeMode>().withDefault(const Constant("system"))();
+
+  /// the app's primary colour, as int32 ARGB
+  ///
+  /// `null` => the theme's own
+  IntColumn get primaryColor => integer().nullable()();
 
   /// cube colors
   ///
