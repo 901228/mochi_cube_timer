@@ -5,6 +5,7 @@ import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../../shared/utils.dart";
+import "../../../l10n/l10n.dart";
 import "../../timer/alert.dart";
 import "../settings_tile.dart";
 
@@ -15,6 +16,7 @@ class TimerSettingsSections extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final (firstAlertTime, secondAlertTime) = TimerConfig.alertTime(
       Duration(seconds: settings.inspectDuration),
     );
@@ -23,20 +25,20 @@ class TimerSettingsSections extends StatelessWidget {
       spacing: groupSpacing,
       children: [
         MochiTileGroup(
-          label: const Text("Inspection"),
+          label: Text(l10n.timerInspection),
           children: [
             SettingsTile(
-              title: "Inspection",
+              title: l10n.timerInspection,
               suffix: MochiSwitch(value: settings.inspectionEnabled, onChanged: dao.setInspectionEnabled),
             ),
             SettingsTile(
               enabled: settings.inspectionEnabled,
-              title: "Inspection duration (seconds)",
-              subtitle: "Default duration: 15 seconds",
+              title: l10n.timerInspectionDuration,
+              subtitle: l10n.timerInspectionDurationHint(15),
               suffix: Text(settings.inspectDuration.toString()),
               onPress: () => showMochiModal(
                 context,
-                title: const Text("Inspection duration (seconds)"),
+                title: Text(l10n.timerInspectionDuration),
                 body: DurationModal(
                   initial: settings.inspectDuration,
                   onSubmit: (value) async {
@@ -49,24 +51,24 @@ class TimerSettingsSections extends StatelessWidget {
         ),
 
         MochiTileGroup(
-          label: const Text("Alert"),
+          label: Text(l10n.timerAlert),
           children: [
             SettingsTile(
-              title: "Alert time left",
+              title: l10n.timerAlertTimeLeft,
               subtitle: Text.rich(
                 TextSpan(
-                  text: "Timer will alert you once ",
+                  text: l10n.timerAlertWhenPrefix,
                   children: [
                     TextSpan(
                       text: firstAlertTime.inSeconds.toString(),
                       style: TextStyle(fontWeight: .bold, color: context.colors.primary.base),
                     ),
-                    const TextSpan(text: " and "),
+                    TextSpan(text: l10n.timerAlertWhenAnd),
                     TextSpan(
                       text: secondAlertTime.inSeconds.toString(),
                       style: TextStyle(fontWeight: .bold, color: context.colors.primary.base),
                     ),
-                    const TextSpan(text: " seconds of inspection have passed"),
+                    TextSpan(text: l10n.timerAlertWhenSuffix),
                   ],
                 ),
               ),
@@ -74,16 +76,16 @@ class TimerSettingsSections extends StatelessWidget {
             ),
             SettingsTile(
               enabled: settings.alertEnabled,
-              title: "Alert type",
-              subtitle: "Choose how the timer will alert you",
+              title: l10n.timerAlertType,
+              subtitle: l10n.timerAlertTypeHint,
               suffix: MochiMultiSelect<AlertType>(
                 enabled: settings.alertEnabled,
-                hint: "None",
+                hint: l10n.commonNone,
                 // The default has vibration even where it is not offered.
                 values: settings.alertTypes.where((e) => e.supported).toSet(),
                 onChanged: dao.setAlertTypes,
                 options: AlertType.values
-                    .map((e) => MochiSelectOption(value: e, label: e.displayName, enabled: e.supported))
+                    .map((e) => MochiSelectOption(value: e, label: e.displayName(l10n), enabled: e.supported))
                     .toList(),
               ),
             ),
@@ -91,43 +93,43 @@ class TimerSettingsSections extends StatelessWidget {
         ),
 
         MochiTileGroup(
-          label: const Text("Records"),
+          label: Text(l10n.timerRecords),
           children: [
             SettingsTile(
-              title: "New best alert",
-              subtitle: "Announce a solve that beats the best of the session",
+              title: l10n.timerBestAlert,
+              subtitle: l10n.timerBestAlertHint,
               suffix: MochiSwitch(value: settings.recordBestAlert, onChanged: dao.setRecordBestAlert),
             ),
             SettingsTile(
-              title: "New worst alert",
-              subtitle: "Announce a solve that is slower than the worst of the session",
+              title: l10n.timerWorstAlert,
+              subtitle: l10n.timerWorstAlertHint,
               suffix: MochiSwitch(value: settings.recordWorstAlert, onChanged: dao.setRecordWorstAlert),
             ),
             SettingsTile(
-              title: "New best average alert",
-              subtitle: "Announce a Mo3, Ao5 or Ao12 that beats the best of the session",
+              title: l10n.timerAverageAlert,
+              subtitle: l10n.timerAverageAlertHint,
               suffix: MochiSwitch(value: settings.recordAverageAlert, onChanged: dao.setRecordAverageAlert),
             ),
           ],
         ),
 
         MochiTileGroup(
-          label: const Text("Colors"),
+          label: Text(l10n.timerColors),
           children: [
             ColorTile(
-              title: "Pressed",
+              title: l10n.timerColorPressed,
               color: settings.timerPressedColor.toColor(),
               defaultColor: DefaultColors.timerColors.pressed.toColor(),
               onSubmit: (c) => dao.save(SettingsCompanion(timerPressedColor: Value(c.toARGB32()))),
             ),
             ColorTile(
-              title: "Holding",
+              title: l10n.timerColorHolding,
               color: settings.timerHoldingColor.toColor(),
               defaultColor: DefaultColors.timerColors.holding.toColor(),
               onSubmit: (c) => dao.save(SettingsCompanion(timerHoldingColor: Value(c.toARGB32()))),
             ),
             ColorTile(
-              title: "Accept",
+              title: l10n.timerColorAccept,
               color: settings.timerAcceptColor.toColor(),
               defaultColor: DefaultColors.timerColors.accept.toColor(),
               onSubmit: (c) => dao.save(SettingsCompanion(timerAcceptColor: Value(c.toARGB32()))),
@@ -196,7 +198,7 @@ class _DurationModalState extends State<DurationModal> {
                         _controller.text = "15";
                       });
                     },
-              child: const Text("Default"),
+              child: Text(context.l10n.commonDefault),
             ),
             Row(
               mainAxisSize: .min,
@@ -210,9 +212,13 @@ class _DurationModalState extends State<DurationModal> {
                       : () {
                           context.pop();
                         },
-                  child: const Text("Cancel"),
+                  child: Text(context.l10n.commonCancel),
                 ),
-                MochiButton(size: .sm, onPress: submitting ? null : _submit, child: const Text("Submit")),
+                MochiButton(
+                  size: .sm,
+                  onPress: submitting ? null : _submit,
+                  child: Text(context.l10n.commonSubmit),
+                ),
               ],
             ),
           ],

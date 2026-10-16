@@ -6,11 +6,13 @@ import "package:flutter_tts/flutter_tts.dart";
 import "package:mochi_ui/mochi_ui.dart";
 import "package:vibration/vibration.dart";
 
+import "../../l10n/l10n.dart";
+
 extension AlertTypeName on AlertType {
-  String get displayName => switch (this) {
-    .text => "Text",
-    .audio => "Audio",
-    .vibration => "Vibration",
+  String displayName(AppLocalizations l10n) => switch (this) {
+    .text => l10n.alertTypeText,
+    .audio => l10n.alertTypeAudio,
+    .vibration => l10n.alertTypeVibration,
   };
 
   /// Vibration needs a phone; elsewhere it does nothing. flutter_tts has no Linux voice.

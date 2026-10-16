@@ -62,4 +62,90 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutLicenses => 'Open source licenses';
+
+  @override
+  String get commonCancel => 'Cancel';
+
+  @override
+  String get commonSubmit => 'Submit';
+
+  @override
+  String get commonDefault => 'Default';
+
+  @override
+  String get commonNone => 'None';
+
+  @override
+  String get alertTypeText => 'Text';
+
+  @override
+  String get alertTypeAudio => 'Audio';
+
+  @override
+  String get alertTypeVibration => 'Vibration';
+
+  @override
+  String get timerInspection => 'Inspection';
+
+  @override
+  String get timerInspectionDuration => 'Inspection duration (seconds)';
+
+  @override
+  String timerInspectionDurationHint(int seconds) {
+    return 'Default duration: $seconds seconds';
+  }
+
+  @override
+  String get timerAlert => 'Alert';
+
+  @override
+  String get timerAlertTimeLeft => 'Alert time left';
+
+  @override
+  String get timerAlertWhenPrefix => 'Timer will alert you once ';
+
+  @override
+  String get timerAlertWhenAnd => ' and ';
+
+  @override
+  String get timerAlertWhenSuffix => ' seconds of inspection have passed';
+
+  @override
+  String get timerAlertType => 'Alert type';
+
+  @override
+  String get timerAlertTypeHint => 'Choose how the timer will alert you';
+
+  @override
+  String get timerRecords => 'Records';
+
+  @override
+  String get timerBestAlert => 'New best alert';
+
+  @override
+  String get timerBestAlertHint => 'Announce a solve that beats the best of the session';
+
+  @override
+  String get timerWorstAlert => 'New worst alert';
+
+  @override
+  String get timerWorstAlertHint => 'Announce a solve that is slower than the worst of the session';
+
+  @override
+  String get timerAverageAlert => 'New best average alert';
+
+  @override
+  String get timerAverageAlertHint => 'Announce a Mo3, Ao5 or Ao12 that beats the best of the session';
+
+  @override
+  String get timerColors => 'Colors';
+
+  @override
+  String get timerColorPressed => 'Pressed';
+
+  @override
+  String get timerColorHolding => 'Holding';
+
+  @override
+  String get timerColorAccept => 'Accept';
 }

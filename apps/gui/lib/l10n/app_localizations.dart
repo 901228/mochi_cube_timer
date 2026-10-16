@@ -199,6 +199,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open source licenses'**
   String get aboutLicenses;
+
+  /// No description provided for @commonCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get commonCancel;
+
+  /// No description provided for @commonSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get commonSubmit;
+
+  /// No description provided for @commonDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get commonDefault;
+
+  /// No description provided for @commonNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get commonNone;
+
+  /// No description provided for @alertTypeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Text'**
+  String get alertTypeText;
+
+  /// No description provided for @alertTypeAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio'**
+  String get alertTypeAudio;
+
+  /// No description provided for @alertTypeVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get alertTypeVibration;
+
+  /// No description provided for @timerInspection.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspection'**
+  String get timerInspection;
+
+  /// No description provided for @timerInspectionDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspection duration (seconds)'**
+  String get timerInspectionDuration;
+
+  /// No description provided for @timerInspectionDurationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Default duration: {seconds} seconds'**
+  String timerInspectionDurationHint(int seconds);
+
+  /// No description provided for @timerAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert'**
+  String get timerAlert;
+
+  /// No description provided for @timerAlertTimeLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert time left'**
+  String get timerAlertTimeLeft;
+
+  /// No description provided for @timerAlertWhenPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer will alert you once '**
+  String get timerAlertWhenPrefix;
+
+  /// No description provided for @timerAlertWhenAnd.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get timerAlertWhenAnd;
+
+  /// No description provided for @timerAlertWhenSuffix.
+  ///
+  /// In en, this message translates to:
+  /// **' seconds of inspection have passed'**
+  String get timerAlertWhenSuffix;
+
+  /// No description provided for @timerAlertType.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert type'**
+  String get timerAlertType;
+
+  /// No description provided for @timerAlertTypeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how the timer will alert you'**
+  String get timerAlertTypeHint;
+
+  /// No description provided for @timerRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get timerRecords;
+
+  /// No description provided for @timerBestAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'New best alert'**
+  String get timerBestAlert;
+
+  /// No description provided for @timerBestAlertHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Announce a solve that beats the best of the session'**
+  String get timerBestAlertHint;
+
+  /// No description provided for @timerWorstAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'New worst alert'**
+  String get timerWorstAlert;
+
+  /// No description provided for @timerWorstAlertHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Announce a solve that is slower than the worst of the session'**
+  String get timerWorstAlertHint;
+
+  /// No description provided for @timerAverageAlert.
+  ///
+  /// In en, this message translates to:
+  /// **'New best average alert'**
+  String get timerAverageAlert;
+
+  /// No description provided for @timerAverageAlertHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Announce a Mo3, Ao5 or Ao12 that beats the best of the session'**
+  String get timerAverageAlertHint;
+
+  /// No description provided for @timerColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Colors'**
+  String get timerColors;
+
+  /// No description provided for @timerColorPressed.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressed'**
+  String get timerColorPressed;
+
+  /// No description provided for @timerColorHolding.
+  ///
+  /// In en, this message translates to:
+  /// **'Holding'**
+  String get timerColorHolding;
+
+  /// No description provided for @timerColorAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get timerColorAccept;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
