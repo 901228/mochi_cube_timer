@@ -32,6 +32,9 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
 
   Future<void> setRecordAverageAlert(bool v) => _write(SettingsCompanion(recordAverageAlert: Value(v)));
 
+  /// A language code such as `zh`; null follows the system.
+  Future<void> setLocale(String? v) => _write(SettingsCompanion(locale: Value(v)));
+
   Future<void> setThemeMode(AppThemeMode v) => _write(SettingsCompanion(themeMode: Value(v)));
 
   /// Null goes back to the theme's own.
