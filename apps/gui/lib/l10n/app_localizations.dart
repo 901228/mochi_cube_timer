@@ -367,6 +367,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Accept'**
   String get timerColorAccept;
+
+  /// No description provided for @puzzleCubeColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Cube colors'**
+  String get puzzleCubeColors;
+
+  /// No description provided for @puzzlePyraminxColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Pyraminx colors'**
+  String get puzzlePyraminxColors;
+
+  /// No description provided for @puzzleClockColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock colors'**
+  String get puzzleClockColors;
+
+  /// No description provided for @faceUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Up'**
+  String get faceUp;
+
+  /// No description provided for @faceDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Down'**
+  String get faceDown;
+
+  /// No description provided for @faceLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get faceLeft;
+
+  /// No description provided for @faceRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get faceRight;
+
+  /// No description provided for @faceFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Front'**
+  String get faceFront;
+
+  /// No description provided for @faceBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get faceBack;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

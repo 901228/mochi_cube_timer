@@ -46,5 +46,14 @@
   "timerColors": "顏色",
   "timerColorPressed": "按下",
   "timerColorHolding": "按住",
-  "timerColorAccept": "可放開"
+  "timerColorAccept": "可放開",
+  "puzzleCubeColors": "方塊顏色",
+  "puzzlePyraminxColors": "金字塔顏色",
+  "puzzleClockColors": "Clock 顏色",
+  "faceUp": "上",
+  "faceDown": "下",
+  "faceLeft": "左",
+  "faceRight": "右",
+  "faceFront": "前",
+  "faceBack": "後"
 }

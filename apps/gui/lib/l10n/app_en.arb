@@ -46,5 +46,14 @@
   "timerColors": "Colors",
   "timerColorPressed": "Pressed",
   "timerColorHolding": "Holding",
-  "timerColorAccept": "Accept"
+  "timerColorAccept": "Accept",
+  "puzzleCubeColors": "Cube colors",
+  "puzzlePyraminxColors": "Pyraminx colors",
+  "puzzleClockColors": "Clock colors",
+  "faceUp": "Up",
+  "faceDown": "Down",
+  "faceLeft": "Left",
+  "faceRight": "Right",
+  "faceFront": "Front",
+  "faceBack": "Back"
 }

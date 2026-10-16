@@ -148,4 +148,31 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get timerColorAccept => '可放開';
+
+  @override
+  String get puzzleCubeColors => '方塊顏色';
+
+  @override
+  String get puzzlePyraminxColors => '金字塔顏色';
+
+  @override
+  String get puzzleClockColors => 'Clock 顏色';
+
+  @override
+  String get faceUp => '上';
+
+  @override
+  String get faceDown => '下';
+
+  @override
+  String get faceLeft => '左';
+
+  @override
+  String get faceRight => '右';
+
+  @override
+  String get faceFront => '前';
+
+  @override
+  String get faceBack => '後';
 }

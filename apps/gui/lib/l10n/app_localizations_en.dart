@@ -148,4 +148,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timerColorAccept => 'Accept';
+
+  @override
+  String get puzzleCubeColors => 'Cube colors';
+
+  @override
+  String get puzzlePyraminxColors => 'Pyraminx colors';
+
+  @override
+  String get puzzleClockColors => 'Clock colors';
+
+  @override
+  String get faceUp => 'Up';
+
+  @override
+  String get faceDown => 'Down';
+
+  @override
+  String get faceLeft => 'Left';
+
+  @override
+  String get faceRight => 'Right';
+
+  @override
+  String get faceFront => 'Front';
+
+  @override
+  String get faceBack => 'Back';
 }
