@@ -10,6 +10,7 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 import "record_break.dart";
+import "timer_focus.dart";
 import "timer_text.dart";
 
 class TimerBody extends StatefulWidget {
@@ -150,6 +151,9 @@ class _TimerPressAreaState extends State<TimerPressArea> {
   /// buttons are ignored so they can't send an extra press or release.
   int? _pointer;
 
+  /// Where that pointer came down, to tell a press from the start of a swipe.
+  Offset _down = Offset.zero;
+
   @override
   Widget build(BuildContext context) => Listener(
     behavior: .opaque,
@@ -157,7 +161,16 @@ class _TimerPressAreaState extends State<TimerPressArea> {
       if (_pointer != null) return;
       if (e.kind == .mouse && e.buttons != kPrimaryButton) return;
       _pointer = e.pointer;
+      _down = e.position;
       context.read<TimerBloc>().add(TimerPressed());
+    },
+    onPointerMove: (e) {
+      if (e.pointer != _pointer || e.kind == .mouse) return;
+      // A swipe turns the page rather than driving the timer, until a solve is on and holding still
+      // is the point; the pages' own drag listens to the same finger without telling this.
+      if (context.read<TimerFocusCubit>().state || (e.position.dx - _down.dx).abs() < kTouchSlop) return;
+      _pointer = null;
+      context.read<TimerBloc>().add(TimerPressCanceled());
     },
     onPointerUp: (e) {
       if (e.pointer != _pointer) return;
