@@ -44,6 +44,10 @@ dependencies:
   vibration: ^3.2.1
   flutter_native_splash: ^2.4.8
   flutter_tts: ^4.2.5
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+  package_info_plus: ^10.2.2
 
 dev_dependencies:
   flutter_test:
@@ -90,11 +94,13 @@ flutter_launcher_icons:
 
 flutter:
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/tables/
     - assets/cube_icons/
     - assets/icon/
+    - assets/fonts/TwemojiFlags/LICENSE.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -115,6 +121,10 @@ flutter:
           weight: 600
         - asset: assets/fonts/Comfortaa/Comfortaa-Bold.ttf
           weight: 700
+    # Flags only, cut from Twemoji Mozilla (CC-BY 4.0), see assets/fonts/TwemojiFlags/LICENSE.md.
+    - family: TwemojiFlags
+      fonts:
+        - asset: assets/fonts/TwemojiFlags/TwemojiFlags.ttf
     - family: NotoSansTC
       fonts:
         - asset: assets/fonts/NotoSansTC/NotoSansTC-Regular.ttf

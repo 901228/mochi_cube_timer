@@ -4,6 +4,7 @@ import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/utils.dart";
+import "sections/about_section.dart";
 import "sections/general_section.dart";
 import "sections/puzzle_section.dart";
 import "sections/root_section.dart";
@@ -14,6 +15,7 @@ final Map<String, Widget Function(SettingsEntry, SettingsDao)> settingsSections 
   "general": (settings, dao) => GeneralSettingsSections(settings: settings, dao: dao),
   "timer": (settings, dao) => TimerSettingsSections(settings: settings, dao: dao),
   "puzzle": (settings, dao) => PuzzleSettingsSections(settings: settings, dao: dao),
+  "about": (settings, dao) => const AboutSettingsSections(),
 };
 
 class SettingsPage extends StatelessWidget {

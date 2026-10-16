@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "languageName": "English",
+  "languageFlag": "🇺🇸",
+  "settingsGeneral": "General",
+  "settingsTimer": "Timer",
+  "settingsPuzzle": "Puzzle",
+  "generalLocale": "Locale",
+  "localeSystem": "System",
+  "generalAppearance": "Appearance",
+  "generalTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "generalPrimaryColor": "Primary color",
+  "settingsAbout": "About",
+  "aboutVersion": "Version",
+  "aboutCredits": "Credits",
+  "aboutFlagsCredit": "Flag emoji: Twemoji, CC-BY 4.0",
+  "aboutLicenses": "Open source licenses"
+}

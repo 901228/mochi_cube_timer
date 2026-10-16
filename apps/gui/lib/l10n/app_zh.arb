@@ -1,0 +1,21 @@
+{
+  "@@locale": "zh",
+  "languageName": "繁體中文",
+  "languageFlag": "🇹🇼",
+  "settingsGeneral": "一般",
+  "settingsTimer": "計時器",
+  "settingsPuzzle": "方塊",
+  "generalLocale": "語言",
+  "localeSystem": "跟隨系統",
+  "generalAppearance": "外觀",
+  "generalTheme": "主題",
+  "themeSystem": "跟隨系統",
+  "themeLight": "淺色",
+  "themeDark": "深色",
+  "generalPrimaryColor": "主色",
+  "settingsAbout": "關於",
+  "aboutVersion": "版本",
+  "aboutCredits": "致謝",
+  "aboutFlagsCredit": "國旗 emoji：Twemoji，CC-BY 4.0",
+  "aboutLicenses": "開放原始碼授權"
+}

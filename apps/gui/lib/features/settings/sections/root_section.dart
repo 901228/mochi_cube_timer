@@ -2,6 +2,7 @@ import "package:cube_timer/cube_timer.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../../l10n/l10n.dart";
 import "../settings_tile.dart";
 
 class RootSettingsSections extends StatelessWidget {
@@ -15,9 +16,10 @@ class RootSettingsSections extends StatelessWidget {
       spacing: groupSpacing,
       children: [
         for (final (title, icon, section) in [
-          ("General", TablerIcons.settings, "general"),
-          ("Timer", TablerIcons.clockHour4, "timer"),
-          ("Puzzle", TablerIcons.cube, "puzzle"),
+          (context.l10n.settingsGeneral, TablerIcons.settings, "general"),
+          (context.l10n.settingsTimer, TablerIcons.clockHour4, "timer"),
+          (context.l10n.settingsPuzzle, TablerIcons.cube, "puzzle"),
+          (context.l10n.settingsAbout, TablerIcons.infoCircle, "about"),
         ])
           MochiTileGroup(
             label: Text(title),

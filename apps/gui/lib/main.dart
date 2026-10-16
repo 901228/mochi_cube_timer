@@ -13,6 +13,7 @@ import "package:go_router/go_router.dart";
 import "app/application.dart";
 import "app/splash_cover.dart";
 import "database/connection.dart";
+import "features/settings/sections/about_section.dart";
 
 void main() {
   // web url
@@ -28,6 +29,8 @@ void main() {
   if (!kIsWeb && view.physicalSize.shortestSide / view.devicePixelRatio < 600) {
     unawaited(SystemChrome.setPreferredOrientations(const [DeviceOrientation.portraitUp]));
   }
+
+  registerLicenses();
 
   // A long press opens the browser's own context menu, which cancels Flutter's long press gesture.
   if (kIsWeb) unawaited(BrowserContextMenu.disableContextMenu());
