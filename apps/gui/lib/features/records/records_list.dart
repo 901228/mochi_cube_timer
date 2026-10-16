@@ -8,6 +8,7 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 import "record_detail_dialog.dart";
+import "../../l10n/l10n.dart";
 
 /// null = not selecting.
 class RecordSelectionCubit extends Cubit<Set<String>?> {
@@ -74,7 +75,7 @@ class _RecordsListState extends State<RecordsList> {
           for (final penalty in Penalty.values)
             MochiMenuItem(
               prefix: Icon(penalty.icon),
-              title: Text(penalty.displayName),
+              title: Text(penalty.displayName(context.l10n)),
               selected: record.penalty == penalty,
               onPress: () async {
                 if (record.penalty == penalty) return;

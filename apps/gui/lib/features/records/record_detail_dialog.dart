@@ -7,6 +7,7 @@ import "package:mochi_ui/mochi_ui.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
+import "../../l10n/l10n.dart";
 
 Future<void> showRecordDetailDialog(
   BuildContext context, {
@@ -137,7 +138,7 @@ class RecordDetailDialog extends StatelessWidget {
                         await context.read<AppDatabase>().recordsDao.setPenalty(record.id, penalty);
                       },
                       prefix: Icon(penalty.icon),
-                      child: Text(penalty.displayName),
+                      child: Text(penalty.displayName(context.l10n)),
                     ),
                 ],
               ),

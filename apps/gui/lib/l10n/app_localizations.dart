@@ -421,6 +421,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get faceBack;
+
+  /// No description provided for @penaltyNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get penaltyNone;
+
+  /// No description provided for @penaltyDnf.
+  ///
+  /// In en, this message translates to:
+  /// **'DNF'**
+  String get penaltyDnf;
+
+  /// No description provided for @penaltyPlus2.
+  ///
+  /// In en, this message translates to:
+  /// **'Plus 2 seconds'**
+  String get penaltyPlus2;
+
+  /// No description provided for @ttsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'en-US'**
+  String get ttsLanguage;
+
+  /// No description provided for @speakSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} seconds'**
+  String speakSeconds(String seconds);
+
+  /// No description provided for @speakNewBest.
+  ///
+  /// In en, this message translates to:
+  /// **'New best'**
+  String get speakNewBest;
+
+  /// No description provided for @speakWorst.
+  ///
+  /// In en, this message translates to:
+  /// **'Worst solve'**
+  String get speakWorst;
+
+  /// No description provided for @speakAverages.
+  ///
+  /// In en, this message translates to:
+  /// **'New best {kinds}'**
+  String speakAverages(String kinds);
+
+  /// No description provided for @speakAnd.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get speakAnd;
+
+  /// No description provided for @breakBest.
+  ///
+  /// In en, this message translates to:
+  /// **'New best! −{seconds}'**
+  String breakBest(String seconds);
+
+  /// No description provided for @breakWorst.
+  ///
+  /// In en, this message translates to:
+  /// **'Worst so far +{seconds}'**
+  String breakWorst(String seconds);
+
+  /// No description provided for @breakAverages.
+  ///
+  /// In en, this message translates to:
+  /// **'New best {averages}'**
+  String breakAverages(String averages);
+
+  /// No description provided for @timerScrambleFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not scramble: {error}'**
+  String timerScrambleFailed(String error);
+
+  /// No description provided for @timerRecordAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Record added'**
+  String get timerRecordAdded;
+
+  /// No description provided for @timerEditScramble.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit scramble'**
+  String get timerEditScramble;
+
+  /// No description provided for @timerEnterScramble.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter scramble'**
+  String get timerEnterScramble;
+
+  /// No description provided for @timerScrambleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scramble'**
+  String get timerScrambleHint;
+
+  /// No description provided for @timerPreviousScramble.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous scramble'**
+  String get timerPreviousScramble;
+
+  /// No description provided for @timerNextScramble.
+  ///
+  /// In en, this message translates to:
+  /// **'Next scramble'**
+  String get timerNextScramble;
+
+  /// No description provided for @statDeviation.
+  ///
+  /// In en, this message translates to:
+  /// **'Deviation'**
+  String get statDeviation;
+
+  /// No description provided for @statMean.
+  ///
+  /// In en, this message translates to:
+  /// **'Mean'**
+  String get statMean;
+
+  /// No description provided for @statBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best'**
+  String get statBest;
+
+  /// No description provided for @statCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get statCount;
+
+  /// No description provided for @commentAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add comment'**
+  String get commentAdd;
+
+  /// No description provided for @commentEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit comment'**
+  String get commentEdit;
+
+  /// No description provided for @commentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get commentHint;
+
+  /// No description provided for @commentTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get commentTooltip;
+
+  /// No description provided for @deleteRecordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete record?'**
+  String get deleteRecordTitle;
+
+  /// No description provided for @deleteRecordMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The current solve will be permanently deleted.'**
+  String get deleteRecordMessage;
+
+  /// No description provided for @commonDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get commonDelete;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

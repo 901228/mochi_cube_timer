@@ -12,6 +12,7 @@ import "../../theme.dart";
 import "record_break.dart";
 import "timer_focus.dart";
 import "timer_text.dart";
+import "../../l10n/l10n.dart";
 
 class TimerBody extends StatefulWidget {
   final Color? color;
@@ -232,9 +233,9 @@ class RunTimeText extends StatelessWidget {
 
   Future<String?> _showCommentDialog(BuildContext context, String initComment) => showMochiPrompt(
     context,
-    title: initComment.isEmpty ? "Add comment" : "Edit comment",
+    title: initComment.isEmpty ? context.l10n.commentAdd : context.l10n.commentEdit,
     multiline: true,
-    hint: "Comment",
+    hint: context.l10n.commentHint,
     initialValue: initComment,
   );
 
@@ -255,27 +256,27 @@ class RunTimeText extends StatelessWidget {
           onPress: () async {
             final answer = await showMochiConfirm(
               context,
-              title: "Delete record?",
-              message: "The current solve will be permanently deleted.",
-              confirmLabel: "Delete",
+              title: context.l10n.deleteRecordTitle,
+              message: context.l10n.deleteRecordMessage,
+              confirmLabel: context.l10n.commonDelete,
               destructive: true,
             );
 
             if (answer) bloc.add(TimerDeleteRecord());
           },
-          tooltip: "Delete",
+          tooltip: context.l10n.commonDelete,
           icon: const Icon(TablerIcons.x),
         ),
         MochiButton.icon(
           selected: penalty == .dnf,
           onPress: () => bloc.add(TimerChangePenalty(penalty == .dnf ? .none : .dnf)),
-          tooltip: Penalty.dnf.displayName,
+          tooltip: Penalty.dnf.displayName(context.l10n),
           icon: Icon(Penalty.dnf.icon),
         ),
         MochiButton.icon(
           selected: penalty == .plus2,
           onPress: () => bloc.add(TimerChangePenalty(penalty == .plus2 ? .none : .plus2)),
-          tooltip: Penalty.plus2.displayName,
+          tooltip: Penalty.plus2.displayName(context.l10n),
           icon: Icon(Penalty.plus2.icon),
         ),
         MochiButton.icon(
@@ -285,7 +286,7 @@ class RunTimeText extends StatelessWidget {
 
             bloc.add(TimerChangeComment(newComment));
           },
-          tooltip: "Comment",
+          tooltip: context.l10n.commentTooltip,
           icon: const Icon(TablerIcons.message),
         ),
       ],
@@ -330,7 +331,7 @@ class RunTimeText extends StatelessWidget {
             children: [
               if (record != null)
                 Text(
-                  recordBreakText(record),
+                  recordBreakText(record, context.l10n),
                   style: style.copyWith(
                     color: record.kind == .best
                         ? context.colors.primary.base
@@ -338,7 +339,10 @@ class RunTimeText extends StatelessWidget {
                   ),
                 ),
               if (averages.isNotEmpty)
-                Text(averageBreakText(averages), style: style.copyWith(color: context.colors.primary.base)),
+                Text(
+                  averageBreakText(averages, context.l10n),
+                  style: style.copyWith(color: context.colors.primary.base),
+                ),
             ],
           );
         },

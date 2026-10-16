@@ -2,18 +2,21 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter/foundation.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../l10n/l10n.dart";
+
 /// What a solve broke, in words: how far it went past the old best or worst.
-String recordBreakText(RecordBreak record) {
+String recordBreakText(RecordBreak record, AppLocalizations l10n) {
   final seconds = (record.by / 1000).toStringAsFixed(2);
   return switch (record.kind) {
-    .best => "New best! −$seconds",
-    .worst => "Worst so far +$seconds",
+    .best => l10n.breakBest(seconds),
+    .worst => l10n.breakWorst(seconds),
   };
 }
 
 /// The best averages a solve set, in words: how far each went past the old best.
-String averageBreakText(List<AverageBreak> averages) =>
-    "New best ${averages.map((b) => "${b.kind.label} −${(b.by / 1000).toStringAsFixed(2)}").join(" · ")}";
+String averageBreakText(List<AverageBreak> averages, AppLocalizations l10n) => l10n.breakAverages(
+  averages.map((b) => "${b.kind.label} −${(b.by / 1000).toStringAsFixed(2)}").join(" · "),
+);
 
 /// One ring that spreads from the middle and fades, each time a new best is announced. Draws
 /// nothing the rest of the time, and lets presses through to the timer.

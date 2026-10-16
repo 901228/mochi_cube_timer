@@ -2,6 +2,7 @@ import "package:cube_timer/cube_timer.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../l10n/l10n.dart";
 import "../../shared/puzzles.dart";
 
 part "search_bar/record_filter_button.dart";

@@ -175,4 +175,106 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faceBack => 'Back';
+
+  @override
+  String get penaltyNone => 'None';
+
+  @override
+  String get penaltyDnf => 'DNF';
+
+  @override
+  String get penaltyPlus2 => 'Plus 2 seconds';
+
+  @override
+  String get ttsLanguage => 'en-US';
+
+  @override
+  String speakSeconds(String seconds) {
+    return '$seconds seconds';
+  }
+
+  @override
+  String get speakNewBest => 'New best';
+
+  @override
+  String get speakWorst => 'Worst solve';
+
+  @override
+  String speakAverages(String kinds) {
+    return 'New best $kinds';
+  }
+
+  @override
+  String get speakAnd => ' and ';
+
+  @override
+  String breakBest(String seconds) {
+    return 'New best! −$seconds';
+  }
+
+  @override
+  String breakWorst(String seconds) {
+    return 'Worst so far +$seconds';
+  }
+
+  @override
+  String breakAverages(String averages) {
+    return 'New best $averages';
+  }
+
+  @override
+  String timerScrambleFailed(String error) {
+    return 'Could not scramble: $error';
+  }
+
+  @override
+  String get timerRecordAdded => 'Record added';
+
+  @override
+  String get timerEditScramble => 'Edit scramble';
+
+  @override
+  String get timerEnterScramble => 'Enter scramble';
+
+  @override
+  String get timerScrambleHint => 'Scramble';
+
+  @override
+  String get timerPreviousScramble => 'Previous scramble';
+
+  @override
+  String get timerNextScramble => 'Next scramble';
+
+  @override
+  String get statDeviation => 'Deviation';
+
+  @override
+  String get statMean => 'Mean';
+
+  @override
+  String get statBest => 'Best';
+
+  @override
+  String get statCount => 'Count';
+
+  @override
+  String get commentAdd => 'Add comment';
+
+  @override
+  String get commentEdit => 'Edit comment';
+
+  @override
+  String get commentHint => 'Comment';
+
+  @override
+  String get commentTooltip => 'Comment';
+
+  @override
+  String get deleteRecordTitle => 'Delete record?';
+
+  @override
+  String get deleteRecordMessage => 'The current solve will be permanently deleted.';
+
+  @override
+  String get commonDelete => 'Delete';
 }

@@ -11,6 +11,7 @@ import "alert.dart";
 import "scramble_cubit.dart";
 import "timer_body.dart";
 import "timer_focus.dart";
+import "../../l10n/l10n.dart";
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -145,22 +146,27 @@ class _TimerViewState extends State<_TimerView> {
 
   void _announce(TimerBloc bloc, RecordBreak? record, List<AverageBreak> averages) {
     final settings = widget.settings;
+    final l10n = context.l10n;
     // The solve may have been reset while it was being looked up, and its record shown to the next.
     if (!mounted || bloc.state is! TimerRunComplete) return;
 
     final said = <String>[];
     if (record != null && (record.kind == .best ? settings.recordBestAlert : settings.recordWorstAlert)) {
       _recordBreak.value = record;
-      said.add(record.kind == .best ? "New best" : "Worst solve");
+      said.add(record.kind == .best ? l10n.speakNewBest : l10n.speakWorst);
       if (record.kind == .best && settings.vibrates) buzz(duration: 100);
     }
     // Only shown and said, not buzzed: a best average is not the thing to look up from the cube for.
     if (settings.recordAverageAlert) {
       _averageBreaks.value = averages;
-      if (averages.isNotEmpty) said.add("New best ${averages.map((b) => b.kind.label).join(" and ")}");
+      if (averages.isNotEmpty) {
+        said.add(l10n.speakAverages(averages.map((b) => b.kind.label).join(l10n.speakAnd)));
+      }
     }
     // One sentence, as a second would cut off the first.
-    if (said.isNotEmpty && settings.speaks) speak(said.join(". "));
+    if (said.isNotEmpty && settings.speaks) {
+      speak(said.join(". "), l10n);
+    }
   }
 
   Widget _withScramble(Widget Function(Scramble scramble) builder) => FutureBuilder(
@@ -172,7 +178,7 @@ class _TimerViewState extends State<_TimerView> {
     future: context.watch<ScrambleCubit>().state,
     builder: (context, snapshot) {
       if (snapshot.hasError) {
-        return Text("打亂失敗：${snapshot.error}");
+        return Text(context.l10n.timerScrambleFailed("${snapshot.error}"));
       }
 
       final scramble = snapshot.data;
@@ -234,19 +240,19 @@ class _TimerViewState extends State<_TimerView> {
                       if (answer == null) return;
 
                       if (context.mounted) {
-                        showMochiToast(context, title: const Text("Record added"));
+                        showMochiToast(context, title: Text(context.l10n.timerRecordAdded));
                       }
                     },
                   ),
                   MochiActionBar([
                     MochiAction(
                       icon: TablerIcons.pencil,
-                      label: "Edit scramble",
+                      label: context.l10n.timerEditScramble,
                       onPress: () async {
                         final newScramble = await showMochiPrompt(
                           context,
-                          title: "Enter scramble",
-                          hint: "Scramble",
+                          title: context.l10n.timerEnterScramble,
+                          hint: context.l10n.timerScrambleHint,
                         );
                         if (newScramble != null && context.mounted) {
                           context.read<ScrambleCubit>().add(newScramble);
@@ -255,12 +261,12 @@ class _TimerViewState extends State<_TimerView> {
                     ),
                     MochiAction(
                       icon: TablerIcons.chevronLeft,
-                      label: "Previous scramble",
+                      label: context.l10n.timerPreviousScramble,
                       onPress: scrambles.hasPrevious ? scrambles.previous : null,
                     ),
                     MochiAction(
                       icon: TablerIcons.chevronRight,
-                      label: "Next scramble",
+                      label: context.l10n.timerNextScramble,
                       onPress: scrambles.next,
                     ),
                   ], maxVisible: 3),
@@ -292,10 +298,10 @@ class _TimerViewState extends State<_TimerView> {
                         crossAxisAlignment: .start,
                         textDirection: .ltr,
                         children: [
-                          _statusLine("Deviation", _statsDisplay(summary.deviation)),
-                          _statusLine("Mean", _statsDisplay(summary.mean)),
-                          _statusLine("Best", _statsDisplay(summary.best)),
-                          _statusLine("Count", summary.count.toString()),
+                          _statusLine(context.l10n.statDeviation, _statsDisplay(summary.deviation)),
+                          _statusLine(context.l10n.statMean, _statsDisplay(summary.mean)),
+                          _statusLine(context.l10n.statBest, _statsDisplay(summary.best)),
+                          _statusLine(context.l10n.statCount, summary.count.toString()),
                         ],
                       );
                     },

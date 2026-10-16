@@ -6,6 +6,7 @@ import "package:mochi_ui/mochi_ui.dart";
 import "../../../database/dao_provider.dart";
 import "../../../shared/puzzles.dart";
 import "../../timer/scramble_cubit.dart";
+import "../../../l10n/l10n.dart";
 
 /// `ss.xxx`, `m:ss.xxx` or `h:mm:ss.xxx`; the fraction is up to 3 digits.
 final _solveTime = RegExp(r"^(?:(?:(\d+):)?(\d+):)?(\d+)(?:\.(\d{1,3}))?$");
@@ -169,7 +170,9 @@ class _AddRecordModalContentState extends State<_AddRecordModalContent> {
               label: _label(icon: TablerIcons.gavel, title: "Penalty"),
               value: widget.valueHolder.penalty,
               onChanged: (value) => setState(() => widget.valueHolder.penalty = value),
-              options: Penalty.values.map((e) => MochiSelectOption(value: e, label: e.displayName)).toList(),
+              options: Penalty.values
+                  .map((e) => MochiSelectOption(value: e, label: e.displayName(context.l10n)))
+                  .toList(),
             ),
             MochiTextField.multiline(
               label: _label(icon: TablerIcons.message, title: "Comment"),

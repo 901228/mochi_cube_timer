@@ -14,6 +14,7 @@ import "../timer/scramble_cubit.dart";
 import "../timer/timer_focus.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
+import "../../l10n/l10n.dart";
 
 class HomeShell extends StatelessWidget {
   const HomeShell({super.key, required this.pages, required this.navigationShell});
@@ -67,11 +68,11 @@ class HomeShell extends StatelessWidget {
                       for (final penalty in Penalty.values)
                         MochiAction(
                           icon: penalty.icon,
-                          label: penalty.displayName,
+                          label: penalty.displayName(context.l10n),
                           onPress: () async {
                             final answer = await showMochiConfirm(
                               context,
-                              title: "Set all records Penalty to ${penalty.displayName}?",
+                              title: "Set all records Penalty to ${penalty.displayName(context.l10n)}?",
                             );
                             if (answer) {
                               await recordsDao.setPenaltyAll(state, penalty);

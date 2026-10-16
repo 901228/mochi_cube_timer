@@ -64,14 +64,18 @@ Future<void> _buzz(int stage) {
 /// plays back, and mixing leaves music the user has on playing.
 final Future<FlutterTts> _tts = () async {
   final tts = FlutterTts();
-  await tts.setLanguage("en-US");
   await tts.setIosAudioCategory(IosTextToSpeechAudioCategory.playback, [
     IosTextToSpeechAudioCategoryOptions.mixWithOthers,
   ]);
   return tts;
 }();
 
-Future<void> speak(String text) async => (await _tts).speak(text);
+/// Says [text] in the language of [l10n], which is the one the words were written in.
+Future<void> speak(String text, AppLocalizations l10n) async {
+  final tts = await _tts;
+  await tts.setLanguage(l10n.ttsLanguage);
+  await tts.speak(text);
+}
 
 extension SettingsAudio on SettingsEntry {
   /// Whether the user wants alerts, with audio among them, where it can be given.
@@ -80,14 +84,14 @@ extension SettingsAudio on SettingsEntry {
 
 /// Calls out the time passed, as a judge does; the +2 has its own text and buzz, and nothing to
 /// say that the time does not already.
-Future<void> _speak(int stage, Duration inspectionDuration) async {
+Future<void> _speak(int stage, Duration inspectionDuration, AppLocalizations l10n) async {
   final (first, second) = TimerConfig.alertTime(inspectionDuration);
   final seconds = switch (stage) {
     1 => first.inSeconds,
     2 => second.inSeconds,
     _ => null,
   };
-  if (seconds != null) await speak("$seconds seconds");
+  if (seconds != null) await speak(l10n.speakSeconds(seconds.toString()), l10n);
 }
 
 /// Gives the inspection alerts that are not text, once each as inspection passes them.
@@ -111,7 +115,7 @@ class InspectionAlerts extends StatelessWidget {
       final stage = inspectionAlertStage(state, duration);
       final types = settings.alertTypes.where((e) => e.supported);
       if (types.contains(AlertType.vibration)) _buzz(stage);
-      if (types.contains(AlertType.audio)) _speak(stage, duration);
+      if (types.contains(AlertType.audio)) _speak(stage, duration, context.l10n);
     },
     child: child,
   );

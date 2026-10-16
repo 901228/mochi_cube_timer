@@ -175,4 +175,106 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get faceBack => '後';
+
+  @override
+  String get penaltyNone => '無';
+
+  @override
+  String get penaltyDnf => 'DNF';
+
+  @override
+  String get penaltyPlus2 => '加 2 秒';
+
+  @override
+  String get ttsLanguage => 'zh-TW';
+
+  @override
+  String speakSeconds(String seconds) {
+    return '$seconds 秒';
+  }
+
+  @override
+  String get speakNewBest => '最佳成績';
+
+  @override
+  String get speakWorst => '最差成績';
+
+  @override
+  String speakAverages(String kinds) {
+    return '最佳 $kinds';
+  }
+
+  @override
+  String get speakAnd => '和';
+
+  @override
+  String breakBest(String seconds) {
+    return '最佳成績！−$seconds';
+  }
+
+  @override
+  String breakWorst(String seconds) {
+    return '目前最差 +$seconds';
+  }
+
+  @override
+  String breakAverages(String averages) {
+    return '最佳 $averages';
+  }
+
+  @override
+  String timerScrambleFailed(String error) {
+    return '打亂失敗：$error';
+  }
+
+  @override
+  String get timerRecordAdded => '已新增成績';
+
+  @override
+  String get timerEditScramble => '編輯打亂';
+
+  @override
+  String get timerEnterScramble => '輸入打亂';
+
+  @override
+  String get timerScrambleHint => '打亂';
+
+  @override
+  String get timerPreviousScramble => '上一個打亂';
+
+  @override
+  String get timerNextScramble => '下一個打亂';
+
+  @override
+  String get statDeviation => '標準差';
+
+  @override
+  String get statMean => '平均';
+
+  @override
+  String get statBest => '最佳';
+
+  @override
+  String get statCount => '次數';
+
+  @override
+  String get commentAdd => '新增備註';
+
+  @override
+  String get commentEdit => '編輯備註';
+
+  @override
+  String get commentHint => '備註';
+
+  @override
+  String get commentTooltip => '備註';
+
+  @override
+  String get deleteRecordTitle => '刪除成績？';
+
+  @override
+  String get deleteRecordMessage => '這次的成績會被永久刪除。';
+
+  @override
+  String get commonDelete => '刪除';
 }

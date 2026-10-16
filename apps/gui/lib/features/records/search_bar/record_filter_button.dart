@@ -76,7 +76,9 @@ class _FilterPanelState extends State<_FilterPanel> {
           values: _query.penalties,
           onChanged: (value) => _update(_query.copyWith(penalties: value)),
           options: Penalty.values
-              .map((e) => MochiSelectOption(prefix: Icon(e.icon), value: e, label: e.displayName))
+              .map(
+                (e) => MochiSelectOption(prefix: Icon(e.icon), value: e, label: e.displayName(context.l10n)),
+              )
               .toList(),
         ),
         MochiDatePicker.range(
