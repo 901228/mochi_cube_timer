@@ -34,7 +34,6 @@ class GeneralSettingsSections extends StatelessWidget {
           children: [
             SettingsTile(
               title: "Locale",
-              icon: Icon(TablerIcons.language),
               suffix: Icon(TablerIcons.flag), // TODO: get locale icon
             ),
           ],
@@ -44,7 +43,6 @@ class GeneralSettingsSections extends StatelessWidget {
           children: [
             SettingsTile(
               title: "Theme",
-              icon: Icon(TablerIcons.sunMoon),
               suffix: MochiSegmentedControl<AppThemeMode>(
                 expanded: false,
                 size: .sm,
