@@ -42,11 +42,19 @@ Expression<int> _effective($RecordsTable t) => CaseWhenExpression(
   orElse: t.time,
 );
 
-Expression<bool> _scope($RecordsTable t, String session, Puzzle puzzle, {bool showArchived = false}) =>
+/// The records of one session and puzzle that are not deleted: the archived ones, or the rest, or
+/// with [includeArchived] both.
+Expression<bool> _scope(
+  $RecordsTable t,
+  String session,
+  Puzzle puzzle, {
+  bool showArchived = false,
+  bool includeArchived = false,
+}) =>
     t.session.equals(session) &
     t.puzzle.equals(puzzle.id) &
     t.deletedAt.isNull() &
-    t.archived.equals(showArchived);
+    (includeArchived ? const Constant(true) : t.archived.equals(showArchived));
 
 extension on RecordSort {
   List<OrderingTerm Function($RecordsTable)> get orderBy => switch (this) {
@@ -215,6 +223,7 @@ List<AverageBreak> averageBreaks(List<SolveTime> before, SolveTime solve) {
 }
 
 extension RecordsDaoStatistics on RecordsDao {
+  /// The archived solves count too: archiving clears the list, not what the session has achieved.
   Future<RecordExtremes> extremes(String session, Puzzle puzzle) async {
     final eff = _effective(records);
     final solved = records.penalty.equalsValue(Penalty.dnf).not();
@@ -226,7 +235,7 @@ extension RecordsDaoStatistics on RecordsDao {
     final row =
         await (selectOnly(records)
               ..addColumns([count, best, worst])
-              ..where(_scope(records, session, puzzle)))
+              ..where(_scope(records, session, puzzle, includeArchived: true)))
             .getSingle();
     return (solved: row.read(count)!, best: row.read(best), worst: row.read(worst));
   }
@@ -257,11 +266,17 @@ extension RecordsDaoStatistics on RecordsDao {
     });
   }
 
-  Stream<List<SolveTime>> watchTimes(String session, Puzzle puzzle, {bool showArchived = false, int? limit}) {
+  Stream<List<SolveTime>> watchTimes(
+    String session,
+    Puzzle puzzle, {
+    bool showArchived = false,
+    bool includeArchived = false,
+    int? limit,
+  }) {
     final eff = _effective(records);
     final q = selectOnly(records)
       ..addColumns([eff, records.penalty])
-      ..where(_scope(records, session, puzzle, showArchived: showArchived))
+      ..where(_scope(records, session, puzzle, showArchived: showArchived, includeArchived: includeArchived))
       ..orderBy([OrderingTerm.desc(records.datetime)]);
     if (limit != null) q.limit(limit);
 

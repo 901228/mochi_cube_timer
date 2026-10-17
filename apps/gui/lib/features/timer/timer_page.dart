@@ -129,7 +129,7 @@ class _TimerViewState extends State<_TimerView> {
     final scramble = await scrambles.state;
     // Read before the solve is written, or it would be compared with itself.
     final extremes = await dao.extremes(widget.sessionId, widget.puzzle);
-    final times = await dao.watchTimes(widget.sessionId, widget.puzzle).first;
+    final times = await dao.watchTimes(widget.sessionId, widget.puzzle, includeArchived: true).first;
 
     bloc.add(TimerRecorded(sessionId: widget.sessionId, puzzle: widget.puzzle, notation: scramble.notation));
 

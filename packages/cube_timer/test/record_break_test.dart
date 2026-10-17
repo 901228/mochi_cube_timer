@@ -80,4 +80,25 @@ void main() {
 
     expect(await db.recordsDao.extremes(kDefaultSessionId, .cube3), (solved: 2, best: 9000, worst: 10000));
   });
+
+  test("archived solves still count towards the extremes and the averages' history", () async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+
+    final ids = [
+      for (final time in [9000, 10000, 11000, 12000, 13000])
+        await db.recordsDao.add(session: kDefaultSessionId, puzzle: .cube3, scramble: "R", time: time),
+    ];
+    await db.recordsDao.setArchivedAll(ids, true);
+
+    final extremes = await db.recordsDao.extremes(kDefaultSessionId, .cube3);
+    expect(extremes, (solved: 5, best: 9000, worst: 13000));
+    expect(extremes.breakBy(8500, .none), (kind: RecordBreakKind.best, by: 500));
+
+    expect(await db.recordsDao.watchTimes(kDefaultSessionId, .cube3).first, isEmpty);
+    expect(
+      await db.recordsDao.watchTimes(kDefaultSessionId, .cube3, includeArchived: true).first,
+      hasLength(5),
+    );
+  });
 }
