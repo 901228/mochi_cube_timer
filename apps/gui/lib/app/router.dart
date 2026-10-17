@@ -40,9 +40,9 @@ final router = GoRouter(
         key: state.pageKey,
         child: HomeShell(
           pages: [
-            (name: "Timer", icon: TablerIcons.clockHour4, path: "/timer"),
-            (name: "Records", icon: TablerIcons.library, path: "/records"),
-            (name: "Stats", icon: TablerIcons.chartLine, path: "/stats"),
+            (id: "timer", icon: TablerIcons.clockHour4, path: "/timer"),
+            (id: "records", icon: TablerIcons.library, path: "/records"),
+            (id: "stats", icon: TablerIcons.chartLine, path: "/stats"),
           ],
           navigationShell: navigationShell,
         ),

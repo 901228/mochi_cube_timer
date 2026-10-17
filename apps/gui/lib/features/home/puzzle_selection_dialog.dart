@@ -4,6 +4,9 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:mochi_ui/mochi_ui/widgets.dart";
 
+import "../../shared/puzzles/puzzle_utils.dart";
+import "../../l10n/l10n.dart";
+
 class PuzzleSelectionDialog extends StatelessWidget {
   const PuzzleSelectionDialog({super.key});
 
@@ -60,7 +63,7 @@ class _PuzzleTile extends StatelessWidget {
       spacing: 4,
       children: [
         SvgPicture.asset("assets/cube_icons/${puzzle.id}.svg", width: 48, height: 48),
-        Text(puzzle.displayName, textAlign: .center, maxLines: 2, overflow: .ellipsis),
+        Text(puzzle.displayName(context.l10n), textAlign: .center, maxLines: 2, overflow: .ellipsis),
       ],
     );
 
@@ -69,7 +72,11 @@ class _PuzzleTile extends StatelessWidget {
       content = ColorFiltered(colorFilter: _disabledFilter, child: content);
     }
 
-    return MochiTappable(onPress: onPress, semanticLabel: puzzle.displayName, builder: (_, _, _) => content);
+    return MochiTappable(
+      onPress: onPress,
+      semanticLabel: puzzle.displayName(context.l10n),
+      builder: (_, _, _) => content,
+    );
   }
 }
 

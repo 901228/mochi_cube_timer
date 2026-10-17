@@ -6,23 +6,22 @@ import "package:mochi_cube/scramblers.dart";
 /// enum lives here rather than in mochi_cube so that library stays open to
 /// puzzles this app does not list.
 enum Puzzle {
-  cube2("222", "2x2 cube"),
-  cube3("333", "3x3 cube"),
-  cube4("444", "4x4 cube"),
-  cube5("555", "5x5 cube"),
-  cube6("666", "6x6 cube"),
-  cube7("777", "7x7 cube"),
-  clock("clock", "Clock"),
-  fto("fto", "FTO"),
-  megaminx("minx", "Megaminx"),
-  pyraminx("pyram", "Pyraminx"),
-  skewb("skewb", "Skewb"),
-  sq1("sq1", "Square-1");
+  cube2("222"),
+  cube3("333"),
+  cube4("444"),
+  cube5("555"),
+  cube6("666"),
+  cube7("777"),
+  clock("clock"),
+  fto("fto"),
+  megaminx("minx"),
+  pyraminx("pyram"),
+  skewb("skewb"),
+  sq1("sq1");
 
-  const Puzzle(this.id, this.displayName);
+  const Puzzle(this.id);
 
   final String id;
-  final String displayName;
 
   static Puzzle fromId(String id) =>
       values.firstWhere((t) => t.id == id, orElse: () => throw ArgumentError("Unknown puzzle: $id"));

@@ -15,10 +15,11 @@ import "../timer/timer_focus.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
 import "../../l10n/l10n.dart";
+import "../../shared/puzzles/puzzle_utils.dart";
 
 class HomeShell extends StatelessWidget {
   const HomeShell({super.key, required this.pages, required this.navigationShell});
-  final List<({String name, IconData icon, String path})> pages;
+  final List<({String id, IconData icon, String path})> pages;
   final StatefulNavigationShell navigationShell;
 
   Widget _selectionHeader(
@@ -58,12 +59,18 @@ class HomeShell extends StatelessWidget {
                 variant: .plain,
                 title: Text("${state!.length} selected"),
                 actionSize: .md,
-                prefixes: [MochiAction(icon: TablerIcons.x, label: "Cancel", onPress: selection.clear)],
+                prefixes: [
+                  MochiAction(
+                    icon: TablerIcons.x,
+                    label: context.l10n.commonCancel,
+                    onPress: selection.clear,
+                  ),
+                ],
                 suffixFoldFrom: .start,
                 suffixes: [
                   MochiAction.menu(
                     icon: TablerIcons.gavel,
-                    label: "Penalty",
+                    label: context.l10n.commonPenalty,
                     children: [
                       for (final penalty in Penalty.values)
                         MochiAction(
@@ -72,7 +79,7 @@ class HomeShell extends StatelessWidget {
                           onPress: () async {
                             final answer = await showMochiConfirm(
                               context,
-                              title: "Set all records Penalty to ${penalty.displayName(context.l10n)}?",
+                              title: context.l10n.homeSetPenaltyAll(penalty.displayName(context.l10n)),
                             );
                             if (answer) {
                               await recordsDao.setPenaltyAll(state, penalty);
@@ -86,7 +93,7 @@ class HomeShell extends StatelessWidget {
                   ),
                   MochiAction.menu(
                     icon: TablerIcons.arrowsRightLeft,
-                    label: "Move To",
+                    label: context.l10n.commonMoveTo,
                     children: (data?.sessions ?? <SessionEntry>[])
                         .map(
                           (e) => MochiAction(
@@ -98,7 +105,7 @@ class HomeShell extends StatelessWidget {
 
                               final answer = await showMochiConfirm(
                                 context,
-                                title: "Move all records to ${e.name}?",
+                                title: context.l10n.homeMoveAll(e.name),
                               );
                               if (answer) {
                                 await recordsDao.setSessionAll(state, e.id);
@@ -115,13 +122,13 @@ class HomeShell extends StatelessWidget {
                   if (!(data?.appState.showArchived ?? false))
                     MochiAction(
                       icon: TablerIcons.arrowDownToArc,
-                      label: "Archive",
+                      label: context.l10n.commonArchive,
                       onPress: () async {
                         final answer = await showMochiConfirm(
                           context,
-                          title: "Archive all records?",
-                          message: "All solves will be archived.",
-                          confirmLabel: "Archive",
+                          title: context.l10n.recordsArchiveAllTitle,
+                          message: context.l10n.recordsArchiveAllMessage,
+                          confirmLabel: context.l10n.commonArchive,
                         );
                         if (answer) {
                           await recordsDao.setArchivedAll(state, true);
@@ -133,14 +140,14 @@ class HomeShell extends StatelessWidget {
                     ),
                   MochiAction(
                     icon: TablerIcons.trash,
-                    label: "Delete",
+                    label: context.l10n.commonDelete,
                     intent: .danger,
                     onPress: () async {
                       final answer = await showMochiConfirm(
                         context,
-                        title: "Delete all records?",
-                        message: "All solves will be permanently deleted.",
-                        confirmLabel: "Delete",
+                        title: context.l10n.recordsDeleteAllTitle,
+                        message: context.l10n.recordsDeleteAllMessage,
+                        confirmLabel: context.l10n.commonDelete,
                         destructive: true,
                       );
                       if (answer) {
@@ -153,7 +160,9 @@ class HomeShell extends StatelessWidget {
                   ),
                   MochiAction(
                     icon: selection.isAllSelected ? TablerIcons.deselect : TablerIcons.selectAll,
-                    label: selection.isAllSelected ? "Deselect all" : "Select all",
+                    label: selection.isAllSelected
+                        ? context.l10n.homeDeselectAll
+                        : context.l10n.homeSelectAll,
                     enabled: data != null,
                     onPress: selection.toggleSelectAll,
                   ),
@@ -201,7 +210,7 @@ class HomeShell extends StatelessWidget {
                 scaleOnPress: false,
                 onPress: () => showMochiModal(
                   context,
-                  title: const Text("Select a puzzle"),
+                  title: Text(context.l10n.homeSelectPuzzle),
                   body: PuzzleSelectionDialog(),
                 ),
                 child: data == null
@@ -216,10 +225,11 @@ class HomeShell extends StatelessWidget {
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             mainAxisAlignment: .center,
+                            spacing: 2,
                             children: [
                               DefaultTextStyle.merge(
                                 style: context.theme.typography.title.md,
-                                child: Text(data.appState.puzzle.displayName),
+                                child: Text(data.appState.puzzle.displayName(context.l10n)),
                               ),
                               DefaultTextStyle.merge(
                                 style: context.theme.typography.title.sm.copyWith(
@@ -233,14 +243,14 @@ class HomeShell extends StatelessWidget {
                       ),
               ),
               suffixes: [
-                if (pages[navigationShell.currentIndex].name.toLowerCase() != "timer")
+                if (pages[navigationShell.currentIndex].id != "timer")
                   MochiAction(
                     icon: (data?.appState.showArchived ?? false)
                         ? TablerIcons.archiveFilled
                         : TablerIcons.archive,
                     enabled: data != null,
                     selected: data?.appState.showArchived ?? false,
-                    label: "Show archived records",
+                    label: context.l10n.homeShowArchived,
                     onPress: data == null
                         ? null
                         : () => context.read<AppDatabase>().appStateDao.setShowArchived(
@@ -249,7 +259,7 @@ class HomeShell extends StatelessWidget {
                   ),
                 MochiAction(
                   icon: TablerIcons.stack2,
-                  label: "Sessions",
+                  label: context.l10n.homeSessions,
                   onPress: data == null
                       ? null
                       : () => showSessionSelectionDialog(context, sessionId: data.appState.session.id),
@@ -267,8 +277,11 @@ class HomeShell extends StatelessWidget {
               },
               items: pages
                   .mapIndexed(
-                    (i, data) =>
-                        MochiBottomNavItem<int>(value: i, label: Text(data.name), icon: Icon(data.icon)),
+                    (i, data) => MochiBottomNavItem<int>(
+                      value: i,
+                      label: Text(_pageLabel(context, data.id)),
+                      icon: Icon(data.icon),
+                    ),
                   )
                   .toList(),
             ),
@@ -276,7 +289,7 @@ class HomeShell extends StatelessWidget {
             sidebar: MochiSidebar(
               footer: [
                 MochiSidebarItem(
-                  label: const Text("Settings"),
+                  label: Text(context.l10n.commonSettings),
                   icon: Icon(TablerIcons.settings),
                   onPress: () {
                     context.pushNamed("settings");
@@ -288,7 +301,7 @@ class HomeShell extends StatelessWidget {
                   .mapIndexed(
                     (i, data) => MochiSidebarItem(
                       icon: Icon(data.icon),
-                      label: Text(data.name),
+                      label: Text(_pageLabel(context, data.id)),
                       onPress: () => navigationShell.goBranch(i),
                       selected: navigationShell.currentIndex == i,
                     ),
@@ -301,7 +314,7 @@ class HomeShell extends StatelessWidget {
                 children: [
                   MochiSidebarHeading(Text("Mochi Cube Timer")),
                   MochiSidebarItem(
-                    label: const Text("Settings"),
+                    label: Text(context.l10n.commonSettings),
                     icon: Icon(TablerIcons.settings),
                     onPress: () {
                       MochiScaffold.of(context).closeDrawer();
@@ -327,6 +340,12 @@ class HomeShell extends StatelessWidget {
     // );
   }
 }
+
+String _pageLabel(BuildContext context, String id) => switch (id) {
+  "timer" => context.l10n.navTimer,
+  "records" => context.l10n.navRecords,
+  _ => context.l10n.navStats,
+};
 
 /// Provides the [ScrambleCubit], following the puzzle without rebuilding the pages under it.
 class _ScrambleScope extends StatefulWidget {

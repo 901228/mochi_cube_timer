@@ -8,6 +8,7 @@ import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 import "../../l10n/l10n.dart";
+import "../../shared/puzzles/puzzle_utils.dart";
 
 Future<void> showRecordDetailDialog(
   BuildContext context, {
@@ -17,7 +18,7 @@ Future<void> showRecordDetailDialog(
 }) => showMochiModal(
   context,
   body: RecordDetailDialog(recordId: recordId, sessions: sessions, isBest: isBest),
-  title: Text("Record Detail"),
+  title: Text(context.l10n.recordDetail),
   titleSuffix: MochiActionBar([.close(onPress: context.pop)]),
   // It ends in plain tiles, and the room under them is better spent on the content.
   safeEdge: false,
@@ -98,7 +99,7 @@ class RecordDetailDialog extends StatelessWidget {
               spacing: 6,
               children: [
                 SvgPicture.asset("assets/cube_icons/${record.puzzle.id}.svg", width: 24, height: 24),
-                Text(record.puzzle.displayName),
+                Text(record.puzzle.displayName(context.l10n)),
 
                 SizedBox(height: 24, child: MochiDivider(axis: .vertical)),
 
@@ -109,7 +110,7 @@ class RecordDetailDialog extends StatelessWidget {
 
             MochiCard(
               titlePrefix: Icon(TablerIcons.box),
-              title: Text("Scramble"),
+              title: Text(context.l10n.commonScramble),
               child: _tile(
                 // icon: TablerIcons.box,
                 body: DefaultTextStyle(
@@ -126,7 +127,7 @@ class RecordDetailDialog extends StatelessWidget {
 
             MochiCard(
               titlePrefix: Icon(TablerIcons.gavel),
-              title: Text("Penalty"),
+              title: Text(context.l10n.commonPenalty),
               child: Row(
                 spacing: 8,
                 children: [
@@ -146,17 +147,19 @@ class RecordDetailDialog extends StatelessWidget {
 
             MochiCard(
               titlePrefix: Icon(TablerIcons.message),
-              title: Text("Comment"),
+              title: Text(context.l10n.commonComment),
               titleSuffix: MochiActionBar([
                 MochiAction(
                   icon: TablerIcons.edit,
-                  label: "Edit comment",
+                  label: context.l10n.recordEditComment,
                   onPress: () async {
                     final newComment = await showMochiPrompt(
                       context,
-                      title: (record.comment?.isEmpty ?? true) ? "Add comment" : "Edit comment",
+                      title: (record.comment?.isEmpty ?? true)
+                          ? context.l10n.commentAdd
+                          : context.l10n.commentEdit,
                       multiline: true,
-                      hint: "Comment",
+                      hint: context.l10n.commentHint,
                       initialValue: record.comment,
                     );
                     if (newComment == null) return;
@@ -167,7 +170,7 @@ class RecordDetailDialog extends StatelessWidget {
               ]),
               child: record.comment?.isNotEmpty ?? false
                   ? Text("${record.comment}")
-                  : Center(child: Text("Comment something...")),
+                  : Center(child: Text(context.l10n.recordCommentEmpty)),
             ),
 
             // The dialog closes once the record is not where it was opened from: moved or deleted.
@@ -176,7 +179,7 @@ class RecordDetailDialog extends StatelessWidget {
               child: MochiActionBar(maxVisible: 3, [
                 MochiAction.menu(
                   icon: TablerIcons.arrowsRightLeft,
-                  label: "Move to",
+                  label: context.l10n.commonMoveTo,
                   showLabel: true,
                   children: [
                     for (final session in sessions)
@@ -195,21 +198,21 @@ class RecordDetailDialog extends StatelessWidget {
                 ),
                 MochiAction(
                   icon: record.archived ? TablerIcons.archiveOff : TablerIcons.archive,
-                  label: record.archived ? "Unarchive" : "Archive",
+                  label: record.archived ? context.l10n.commonUnarchive : context.l10n.commonArchive,
                   showLabel: true,
                   onPress: () => dao.setArchived(record.id, !record.archived),
                 ),
                 MochiAction(
                   icon: TablerIcons.trash,
-                  label: "Delete",
+                  label: context.l10n.commonDelete,
                   showLabel: true,
                   intent: .danger,
                   onPress: () async {
                     final answer = await showMochiConfirm(
                       context,
-                      title: "Delete record?",
-                      message: "This record will be permanently deleted.",
-                      confirmLabel: "Delete",
+                      title: context.l10n.deleteRecordTitle,
+                      message: context.l10n.recordDeleteMessage,
+                      confirmLabel: context.l10n.commonDelete,
                       destructive: true,
                     );
                     if (!answer || !context.mounted) return;
