@@ -250,10 +250,14 @@ class _TimerViewState extends State<_TimerView> {
                       icon: TablerIcons.pencil,
                       label: context.l10n.timerEditScramble,
                       onPress: () async {
+                        final currentScramble = await context.read<ScrambleCubit>().state;
+                        if (!context.mounted) return;
+
                         final newScramble = await showMochiPrompt(
                           context,
                           title: context.l10n.timerEnterScramble,
                           hint: context.l10n.timerScrambleHint,
+                          initialValue: currentScramble.notation,
                         );
                         if (newScramble != null && context.mounted) {
                           context.read<ScrambleCubit>().add(newScramble);
