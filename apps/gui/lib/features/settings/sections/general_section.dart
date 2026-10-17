@@ -56,18 +56,19 @@ class GeneralSettingsSections extends StatelessWidget {
     return Column(
       spacing: groupSpacing,
       children: [
-        MochiTileGroup(
-          label: Text(l10n.generalLocale),
-          children: [
-            SettingsTile(
-              title: l10n.generalLocale,
-              suffix: Text(
-                settings.locale == null ? "${l10n.localeSystem} · ${l10n.languageFlag}" : _named(current),
+        if (!systemPicksLanguage)
+          MochiTileGroup(
+            label: Text(l10n.generalLocale),
+            children: [
+              SettingsTile(
+                title: l10n.generalLocale,
+                suffix: Text(
+                  settings.locale == null ? "${l10n.localeSystem} · ${l10n.languageFlag}" : _named(current),
+                ),
+                onPress: () => _chooseLocale(context),
               ),
-              onPress: () => _chooseLocale(context),
-            ),
-          ],
-        ),
+            ],
+          ),
         MochiTileGroup(
           label: Text(l10n.generalAppearance),
           children: [

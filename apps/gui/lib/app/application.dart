@@ -27,8 +27,8 @@ class Application extends StatelessWidget {
         title: "Mochi Cube Timer",
         routerConfig: router,
         locale: switch (settings?.locale) {
-          final code? => Locale(code),
-          null => null,
+          final code? when !systemPicksLanguage => Locale(code),
+          _ => null,
         },
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
