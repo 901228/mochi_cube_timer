@@ -30,11 +30,12 @@ class Cube2DView extends StatelessWidget {
         settings.cubeColorL.toColor(),
         settings.cubeColorB.toColor(),
       ],
+      // A face is named for the vertex it lacks, and the vertices are numbered as the moves are: U, L, R, B.
       .pyraminx => [
-        settings.pyraminxColorR.toColor(),
-        settings.pyraminxColorL.toColor(),
-        settings.pyraminxColorB.toColor(),
         settings.pyraminxColorU.toColor(),
+        settings.pyraminxColorL.toColor(),
+        settings.pyraminxColorR.toColor(),
+        settings.pyraminxColorB.toColor(),
       ],
       .clock => throw StateError("Clock colors should not call `_colorsFor()`"),
       // TODO: implement colors for other puzzles
@@ -57,6 +58,8 @@ class Cube2DView extends StatelessWidget {
               layout: puzzleLayout,
               state: state,
               colors: _colorsFor(puzzle, settings),
+              faces: puzzle == .pyraminx ? 4 : 6,
+              inset: 0.06,
             ),
             final ClockLayout clockLayout => ClockPainter(
               layout: clockLayout,
@@ -98,6 +101,7 @@ class PuzzlePainter extends CustomPainter {
     required this.state,
     required this.colors,
     this.stroke = const Color(0xFF000000),
+    this.faces = 1,
     this.inset = 0,
   });
 
@@ -105,7 +109,12 @@ class PuzzlePainter extends CustomPainter {
   final List<int> state; // scramble.state
   final List<Color> colors; // 用 state 的值當索引
   final Color stroke;
-  final double inset; // 貼紙縮多少，0 就沒有縫
+
+  /// How many faces the stickers make, each an equal run of them in order.
+  final int faces;
+
+  /// How far each face shrinks toward its middle, so a gap appears between faces; 0 is none.
+  final double inset;
 
   Size _lastSize = Size.zero;
 
@@ -122,24 +131,37 @@ class PuzzlePainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round;
 
     for (var i = 0; i < layout.length; i++) {
-      final path = _pathOf(layout[i], scale, dx, dy);
+      final path = _pathOf(i, scale, dx, dy);
       fill.color = colors[state[i]];
       canvas.drawPath(path, fill);
       canvas.drawPath(path, line);
     }
   }
 
-  /// Shrink each sticker toward its own middle, so a gap appears between
-  /// neighbours without the layout having to carry one.
-  Path _pathOf(List<Point> polygon, double scale, double dx, double dy) {
-    var cx = 0.0;
-    var cy = 0.0;
-    for (final (x, y) in polygon) {
-      cx += x;
-      cy += y;
-    }
-    cx /= polygon.length;
-    cy /= polygon.length;
+  /// The middle of each face, as the mean of its stickers' corners.
+  late final List<Point> _faceCentres = () {
+    final perFace = layout.length ~/ faces;
+    return [
+      for (var face = 0; face < faces; face++)
+        () {
+          var (cx, cy, n) = (0.0, 0.0, 0);
+          for (final polygon in layout.stickers.skip(face * perFace).take(perFace)) {
+            for (final (x, y) in polygon) {
+              cx += x;
+              cy += y;
+              n++;
+            }
+          }
+          return (cx / n, cy / n);
+        }(),
+    ];
+  }();
+
+  /// Shrink each sticker toward the middle of its face, so the faces stand apart
+  /// while the stickers of one face still touch.
+  Path _pathOf(int sticker, double scale, double dx, double dy) {
+    final polygon = layout[sticker];
+    final (cx, cy) = _faceCentres[sticker ~/ (layout.length ~/ faces)];
 
     final path = Path();
     for (var i = 0; i < polygon.length; i++) {
@@ -155,6 +177,7 @@ class PuzzlePainter extends CustomPainter {
   bool shouldRepaint(PuzzlePainter old) =>
       !identical(old.layout, layout) ||
       old.stroke != stroke ||
+      old.faces != faces ||
       old.inset != inset ||
       !listEquals(old.state, state) ||
       !listEquals(old.colors, colors);
@@ -163,7 +186,7 @@ class PuzzlePainter extends CustomPainter {
   bool? hitTest(Offset position) {
     final (:scale, :dx, :dy) = layout.fitInto(_lastSize.width, _lastSize.height);
     for (var i = 0; i < layout.length; i++) {
-      if (_pathOf(layout[i], scale, dx, dy).contains(position)) return true;
+      if (_pathOf(i, scale, dx, dy).contains(position)) return true;
     }
     return false;
   }
