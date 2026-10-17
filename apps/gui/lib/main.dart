@@ -33,9 +33,11 @@ void main() {
   if (kIsWeb) unawaited(BrowserContextMenu.disableContextMenu());
 
   // The scramblers build their tables on the first scramble of a puzzle, which
-  // on the web is a second or more with the only thread blocked and no frames
-  // going out. We ship them built instead; awaiting an asset leaves the frame
-  // free, and a file we do not have falls back to building as before.
+  // blocks the only thread for up to a second or more with no frames going out,
+  // worst on the web. We ship them built on every platform instead; awaiting an
+  // asset leaves the frame free, and a file we do not have, or one with the wrong
+  // version, falls back to building as before.
+
   useTableBytesLoader((name) async {
     try {
       final data = await rootBundle.load("assets/tables/$name");
