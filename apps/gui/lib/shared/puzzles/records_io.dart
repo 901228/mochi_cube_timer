@@ -6,6 +6,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../utils/csv.dart";
+import "../../l10n/l10n.dart";
 
 /// The rows [parseRecordsCsv] could read, and how many it could not.
 typedef ParsedRecords = ({List<RecordImport> records, int skipped});
@@ -56,7 +57,7 @@ Future<void> importRecords(BuildContext context, {SessionEntry? session}) async 
 
   try {
     final picked = await FilePicker.pickFiles(
-      dialogTitle: "Pick a csv file of records",
+      dialogTitle: context.l10n.importPickTitle,
       type: .custom,
       allowedExtensions: ["csv"],
     );
@@ -67,14 +68,16 @@ Future<void> importRecords(BuildContext context, {SessionEntry? session}) async 
     if (!context.mounted) return;
 
     final fileName = file.name.replaceFirst(RegExp(r"\.csv$", caseSensitive: false), "");
-    final name = session?.name ?? (fileName.isEmpty ? "Imported" : fileName);
+    final name = session?.name ?? (fileName.isEmpty ? context.l10n.importDefaultName : fileName);
     final answer = await showMochiConfirm(
       context,
-      title: "Import records?",
+      title: context.l10n.importTitle,
       message:
-          "${records.length} records will be added to ${session == null ? "a new session " : ""}\"$name\"."
-          "${skipped > 0 ? " $skipped unreadable rows will be skipped." : ""}",
-      confirmLabel: "Import",
+          (session == null
+              ? context.l10n.importMessageNew(records.length, name)
+              : context.l10n.importMessageExisting(records.length, name)) +
+          (skipped > 0 ? context.l10n.importSkipped(skipped) : ""),
+      confirmLabel: context.l10n.commonImport,
     );
     if (!answer) return;
 
@@ -82,13 +85,17 @@ Future<void> importRecords(BuildContext context, {SessionEntry? session}) async 
     if (toastContext.mounted) {
       showMochiToast(
         toastContext,
-        title: const Text("Records imported"),
-        description: Text("Added ${records.length} records to \"$name\"."),
+        title: Text(context.l10n.importDone),
+        description: Text(context.l10n.importDoneDescription(records.length, name)),
       );
     }
-  } on FormatException catch (e) {
+  } on FormatException {
     if (toastContext.mounted) {
-      showMochiToast(toastContext, title: const Text("Can't import this file"), description: Text(e.message));
+      showMochiToast(
+        toastContext,
+        title: Text(context.l10n.importFailed),
+        description: Text(context.l10n.importNotRecords),
+      );
     }
   } catch (e) {
     FlutterError.reportError(
@@ -108,9 +115,9 @@ Future<void> exportRecords(BuildContext context, SessionEntry session) async {
     title: Column(
       crossAxisAlignment: .start,
       children: [
-        const Text("Export session"),
+        Text(context.l10n.exportTitle),
         Text(
-          "Export as CSV",
+          context.l10n.exportAsCsv,
           style: context.theme.typography.title.sm.copyWith(color: context.theme.colors.mutedForeground),
         ),
       ],
@@ -125,7 +132,7 @@ Future<void> exportRecords(BuildContext context, SessionEntry session) async {
             MochiCheckbox(
               value: includeDeleted,
               onChanged: (value) => setState(() => includeDeleted = value!),
-              label: const Text("Include deleted records"),
+              label: Text(context.l10n.exportIncludeDeleted),
             ),
           ],
         ),
@@ -134,7 +141,7 @@ Future<void> exportRecords(BuildContext context, SessionEntry session) async {
     actions: [
       MochiButton(
         prefix: Icon(TablerIcons.check),
-        child: Text("Export"),
+        child: Text(context.l10n.commonExport),
         onPress: () async {
           await _exportRecords(context, toastContext, session, includeDeleted: includeDeleted);
 
@@ -151,6 +158,7 @@ Future<void> _exportRecords(
   SessionEntry session, {
   bool includeDeleted = false,
 }) async {
+  final l10n = context.l10n;
   RecordsDao recordsDao = context.read<AppDatabase>().recordsDao;
   AppStateDao appStateDao = context.read<AppDatabase>().appStateDao;
 
@@ -167,7 +175,7 @@ Future<void> _exportRecords(
     ]);
 
     final saveFile = await FilePicker.saveFile(
-      dialogTitle: "Output session to a csv file",
+      dialogTitle: l10n.exportPickTitle,
       fileName: "${session.name}.csv",
       type: .custom,
       allowedExtensions: ["csv"],
@@ -178,10 +186,10 @@ Future<void> _exportRecords(
       if (toastContext.mounted) {
         showMochiToast(
           toastContext,
-          title: const Text("Session exported"),
+          title: Text(context.l10n.exportDone),
           description: Text.rich(
             TextSpan(
-              text: "Export session records to ",
+              text: toastContext.l10n.exportDonePrefix,
               children: [
                 TextSpan(
                   text: saveFile.path,

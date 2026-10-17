@@ -9,11 +9,11 @@ part "search_bar/record_filter_button.dart";
 part "search_bar/record_sort_button.dart";
 
 extension on RecordSort {
-  String get label => switch (this) {
-    .newest => "Newest first",
-    .oldest => "Oldest first",
-    .fastest => "Fastest first",
-    .slowest => "Slowest first",
+  String label(AppLocalizations l10n) => switch (this) {
+    .newest => l10n.sortNewest,
+    .oldest => l10n.sortOldest,
+    .fastest => l10n.sortFastest,
+    .slowest => l10n.sortSlowest,
   };
 
   IconData get icon => switch (this) {
@@ -89,12 +89,12 @@ class _RecordSearchBarState extends State<RecordSearchBar> {
             size: .sm,
             intent: .neutral,
             icon: Icon(TablerIcons.squarePlus),
-            tooltip: "Add a record",
+            tooltip: context.l10n.searchAddRecord,
             onPress: widget.onAddRecord,
           ),
           Expanded(
             child: MochiSearchBar(
-              hint: "Search comments",
+              hint: context.l10n.searchComments,
               onSearch: (text) => _update(_query.copyWith(comment: text)),
               suffix: Row(
                 mainAxisSize: .min,
@@ -106,12 +106,24 @@ class _RecordSearchBarState extends State<RecordSearchBar> {
             ),
           ),
           MochiActionBar(scaleOnPress: false, maxVisible: 2, [
-            MochiAction(icon: TablerIcons.arrowDownToArc, label: "Archive", onPress: widget.onArchiveAll),
-            MochiAction(icon: TablerIcons.packageImport, label: "Import", onPress: widget.onImport),
-            MochiAction(icon: TablerIcons.packageExport, label: "Export", onPress: widget.onExportAll),
+            MochiAction(
+              icon: TablerIcons.arrowDownToArc,
+              label: context.l10n.commonArchive,
+              onPress: widget.onArchiveAll,
+            ),
+            MochiAction(
+              icon: TablerIcons.packageImport,
+              label: context.l10n.commonImport,
+              onPress: widget.onImport,
+            ),
+            MochiAction(
+              icon: TablerIcons.packageExport,
+              label: context.l10n.commonExport,
+              onPress: widget.onExportAll,
+            ),
             MochiAction(
               icon: TablerIcons.trashFilled,
-              label: "Delete all",
+              label: context.l10n.searchDeleteAll,
               intent: .danger,
               onPress: widget.onDeleteAll,
             ),

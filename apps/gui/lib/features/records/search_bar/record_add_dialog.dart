@@ -45,12 +45,12 @@ Future<bool?> showAddRecordModal(BuildContext context) {
 
   return showMochiModal(
     context,
-    title: const Text("Add record"),
+    title: Text(context.l10n.addRecordTitle),
     body: Form(key: formKey, child: _AddRecordModalContent(valueHolder, appState.puzzle)),
     actions: [
       MochiButton(
         prefix: Icon(TablerIcons.check),
-        child: Text("Add"),
+        child: Text(context.l10n.commonAdd),
         onPress: () async {
           final form = formKey.currentState!;
           if (!form.validate()) return;
@@ -105,10 +105,11 @@ class _AddRecordModalContentState extends State<_AddRecordModalContent> {
       spacing: g.space.sm,
       children: [
         FormField<String>(
-          validator: (value) => parseSolveTime(value ?? "") == null ? "Invalid time" : null,
+          validator: (value) =>
+              parseSolveTime(value ?? "") == null ? context.l10n.addRecordInvalidTime : null,
           onSaved: (value) => widget.valueHolder.time = parseSolveTime(value!)!,
           builder: (field) => MochiTextField(
-            hint: "Solve Time",
+            hint: context.l10n.addRecordSolveTime,
             autofocus: true,
             error: field.errorText,
             inputFormatters: [
@@ -133,11 +134,11 @@ class _AddRecordModalContentState extends State<_AddRecordModalContent> {
               spacing: g.space.xs2,
               children: [
                 MochiFieldFrame(
-                  label: _label(icon: TablerIcons.box, title: "Scramble"),
+                  label: _label(icon: TablerIcons.box, title: context.l10n.commonScramble),
                   child: MochiCheckbox(
                     value: widget.valueHolder.useCurrentScramble,
                     onChanged: (value) => setState(() => widget.valueHolder.useCurrentScramble = value!),
-                    label: const Text("Use current scramble"),
+                    label: Text(context.l10n.addRecordUseCurrent),
                   ),
                 ),
                 MochiReveal(
@@ -145,7 +146,9 @@ class _AddRecordModalContentState extends State<_AddRecordModalContent> {
                   child: FormField<String>(
                     validator: (value) {
                       if (widget.valueHolder.useCurrentScramble) return null;
-                      if (value == null || value.trim().isEmpty) return "Scramble is required";
+                      if (value == null || value.trim().isEmpty) {
+                        return context.l10n.addRecordScrambleRequired;
+                      }
                       try {
                         widget.puzzle.scrambler.parse(value);
                         return null;
@@ -157,7 +160,7 @@ class _AddRecordModalContentState extends State<_AddRecordModalContent> {
                         ? null
                         : widget.puzzle.scrambler.parse(value!),
                     builder: (field) => MochiTextField(
-                      hint: "Scramble",
+                      hint: context.l10n.commonScramble,
                       enabled: !widget.valueHolder.useCurrentScramble,
                       error: field.errorText,
                       onChanged: field.didChange,
@@ -167,7 +170,7 @@ class _AddRecordModalContentState extends State<_AddRecordModalContent> {
               ],
             ),
             MochiSelect(
-              label: _label(icon: TablerIcons.gavel, title: "Penalty"),
+              label: _label(icon: TablerIcons.gavel, title: context.l10n.commonPenalty),
               value: widget.valueHolder.penalty,
               onChanged: (value) => setState(() => widget.valueHolder.penalty = value),
               options: Penalty.values
@@ -175,8 +178,8 @@ class _AddRecordModalContentState extends State<_AddRecordModalContent> {
                   .toList(),
             ),
             MochiTextField.multiline(
-              label: _label(icon: TablerIcons.message, title: "Comment"),
-              hint: "Comment",
+              label: _label(icon: TablerIcons.message, title: context.l10n.commonComment),
+              hint: context.l10n.commentHint,
               onChanged: (value) => widget.valueHolder.comment = value.isEmpty ? null : value,
             ),
           ],

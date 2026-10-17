@@ -63,14 +63,14 @@ class _RecordsListState extends State<RecordsList> {
     return [
       MochiMenuItem(
         prefix: const Icon(TablerIcons.listCheck),
-        title: const Text("Select"),
+        title: Text(context.l10n.commonSelect),
         onPress: () {
           context.read<RecordSelectionCubit>().start(record.id);
         },
       ),
       MochiSubmenu(
         prefix: const Icon(TablerIcons.gavel),
-        title: const Text("Penalty"),
+        title: Text(context.l10n.commonPenalty),
         menuBuilder: (context) => [
           for (final penalty in Penalty.values)
             MochiMenuItem(
@@ -86,7 +86,7 @@ class _RecordsListState extends State<RecordsList> {
       ),
       MochiSubmenu(
         prefix: const Icon(TablerIcons.arrowsRightLeft),
-        title: const Text("Move to"),
+        title: Text(context.l10n.commonMoveTo),
         menuBuilder: (context) => sessions
             .map(
               (e) => MochiMenuItem(
@@ -104,7 +104,7 @@ class _RecordsListState extends State<RecordsList> {
       ),
       MochiMenuItem(
         prefix: Icon(record.archived ? TablerIcons.archiveOff : TablerIcons.archive),
-        title: Text(record.archived ? "Unarchive" : "Archive"),
+        title: Text(record.archived ? context.l10n.commonUnarchive : context.l10n.commonArchive),
         onPress: () {
           context.read<AppDatabase>().recordsDao.setArchived(record.id, !record.archived);
         },
@@ -115,13 +115,13 @@ class _RecordsListState extends State<RecordsList> {
       MochiMenuItem(
         intent: .danger,
         prefix: const Icon(TablerIcons.trash),
-        title: const Text("Delete"),
+        title: Text(context.l10n.commonDelete),
         onPress: () async {
           final answer = await showMochiConfirm(
             context,
-            title: "Delete record?",
-            message: "This record will be permanently deleted.",
-            confirmLabel: "Delete",
+            title: context.l10n.deleteRecordTitle,
+            message: context.l10n.recordDeleteMessage,
+            confirmLabel: context.l10n.commonDelete,
             destructive: true,
           );
           if (answer) {
@@ -214,7 +214,7 @@ class _RecordsListState extends State<RecordsList> {
     final mobile = context.responsive(mobile: true, tablet: false);
 
     return widget.records.isEmpty
-        ? Center(child: Text("No records yet"))
+        ? Center(child: Text(context.l10n.recordsNone))
         : DefaultTextStyle.merge(
             textHeightBehavior: const TextHeightBehavior(
               applyHeightToFirstAscent: false,

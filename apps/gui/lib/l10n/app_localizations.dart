@@ -601,6 +601,594 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get commonDelete;
+
+  /// No description provided for @commonArchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get commonArchive;
+
+  /// No description provided for @commonUnarchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive'**
+  String get commonUnarchive;
+
+  /// No description provided for @commonMoveTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to'**
+  String get commonMoveTo;
+
+  /// No description provided for @commonPenalty.
+  ///
+  /// In en, this message translates to:
+  /// **'Penalty'**
+  String get commonPenalty;
+
+  /// No description provided for @commonComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get commonComment;
+
+  /// No description provided for @commonScramble.
+  ///
+  /// In en, this message translates to:
+  /// **'Scramble'**
+  String get commonScramble;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get commonSave;
+
+  /// No description provided for @commonExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get commonExport;
+
+  /// No description provided for @commonImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get commonImport;
+
+  /// No description provided for @commonRename.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename'**
+  String get commonRename;
+
+  /// No description provided for @commonSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get commonSelect;
+
+  /// No description provided for @commonSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get commonSettings;
+
+  /// No description provided for @commonAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get commonAdd;
+
+  /// No description provided for @commonAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get commonAny;
+
+  /// No description provided for @recordDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Record Detail'**
+  String get recordDetail;
+
+  /// No description provided for @recordCommentEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment something...'**
+  String get recordCommentEmpty;
+
+  /// No description provided for @recordEditComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit comment'**
+  String get recordEditComment;
+
+  /// No description provided for @recordDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This record will be permanently deleted.'**
+  String get recordDeleteMessage;
+
+  /// No description provided for @recordsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No records yet'**
+  String get recordsNone;
+
+  /// No description provided for @recordsDeleteAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all records?'**
+  String get recordsDeleteAllTitle;
+
+  /// No description provided for @recordsDeleteAllMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All solves will be permanently deleted.'**
+  String get recordsDeleteAllMessage;
+
+  /// No description provided for @recordsArchiveAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive all records?'**
+  String get recordsArchiveAllTitle;
+
+  /// No description provided for @recordsArchiveAllMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All solves will be archived.'**
+  String get recordsArchiveAllMessage;
+
+  /// No description provided for @addRecordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add record'**
+  String get addRecordTitle;
+
+  /// No description provided for @addRecordInvalidTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid time'**
+  String get addRecordInvalidTime;
+
+  /// No description provided for @addRecordSolveTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve Time'**
+  String get addRecordSolveTime;
+
+  /// No description provided for @addRecordUseCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Use current scramble'**
+  String get addRecordUseCurrent;
+
+  /// No description provided for @addRecordScrambleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Scramble is required'**
+  String get addRecordScrambleRequired;
+
+  /// No description provided for @searchAddRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a record'**
+  String get searchAddRecord;
+
+  /// No description provided for @searchComments.
+  ///
+  /// In en, this message translates to:
+  /// **'Search comments'**
+  String get searchComments;
+
+  /// No description provided for @searchDeleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all'**
+  String get searchDeleteAll;
+
+  /// No description provided for @sortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get sortNewest;
+
+  /// No description provided for @sortOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get sortOldest;
+
+  /// No description provided for @sortFastest.
+  ///
+  /// In en, this message translates to:
+  /// **'Fastest first'**
+  String get sortFastest;
+
+  /// No description provided for @sortSlowest.
+  ///
+  /// In en, this message translates to:
+  /// **'Slowest first'**
+  String get sortSlowest;
+
+  /// No description provided for @sortTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort: {label}'**
+  String sortTooltip(String label);
+
+  /// No description provided for @filterRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter records'**
+  String get filterRecords;
+
+  /// No description provided for @filterRecordsActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter records ({active} on)'**
+  String filterRecordsActive(int active);
+
+  /// No description provided for @filterDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get filterDate;
+
+  /// No description provided for @filterAnyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get filterAnyTime;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get filterClear;
+
+  /// No description provided for @statsCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Stats'**
+  String get statsCurrent;
+
+  /// No description provided for @statsSolveCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve Count'**
+  String get statsSolveCount;
+
+  /// No description provided for @statsSolveMean.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve Mean'**
+  String get statsSolveMean;
+
+  /// No description provided for @statsSolveDeviation.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve Deviation'**
+  String get statsSolveDeviation;
+
+  /// No description provided for @statsBestSingle.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Single'**
+  String get statsBestSingle;
+
+  /// No description provided for @statsBestStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Stats'**
+  String get statsBestStats;
+
+  /// No description provided for @statsBestAo5.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Ao5'**
+  String get statsBestAo5;
+
+  /// No description provided for @statsSolveTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve Times'**
+  String get statsSolveTimes;
+
+  /// No description provided for @statsDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Distribution'**
+  String get statsDistribution;
+
+  /// No description provided for @statsNoSolves.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no solve yet'**
+  String get statsNoSolves;
+
+  /// No description provided for @statsNotEnough.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough solves yet'**
+  String get statsNotEnough;
+
+  /// No description provided for @statsMedian.
+  ///
+  /// In en, this message translates to:
+  /// **'Median {value}'**
+  String statsMedian(String value);
+
+  /// No description provided for @homeSetPenaltyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Set all records Penalty to {penalty}?'**
+  String homeSetPenaltyAll(String penalty);
+
+  /// No description provided for @homeMoveAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Move all records to {name}?'**
+  String homeMoveAll(String name);
+
+  /// No description provided for @homeDeselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect all'**
+  String get homeDeselectAll;
+
+  /// No description provided for @homeSelectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get homeSelectAll;
+
+  /// No description provided for @homeSelectPuzzle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a puzzle'**
+  String get homeSelectPuzzle;
+
+  /// No description provided for @homeShowArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Show archived records'**
+  String get homeShowArchived;
+
+  /// No description provided for @homeSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get homeSessions;
+
+  /// No description provided for @sessionSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a session'**
+  String get sessionSelect;
+
+  /// No description provided for @sessionCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new session'**
+  String get sessionCreate;
+
+  /// No description provided for @sessionImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import to new session'**
+  String get sessionImport;
+
+  /// No description provided for @sessionDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete session?'**
+  String get sessionDeleteTitle;
+
+  /// No description provided for @sessionDeleteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All solves in \"{name}\" will be permanently deleted.'**
+  String sessionDeleteMessage(String name);
+
+  /// No description provided for @importPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a csv file of records'**
+  String get importPickTitle;
+
+  /// No description provided for @importDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported'**
+  String get importDefaultName;
+
+  /// No description provided for @importTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import records?'**
+  String get importTitle;
+
+  /// No description provided for @importMessageNew.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} records will be added to a new session \"{name}\".'**
+  String importMessageNew(int count, String name);
+
+  /// No description provided for @importMessageExisting.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} records will be added to \"{name}\".'**
+  String importMessageExisting(int count, String name);
+
+  /// No description provided for @importSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **' {skipped} unreadable rows will be skipped.'**
+  String importSkipped(int skipped);
+
+  /// No description provided for @importDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Records imported'**
+  String get importDone;
+
+  /// No description provided for @importDoneDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {count} records to \"{name}\".'**
+  String importDoneDescription(int count, String name);
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t import this file'**
+  String get importFailed;
+
+  /// No description provided for @importNotRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Not a records file: needs Puzzle, Scramble, Time and Datetime columns'**
+  String get importNotRecords;
+
+  /// No description provided for @exportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export session'**
+  String get exportTitle;
+
+  /// No description provided for @exportAsCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Export as CSV'**
+  String get exportAsCsv;
+
+  /// No description provided for @exportIncludeDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Include deleted records'**
+  String get exportIncludeDeleted;
+
+  /// No description provided for @exportPickTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Output session to a csv file'**
+  String get exportPickTitle;
+
+  /// No description provided for @exportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Session exported'**
+  String get exportDone;
+
+  /// No description provided for @exportDonePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Export session records to '**
+  String get exportDonePrefix;
+
+  /// No description provided for @timerInspectionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'INSPECTION'**
+  String get timerInspectionHint;
+
+  /// No description provided for @timerGo.
+  ///
+  /// In en, this message translates to:
+  /// **'GO!'**
+  String get timerGo;
+
+  /// No description provided for @navTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer'**
+  String get navTimer;
+
+  /// No description provided for @navRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get navRecords;
+
+  /// No description provided for @navStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get navStats;
+
+  /// No description provided for @puzzleCube2.
+  ///
+  /// In en, this message translates to:
+  /// **'2x2'**
+  String get puzzleCube2;
+
+  /// No description provided for @puzzleCube3.
+  ///
+  /// In en, this message translates to:
+  /// **'3x3'**
+  String get puzzleCube3;
+
+  /// No description provided for @puzzleCube4.
+  ///
+  /// In en, this message translates to:
+  /// **'4x4'**
+  String get puzzleCube4;
+
+  /// No description provided for @puzzleCube5.
+  ///
+  /// In en, this message translates to:
+  /// **'5x5'**
+  String get puzzleCube5;
+
+  /// No description provided for @puzzleCube6.
+  ///
+  /// In en, this message translates to:
+  /// **'6x6'**
+  String get puzzleCube6;
+
+  /// No description provided for @puzzleCube7.
+  ///
+  /// In en, this message translates to:
+  /// **'7x7'**
+  String get puzzleCube7;
+
+  /// No description provided for @puzzleClock.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock'**
+  String get puzzleClock;
+
+  /// No description provided for @puzzleFto.
+  ///
+  /// In en, this message translates to:
+  /// **'FTO'**
+  String get puzzleFto;
+
+  /// No description provided for @puzzleMegaminx.
+  ///
+  /// In en, this message translates to:
+  /// **'Megaminx'**
+  String get puzzleMegaminx;
+
+  /// No description provided for @puzzlePyraminx.
+  ///
+  /// In en, this message translates to:
+  /// **'Pyraminx'**
+  String get puzzlePyraminx;
+
+  /// No description provided for @puzzleSkewb.
+  ///
+  /// In en, this message translates to:
+  /// **'Skewb'**
+  String get puzzleSkewb;
+
+  /// No description provided for @puzzleSquare1.
+  ///
+  /// In en, this message translates to:
+  /// **'Square-1'**
+  String get puzzleSquare1;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

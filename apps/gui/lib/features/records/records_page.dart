@@ -8,6 +8,7 @@ import "../../shared/utils.dart";
 import "record_search_bar.dart";
 import "records_list.dart";
 import "search_bar/record_add_dialog.dart";
+import "../../l10n/l10n.dart";
 
 class RecordsPage extends StatelessWidget {
   const RecordsPage({super.key});
@@ -99,7 +100,7 @@ class _RecordsPageState extends State<_RecordsPage> {
                   if (answer == null) return;
 
                   if (context.mounted) {
-                    showMochiToast(context, title: const Text("Record added"));
+                    showMochiToast(context, title: Text(context.l10n.timerRecordAdded));
                   }
                 },
                 onArchiveAll: records.every((e) => e.archived)
@@ -107,9 +108,9 @@ class _RecordsPageState extends State<_RecordsPage> {
                     : () async {
                         final answer = await showMochiConfirm(
                           context,
-                          title: "Archive all records?",
-                          message: "All solves will be archived.",
-                          confirmLabel: "Archive",
+                          title: context.l10n.recordsArchiveAllTitle,
+                          message: context.l10n.recordsArchiveAllMessage,
+                          confirmLabel: context.l10n.commonArchive,
                         );
                         if (answer) {
                           await recordsDao.setArchivedAll(records.map((e) => e.id), true);
@@ -120,9 +121,9 @@ class _RecordsPageState extends State<_RecordsPage> {
                     : () async {
                         final answer = await showMochiConfirm(
                           context,
-                          title: "Delete all records?",
-                          message: "All solves will be permanently deleted.",
-                          confirmLabel: "Delete",
+                          title: context.l10n.recordsDeleteAllTitle,
+                          message: context.l10n.recordsDeleteAllMessage,
+                          confirmLabel: context.l10n.commonDelete,
                           destructive: true,
                         );
                         if (answer) {

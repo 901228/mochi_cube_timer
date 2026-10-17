@@ -5,7 +5,7 @@ class _RecordFilterButton extends StatelessWidget {
   final ValueChanged<RecordQuery> onChanged;
   const _RecordFilterButton({required this.query, required this.onChanged});
 
-  Widget _buttonBase({FocusNode? focusNode, VoidCallback? onPress}) {
+  Widget _buttonBase(BuildContext context, {FocusNode? focusNode, VoidCallback? onPress}) {
     final active = query.activeFilters;
 
     return MochiButton.icon(
@@ -15,7 +15,7 @@ class _RecordFilterButton extends StatelessWidget {
       focusNode: focusNode,
       selected: active > 0,
       icon: Icon(active == 0 ? TablerIcons.filter2 : TablerIcons.filter2Check),
-      tooltip: active == 0 ? "Filter records" : "Filter records ($active on)",
+      tooltip: active == 0 ? context.l10n.filterRecords : context.l10n.filterRecordsActive(active),
       onPress: onPress,
     );
   }
@@ -26,10 +26,11 @@ class _RecordFilterButton extends StatelessWidget {
 
     if (useSheet) {
       return _buttonBase(
+        context,
         onPress: () => showMochiSheet<void>(
           context,
           builder: (context) => MochiSheet(
-            semanticLabel: "Filter records",
+            semanticLabel: context.l10n.filterRecords,
             child: _FilterPanel(query: query, onChanged: onChanged),
           ),
         ),
@@ -41,7 +42,8 @@ class _RecordFilterButton extends StatelessWidget {
       align: .end,
       constraints: const BoxConstraints(minWidth: 280, maxWidth: 320),
       popoverBuilder: (context) => _FilterPanel(query: query, onChanged: onChanged),
-      builder: (context, anchor, _) => _buttonBase(focusNode: anchor.focusNode, onPress: anchor.toggle),
+      builder: (context, anchor, _) =>
+          _buttonBase(context, focusNode: anchor.focusNode, onPress: anchor.toggle),
     );
   }
 }
@@ -71,8 +73,8 @@ class _FilterPanelState extends State<_FilterPanel> {
       spacing: 12,
       children: [
         MochiMultiSelect(
-          label: const Text("Penalty"),
-          hint: "Any",
+          label: Text(context.l10n.commonPenalty),
+          hint: context.l10n.commonAny,
           values: _query.penalties,
           onChanged: (value) => _update(_query.copyWith(penalties: value)),
           options: Penalty.values
@@ -82,8 +84,8 @@ class _FilterPanelState extends State<_FilterPanel> {
               .toList(),
         ),
         MochiDatePicker.range(
-          label: const Text("Date"),
-          hint: "Any time",
+          label: Text(context.l10n.filterDate),
+          hint: context.l10n.filterAnyTime,
           value: _query.dates,
           last: DateTime.now(),
           onChanged: (range) => _update(_query.withDates(range.start, range.end)),
@@ -95,7 +97,7 @@ class _FilterPanelState extends State<_FilterPanel> {
             prefix: const Icon(TablerIcons.filterOff),
             enabled: _query.activeFilters > 0,
             onPress: () => _update(_query.clearFilters()),
-            child: const Text("Clear filters"),
+            child: Text(context.l10n.filterClear),
           ),
         ),
       ],

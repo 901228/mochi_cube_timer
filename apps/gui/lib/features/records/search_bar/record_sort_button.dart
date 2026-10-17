@@ -12,7 +12,7 @@ class _RecordSortButton extends StatelessWidget {
           .map(
             (sort) => MochiMenuItem(
               prefix: Icon(sort.icon),
-              title: Text(sort.label),
+              title: Text(sort.label(context.l10n)),
               selected: query.sort == sort,
               onPress: () => onChanged(query.copyWith(sort: sort)),
             ),
@@ -25,7 +25,7 @@ class _RecordSortButton extends StatelessWidget {
         intent: .neutral,
         onPress: anchor.open,
         icon: Icon(query.sort.icon),
-        tooltip: "Sort: ${query.sort.label}",
+        tooltip: context.l10n.sortTooltip(query.sort.label(context.l10n)),
       ),
     );
   }
