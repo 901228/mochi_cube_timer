@@ -26,14 +26,6 @@ Plan:
 
 Estimate: decoder and tests 2h, bloc 2h, setting and permission 1h, then tuning on a phone with a real Stackmat.
 
-## Clock overlaps its statistics
-
-`timer_page.dart` (about lines 290-320): the row is the left statistics (`Expanded`), the `Cube2DView`, then the right statistics. The Clock's scramble drawing has two faces and is wider, so it squeezes the statistics into each other.
-
-Seen on a 390 x 844 pt screen (iPhone 17e, portrait): the statistics overlap there.
-
-Fix: cap the width of the 2D drawing, or draw the Clock smaller. About 30 minutes.
-
 ## Landscape
 
 Phones are locked to portrait in `main.dart` (`// shortcut:`), because the timer, records and stats were laid out for upright use only. Adapt them to landscape, then remove the lock.
