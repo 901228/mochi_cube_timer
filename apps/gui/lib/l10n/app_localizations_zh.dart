@@ -591,11 +591,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String timerAlertFirst(int seconds) {
-    return '$seconds秒！';
+    return '$seconds秒!';
   }
 
   @override
   String timerAlertSecond(int seconds) {
-    return '$seconds秒！！';
+    return '$seconds秒!!';
   }
 }

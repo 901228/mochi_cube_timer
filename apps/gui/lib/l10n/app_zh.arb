@@ -199,8 +199,8 @@
   "puzzlePyraminx": "金字塔",
   "puzzleSkewb": "斜轉",
   "puzzleSquare1": "Square-1",
-  "timerAlertFirst": "{seconds}秒！",
+  "timerAlertFirst": "{seconds}秒!",
   "@timerAlertFirst": {"placeholders": {"seconds": {"type": "int"}}},
-  "timerAlertSecond": "{seconds}秒！！",
+  "timerAlertSecond": "{seconds}秒!!",
   "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}}
 }
