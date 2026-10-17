@@ -48,7 +48,7 @@ class AboutSettingsSections extends StatelessWidget {
             child: Center(child: MochiCircularProgress()),
           ),
           final licenses => SingleChildScrollView(
-            child: Column(
+            child: MochiTileGroup(
               children: [
                 for (final MapEntry(:key, :value) in licenses.entries)
                   SettingsTile(

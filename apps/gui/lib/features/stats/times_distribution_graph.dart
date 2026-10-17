@@ -4,6 +4,7 @@ import "package:fl_chart/fl_chart.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "stats_common.dart";
+import "../../l10n/l10n.dart";
 
 class TimesDistributionGraph extends StatelessWidget {
   final StatsReturn? data;
@@ -30,7 +31,7 @@ class TimesDistributionGraph extends StatelessWidget {
     if (d == null) {
       return AspectRatio(
         aspectRatio: aspectRatio,
-        child: Center(child: Text(data == null ? "" : "Not enough solves yet", style: small)),
+        child: Center(child: Text(data == null ? "" : context.l10n.statsNotEnough, style: small)),
       );
     }
 
@@ -138,7 +139,7 @@ class TimesDistributionGraph extends StatelessWidget {
                   dash: 8,
                   gap: 8,
                   spacing: 2,
-                  label: "Median ${(d.median / 1000).toStringAsFixed(2)}",
+                  label: context.l10n.statsMedian((d.median / 1000).toStringAsFixed(2)),
                   labelStyle: small.copyWith(fontWeight: .bold),
                 ),
               ),

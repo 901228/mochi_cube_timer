@@ -6,6 +6,7 @@ import "package:mochi_ui/mochi_ui/widgets.dart";
 
 import "../../theme.dart";
 import "../puzzles.dart";
+import "../../l10n/l10n.dart";
 
 /// Open the scramble viewer over the current page.
 ///
@@ -27,8 +28,8 @@ Future<void> showScrambleModal(
     .sheet => showMochiSheet(
       context,
       builder: (context) => MochiSheet(
-        title: const Text("Scramble"),
-        semanticLabel: "Scramble",
+        title: Text(context.l10n.commonScramble),
+        semanticLabel: context.l10n.commonScramble,
         safeEdge: false,
         child: content,
       ),
@@ -61,7 +62,11 @@ Future<void> _showScrambleDialog(BuildContext context, Widget content) {
       transitionDuration: theme.motion.transitionDuration,
       reverseTransitionDuration: theme.motion.transitionReverseDuration,
       pageBuilder: (context, _, _) => Center(
-        child: MochiDialog(title: const Text("Scramble"), semanticLabel: "Scramble", body: content),
+        child: MochiDialog(
+          title: Text(context.l10n.commonScramble),
+          semanticLabel: context.l10n.commonScramble,
+          body: content,
+        ),
       ),
       transitionsBuilder: (context, animation, _, child) =>
           MochiSurfaceTransition(animation: animation, transition: .fade, scrim: false, child: child),

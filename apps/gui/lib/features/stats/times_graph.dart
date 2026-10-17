@@ -6,6 +6,7 @@ import "package:fl_chart/fl_chart.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "stats_common.dart";
+import "../../l10n/l10n.dart";
 
 class TimesGraph extends StatefulWidget {
   final StatsReturn? data;
@@ -59,7 +60,7 @@ class _TimesGraphState extends State<TimesGraph> with SingleTickerProviderStateM
         aspectRatio: widget.aspectRatio,
         child: Center(
           child: Text(
-            widget.data == null ? "" : "There is no solve yet",
+            widget.data == null ? "" : context.l10n.statsNoSolves,
             style: context.theme.typography.body.sm.copyWith(color: c.mutedForeground),
           ),
         ),

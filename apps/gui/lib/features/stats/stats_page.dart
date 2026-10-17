@@ -10,6 +10,7 @@ import "../../theme.dart";
 import "stats_common.dart";
 import "times_distribution_graph.dart";
 import "times_graph.dart";
+import "../../l10n/l10n.dart";
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -159,7 +160,7 @@ class _StatsPageState extends State<_StatsPage> {
         final data = snapshot.data;
 
         final currentStats = _card(
-          title: "Current Stats",
+          title: context.l10n.statsCurrent,
           child: Column(
             mainAxisAlignment: .spaceAround,
             children: [
@@ -172,7 +173,7 @@ class _StatsPageState extends State<_StatsPage> {
           ),
         );
         final solveCount = _card(
-          title: "Solve Count",
+          title: context.l10n.statsSolveCount,
           child: _number(
             "count",
             data?.summary.count.toDouble(),
@@ -180,21 +181,24 @@ class _StatsPageState extends State<_StatsPage> {
             format: (v) => v.round().toString(),
           ),
         );
-        final solveMean = _card(title: "Solve Mean", child: _summaryText("mean", data?.summary.mean));
+        final solveMean = _card(
+          title: context.l10n.statsSolveMean,
+          child: _summaryText("mean", data?.summary.mean),
+        );
         final solveDeviation = _card(
-          title: "Solve Deviation",
+          title: context.l10n.statsSolveDeviation,
           child: _summaryText("deviation", data?.summary.deviation),
         );
         final bestSingle = MochiCard(
           elevation: .md,
           color: colors.primary.base,
           padding: .all(geometry.space.sm),
-          title: Text("Best Single", style: TextStyle(color: colors.primary.soft)),
+          title: Text(context.l10n.statsBestSingle, style: TextStyle(color: colors.primary.soft)),
           titleGap: 0,
           child: _summaryText("best", data?.summary.best, color: colors.primary.onBase),
         );
         final bestStats = _card(
-          title: "Best Stats",
+          title: context.l10n.statsBestStats,
           child: Column(
             mainAxisAlignment: .spaceAround,
             children: [
@@ -206,7 +210,7 @@ class _StatsPageState extends State<_StatsPage> {
         );
         final bestAo5Data = data?.times.bestAoWithList(5);
         final bestAo5 = _card(
-          title: "Best Ao5",
+          title: context.l10n.statsBestAo5,
           child: bestAo5Data == null
               ? Center(child: _summaryText("best ao5", null))
               : Column(
@@ -249,7 +253,7 @@ class _StatsPageState extends State<_StatsPage> {
                     ],
                   ),
                 ),
-                MochiCard(elevation: .md, title: const Text("Solve Times"), child: TimesGraph(data)),
+                MochiCard(elevation: .md, title: Text(context.l10n.statsSolveTimes), child: TimesGraph(data)),
                 IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: .stretch,
@@ -264,7 +268,7 @@ class _StatsPageState extends State<_StatsPage> {
                 ),
                 MochiCard(
                   elevation: .md,
-                  title: const Text("Time Distribution"),
+                  title: Text(context.l10n.statsDistribution),
                   child: TimesDistributionGraph(data),
                 ),
               ],

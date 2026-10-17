@@ -5,24 +5,25 @@ import "package:mochi_ui/mochi_ui.dart";
 
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
+import "../../l10n/l10n.dart";
 
 Future<void> showSessionSelectionDialog(BuildContext context, {required String sessionId}) async {
   final creating = ValueNotifier(false);
 
   await showMochiModal(
     context,
-    title: const Text("Select a session"),
+    title: Text(context.l10n.sessionSelect),
     titleSuffix: MochiActionBar([
       MochiAction(
         icon: TablerIcons.stackPlus,
-        label: "Create new session",
+        label: context.l10n.sessionCreate,
         onPress: () {
           creating.value = true;
         },
       ),
       MochiAction(
         icon: TablerIcons.packageImport,
-        label: "Import to new session",
+        label: context.l10n.sessionImport,
         onPress: () => importRecords(context),
       ),
     ]),
@@ -125,8 +126,12 @@ class _SessionNameEditTileState extends State<_SessionNameEditTile> {
           mainAxisSize: .min,
           spacing: 8,
           children: [
-            MochiButton(appearance: .outlined, onPress: widget.onCancel, child: const Text("Cancel")),
-            MochiButton(child: const Text("Save"), onPress: () => widget.onSave(_controller.text)),
+            MochiButton(
+              appearance: .outlined,
+              onPress: widget.onCancel,
+              child: Text(context.l10n.commonCancel),
+            ),
+            MochiButton(child: Text(context.l10n.commonSave), onPress: () => widget.onSave(_controller.text)),
           ],
         ),
       ),
@@ -159,7 +164,7 @@ class _SessionTileState extends State<_SessionTile> {
     return [
       MochiMenuItem(
         prefix: const Icon(TablerIcons.edit),
-        title: const Text("Rename"),
+        title: Text(context.l10n.commonRename),
         onPress: () {
           setState(() {
             _isEditing = true;
@@ -168,7 +173,7 @@ class _SessionTileState extends State<_SessionTile> {
       ),
       MochiMenuItem(
         prefix: const Icon(TablerIcons.packageExport),
-        title: const Text("Export"),
+        title: Text(context.l10n.commonExport),
         onPress: () => exportRecords(context, widget.session),
       ),
       MochiMenuDivider(),
@@ -176,13 +181,13 @@ class _SessionTileState extends State<_SessionTile> {
         intent: .danger,
         enabled: widget.session.id != kDefaultSessionId,
         prefix: Icon(TablerIcons.trash),
-        title: const Text("Delete"),
+        title: Text(context.l10n.commonDelete),
         onPress: () async {
           final answer = await showMochiConfirm(
             context,
-            title: "Delete session?",
-            message: 'All solves in "${widget.session.name}" will be permanently deleted.',
-            confirmLabel: "Delete",
+            title: context.l10n.sessionDeleteTitle,
+            message: context.l10n.sessionDeleteMessage(widget.session.name),
+            confirmLabel: context.l10n.commonDelete,
             destructive: true,
           );
           if (answer) {

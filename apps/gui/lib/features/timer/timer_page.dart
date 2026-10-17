@@ -3,6 +3,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../database/dao_provider.dart";
+import "../../l10n/l10n.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
@@ -11,7 +12,6 @@ import "alert.dart";
 import "scramble_cubit.dart";
 import "timer_body.dart";
 import "timer_focus.dart";
-import "../../l10n/l10n.dart";
 
 class TimerPage extends StatelessWidget {
   const TimerPage({super.key});
@@ -235,6 +235,7 @@ class _TimerViewState extends State<_TimerView> {
                     size: .sm,
                     intent: .neutral,
                     icon: Icon(TablerIcons.squarePlus),
+                    tooltip: context.l10n.searchAddRecord,
                     onPress: () async {
                       final answer = await showAddRecordModal(context);
                       if (answer == null) return;

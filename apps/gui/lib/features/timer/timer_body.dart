@@ -211,11 +211,11 @@ class InspectionText extends StatelessWidget {
 
     return TimerText(
       time: Text(displayText),
-      hint: Text("INSPECTION", style: hintTextStyle.copyWith(color: hintTextColor)),
+      hint: Text(context.l10n.timerInspectionHint, style: hintTextStyle.copyWith(color: hintTextColor)),
       rightHint: !alertText
           ? null
           : seconds <= 0
-          ? Text("GO!", style: alertTextStyle)
+          ? Text(context.l10n.timerGo, style: alertTextStyle)
           : elapsedSeconds == firstAlertTime.inSeconds
           ? Text("${firstAlertTime.inSeconds}s!", style: alertTextStyle)
           : elapsedSeconds == secondAlertTime.inSeconds
