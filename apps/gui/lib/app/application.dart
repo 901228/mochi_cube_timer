@@ -9,18 +9,8 @@ import "router.dart";
 class Application extends StatelessWidget {
   const new({super.key});
 
-  // The kit's faces with the flags last: no system font can be counted on to draw them (Linux and
-  // Windows ones often draw "TW"), and a font tried before the system's is the only way to be sure.
-  // Built once, as MochiTheme compares by identity.
-  static final _typography = MochiTypography(
-    title: MochiTypeface(fontFamily: "Comfortaa", fontFamilyFallback: _fallback, weight: FontWeight.w700),
-    body: MochiTypeface(fontFamily: "Comfortaa", fontFamilyFallback: _fallback),
-  );
-  static const _fallback = ["FakePearl", "TwemojiFlags"];
-
   MochiTheme _customTheme(MochiTheme base, Brightness brightness, int? primary) => base.copyWith(
     colors: primary == null ? null : MochiColors.branded(brightness: brightness, primary: Color(primary)),
-    typography: _typography,
     extensions: [TimerTypography.standard],
     defaults: MochiDefaults(transition: .slide),
   );

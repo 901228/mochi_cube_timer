@@ -1,19 +1,11 @@
 import "dart:async";
 
-import "package:flutter/foundation.dart" show LicenseEntryWithLineBreaks, LicenseRegistry;
-import "package:flutter/services.dart" show rootBundle;
+import "package:flutter/foundation.dart" show LicenseRegistry;
 import "package:mochi_ui/mochi_ui.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
 import "../../../l10n/l10n.dart";
 import "../settings_tile.dart";
-
-/// Puts the licenses of what is bundled beyond Dart packages where [LicenseRegistry] can list them.
-void registerLicenses() => LicenseRegistry.addLicense(() async* {
-  yield LicenseEntryWithLineBreaks([
-    "Twemoji flags (font)",
-  ], await rootBundle.loadString("assets/fonts/TwemojiFlags/LICENSE.md"));
-});
 
 class AboutSettingsSections extends StatelessWidget {
   const AboutSettingsSections({super.key});
@@ -92,7 +84,6 @@ class AboutSettingsSections extends StatelessWidget {
         MochiTileGroup(
           label: Text(l10n.aboutCredits),
           children: [
-            SettingsTile(title: l10n.aboutFlagsCredit),
             SettingsTile(
               title: l10n.aboutLicenses,
               suffix: Icon(TablerIcons.chevronRight),

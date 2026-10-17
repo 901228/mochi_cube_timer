@@ -100,7 +100,6 @@ flutter:
     - assets/tables/
     - assets/cube_icons/
     - assets/icon/
-    - assets/fonts/TwemojiFlags/LICENSE.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -121,10 +120,6 @@ flutter:
           weight: 600
         - asset: assets/fonts/Comfortaa/Comfortaa-Bold.ttf
           weight: 700
-    # Flags only, cut from Twemoji Mozilla (CC-BY 4.0), see assets/fonts/TwemojiFlags/LICENSE.md.
-    - family: TwemojiFlags
-      fonts:
-        - asset: assets/fonts/TwemojiFlags/TwemojiFlags.ttf
     - family: NotoSansTC
       fonts:
         - asset: assets/fonts/NotoSansTC/NotoSansTC-Regular.ttf
