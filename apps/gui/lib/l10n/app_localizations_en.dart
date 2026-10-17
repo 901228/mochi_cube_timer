@@ -58,9 +58,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutCredits => 'Credits';
 
   @override
-  String get aboutFlagsCredit => 'Flag emoji: Twemoji, CC-BY 4.0';
-
-  @override
   String get aboutLicenses => 'Open source licenses';
 
   @override
@@ -591,4 +588,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get puzzleSquare1 => 'Square-1';
+
+  @override
+  String timerAlertFirst(int seconds) {
+    return '${seconds}s!';
+  }
+
+  @override
+  String timerAlertSecond(int seconds) {
+    return '${seconds}s!!';
+  }
 }

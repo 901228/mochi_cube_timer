@@ -58,9 +58,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get aboutCredits => '致謝';
 
   @override
-  String get aboutFlagsCredit => '國旗 emoji：Twemoji，CC-BY 4.0';
-
-  @override
   String get aboutLicenses => '開放原始碼授權';
 
   @override
@@ -591,4 +588,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get puzzleSquare1 => 'Square-1';
+
+  @override
+  String timerAlertFirst(int seconds) {
+    return '$seconds 秒！';
+  }
+
+  @override
+  String timerAlertSecond(int seconds) {
+    return '$seconds 秒！！';
+  }
 }

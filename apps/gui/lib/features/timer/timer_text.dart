@@ -28,7 +28,9 @@ class TimerText extends StatelessWidget {
         if (rightHint != null)
           LayoutId(
             id: TimerTextLayoutDelegate.rightHintId,
-            child: IgnorePointer(child: rightHint!),
+            child: IgnorePointer(
+              child: FittedBox(fit: BoxFit.scaleDown, child: rightHint!),
+            ),
           ),
       ],
     );

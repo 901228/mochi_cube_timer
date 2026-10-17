@@ -19,6 +19,7 @@ class PuzzleSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: .zero,
       itemCount: Puzzle.values.length,
       // mainAxisExtent sets the cell height outright. Without it the

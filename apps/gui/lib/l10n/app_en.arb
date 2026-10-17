@@ -16,7 +16,6 @@
   "settingsAbout": "About",
   "aboutVersion": "Version",
   "aboutCredits": "Credits",
-  "aboutFlagsCredit": "Flag emoji: Twemoji, CC-BY 4.0",
   "aboutLicenses": "Open source licenses",
   "commonCancel": "Cancel",
   "commonSubmit": "Submit",
@@ -199,5 +198,9 @@
   "puzzleMegaminx": "Megaminx",
   "puzzlePyraminx": "Pyraminx",
   "puzzleSkewb": "Skewb",
-  "puzzleSquare1": "Square-1"
+  "puzzleSquare1": "Square-1",
+  "timerAlertFirst": "{seconds}s!",
+  "@timerAlertFirst": {"placeholders": {"seconds": {"type": "int"}}},
+  "timerAlertSecond": "{seconds}s!!",
+  "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}}
 }

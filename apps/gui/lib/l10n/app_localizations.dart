@@ -188,12 +188,6 @@ abstract class AppLocalizations {
   /// **'Credits'**
   String get aboutCredits;
 
-  /// No description provided for @aboutFlagsCredit.
-  ///
-  /// In en, this message translates to:
-  /// **'Flag emoji: Twemoji, CC-BY 4.0'**
-  String get aboutFlagsCredit;
-
   /// No description provided for @aboutLicenses.
   ///
   /// In en, this message translates to:
@@ -1189,6 +1183,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Square-1'**
   String get puzzleSquare1;
+
+  /// No description provided for @timerAlertFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s!'**
+  String timerAlertFirst(int seconds);
+
+  /// No description provided for @timerAlertSecond.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s!!'**
+  String timerAlertSecond(int seconds);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

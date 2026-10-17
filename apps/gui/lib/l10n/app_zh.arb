@@ -16,7 +16,6 @@
   "settingsAbout": "關於",
   "aboutVersion": "版本",
   "aboutCredits": "致謝",
-  "aboutFlagsCredit": "國旗 emoji：Twemoji，CC-BY 4.0",
   "aboutLicenses": "開放原始碼授權",
   "commonCancel": "取消",
   "commonSubmit": "確定",
@@ -199,5 +198,9 @@
   "puzzleMegaminx": "五魔方",
   "puzzlePyraminx": "金字塔",
   "puzzleSkewb": "斜轉",
-  "puzzleSquare1": "Square-1"
+  "puzzleSquare1": "Square-1",
+  "timerAlertFirst": "{seconds} 秒！",
+  "@timerAlertFirst": {"placeholders": {"seconds": {"type": "int"}}},
+  "timerAlertSecond": "{seconds} 秒！！",
+  "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}}
 }

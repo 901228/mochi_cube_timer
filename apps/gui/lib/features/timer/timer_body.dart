@@ -217,9 +217,9 @@ class InspectionText extends StatelessWidget {
           : seconds <= 0
           ? Text(context.l10n.timerGo, style: alertTextStyle)
           : elapsedSeconds == firstAlertTime.inSeconds
-          ? Text("${firstAlertTime.inSeconds}s!", style: alertTextStyle)
+          ? Text(context.l10n.timerAlertFirst(firstAlertTime.inSeconds), style: alertTextStyle)
           : elapsedSeconds == secondAlertTime.inSeconds
-          ? Text("${secondAlertTime.inSeconds}s!!", style: alertTextStyle)
+          ? Text(context.l10n.timerAlertSecond(secondAlertTime.inSeconds), style: alertTextStyle)
           : null,
     );
   }
