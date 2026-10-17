@@ -37,7 +37,6 @@ void main() {
   // worst on the web. We ship them built on every platform instead; awaiting an
   // asset leaves the frame free, and a file we do not have, or one with the wrong
   // version, falls back to building as before.
-
   useTableBytesLoader((name) async {
     try {
       final data = await rootBundle.load("assets/tables/$name");
