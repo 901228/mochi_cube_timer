@@ -2,6 +2,7 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:cube_timer/src/database/tables/converters.dart";
 import "package:drift/drift.dart";
+import "package:drift/native.dart";
 import "package:drift_dev/api/migrations_native.dart";
 import "package:test/test.dart";
 
@@ -11,6 +12,7 @@ import "generated/schema_v2.dart" as v2;
 import "generated/schema_v3.dart" as v3;
 import "generated/schema_v4.dart" as v4;
 import "generated/schema_v5.dart" as v5;
+import "generated/schema_v6.dart" as v6;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -349,6 +351,56 @@ void main() {
         ]);
       },
     );
+  });
+
+  test("v5 to v6 keeps the settings, the old default alert types among them", () async {
+    const old = v5.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "text,vibration",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      recordAverageAlert: 0,
+      locale: "zh_TW",
+      themeMode: "dark",
+      primaryColor: 15,
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 5,
+      newVersion: 6,
+      createOld: v5.DatabaseAtV5.new,
+      createNew: v6.DatabaseAtV6.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        // Same columns in both versions, so the rows compare as JSON.
+        expect((await newDb.select(newDb.settings).get()).map((e) => e.toJson()), [old.toJson()]);
+      },
+    );
+  });
+
+  test("a new database gives every kind of alert", () async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    expect((await db.settingsDao.watch().first).alertTypes, AlertType.values.toSet());
   });
 
   test("the alert types read back as stored, ignoring names no longer in the enum", () {

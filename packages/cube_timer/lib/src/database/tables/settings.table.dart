@@ -22,7 +22,7 @@ class Settings extends Table {
 
   /// how the alert is given
   TextColumn get alertTypes =>
-      text().map(const AlertTypesConverter()).withDefault(const Constant("text,vibration"))();
+      text().map(const AlertTypesConverter()).withDefault(const Constant("text,audio,vibration"))();
 
   /// whether a new best solve of the session is announced
   BoolColumn get recordBestAlert => boolean().withDefault(const Constant(true))();

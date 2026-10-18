@@ -68,7 +68,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant("text,vibration"),
+    defaultValue: const Constant("text,audio,vibration"),
   ).withConverter<Set<AlertType>>($SettingsTable.$converteralertTypes);
   static const VerificationMeta _recordBestAlertMeta = const VerificationMeta(
     'recordBestAlert',
