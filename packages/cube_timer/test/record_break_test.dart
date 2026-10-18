@@ -95,6 +95,7 @@ void main() {
     expect(extremes, (solved: 5, best: 9000, worst: 13000));
     expect(extremes.breakBy(8500, .none), (kind: RecordBreakKind.best, by: 500));
 
+    expect(await db.recordsDao.watchBest(kDefaultSessionId, .cube3).first, 9000);
     expect(await db.recordsDao.watchTimes(kDefaultSessionId, .cube3).first, isEmpty);
     expect(
       await db.recordsDao.watchTimes(kDefaultSessionId, .cube3, includeArchived: true).first,

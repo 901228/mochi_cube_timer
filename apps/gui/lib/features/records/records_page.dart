@@ -36,11 +36,11 @@ class _RecordsPageState extends State<_RecordsPage> {
   RecordQuery _query = const RecordQuery();
   late Stream<List<RecordEntry>> _stream;
 
-  /// For the best solve to be marked, whatever the query shows.
-  late Stream<SessionSummary> _summary;
+  /// For the personal best to be marked, whatever the query or the tab shows.
+  late Stream<int?> _best;
 
-  void _watchSummary() {
-    _summary = recordsDao.watchSummary(widget.session.id, widget.puzzle, showArchived: widget.showArchived);
+  void _watchBest() {
+    _best = recordsDao.watchBest(widget.session.id, widget.puzzle);
   }
 
   void _watchSession() {
@@ -56,7 +56,7 @@ class _RecordsPageState extends State<_RecordsPage> {
   void initState() {
     super.initState();
     _watchSession();
-    _watchSummary();
+    _watchBest();
   }
 
   @override
@@ -66,7 +66,7 @@ class _RecordsPageState extends State<_RecordsPage> {
         oldWidget.puzzle != widget.puzzle ||
         oldWidget.showArchived != widget.showArchived) {
       _watchSession();
-      _watchSummary();
+      _watchBest();
     }
   }
 
@@ -140,9 +140,8 @@ class _RecordsPageState extends State<_RecordsPage> {
                 removeTop: true,
                 child: Expanded(
                   child: StreamBuilder(
-                    stream: _summary,
-                    builder: (context, summary) =>
-                        RecordsList(records: records, best: summary.data?.best?.round()),
+                    stream: _best,
+                    builder: (context, best) => RecordsList(records: records, best: best.data),
                   ),
                 ),
               ),

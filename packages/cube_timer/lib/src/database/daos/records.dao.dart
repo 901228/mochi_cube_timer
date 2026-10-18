@@ -240,6 +240,16 @@ extension RecordsDaoStatistics on RecordsDao {
     return (solved: row.read(count)!, best: row.read(best), worst: row.read(worst));
   }
 
+  /// The best solved time in ms, archived solves included, as [extremes] counts it: the personal best.
+  Stream<int?> watchBest(String session, Puzzle puzzle) {
+    final best = _effective(records).min(filter: records.penalty.equalsValue(Penalty.dnf).not());
+    return (selectOnly(records)
+          ..addColumns([best])
+          ..where(_scope(records, session, puzzle, includeArchived: true)))
+        .watchSingle()
+        .map((r) => r.read(best));
+  }
+
   Stream<SessionSummary> watchSummary(String session, Puzzle puzzle, {bool showArchived = false}) {
     final eff = _effective(records);
     final solved = records.penalty.equalsValue(Penalty.dnf).not();
