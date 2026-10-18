@@ -62,14 +62,14 @@ flutter_native_splash:
   image: assets/icon/icon.png
   color_dark: "#1E1E2E" # mocha base
   image_dark: assets/icon/icon_dark.png
-  android: false
+  android: true
   ios: true
   web: true
 
 flutter_launcher_icons:
   image_path: "assets/icon/icon.png"
 
-  android: false
+  android: true
   min_sdk_android: 21
 
   ios: true
