@@ -69,6 +69,8 @@ class Cube2DView extends StatelessWidget {
                 darkFace: settings.clockColorBack.toColor(),
               ),
             ),
+            // TODO: draw the Square-1; the picker keeps it disabled until then
+            Square1Layout() => throw UnimplementedError("Drawing $puzzle is not implemented yet."),
           },
         ),
       ),
