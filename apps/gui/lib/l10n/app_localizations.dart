@@ -533,7 +533,7 @@ abstract class AppLocalizations {
   /// No description provided for @statDeviation.
   ///
   /// In en, this message translates to:
-  /// **'Deviation'**
+  /// **'SD'**
   String get statDeviation;
 
   /// No description provided for @statMean.

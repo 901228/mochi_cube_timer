@@ -80,7 +80,7 @@
   "timerScrambleHint": "Scramble",
   "timerPreviousScramble": "Previous scramble",
   "timerNextScramble": "Next scramble",
-  "statDeviation": "Deviation",
+  "statDeviation": "SD",
   "statMean": "Mean",
   "statBest": "Best",
   "statCount": "Count",

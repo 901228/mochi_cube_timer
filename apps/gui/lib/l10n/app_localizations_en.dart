@@ -243,7 +243,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerNextScramble => 'Next scramble';
 
   @override
-  String get statDeviation => 'Deviation';
+  String get statDeviation => 'SD';
 
   @override
   String get statMean => 'Mean';
