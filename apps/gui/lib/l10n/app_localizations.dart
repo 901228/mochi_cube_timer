@@ -296,6 +296,24 @@ abstract class AppLocalizations {
   /// **'Choose how the timer will alert you'**
   String get timerAlertTypeHint;
 
+  /// No description provided for @timerDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'Display'**
+  String get timerDisplay;
+
+  /// No description provided for @timerShowRunningTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Show time while timing'**
+  String get timerShowRunningTime;
+
+  /// No description provided for @timerShowRunningTimeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'When off, shows ... until the solve stops'**
+  String get timerShowRunningTimeHint;
+
   /// No description provided for @timerRecords.
   ///
   /// In en, this message translates to:

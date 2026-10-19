@@ -130,7 +130,11 @@ class _TimerBodyState extends State<TimerBody> {
                   ? InspectionText(alertText: alertText)
                   : (state is TimerInitial || state.hold == .armed
                         ? const IgnorePointer(child: Center(child: Text("0.00")))
-                        : RunTimeText(recordBreak: recordBreak, averageBreaks: averageBreaks)),
+                        : RunTimeText(
+                            recordBreak: recordBreak,
+                            averageBreaks: averageBreaks,
+                            showRunningTime: settings.showRunningTime,
+                          )),
             ],
           ),
         );
@@ -225,8 +229,21 @@ class InspectionText extends StatelessWidget {
   }
 }
 
+/// Whether the time is left out of [state]'s readout: while a solve runs and the setting asks for
+/// it. Once the solve stops the time is shown whatever the setting.
+bool hidesTime(TimerState state, {required bool showRunningTime}) =>
+    !showRunningTime && state is TimerRunInProgress;
+
 class RunTimeText extends StatelessWidget {
-  const RunTimeText({super.key, required this.recordBreak, required this.averageBreaks});
+  const RunTimeText({
+    super.key,
+    required this.recordBreak,
+    required this.averageBreaks,
+    required this.showRunningTime,
+  });
+
+  /// Whether the time shows while the solve runs, or `...` stands in for it until it stops.
+  final bool showRunningTime;
 
   final ValueListenable<RecordBreak?> recordBreak;
   final ValueListenable<List<AverageBreak>> averageBreaks;
@@ -301,7 +318,10 @@ class RunTimeText extends StatelessWidget {
       (TimerBloc bloc) => bloc.state is TimerRunComplete && bloc.state.hold == .none,
     );
 
-    final timeText = Text(duration.timerDisplayString(penalty));
+    final hidden = context.select(
+      (TimerBloc bloc) => hidesTime(bloc.state, showRunningTime: showRunningTime),
+    );
+    final timeText = Text(hidden ? "..." : duration.timerDisplayString(penalty));
 
     return TimerText(
       time: penalty == .plus2

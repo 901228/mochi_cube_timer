@@ -114,6 +114,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timerAlertTypeHint => '選擇計時器如何提醒你';
 
   @override
+  String get timerDisplay => '顯示';
+
+  @override
+  String get timerShowRunningTime => '計時時顯示時間';
+
+  @override
+  String get timerShowRunningTimeHint => '關閉時計時中顯示 ...，停止後才顯示時間';
+
+  @override
   String get timerRecords => '最佳成績';
 
   @override

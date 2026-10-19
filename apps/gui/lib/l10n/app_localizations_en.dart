@@ -114,6 +114,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerAlertTypeHint => 'Choose how the timer will alert you';
 
   @override
+  String get timerDisplay => 'Display';
+
+  @override
+  String get timerShowRunningTime => 'Show time while timing';
+
+  @override
+  String get timerShowRunningTimeHint => 'When off, shows ... until the solve stops';
+
+  @override
   String get timerRecords => 'Records';
 
   @override

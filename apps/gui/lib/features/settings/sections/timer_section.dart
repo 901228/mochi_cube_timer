@@ -114,6 +114,17 @@ class TimerSettingsSections extends StatelessWidget {
         ),
 
         MochiTileGroup(
+          label: Text(l10n.timerDisplay),
+          children: [
+            SettingsTile(
+              title: l10n.timerShowRunningTime,
+              subtitle: l10n.timerShowRunningTimeHint,
+              suffix: MochiSwitch(value: settings.showRunningTime, onChanged: dao.setShowRunningTime),
+            ),
+          ],
+        ),
+
+        MochiTileGroup(
           label: Text(l10n.timerColors),
           children: [
             ColorTile(

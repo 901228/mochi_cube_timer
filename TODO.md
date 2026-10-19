@@ -22,7 +22,7 @@ Plan:
 1. Read the microphone as PCM with the `record` package (stream); add the microphone permission on iOS and Android.
 2. A decoder in `packages/cube_timer`, plain Dart so it can be tested on made-up signals: edge detection, bits to bytes, packet and checksum.
 3. Feed its states to `TimerBloc`: hands on is a press, green light is armed, running starts, stopped records the Stackmat's time.
-4. A "Timer input" setting (Touch / Stackmat): DB v6 with a drift migration, and a migration test.
+4. A "Timer input" setting (Touch / Stackmat): DB v8 with a drift migration, and a migration test.
 
 Estimate: decoder and tests 2h, bloc 2h, setting and permission 1h, then tuning on a phone with a real Stackmat.
 
