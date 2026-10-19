@@ -31,10 +31,10 @@ class PuzzleSelectionDialog extends StatelessWidget {
         crossAxisSpacing: 8,
         mainAxisSpacing: 16,
       ),
-      // HACK: currently the scrambler of `skewb`, `minx`, `fto`, `444` is not completed, so we return null for them.
+      // HACK: currently the scrambler of `skewb`, `minx`, `fto` is not completed, so we return null for them.
       itemBuilder: (context, index) => _PuzzleTile(
         puzzle: Puzzle.values[index],
-        onPress: {"skewb", "minx", "fto", "444"}.contains(Puzzle.values[index].id)
+        onPress: {"skewb", "minx", "fto"}.contains(Puzzle.values[index].id)
             ? null
             : () => _select(context, Puzzle.values[index]),
       ),
