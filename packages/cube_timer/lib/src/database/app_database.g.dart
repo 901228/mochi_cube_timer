@@ -324,6 +324,21 @@ class $SettingsTable extends Settings
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.timerColors.accept),
   );
+  static const VerificationMeta _showRunningTimeMeta = const VerificationMeta(
+    'showRunningTime',
+  );
+  @override
+  late final GeneratedColumn<bool> showRunningTime = GeneratedColumn<bool>(
+    'show_running_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_running_time" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -352,6 +367,7 @@ class $SettingsTable extends Settings
     timerPressedColor,
     timerHoldingColor,
     timerAcceptColor,
+    showRunningTime,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -572,6 +588,15 @@ class $SettingsTable extends Settings
         ),
       );
     }
+    if (data.containsKey('show_running_time')) {
+      context.handle(
+        _showRunningTimeMeta,
+        showRunningTime.isAcceptableOrUnknown(
+          data['show_running_time']!,
+          _showRunningTimeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -689,6 +714,10 @@ class $SettingsTable extends Settings
         DriftSqlType.int,
         data['${effectivePrefix}timer_accept_color'],
       )!,
+      showRunningTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_running_time'],
+      )!,
     );
   }
 
@@ -765,6 +794,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   final int timerPressedColor;
   final int timerHoldingColor;
   final int timerAcceptColor;
+
+  /// whether the time is shown while a solve runs, or only `...` until it stops
+  final bool showRunningTime;
   const SettingsEntry({
     required this.id,
     required this.inspectionEnabled,
@@ -792,6 +824,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.timerPressedColor,
     required this.timerHoldingColor,
     required this.timerAcceptColor,
+    required this.showRunningTime,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -834,6 +867,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['timer_pressed_color'] = Variable<int>(timerPressedColor);
     map['timer_holding_color'] = Variable<int>(timerHoldingColor);
     map['timer_accept_color'] = Variable<int>(timerAcceptColor);
+    map['show_running_time'] = Variable<bool>(showRunningTime);
     return map;
   }
 
@@ -869,6 +903,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       timerPressedColor: Value(timerPressedColor),
       timerHoldingColor: Value(timerHoldingColor),
       timerAcceptColor: Value(timerAcceptColor),
+      showRunningTime: Value(showRunningTime),
     );
   }
 
@@ -906,6 +941,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       timerPressedColor: serializer.fromJson<int>(json['timerPressedColor']),
       timerHoldingColor: serializer.fromJson<int>(json['timerHoldingColor']),
       timerAcceptColor: serializer.fromJson<int>(json['timerAcceptColor']),
+      showRunningTime: serializer.fromJson<bool>(json['showRunningTime']),
     );
   }
   @override
@@ -940,6 +976,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'timerPressedColor': serializer.toJson<int>(timerPressedColor),
       'timerHoldingColor': serializer.toJson<int>(timerHoldingColor),
       'timerAcceptColor': serializer.toJson<int>(timerAcceptColor),
+      'showRunningTime': serializer.toJson<bool>(showRunningTime),
     };
   }
 
@@ -970,6 +1007,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     int? timerPressedColor,
     int? timerHoldingColor,
     int? timerAcceptColor,
+    bool? showRunningTime,
   }) => SettingsEntry(
     id: id ?? this.id,
     inspectionEnabled: inspectionEnabled ?? this.inspectionEnabled,
@@ -997,6 +1035,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     timerPressedColor: timerPressedColor ?? this.timerPressedColor,
     timerHoldingColor: timerHoldingColor ?? this.timerHoldingColor,
     timerAcceptColor: timerAcceptColor ?? this.timerAcceptColor,
+    showRunningTime: showRunningTime ?? this.showRunningTime,
   );
   SettingsEntry copyWithCompanion(SettingsCompanion data) {
     return SettingsEntry(
@@ -1072,6 +1111,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       timerAcceptColor: data.timerAcceptColor.present
           ? data.timerAcceptColor.value
           : this.timerAcceptColor,
+      showRunningTime: data.showRunningTime.present
+          ? data.showRunningTime.value
+          : this.showRunningTime,
     );
   }
 
@@ -1103,7 +1145,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('clockColorBack: $clockColorBack, ')
           ..write('timerPressedColor: $timerPressedColor, ')
           ..write('timerHoldingColor: $timerHoldingColor, ')
-          ..write('timerAcceptColor: $timerAcceptColor')
+          ..write('timerAcceptColor: $timerAcceptColor, ')
+          ..write('showRunningTime: $showRunningTime')
           ..write(')'))
         .toString();
   }
@@ -1136,6 +1179,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     timerPressedColor,
     timerHoldingColor,
     timerAcceptColor,
+    showRunningTime,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -1166,7 +1210,8 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.clockColorBack == this.clockColorBack &&
           other.timerPressedColor == this.timerPressedColor &&
           other.timerHoldingColor == this.timerHoldingColor &&
-          other.timerAcceptColor == this.timerAcceptColor);
+          other.timerAcceptColor == this.timerAcceptColor &&
+          other.showRunningTime == this.showRunningTime);
 }
 
 class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
@@ -1196,6 +1241,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<int> timerPressedColor;
   final Value<int> timerHoldingColor;
   final Value<int> timerAcceptColor;
+  final Value<bool> showRunningTime;
   const SettingsCompanion({
     this.id = const Value.absent(),
     this.inspectionEnabled = const Value.absent(),
@@ -1223,6 +1269,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.timerPressedColor = const Value.absent(),
     this.timerHoldingColor = const Value.absent(),
     this.timerAcceptColor = const Value.absent(),
+    this.showRunningTime = const Value.absent(),
   });
   SettingsCompanion.insert({
     this.id = const Value.absent(),
@@ -1251,6 +1298,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.timerPressedColor = const Value.absent(),
     this.timerHoldingColor = const Value.absent(),
     this.timerAcceptColor = const Value.absent(),
+    this.showRunningTime = const Value.absent(),
   });
   static Insertable<SettingsEntry> custom({
     Expression<int>? id,
@@ -1279,6 +1327,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<int>? timerPressedColor,
     Expression<int>? timerHoldingColor,
     Expression<int>? timerAcceptColor,
+    Expression<bool>? showRunningTime,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1308,6 +1357,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (timerPressedColor != null) 'timer_pressed_color': timerPressedColor,
       if (timerHoldingColor != null) 'timer_holding_color': timerHoldingColor,
       if (timerAcceptColor != null) 'timer_accept_color': timerAcceptColor,
+      if (showRunningTime != null) 'show_running_time': showRunningTime,
     });
   }
 
@@ -1338,6 +1388,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<int>? timerPressedColor,
     Value<int>? timerHoldingColor,
     Value<int>? timerAcceptColor,
+    Value<bool>? showRunningTime,
   }) {
     return SettingsCompanion(
       id: id ?? this.id,
@@ -1366,6 +1417,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       timerPressedColor: timerPressedColor ?? this.timerPressedColor,
       timerHoldingColor: timerHoldingColor ?? this.timerHoldingColor,
       timerAcceptColor: timerAcceptColor ?? this.timerAcceptColor,
+      showRunningTime: showRunningTime ?? this.showRunningTime,
     );
   }
 
@@ -1454,6 +1506,9 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     if (timerAcceptColor.present) {
       map['timer_accept_color'] = Variable<int>(timerAcceptColor.value);
     }
+    if (showRunningTime.present) {
+      map['show_running_time'] = Variable<bool>(showRunningTime.value);
+    }
     return map;
   }
 
@@ -1485,7 +1540,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('clockColorBack: $clockColorBack, ')
           ..write('timerPressedColor: $timerPressedColor, ')
           ..write('timerHoldingColor: $timerHoldingColor, ')
-          ..write('timerAcceptColor: $timerAcceptColor')
+          ..write('timerAcceptColor: $timerAcceptColor, ')
+          ..write('showRunningTime: $showRunningTime')
           ..write(')'))
         .toString();
   }
@@ -2798,6 +2854,7 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<int> timerPressedColor,
   Value<int> timerHoldingColor,
   Value<int> timerAcceptColor,
+  Value<bool> showRunningTime,
 });
 typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> id,
@@ -2826,6 +2883,7 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> timerPressedColor,
   Value<int> timerHoldingColor,
   Value<int> timerAcceptColor,
+  Value<bool> showRunningTime,
 });
 
 class $$SettingsTableFilterComposer
@@ -2968,6 +3026,11 @@ class $$SettingsTableFilterComposer
     column: $table.timerAcceptColor,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<bool> get showRunningTime => $composableBuilder(
+    column: $table.showRunningTime,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$SettingsTableOrderingComposer
@@ -3108,6 +3171,11 @@ class $$SettingsTableOrderingComposer
     column: $table.timerAcceptColor,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get showRunningTime => $composableBuilder(
+    column: $table.showRunningTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SettingsTableAnnotationComposer
@@ -3243,6 +3311,11 @@ class $$SettingsTableAnnotationComposer
     column: $table.timerAcceptColor,
     builder: (column) => column,
   );
+
+  GeneratedColumn<bool> get showRunningTime => $composableBuilder(
+    column: $table.showRunningTime,
+    builder: (column) => column,
+  );
 }
 
 class $$SettingsTableTableManager
@@ -3302,6 +3375,7 @@ class $$SettingsTableTableManager
                 Value<int> timerPressedColor = const Value.absent(),
                 Value<int> timerHoldingColor = const Value.absent(),
                 Value<int> timerAcceptColor = const Value.absent(),
+                Value<bool> showRunningTime = const Value.absent(),
               }) => SettingsCompanion(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
@@ -3329,6 +3403,7 @@ class $$SettingsTableTableManager
                 timerPressedColor: timerPressedColor,
                 timerHoldingColor: timerHoldingColor,
                 timerAcceptColor: timerAcceptColor,
+                showRunningTime: showRunningTime,
               ),
           createCompanionCallback:
               ({
@@ -3358,6 +3433,7 @@ class $$SettingsTableTableManager
                 Value<int> timerPressedColor = const Value.absent(),
                 Value<int> timerHoldingColor = const Value.absent(),
                 Value<int> timerAcceptColor = const Value.absent(),
+                Value<bool> showRunningTime = const Value.absent(),
               }) => SettingsCompanion.insert(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
@@ -3385,6 +3461,7 @@ class $$SettingsTableTableManager
                 timerPressedColor: timerPressedColor,
                 timerHoldingColor: timerHoldingColor,
                 timerAcceptColor: timerAcceptColor,
+                showRunningTime: showRunningTime,
               ),
           withReferenceMapper: (p0) => p0
               .map(

@@ -71,6 +71,9 @@ class Settings extends Table {
   IntColumn get timerHoldingColor => integer().withDefault(Constant(DefaultColors.timerColors.holding))();
   IntColumn get timerAcceptColor => integer().withDefault(Constant(DefaultColors.timerColors.accept))();
 
+  /// whether the time is shown while a solve runs, or only `...` until it stops
+  BoolColumn get showRunningTime => boolean().withDefault(const Constant(true))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

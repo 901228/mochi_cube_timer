@@ -13,6 +13,7 @@ import "generated/schema_v3.dart" as v3;
 import "generated/schema_v4.dart" as v4;
 import "generated/schema_v5.dart" as v5;
 import "generated/schema_v6.dart" as v6;
+import "generated/schema_v7.dart" as v7;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -393,6 +394,52 @@ void main() {
       validateItems: (newDb) async {
         // Same columns in both versions, so the rows compare as JSON.
         expect((await newDb.select(newDb.settings).get()).map((e) => e.toJson()), [old.toJson()]);
+      },
+    );
+  });
+
+  test("v6 to v7 keeps the settings, and shows the running time by default", () async {
+    const old = v6.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "text,vibration",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      recordAverageAlert: 0,
+      locale: "zh_TW",
+      themeMode: "dark",
+      primaryColor: 15,
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 6,
+      newVersion: 7,
+      createOld: v6.DatabaseAtV6.new,
+      createNew: v7.DatabaseAtV7.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        final rows = await newDb.select(newDb.settings).get();
+        expect(rows.map((e) => e.toJson()), [
+          {...old.toJson(), "showRunningTime": 1},
+        ]);
       },
     );
   });
