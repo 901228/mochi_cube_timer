@@ -27,7 +27,7 @@ enum Puzzle {
       values.firstWhere((t) => t.id == id, orElse: () => throw ArgumentError("Unknown puzzle: $id"));
 
   Scrambler get scrambler => puzzleScramblers[id]!;
-  Future<Scramble> getScramble() => scrambler.next();
+  Future<Scramble> getScramble() => scrambler.nextInBackground();
 }
 
 /// The penalty for a solve.
