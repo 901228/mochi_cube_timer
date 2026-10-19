@@ -20,9 +20,13 @@ class TimerText extends StatelessWidget {
             id: TimerTextLayoutDelegate.hintId,
             child: IgnorePointer(child: hint!),
           ),
+        // Scaled down rather than overflowing when the time is longer than the screen is wide: a
+        // time of minutes or hours, or a large text size.
         LayoutId(
           id: TimerTextLayoutDelegate.timeId,
-          child: IgnorePointer(child: time),
+          child: IgnorePointer(
+            child: FittedBox(fit: BoxFit.scaleDown, child: time),
+          ),
         ),
         if (action != null) LayoutId(id: TimerTextLayoutDelegate.actionId, child: action!),
         if (rightHint != null)

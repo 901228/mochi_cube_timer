@@ -29,7 +29,3 @@ Estimate: decoder and tests 2h, bloc 2h, setting and permission 1h, then tuning 
 ## Landscape
 
 Phones are locked to portrait in `main.dart` (`// shortcut:`), because the timer, records and stats were laid out for upright use only. Adapt them to landscape, then remove the lock.
-
-## Timer text can be too long
-
-The time on the timer page has no size limit: a long time (minutes, or a large font size) can overflow the screen's width. Cap its size and scale it down to fit, as the "Go" hint in `timer_text.dart` already does with `FittedBox(fit: BoxFit.scaleDown)`.
