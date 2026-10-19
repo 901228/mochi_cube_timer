@@ -29,3 +29,7 @@ Estimate: decoder and tests 2h, bloc 2h, setting and permission 1h, then tuning 
 ## Landscape
 
 Phones are locked to portrait in `main.dart` (`// shortcut:`), because the timer, records and stats were laid out for upright use only. Adapt them to landscape, then remove the lock.
+
+## Import csTimer and Twisty Timer solves
+
+Read the export files of csTimer and Twisty Timer, as the CSV import (`records_io.dart`) already reads this app's own. First look at a real export of each to see what they hold (times, penalties, scrambles, dates, comments, sessions), and how their puzzles and sessions map onto ours.
