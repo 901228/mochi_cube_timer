@@ -171,7 +171,11 @@ class _ScrambleModalContentState extends State<ScrambleModalContent> {
         spacing: 16,
         children: [
           _moves(context),
-          Cube2DView(puzzle: widget.puzzle, state: _state, settings: widget.settings),
+          // Capped so a tall picture, the stacked Square-1, shrinks to fit rather than overflow.
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.4),
+            child: Cube2DView(puzzle: widget.puzzle, state: _state, settings: widget.settings),
+          ),
         ],
       ),
     ),

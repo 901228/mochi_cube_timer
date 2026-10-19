@@ -6,11 +6,18 @@ import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 import "../utils.dart";
+import "square1_painter.dart";
 
 class Cube2DView extends StatelessWidget {
   static const Curve heroFlightCurve = Curves.fastOutSlowIn;
 
-  const Cube2DView({super.key, required this.puzzle, required this.state, this.settings});
+  const Cube2DView({
+    super.key,
+    required this.puzzle,
+    required this.state,
+    this.settings,
+    this.compact = false,
+  });
 
   final Puzzle puzzle;
 
@@ -19,6 +26,10 @@ class Cube2DView extends StatelessWidget {
   final List<int> state;
 
   final SettingsEntry? settings;
+
+  /// A small picture for the timer page rather than the enlarged one; only the Square-1 differs,
+  /// laying its layers side by side.
+  final bool compact;
 
   List<Color> _colorsFor(Puzzle puzzle, SettingsEntry settings) {
     return switch (puzzle) {
@@ -29,6 +40,16 @@ class Cube2DView extends StatelessWidget {
         settings.cubeColorD.toColor(),
         settings.cubeColorL.toColor(),
         settings.cubeColorB.toColor(),
+      ],
+      // The Square-1 is scrambled with U up and R in front, so what the layout calls the right, front,
+      // left and back are the cube's B, R, F and L: the cube's colours turned a quarter.
+      .sq1 => [
+        settings.cubeColorU.toColor(),
+        settings.cubeColorB.toColor(),
+        settings.cubeColorR.toColor(),
+        settings.cubeColorD.toColor(),
+        settings.cubeColorF.toColor(),
+        settings.cubeColorL.toColor(),
       ],
       // A face is named for the vertex it lacks, and the vertices are numbered as the moves are: U, L, R, B.
       .pyraminx => [
@@ -45,33 +66,42 @@ class Cube2DView extends StatelessWidget {
 
   Widget _cube(SettingsEntry settings) {
     final layout = puzzle.scrambler.layout;
+    final square1 = layout is Square1Layout
+        ? Square1Painter(
+            layout: layout,
+            state: state,
+            colors: _colorsFor(puzzle, settings),
+            horizontal: compact,
+          )
+        : null;
 
     return Hero(
       tag: "cube_2d_view-$puzzle",
       curve: heroFlightCurve,
       child: AspectRatio(
-        aspectRatio: layout.width / layout.height,
+        aspectRatio: square1?.aspectRatio ?? layout.width / layout.height,
         child: CustomPaint(
           isComplex: true,
-          painter: switch (layout) {
-            final PuzzleLayout puzzleLayout => PuzzlePainter(
-              layout: puzzleLayout,
-              state: state,
-              colors: _colorsFor(puzzle, settings),
-              faces: puzzle == .pyraminx ? 4 : 6,
-              inset: 0.06,
-            ),
-            final ClockLayout clockLayout => ClockPainter(
-              layout: clockLayout,
-              state: state,
-              color: ClockPainterColor(
-                lightFace: settings.clockColorFront.toColor(),
-                darkFace: settings.clockColorBack.toColor(),
-              ),
-            ),
-            // TODO: draw the Square-1; the picker keeps it disabled until then
-            Square1Layout() => throw UnimplementedError("Drawing $puzzle is not implemented yet."),
-          },
+          painter:
+              square1 ??
+              switch (layout) {
+                final PuzzleLayout puzzleLayout => PuzzlePainter(
+                  layout: puzzleLayout,
+                  state: state,
+                  colors: _colorsFor(puzzle, settings),
+                  faces: puzzle == .pyraminx ? 4 : 6,
+                  inset: 0.06,
+                ),
+                final ClockLayout clockLayout => ClockPainter(
+                  layout: clockLayout,
+                  state: state,
+                  color: ClockPainterColor(
+                    lightFace: settings.clockColorFront.toColor(),
+                    darkFace: settings.clockColorBack.toColor(),
+                  ),
+                ),
+                Square1Layout() => throw StateError("The Square-1 is drawn by its own painter"),
+              },
         ),
       ),
     );

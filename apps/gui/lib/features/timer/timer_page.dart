@@ -321,6 +321,7 @@ class _TimerViewState extends State<_TimerView> {
                       puzzle: scrambles.puzzle,
                       state: scramble.state,
                       settings: widget.settings,
+                      compact: true,
                     ),
                   ),
                 ),
