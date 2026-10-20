@@ -33,7 +33,7 @@ class Cube2DView extends StatelessWidget {
 
   List<Color> _colorsFor(Puzzle puzzle, SettingsEntry settings) {
     return switch (puzzle) {
-      .cube2 || .cube3 || .cube4 || .cube5 || .cube6 || .cube7 => [
+      .cube2 || .cube3 || .cube4 || .cube5 || .cube6 || .cube7 || .skewb => [
         settings.cubeColorU.toColor(),
         settings.cubeColorR.toColor(),
         settings.cubeColorF.toColor(),
