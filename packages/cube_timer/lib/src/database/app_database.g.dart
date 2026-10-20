@@ -264,6 +264,150 @@ class $SettingsTable extends Settings
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.pyraminxColors.L),
   );
+  static const VerificationMeta _megaminxColorUMeta = const VerificationMeta(
+    'megaminxColorU',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorU = GeneratedColumn<int>(
+    'megaminx_color_u',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.u),
+  );
+  static const VerificationMeta _megaminxColorBLMeta = const VerificationMeta(
+    'megaminxColorBL',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorBL = GeneratedColumn<int>(
+    'megaminx_color_b_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.bl),
+  );
+  static const VerificationMeta _megaminxColorBRMeta = const VerificationMeta(
+    'megaminxColorBR',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorBR = GeneratedColumn<int>(
+    'megaminx_color_b_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.br),
+  );
+  static const VerificationMeta _megaminxColorRMeta = const VerificationMeta(
+    'megaminxColorR',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorR = GeneratedColumn<int>(
+    'megaminx_color_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.r),
+  );
+  static const VerificationMeta _megaminxColorFMeta = const VerificationMeta(
+    'megaminxColorF',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorF = GeneratedColumn<int>(
+    'megaminx_color_f',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.f),
+  );
+  static const VerificationMeta _megaminxColorLMeta = const VerificationMeta(
+    'megaminxColorL',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorL = GeneratedColumn<int>(
+    'megaminx_color_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.l),
+  );
+  static const VerificationMeta _megaminxColorDMeta = const VerificationMeta(
+    'megaminxColorD',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorD = GeneratedColumn<int>(
+    'megaminx_color_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.d),
+  );
+  static const VerificationMeta _megaminxColorDRMeta = const VerificationMeta(
+    'megaminxColorDR',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorDR = GeneratedColumn<int>(
+    'megaminx_color_d_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.dr),
+  );
+  static const VerificationMeta _megaminxColorDBRMeta = const VerificationMeta(
+    'megaminxColorDBR',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorDBR = GeneratedColumn<int>(
+    'megaminx_color_d_b_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.dbr),
+  );
+  static const VerificationMeta _megaminxColorBMeta = const VerificationMeta(
+    'megaminxColorB',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorB = GeneratedColumn<int>(
+    'megaminx_color_b',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.b),
+  );
+  static const VerificationMeta _megaminxColorDBLMeta = const VerificationMeta(
+    'megaminxColorDBL',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorDBL = GeneratedColumn<int>(
+    'megaminx_color_d_b_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.dbl),
+  );
+  static const VerificationMeta _megaminxColorDLMeta = const VerificationMeta(
+    'megaminxColorDL',
+  );
+  @override
+  late final GeneratedColumn<int> megaminxColorDL = GeneratedColumn<int>(
+    'megaminx_color_d_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.megaminxColors.dl),
+  );
   static const VerificationMeta _clockColorFrontMeta = const VerificationMeta(
     'clockColorFront',
   );
@@ -362,6 +506,18 @@ class $SettingsTable extends Settings
     pyraminxColorB,
     pyraminxColorR,
     pyraminxColorL,
+    megaminxColorU,
+    megaminxColorBL,
+    megaminxColorBR,
+    megaminxColorR,
+    megaminxColorF,
+    megaminxColorL,
+    megaminxColorD,
+    megaminxColorDR,
+    megaminxColorDBR,
+    megaminxColorB,
+    megaminxColorDBL,
+    megaminxColorDL,
     clockColorFront,
     clockColorBack,
     timerPressedColor,
@@ -543,6 +699,114 @@ class $SettingsTable extends Settings
         ),
       );
     }
+    if (data.containsKey('megaminx_color_u')) {
+      context.handle(
+        _megaminxColorUMeta,
+        megaminxColorU.isAcceptableOrUnknown(
+          data['megaminx_color_u']!,
+          _megaminxColorUMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_b_l')) {
+      context.handle(
+        _megaminxColorBLMeta,
+        megaminxColorBL.isAcceptableOrUnknown(
+          data['megaminx_color_b_l']!,
+          _megaminxColorBLMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_b_r')) {
+      context.handle(
+        _megaminxColorBRMeta,
+        megaminxColorBR.isAcceptableOrUnknown(
+          data['megaminx_color_b_r']!,
+          _megaminxColorBRMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_r')) {
+      context.handle(
+        _megaminxColorRMeta,
+        megaminxColorR.isAcceptableOrUnknown(
+          data['megaminx_color_r']!,
+          _megaminxColorRMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_f')) {
+      context.handle(
+        _megaminxColorFMeta,
+        megaminxColorF.isAcceptableOrUnknown(
+          data['megaminx_color_f']!,
+          _megaminxColorFMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_l')) {
+      context.handle(
+        _megaminxColorLMeta,
+        megaminxColorL.isAcceptableOrUnknown(
+          data['megaminx_color_l']!,
+          _megaminxColorLMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_d')) {
+      context.handle(
+        _megaminxColorDMeta,
+        megaminxColorD.isAcceptableOrUnknown(
+          data['megaminx_color_d']!,
+          _megaminxColorDMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_d_r')) {
+      context.handle(
+        _megaminxColorDRMeta,
+        megaminxColorDR.isAcceptableOrUnknown(
+          data['megaminx_color_d_r']!,
+          _megaminxColorDRMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_d_b_r')) {
+      context.handle(
+        _megaminxColorDBRMeta,
+        megaminxColorDBR.isAcceptableOrUnknown(
+          data['megaminx_color_d_b_r']!,
+          _megaminxColorDBRMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_b')) {
+      context.handle(
+        _megaminxColorBMeta,
+        megaminxColorB.isAcceptableOrUnknown(
+          data['megaminx_color_b']!,
+          _megaminxColorBMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_d_b_l')) {
+      context.handle(
+        _megaminxColorDBLMeta,
+        megaminxColorDBL.isAcceptableOrUnknown(
+          data['megaminx_color_d_b_l']!,
+          _megaminxColorDBLMeta,
+        ),
+      );
+    }
+    if (data.containsKey('megaminx_color_d_l')) {
+      context.handle(
+        _megaminxColorDLMeta,
+        megaminxColorDL.isAcceptableOrUnknown(
+          data['megaminx_color_d_l']!,
+          _megaminxColorDLMeta,
+        ),
+      );
+    }
     if (data.containsKey('clock_color_front')) {
       context.handle(
         _clockColorFrontMeta,
@@ -694,6 +958,54 @@ class $SettingsTable extends Settings
         DriftSqlType.int,
         data['${effectivePrefix}pyraminx_color_l'],
       )!,
+      megaminxColorU: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_u'],
+      )!,
+      megaminxColorBL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_b_l'],
+      )!,
+      megaminxColorBR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_b_r'],
+      )!,
+      megaminxColorR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_r'],
+      )!,
+      megaminxColorF: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_f'],
+      )!,
+      megaminxColorL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_l'],
+      )!,
+      megaminxColorD: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_d'],
+      )!,
+      megaminxColorDR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_d_r'],
+      )!,
+      megaminxColorDBR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_d_b_r'],
+      )!,
+      megaminxColorB: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_b'],
+      )!,
+      megaminxColorDBL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_d_b_l'],
+      )!,
+      megaminxColorDL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}megaminx_color_d_l'],
+      )!,
       clockColorFront: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}clock_color_front'],
@@ -786,6 +1098,20 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   final int pyraminxColorR;
   final int pyraminxColorL;
 
+  /// megaminx colors, one per face
+  final int megaminxColorU;
+  final int megaminxColorBL;
+  final int megaminxColorBR;
+  final int megaminxColorR;
+  final int megaminxColorF;
+  final int megaminxColorL;
+  final int megaminxColorD;
+  final int megaminxColorDR;
+  final int megaminxColorDBR;
+  final int megaminxColorB;
+  final int megaminxColorDBL;
+  final int megaminxColorDL;
+
   /// clock colors
   final int clockColorFront;
   final int clockColorBack;
@@ -819,6 +1145,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.pyraminxColorB,
     required this.pyraminxColorR,
     required this.pyraminxColorL,
+    required this.megaminxColorU,
+    required this.megaminxColorBL,
+    required this.megaminxColorBR,
+    required this.megaminxColorR,
+    required this.megaminxColorF,
+    required this.megaminxColorL,
+    required this.megaminxColorD,
+    required this.megaminxColorDR,
+    required this.megaminxColorDBR,
+    required this.megaminxColorB,
+    required this.megaminxColorDBL,
+    required this.megaminxColorDL,
     required this.clockColorFront,
     required this.clockColorBack,
     required this.timerPressedColor,
@@ -862,6 +1200,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['pyraminx_color_b'] = Variable<int>(pyraminxColorB);
     map['pyraminx_color_r'] = Variable<int>(pyraminxColorR);
     map['pyraminx_color_l'] = Variable<int>(pyraminxColorL);
+    map['megaminx_color_u'] = Variable<int>(megaminxColorU);
+    map['megaminx_color_b_l'] = Variable<int>(megaminxColorBL);
+    map['megaminx_color_b_r'] = Variable<int>(megaminxColorBR);
+    map['megaminx_color_r'] = Variable<int>(megaminxColorR);
+    map['megaminx_color_f'] = Variable<int>(megaminxColorF);
+    map['megaminx_color_l'] = Variable<int>(megaminxColorL);
+    map['megaminx_color_d'] = Variable<int>(megaminxColorD);
+    map['megaminx_color_d_r'] = Variable<int>(megaminxColorDR);
+    map['megaminx_color_d_b_r'] = Variable<int>(megaminxColorDBR);
+    map['megaminx_color_b'] = Variable<int>(megaminxColorB);
+    map['megaminx_color_d_b_l'] = Variable<int>(megaminxColorDBL);
+    map['megaminx_color_d_l'] = Variable<int>(megaminxColorDL);
     map['clock_color_front'] = Variable<int>(clockColorFront);
     map['clock_color_back'] = Variable<int>(clockColorBack);
     map['timer_pressed_color'] = Variable<int>(timerPressedColor);
@@ -898,6 +1248,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       pyraminxColorB: Value(pyraminxColorB),
       pyraminxColorR: Value(pyraminxColorR),
       pyraminxColorL: Value(pyraminxColorL),
+      megaminxColorU: Value(megaminxColorU),
+      megaminxColorBL: Value(megaminxColorBL),
+      megaminxColorBR: Value(megaminxColorBR),
+      megaminxColorR: Value(megaminxColorR),
+      megaminxColorF: Value(megaminxColorF),
+      megaminxColorL: Value(megaminxColorL),
+      megaminxColorD: Value(megaminxColorD),
+      megaminxColorDR: Value(megaminxColorDR),
+      megaminxColorDBR: Value(megaminxColorDBR),
+      megaminxColorB: Value(megaminxColorB),
+      megaminxColorDBL: Value(megaminxColorDBL),
+      megaminxColorDL: Value(megaminxColorDL),
       clockColorFront: Value(clockColorFront),
       clockColorBack: Value(clockColorBack),
       timerPressedColor: Value(timerPressedColor),
@@ -936,6 +1298,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       pyraminxColorB: serializer.fromJson<int>(json['pyraminxColorB']),
       pyraminxColorR: serializer.fromJson<int>(json['pyraminxColorR']),
       pyraminxColorL: serializer.fromJson<int>(json['pyraminxColorL']),
+      megaminxColorU: serializer.fromJson<int>(json['megaminxColorU']),
+      megaminxColorBL: serializer.fromJson<int>(json['megaminxColorBL']),
+      megaminxColorBR: serializer.fromJson<int>(json['megaminxColorBR']),
+      megaminxColorR: serializer.fromJson<int>(json['megaminxColorR']),
+      megaminxColorF: serializer.fromJson<int>(json['megaminxColorF']),
+      megaminxColorL: serializer.fromJson<int>(json['megaminxColorL']),
+      megaminxColorD: serializer.fromJson<int>(json['megaminxColorD']),
+      megaminxColorDR: serializer.fromJson<int>(json['megaminxColorDR']),
+      megaminxColorDBR: serializer.fromJson<int>(json['megaminxColorDBR']),
+      megaminxColorB: serializer.fromJson<int>(json['megaminxColorB']),
+      megaminxColorDBL: serializer.fromJson<int>(json['megaminxColorDBL']),
+      megaminxColorDL: serializer.fromJson<int>(json['megaminxColorDL']),
       clockColorFront: serializer.fromJson<int>(json['clockColorFront']),
       clockColorBack: serializer.fromJson<int>(json['clockColorBack']),
       timerPressedColor: serializer.fromJson<int>(json['timerPressedColor']),
@@ -971,6 +1345,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'pyraminxColorB': serializer.toJson<int>(pyraminxColorB),
       'pyraminxColorR': serializer.toJson<int>(pyraminxColorR),
       'pyraminxColorL': serializer.toJson<int>(pyraminxColorL),
+      'megaminxColorU': serializer.toJson<int>(megaminxColorU),
+      'megaminxColorBL': serializer.toJson<int>(megaminxColorBL),
+      'megaminxColorBR': serializer.toJson<int>(megaminxColorBR),
+      'megaminxColorR': serializer.toJson<int>(megaminxColorR),
+      'megaminxColorF': serializer.toJson<int>(megaminxColorF),
+      'megaminxColorL': serializer.toJson<int>(megaminxColorL),
+      'megaminxColorD': serializer.toJson<int>(megaminxColorD),
+      'megaminxColorDR': serializer.toJson<int>(megaminxColorDR),
+      'megaminxColorDBR': serializer.toJson<int>(megaminxColorDBR),
+      'megaminxColorB': serializer.toJson<int>(megaminxColorB),
+      'megaminxColorDBL': serializer.toJson<int>(megaminxColorDBL),
+      'megaminxColorDL': serializer.toJson<int>(megaminxColorDL),
       'clockColorFront': serializer.toJson<int>(clockColorFront),
       'clockColorBack': serializer.toJson<int>(clockColorBack),
       'timerPressedColor': serializer.toJson<int>(timerPressedColor),
@@ -1002,6 +1388,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     int? pyraminxColorB,
     int? pyraminxColorR,
     int? pyraminxColorL,
+    int? megaminxColorU,
+    int? megaminxColorBL,
+    int? megaminxColorBR,
+    int? megaminxColorR,
+    int? megaminxColorF,
+    int? megaminxColorL,
+    int? megaminxColorD,
+    int? megaminxColorDR,
+    int? megaminxColorDBR,
+    int? megaminxColorB,
+    int? megaminxColorDBL,
+    int? megaminxColorDL,
     int? clockColorFront,
     int? clockColorBack,
     int? timerPressedColor,
@@ -1030,6 +1428,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     pyraminxColorB: pyraminxColorB ?? this.pyraminxColorB,
     pyraminxColorR: pyraminxColorR ?? this.pyraminxColorR,
     pyraminxColorL: pyraminxColorL ?? this.pyraminxColorL,
+    megaminxColorU: megaminxColorU ?? this.megaminxColorU,
+    megaminxColorBL: megaminxColorBL ?? this.megaminxColorBL,
+    megaminxColorBR: megaminxColorBR ?? this.megaminxColorBR,
+    megaminxColorR: megaminxColorR ?? this.megaminxColorR,
+    megaminxColorF: megaminxColorF ?? this.megaminxColorF,
+    megaminxColorL: megaminxColorL ?? this.megaminxColorL,
+    megaminxColorD: megaminxColorD ?? this.megaminxColorD,
+    megaminxColorDR: megaminxColorDR ?? this.megaminxColorDR,
+    megaminxColorDBR: megaminxColorDBR ?? this.megaminxColorDBR,
+    megaminxColorB: megaminxColorB ?? this.megaminxColorB,
+    megaminxColorDBL: megaminxColorDBL ?? this.megaminxColorDBL,
+    megaminxColorDL: megaminxColorDL ?? this.megaminxColorDL,
     clockColorFront: clockColorFront ?? this.clockColorFront,
     clockColorBack: clockColorBack ?? this.clockColorBack,
     timerPressedColor: timerPressedColor ?? this.timerPressedColor,
@@ -1096,6 +1506,42 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       pyraminxColorL: data.pyraminxColorL.present
           ? data.pyraminxColorL.value
           : this.pyraminxColorL,
+      megaminxColorU: data.megaminxColorU.present
+          ? data.megaminxColorU.value
+          : this.megaminxColorU,
+      megaminxColorBL: data.megaminxColorBL.present
+          ? data.megaminxColorBL.value
+          : this.megaminxColorBL,
+      megaminxColorBR: data.megaminxColorBR.present
+          ? data.megaminxColorBR.value
+          : this.megaminxColorBR,
+      megaminxColorR: data.megaminxColorR.present
+          ? data.megaminxColorR.value
+          : this.megaminxColorR,
+      megaminxColorF: data.megaminxColorF.present
+          ? data.megaminxColorF.value
+          : this.megaminxColorF,
+      megaminxColorL: data.megaminxColorL.present
+          ? data.megaminxColorL.value
+          : this.megaminxColorL,
+      megaminxColorD: data.megaminxColorD.present
+          ? data.megaminxColorD.value
+          : this.megaminxColorD,
+      megaminxColorDR: data.megaminxColorDR.present
+          ? data.megaminxColorDR.value
+          : this.megaminxColorDR,
+      megaminxColorDBR: data.megaminxColorDBR.present
+          ? data.megaminxColorDBR.value
+          : this.megaminxColorDBR,
+      megaminxColorB: data.megaminxColorB.present
+          ? data.megaminxColorB.value
+          : this.megaminxColorB,
+      megaminxColorDBL: data.megaminxColorDBL.present
+          ? data.megaminxColorDBL.value
+          : this.megaminxColorDBL,
+      megaminxColorDL: data.megaminxColorDL.present
+          ? data.megaminxColorDL.value
+          : this.megaminxColorDL,
       clockColorFront: data.clockColorFront.present
           ? data.clockColorFront.value
           : this.clockColorFront,
@@ -1141,6 +1587,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('pyraminxColorB: $pyraminxColorB, ')
           ..write('pyraminxColorR: $pyraminxColorR, ')
           ..write('pyraminxColorL: $pyraminxColorL, ')
+          ..write('megaminxColorU: $megaminxColorU, ')
+          ..write('megaminxColorBL: $megaminxColorBL, ')
+          ..write('megaminxColorBR: $megaminxColorBR, ')
+          ..write('megaminxColorR: $megaminxColorR, ')
+          ..write('megaminxColorF: $megaminxColorF, ')
+          ..write('megaminxColorL: $megaminxColorL, ')
+          ..write('megaminxColorD: $megaminxColorD, ')
+          ..write('megaminxColorDR: $megaminxColorDR, ')
+          ..write('megaminxColorDBR: $megaminxColorDBR, ')
+          ..write('megaminxColorB: $megaminxColorB, ')
+          ..write('megaminxColorDBL: $megaminxColorDBL, ')
+          ..write('megaminxColorDL: $megaminxColorDL, ')
           ..write('clockColorFront: $clockColorFront, ')
           ..write('clockColorBack: $clockColorBack, ')
           ..write('timerPressedColor: $timerPressedColor, ')
@@ -1174,6 +1632,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     pyraminxColorB,
     pyraminxColorR,
     pyraminxColorL,
+    megaminxColorU,
+    megaminxColorBL,
+    megaminxColorBR,
+    megaminxColorR,
+    megaminxColorF,
+    megaminxColorL,
+    megaminxColorD,
+    megaminxColorDR,
+    megaminxColorDBR,
+    megaminxColorB,
+    megaminxColorDBL,
+    megaminxColorDL,
     clockColorFront,
     clockColorBack,
     timerPressedColor,
@@ -1206,6 +1676,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.pyraminxColorB == this.pyraminxColorB &&
           other.pyraminxColorR == this.pyraminxColorR &&
           other.pyraminxColorL == this.pyraminxColorL &&
+          other.megaminxColorU == this.megaminxColorU &&
+          other.megaminxColorBL == this.megaminxColorBL &&
+          other.megaminxColorBR == this.megaminxColorBR &&
+          other.megaminxColorR == this.megaminxColorR &&
+          other.megaminxColorF == this.megaminxColorF &&
+          other.megaminxColorL == this.megaminxColorL &&
+          other.megaminxColorD == this.megaminxColorD &&
+          other.megaminxColorDR == this.megaminxColorDR &&
+          other.megaminxColorDBR == this.megaminxColorDBR &&
+          other.megaminxColorB == this.megaminxColorB &&
+          other.megaminxColorDBL == this.megaminxColorDBL &&
+          other.megaminxColorDL == this.megaminxColorDL &&
           other.clockColorFront == this.clockColorFront &&
           other.clockColorBack == this.clockColorBack &&
           other.timerPressedColor == this.timerPressedColor &&
@@ -1236,6 +1718,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<int> pyraminxColorB;
   final Value<int> pyraminxColorR;
   final Value<int> pyraminxColorL;
+  final Value<int> megaminxColorU;
+  final Value<int> megaminxColorBL;
+  final Value<int> megaminxColorBR;
+  final Value<int> megaminxColorR;
+  final Value<int> megaminxColorF;
+  final Value<int> megaminxColorL;
+  final Value<int> megaminxColorD;
+  final Value<int> megaminxColorDR;
+  final Value<int> megaminxColorDBR;
+  final Value<int> megaminxColorB;
+  final Value<int> megaminxColorDBL;
+  final Value<int> megaminxColorDL;
   final Value<int> clockColorFront;
   final Value<int> clockColorBack;
   final Value<int> timerPressedColor;
@@ -1264,6 +1758,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.pyraminxColorB = const Value.absent(),
     this.pyraminxColorR = const Value.absent(),
     this.pyraminxColorL = const Value.absent(),
+    this.megaminxColorU = const Value.absent(),
+    this.megaminxColorBL = const Value.absent(),
+    this.megaminxColorBR = const Value.absent(),
+    this.megaminxColorR = const Value.absent(),
+    this.megaminxColorF = const Value.absent(),
+    this.megaminxColorL = const Value.absent(),
+    this.megaminxColorD = const Value.absent(),
+    this.megaminxColorDR = const Value.absent(),
+    this.megaminxColorDBR = const Value.absent(),
+    this.megaminxColorB = const Value.absent(),
+    this.megaminxColorDBL = const Value.absent(),
+    this.megaminxColorDL = const Value.absent(),
     this.clockColorFront = const Value.absent(),
     this.clockColorBack = const Value.absent(),
     this.timerPressedColor = const Value.absent(),
@@ -1293,6 +1799,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.pyraminxColorB = const Value.absent(),
     this.pyraminxColorR = const Value.absent(),
     this.pyraminxColorL = const Value.absent(),
+    this.megaminxColorU = const Value.absent(),
+    this.megaminxColorBL = const Value.absent(),
+    this.megaminxColorBR = const Value.absent(),
+    this.megaminxColorR = const Value.absent(),
+    this.megaminxColorF = const Value.absent(),
+    this.megaminxColorL = const Value.absent(),
+    this.megaminxColorD = const Value.absent(),
+    this.megaminxColorDR = const Value.absent(),
+    this.megaminxColorDBR = const Value.absent(),
+    this.megaminxColorB = const Value.absent(),
+    this.megaminxColorDBL = const Value.absent(),
+    this.megaminxColorDL = const Value.absent(),
     this.clockColorFront = const Value.absent(),
     this.clockColorBack = const Value.absent(),
     this.timerPressedColor = const Value.absent(),
@@ -1322,6 +1840,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<int>? pyraminxColorB,
     Expression<int>? pyraminxColorR,
     Expression<int>? pyraminxColorL,
+    Expression<int>? megaminxColorU,
+    Expression<int>? megaminxColorBL,
+    Expression<int>? megaminxColorBR,
+    Expression<int>? megaminxColorR,
+    Expression<int>? megaminxColorF,
+    Expression<int>? megaminxColorL,
+    Expression<int>? megaminxColorD,
+    Expression<int>? megaminxColorDR,
+    Expression<int>? megaminxColorDBR,
+    Expression<int>? megaminxColorB,
+    Expression<int>? megaminxColorDBL,
+    Expression<int>? megaminxColorDL,
     Expression<int>? clockColorFront,
     Expression<int>? clockColorBack,
     Expression<int>? timerPressedColor,
@@ -1352,6 +1882,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (pyraminxColorB != null) 'pyraminx_color_b': pyraminxColorB,
       if (pyraminxColorR != null) 'pyraminx_color_r': pyraminxColorR,
       if (pyraminxColorL != null) 'pyraminx_color_l': pyraminxColorL,
+      if (megaminxColorU != null) 'megaminx_color_u': megaminxColorU,
+      if (megaminxColorBL != null) 'megaminx_color_b_l': megaminxColorBL,
+      if (megaminxColorBR != null) 'megaminx_color_b_r': megaminxColorBR,
+      if (megaminxColorR != null) 'megaminx_color_r': megaminxColorR,
+      if (megaminxColorF != null) 'megaminx_color_f': megaminxColorF,
+      if (megaminxColorL != null) 'megaminx_color_l': megaminxColorL,
+      if (megaminxColorD != null) 'megaminx_color_d': megaminxColorD,
+      if (megaminxColorDR != null) 'megaminx_color_d_r': megaminxColorDR,
+      if (megaminxColorDBR != null) 'megaminx_color_d_b_r': megaminxColorDBR,
+      if (megaminxColorB != null) 'megaminx_color_b': megaminxColorB,
+      if (megaminxColorDBL != null) 'megaminx_color_d_b_l': megaminxColorDBL,
+      if (megaminxColorDL != null) 'megaminx_color_d_l': megaminxColorDL,
       if (clockColorFront != null) 'clock_color_front': clockColorFront,
       if (clockColorBack != null) 'clock_color_back': clockColorBack,
       if (timerPressedColor != null) 'timer_pressed_color': timerPressedColor,
@@ -1383,6 +1925,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<int>? pyraminxColorB,
     Value<int>? pyraminxColorR,
     Value<int>? pyraminxColorL,
+    Value<int>? megaminxColorU,
+    Value<int>? megaminxColorBL,
+    Value<int>? megaminxColorBR,
+    Value<int>? megaminxColorR,
+    Value<int>? megaminxColorF,
+    Value<int>? megaminxColorL,
+    Value<int>? megaminxColorD,
+    Value<int>? megaminxColorDR,
+    Value<int>? megaminxColorDBR,
+    Value<int>? megaminxColorB,
+    Value<int>? megaminxColorDBL,
+    Value<int>? megaminxColorDL,
     Value<int>? clockColorFront,
     Value<int>? clockColorBack,
     Value<int>? timerPressedColor,
@@ -1412,6 +1966,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       pyraminxColorB: pyraminxColorB ?? this.pyraminxColorB,
       pyraminxColorR: pyraminxColorR ?? this.pyraminxColorR,
       pyraminxColorL: pyraminxColorL ?? this.pyraminxColorL,
+      megaminxColorU: megaminxColorU ?? this.megaminxColorU,
+      megaminxColorBL: megaminxColorBL ?? this.megaminxColorBL,
+      megaminxColorBR: megaminxColorBR ?? this.megaminxColorBR,
+      megaminxColorR: megaminxColorR ?? this.megaminxColorR,
+      megaminxColorF: megaminxColorF ?? this.megaminxColorF,
+      megaminxColorL: megaminxColorL ?? this.megaminxColorL,
+      megaminxColorD: megaminxColorD ?? this.megaminxColorD,
+      megaminxColorDR: megaminxColorDR ?? this.megaminxColorDR,
+      megaminxColorDBR: megaminxColorDBR ?? this.megaminxColorDBR,
+      megaminxColorB: megaminxColorB ?? this.megaminxColorB,
+      megaminxColorDBL: megaminxColorDBL ?? this.megaminxColorDBL,
+      megaminxColorDL: megaminxColorDL ?? this.megaminxColorDL,
       clockColorFront: clockColorFront ?? this.clockColorFront,
       clockColorBack: clockColorBack ?? this.clockColorBack,
       timerPressedColor: timerPressedColor ?? this.timerPressedColor,
@@ -1491,6 +2057,42 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     if (pyraminxColorL.present) {
       map['pyraminx_color_l'] = Variable<int>(pyraminxColorL.value);
     }
+    if (megaminxColorU.present) {
+      map['megaminx_color_u'] = Variable<int>(megaminxColorU.value);
+    }
+    if (megaminxColorBL.present) {
+      map['megaminx_color_b_l'] = Variable<int>(megaminxColorBL.value);
+    }
+    if (megaminxColorBR.present) {
+      map['megaminx_color_b_r'] = Variable<int>(megaminxColorBR.value);
+    }
+    if (megaminxColorR.present) {
+      map['megaminx_color_r'] = Variable<int>(megaminxColorR.value);
+    }
+    if (megaminxColorF.present) {
+      map['megaminx_color_f'] = Variable<int>(megaminxColorF.value);
+    }
+    if (megaminxColorL.present) {
+      map['megaminx_color_l'] = Variable<int>(megaminxColorL.value);
+    }
+    if (megaminxColorD.present) {
+      map['megaminx_color_d'] = Variable<int>(megaminxColorD.value);
+    }
+    if (megaminxColorDR.present) {
+      map['megaminx_color_d_r'] = Variable<int>(megaminxColorDR.value);
+    }
+    if (megaminxColorDBR.present) {
+      map['megaminx_color_d_b_r'] = Variable<int>(megaminxColorDBR.value);
+    }
+    if (megaminxColorB.present) {
+      map['megaminx_color_b'] = Variable<int>(megaminxColorB.value);
+    }
+    if (megaminxColorDBL.present) {
+      map['megaminx_color_d_b_l'] = Variable<int>(megaminxColorDBL.value);
+    }
+    if (megaminxColorDL.present) {
+      map['megaminx_color_d_l'] = Variable<int>(megaminxColorDL.value);
+    }
     if (clockColorFront.present) {
       map['clock_color_front'] = Variable<int>(clockColorFront.value);
     }
@@ -1536,6 +2138,18 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('pyraminxColorB: $pyraminxColorB, ')
           ..write('pyraminxColorR: $pyraminxColorR, ')
           ..write('pyraminxColorL: $pyraminxColorL, ')
+          ..write('megaminxColorU: $megaminxColorU, ')
+          ..write('megaminxColorBL: $megaminxColorBL, ')
+          ..write('megaminxColorBR: $megaminxColorBR, ')
+          ..write('megaminxColorR: $megaminxColorR, ')
+          ..write('megaminxColorF: $megaminxColorF, ')
+          ..write('megaminxColorL: $megaminxColorL, ')
+          ..write('megaminxColorD: $megaminxColorD, ')
+          ..write('megaminxColorDR: $megaminxColorDR, ')
+          ..write('megaminxColorDBR: $megaminxColorDBR, ')
+          ..write('megaminxColorB: $megaminxColorB, ')
+          ..write('megaminxColorDBL: $megaminxColorDBL, ')
+          ..write('megaminxColorDL: $megaminxColorDL, ')
           ..write('clockColorFront: $clockColorFront, ')
           ..write('clockColorBack: $clockColorBack, ')
           ..write('timerPressedColor: $timerPressedColor, ')
@@ -2849,6 +3463,18 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<int> pyraminxColorB,
   Value<int> pyraminxColorR,
   Value<int> pyraminxColorL,
+  Value<int> megaminxColorU,
+  Value<int> megaminxColorBL,
+  Value<int> megaminxColorBR,
+  Value<int> megaminxColorR,
+  Value<int> megaminxColorF,
+  Value<int> megaminxColorL,
+  Value<int> megaminxColorD,
+  Value<int> megaminxColorDR,
+  Value<int> megaminxColorDBR,
+  Value<int> megaminxColorB,
+  Value<int> megaminxColorDBL,
+  Value<int> megaminxColorDL,
   Value<int> clockColorFront,
   Value<int> clockColorBack,
   Value<int> timerPressedColor,
@@ -2878,6 +3504,18 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> pyraminxColorB,
   Value<int> pyraminxColorR,
   Value<int> pyraminxColorL,
+  Value<int> megaminxColorU,
+  Value<int> megaminxColorBL,
+  Value<int> megaminxColorBR,
+  Value<int> megaminxColorR,
+  Value<int> megaminxColorF,
+  Value<int> megaminxColorL,
+  Value<int> megaminxColorD,
+  Value<int> megaminxColorDR,
+  Value<int> megaminxColorDBR,
+  Value<int> megaminxColorB,
+  Value<int> megaminxColorDBL,
+  Value<int> megaminxColorDL,
   Value<int> clockColorFront,
   Value<int> clockColorBack,
   Value<int> timerPressedColor,
@@ -2999,6 +3637,66 @@ class $$SettingsTableFilterComposer
 
   ColumnFilters<int> get pyraminxColorL => $composableBuilder(
     column: $table.pyraminxColorL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorU => $composableBuilder(
+    column: $table.megaminxColorU,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorBL => $composableBuilder(
+    column: $table.megaminxColorBL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorBR => $composableBuilder(
+    column: $table.megaminxColorBR,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorR => $composableBuilder(
+    column: $table.megaminxColorR,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorF => $composableBuilder(
+    column: $table.megaminxColorF,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorL => $composableBuilder(
+    column: $table.megaminxColorL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorD => $composableBuilder(
+    column: $table.megaminxColorD,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorDR => $composableBuilder(
+    column: $table.megaminxColorDR,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorDBR => $composableBuilder(
+    column: $table.megaminxColorDBR,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorB => $composableBuilder(
+    column: $table.megaminxColorB,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorDBL => $composableBuilder(
+    column: $table.megaminxColorDBL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get megaminxColorDL => $composableBuilder(
+    column: $table.megaminxColorDL,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3147,6 +3845,66 @@ class $$SettingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get megaminxColorU => $composableBuilder(
+    column: $table.megaminxColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorBL => $composableBuilder(
+    column: $table.megaminxColorBL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorBR => $composableBuilder(
+    column: $table.megaminxColorBR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorR => $composableBuilder(
+    column: $table.megaminxColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorF => $composableBuilder(
+    column: $table.megaminxColorF,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorL => $composableBuilder(
+    column: $table.megaminxColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorD => $composableBuilder(
+    column: $table.megaminxColorD,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorDR => $composableBuilder(
+    column: $table.megaminxColorDR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorDBR => $composableBuilder(
+    column: $table.megaminxColorDBR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorB => $composableBuilder(
+    column: $table.megaminxColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorDBL => $composableBuilder(
+    column: $table.megaminxColorDBL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get megaminxColorDL => $composableBuilder(
+    column: $table.megaminxColorDL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get clockColorFront => $composableBuilder(
     column: $table.clockColorFront,
     builder: (column) => ColumnOrderings(column),
@@ -3287,6 +4045,66 @@ class $$SettingsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get megaminxColorU => $composableBuilder(
+    column: $table.megaminxColorU,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorBL => $composableBuilder(
+    column: $table.megaminxColorBL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorBR => $composableBuilder(
+    column: $table.megaminxColorBR,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorR => $composableBuilder(
+    column: $table.megaminxColorR,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorF => $composableBuilder(
+    column: $table.megaminxColorF,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorL => $composableBuilder(
+    column: $table.megaminxColorL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorD => $composableBuilder(
+    column: $table.megaminxColorD,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorDR => $composableBuilder(
+    column: $table.megaminxColorDR,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorDBR => $composableBuilder(
+    column: $table.megaminxColorDBR,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorB => $composableBuilder(
+    column: $table.megaminxColorB,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorDBL => $composableBuilder(
+    column: $table.megaminxColorDBL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get megaminxColorDL => $composableBuilder(
+    column: $table.megaminxColorDL,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get clockColorFront => $composableBuilder(
     column: $table.clockColorFront,
     builder: (column) => column,
@@ -3370,6 +4188,18 @@ class $$SettingsTableTableManager
                 Value<int> pyraminxColorB = const Value.absent(),
                 Value<int> pyraminxColorR = const Value.absent(),
                 Value<int> pyraminxColorL = const Value.absent(),
+                Value<int> megaminxColorU = const Value.absent(),
+                Value<int> megaminxColorBL = const Value.absent(),
+                Value<int> megaminxColorBR = const Value.absent(),
+                Value<int> megaminxColorR = const Value.absent(),
+                Value<int> megaminxColorF = const Value.absent(),
+                Value<int> megaminxColorL = const Value.absent(),
+                Value<int> megaminxColorD = const Value.absent(),
+                Value<int> megaminxColorDR = const Value.absent(),
+                Value<int> megaminxColorDBR = const Value.absent(),
+                Value<int> megaminxColorB = const Value.absent(),
+                Value<int> megaminxColorDBL = const Value.absent(),
+                Value<int> megaminxColorDL = const Value.absent(),
                 Value<int> clockColorFront = const Value.absent(),
                 Value<int> clockColorBack = const Value.absent(),
                 Value<int> timerPressedColor = const Value.absent(),
@@ -3398,6 +4228,18 @@ class $$SettingsTableTableManager
                 pyraminxColorB: pyraminxColorB,
                 pyraminxColorR: pyraminxColorR,
                 pyraminxColorL: pyraminxColorL,
+                megaminxColorU: megaminxColorU,
+                megaminxColorBL: megaminxColorBL,
+                megaminxColorBR: megaminxColorBR,
+                megaminxColorR: megaminxColorR,
+                megaminxColorF: megaminxColorF,
+                megaminxColorL: megaminxColorL,
+                megaminxColorD: megaminxColorD,
+                megaminxColorDR: megaminxColorDR,
+                megaminxColorDBR: megaminxColorDBR,
+                megaminxColorB: megaminxColorB,
+                megaminxColorDBL: megaminxColorDBL,
+                megaminxColorDL: megaminxColorDL,
                 clockColorFront: clockColorFront,
                 clockColorBack: clockColorBack,
                 timerPressedColor: timerPressedColor,
@@ -3428,6 +4270,18 @@ class $$SettingsTableTableManager
                 Value<int> pyraminxColorB = const Value.absent(),
                 Value<int> pyraminxColorR = const Value.absent(),
                 Value<int> pyraminxColorL = const Value.absent(),
+                Value<int> megaminxColorU = const Value.absent(),
+                Value<int> megaminxColorBL = const Value.absent(),
+                Value<int> megaminxColorBR = const Value.absent(),
+                Value<int> megaminxColorR = const Value.absent(),
+                Value<int> megaminxColorF = const Value.absent(),
+                Value<int> megaminxColorL = const Value.absent(),
+                Value<int> megaminxColorD = const Value.absent(),
+                Value<int> megaminxColorDR = const Value.absent(),
+                Value<int> megaminxColorDBR = const Value.absent(),
+                Value<int> megaminxColorB = const Value.absent(),
+                Value<int> megaminxColorDBL = const Value.absent(),
+                Value<int> megaminxColorDL = const Value.absent(),
                 Value<int> clockColorFront = const Value.absent(),
                 Value<int> clockColorBack = const Value.absent(),
                 Value<int> timerPressedColor = const Value.absent(),
@@ -3456,6 +4310,18 @@ class $$SettingsTableTableManager
                 pyraminxColorB: pyraminxColorB,
                 pyraminxColorR: pyraminxColorR,
                 pyraminxColorL: pyraminxColorL,
+                megaminxColorU: megaminxColorU,
+                megaminxColorBL: megaminxColorBL,
+                megaminxColorBR: megaminxColorBR,
+                megaminxColorR: megaminxColorR,
+                megaminxColorF: megaminxColorF,
+                megaminxColorL: megaminxColorL,
+                megaminxColorD: megaminxColorD,
+                megaminxColorDR: megaminxColorDR,
+                megaminxColorDBR: megaminxColorDBR,
+                megaminxColorB: megaminxColorB,
+                megaminxColorDBL: megaminxColorDBL,
+                megaminxColorDL: megaminxColorDL,
                 clockColorFront: clockColorFront,
                 clockColorBack: clockColorBack,
                 timerPressedColor: timerPressedColor,

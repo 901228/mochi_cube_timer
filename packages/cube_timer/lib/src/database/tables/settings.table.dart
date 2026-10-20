@@ -62,6 +62,20 @@ class Settings extends Table {
   IntColumn get pyraminxColorR => integer().withDefault(Constant(DefaultColors.pyraminxColors.R))();
   IntColumn get pyraminxColorL => integer().withDefault(Constant(DefaultColors.pyraminxColors.L))();
 
+  /// megaminx colors, one per face
+  IntColumn get megaminxColorU => integer().withDefault(Constant(DefaultColors.megaminxColors.u))();
+  IntColumn get megaminxColorBL => integer().withDefault(Constant(DefaultColors.megaminxColors.bl))();
+  IntColumn get megaminxColorBR => integer().withDefault(Constant(DefaultColors.megaminxColors.br))();
+  IntColumn get megaminxColorR => integer().withDefault(Constant(DefaultColors.megaminxColors.r))();
+  IntColumn get megaminxColorF => integer().withDefault(Constant(DefaultColors.megaminxColors.f))();
+  IntColumn get megaminxColorL => integer().withDefault(Constant(DefaultColors.megaminxColors.l))();
+  IntColumn get megaminxColorD => integer().withDefault(Constant(DefaultColors.megaminxColors.d))();
+  IntColumn get megaminxColorDR => integer().withDefault(Constant(DefaultColors.megaminxColors.dr))();
+  IntColumn get megaminxColorDBR => integer().withDefault(Constant(DefaultColors.megaminxColors.dbr))();
+  IntColumn get megaminxColorB => integer().withDefault(Constant(DefaultColors.megaminxColors.b))();
+  IntColumn get megaminxColorDBL => integer().withDefault(Constant(DefaultColors.megaminxColors.dbl))();
+  IntColumn get megaminxColorDL => integer().withDefault(Constant(DefaultColors.megaminxColors.dl))();
+
   /// clock colors
   IntColumn get clockColorFront => integer().withDefault(Constant(DefaultColors.clockColors.front))();
   IntColumn get clockColorBack => integer().withDefault(Constant(DefaultColors.clockColors.back))();

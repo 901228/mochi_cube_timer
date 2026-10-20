@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
   // Bumped with every change to the tables: run `dart run drift_dev make-migrations` before and
   // after, and add the step below.
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -56,6 +56,20 @@ class AppDatabase extends _$AppDatabase {
       },
       from6To7: (m, schema) async {
         await m.addColumn(schema.settings, schema.settings.showRunningTime);
+      },
+      from7To8: (m, schema) async {
+        await m.addColumn(schema.settings, schema.settings.megaminxColorU);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorBL);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorBR);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorR);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorF);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorL);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorD);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorDR);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorDBR);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorB);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorDBL);
+        await m.addColumn(schema.settings, schema.settings.megaminxColorDL);
       },
     ),
     beforeOpen: (_) async {

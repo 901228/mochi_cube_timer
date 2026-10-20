@@ -14,6 +14,7 @@ import "generated/schema_v4.dart" as v4;
 import "generated/schema_v5.dart" as v5;
 import "generated/schema_v6.dart" as v6;
 import "generated/schema_v7.dart" as v7;
+import "generated/schema_v8.dart" as v8;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -439,6 +440,67 @@ void main() {
         final rows = await newDb.select(newDb.settings).get();
         expect(rows.map((e) => e.toJson()), [
           {...old.toJson(), "showRunningTime": 1},
+        ]);
+      },
+    );
+  });
+
+  test("v7 to v8 keeps the settings, and gives the Megaminx its colours", () async {
+    const old = v7.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "text,vibration",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      recordAverageAlert: 0,
+      locale: "zh_TW",
+      themeMode: "dark",
+      primaryColor: 15,
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+      showRunningTime: 0,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 7,
+      newVersion: 8,
+      createOld: v7.DatabaseAtV7.new,
+      createNew: v8.DatabaseAtV8.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        final rows = await newDb.select(newDb.settings).get();
+        expect(rows.map((e) => e.toJson()), [
+          {
+            ...old.toJson(),
+            "megaminxColorU": DefaultColors.megaminxColors.u,
+            "megaminxColorBL": DefaultColors.megaminxColors.bl,
+            "megaminxColorBR": DefaultColors.megaminxColors.br,
+            "megaminxColorR": DefaultColors.megaminxColors.r,
+            "megaminxColorF": DefaultColors.megaminxColors.f,
+            "megaminxColorL": DefaultColors.megaminxColors.l,
+            "megaminxColorD": DefaultColors.megaminxColors.d,
+            "megaminxColorDR": DefaultColors.megaminxColors.dr,
+            "megaminxColorDBR": DefaultColors.megaminxColors.dbr,
+            "megaminxColorB": DefaultColors.megaminxColors.b,
+            "megaminxColorDBL": DefaultColors.megaminxColors.dbl,
+            "megaminxColorDL": DefaultColors.megaminxColors.dl,
+          },
         ]);
       },
     );
