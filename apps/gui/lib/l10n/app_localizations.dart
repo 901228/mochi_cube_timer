@@ -392,6 +392,12 @@ abstract class AppLocalizations {
   /// **'Pyraminx colors'**
   String get puzzlePyraminxColors;
 
+  /// No description provided for @puzzleMegaminxColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Megaminx colors'**
+  String get puzzleMegaminxColors;
+
   /// No description provided for @puzzleClockColors.
   ///
   /// In en, this message translates to:

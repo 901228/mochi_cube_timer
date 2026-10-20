@@ -162,6 +162,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get puzzlePyraminxColors => '金字塔顏色';
 
   @override
+  String get puzzleMegaminxColors => '五魔方顏色';
+
+  @override
   String get puzzleClockColors => '魔錶顏色';
 
   @override
