@@ -223,8 +223,8 @@ class Settings extends Table with TableInfo<Settings, SettingsData> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    $customConstraints: 'NOT NULL DEFAULT 4280182527',
-    defaultValue: const CustomExpression('4280182527'),
+    $customConstraints: 'NOT NULL DEFAULT 4280193279',
+    defaultValue: const CustomExpression('4280193279'),
   );
   late final GeneratedColumn<int> megaminxColorR = GeneratedColumn<int>(
     'megaminx_color_r',
@@ -232,8 +232,8 @@ class Settings extends Table with TableInfo<Settings, SettingsData> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    $customConstraints: 'NOT NULL DEFAULT 4292673536',
-    defaultValue: const CustomExpression('4292673536'),
+    $customConstraints: 'NOT NULL DEFAULT 4293815147',
+    defaultValue: const CustomExpression('4293815147'),
   );
   late final GeneratedColumn<int> megaminxColorF = GeneratedColumn<int>(
     'megaminx_color_f',
@@ -295,8 +295,8 @@ class Settings extends Table with TableInfo<Settings, SettingsData> {
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    $customConstraints: 'NOT NULL DEFAULT 4294936627',
-    defaultValue: const CustomExpression('4294936627'),
+    $customConstraints: 'NOT NULL DEFAULT 4294951229',
+    defaultValue: const CustomExpression('4294951229'),
   );
   late final GeneratedColumn<int> megaminxColorDL = GeneratedColumn<int>(
     'megaminx_color_d_l',

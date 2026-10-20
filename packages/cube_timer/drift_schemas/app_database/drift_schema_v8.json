@@ -279,7 +279,7 @@
             "moor_type": "int",
             "nullable": false,
             "customConstraints": null,
-            "default_dart": "const CustomExpression('4280182527')",
+            "default_dart": "const CustomExpression('4280193279')",
             "default_client_dart": null,
             "dsl_features": []
           },
@@ -289,7 +289,7 @@
             "moor_type": "int",
             "nullable": false,
             "customConstraints": null,
-            "default_dart": "const CustomExpression('4292673536')",
+            "default_dart": "const CustomExpression('4293815147')",
             "default_client_dart": null,
             "dsl_features": []
           },
@@ -359,7 +359,7 @@
             "moor_type": "int",
             "nullable": false,
             "customConstraints": null,
-            "default_dart": "const CustomExpression('4294936627')",
+            "default_dart": "const CustomExpression('4294951229')",
             "default_client_dart": null,
             "dsl_features": []
           },
@@ -767,7 +767,7 @@
       "sql": [
         {
           "dialect": "sqlite",
-          "sql": "CREATE TABLE IF NOT EXISTS \"settings\" (\"id\" INTEGER NOT NULL, \"inspection_enabled\" INTEGER NOT NULL DEFAULT 1 CHECK (\"inspection_enabled\" IN (0, 1)), \"inspect_duration\" INTEGER NOT NULL DEFAULT 15, \"alert_enabled\" INTEGER NOT NULL DEFAULT 1 CHECK (\"alert_enabled\" IN (0, 1)), \"alert_types\" TEXT NOT NULL DEFAULT 'text,audio,vibration', \"record_best_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_best_alert\" IN (0, 1)), \"record_worst_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_worst_alert\" IN (0, 1)), \"record_average_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_average_alert\" IN (0, 1)), \"locale\" TEXT NULL, \"theme_mode\" TEXT NOT NULL DEFAULT 'system', \"primary_color\" INTEGER NULL, \"cube_color_u\" INTEGER NOT NULL DEFAULT 4294967295, \"cube_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"cube_color_f\" INTEGER NOT NULL DEFAULT 4278255487, \"cube_color_d\" INTEGER NOT NULL DEFAULT 4294967040, \"cube_color_l\" INTEGER NOT NULL DEFAULT 4294951229, \"cube_color_b\" INTEGER NOT NULL DEFAULT 4280193279, \"pyraminx_color_u\" INTEGER NOT NULL DEFAULT 4294967040, \"pyraminx_color_b\" INTEGER NOT NULL DEFAULT 4278255487, \"pyraminx_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"pyraminx_color_l\" INTEGER NOT NULL DEFAULT 4280193279, \"megaminx_color_u\" INTEGER NOT NULL DEFAULT 4294967295, \"megaminx_color_b_l\" INTEGER NOT NULL DEFAULT 4294967040, \"megaminx_color_b_r\" INTEGER NOT NULL DEFAULT 4280182527, \"megaminx_color_r\" INTEGER NOT NULL DEFAULT 4292673536, \"megaminx_color_f\" INTEGER NOT NULL DEFAULT 4278216192, \"megaminx_color_l\" INTEGER NOT NULL DEFAULT 4289732808, \"megaminx_color_d\" INTEGER NOT NULL DEFAULT 4288256409, \"megaminx_color_d_r\" INTEGER NOT NULL DEFAULT 4294967227, \"megaminx_color_d_b_r\" INTEGER NOT NULL DEFAULT 4294941183, \"megaminx_color_b\" INTEGER NOT NULL DEFAULT 4286049792, \"megaminx_color_d_b_l\" INTEGER NOT NULL DEFAULT 4294936627, \"megaminx_color_d_l\" INTEGER NOT NULL DEFAULT 4287159807, \"clock_color_front\" INTEGER NOT NULL DEFAULT 4292081151, \"clock_color_back\" INTEGER NOT NULL DEFAULT 4282352383, \"timer_pressed_color\" INTEGER NOT NULL DEFAULT 4294932857, \"timer_holding_color\" INTEGER NOT NULL DEFAULT 4294967161, \"timer_accept_color\" INTEGER NOT NULL DEFAULT 4280345188, \"show_running_time\" INTEGER NOT NULL DEFAULT 1 CHECK (\"show_running_time\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+          "sql": "CREATE TABLE IF NOT EXISTS \"settings\" (\"id\" INTEGER NOT NULL, \"inspection_enabled\" INTEGER NOT NULL DEFAULT 1 CHECK (\"inspection_enabled\" IN (0, 1)), \"inspect_duration\" INTEGER NOT NULL DEFAULT 15, \"alert_enabled\" INTEGER NOT NULL DEFAULT 1 CHECK (\"alert_enabled\" IN (0, 1)), \"alert_types\" TEXT NOT NULL DEFAULT 'text,audio,vibration', \"record_best_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_best_alert\" IN (0, 1)), \"record_worst_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_worst_alert\" IN (0, 1)), \"record_average_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_average_alert\" IN (0, 1)), \"locale\" TEXT NULL, \"theme_mode\" TEXT NOT NULL DEFAULT 'system', \"primary_color\" INTEGER NULL, \"cube_color_u\" INTEGER NOT NULL DEFAULT 4294967295, \"cube_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"cube_color_f\" INTEGER NOT NULL DEFAULT 4278255487, \"cube_color_d\" INTEGER NOT NULL DEFAULT 4294967040, \"cube_color_l\" INTEGER NOT NULL DEFAULT 4294951229, \"cube_color_b\" INTEGER NOT NULL DEFAULT 4280193279, \"pyraminx_color_u\" INTEGER NOT NULL DEFAULT 4294967040, \"pyraminx_color_b\" INTEGER NOT NULL DEFAULT 4278255487, \"pyraminx_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"pyraminx_color_l\" INTEGER NOT NULL DEFAULT 4280193279, \"megaminx_color_u\" INTEGER NOT NULL DEFAULT 4294967295, \"megaminx_color_b_l\" INTEGER NOT NULL DEFAULT 4294967040, \"megaminx_color_b_r\" INTEGER NOT NULL DEFAULT 4280193279, \"megaminx_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"megaminx_color_f\" INTEGER NOT NULL DEFAULT 4278216192, \"megaminx_color_l\" INTEGER NOT NULL DEFAULT 4289732808, \"megaminx_color_d\" INTEGER NOT NULL DEFAULT 4288256409, \"megaminx_color_d_r\" INTEGER NOT NULL DEFAULT 4294967227, \"megaminx_color_d_b_r\" INTEGER NOT NULL DEFAULT 4294941183, \"megaminx_color_b\" INTEGER NOT NULL DEFAULT 4286049792, \"megaminx_color_d_b_l\" INTEGER NOT NULL DEFAULT 4294951229, \"megaminx_color_d_l\" INTEGER NOT NULL DEFAULT 4287159807, \"clock_color_front\" INTEGER NOT NULL DEFAULT 4292081151, \"clock_color_back\" INTEGER NOT NULL DEFAULT 4282352383, \"timer_pressed_color\" INTEGER NOT NULL DEFAULT 4294932857, \"timer_holding_color\" INTEGER NOT NULL DEFAULT 4294967161, \"timer_accept_color\" INTEGER NOT NULL DEFAULT 4280345188, \"show_running_time\" INTEGER NOT NULL DEFAULT 1 CHECK (\"show_running_time\" IN (0, 1)), PRIMARY KEY (\"id\"));"
         }
       ]
     },

@@ -1509,8 +1509,8 @@ i1.GeneratedColumn<int> _column_45(String aliasedName) =>
       aliasedName,
       false,
       type: i1.DriftSqlType.int,
-      $customConstraints: 'NOT NULL DEFAULT 4280182527',
-      defaultValue: const i1.CustomExpression('4280182527'),
+      $customConstraints: 'NOT NULL DEFAULT 4280193279',
+      defaultValue: const i1.CustomExpression('4280193279'),
     );
 i1.GeneratedColumn<int> _column_46(String aliasedName) =>
     i1.GeneratedColumn<int>(
@@ -1518,8 +1518,8 @@ i1.GeneratedColumn<int> _column_46(String aliasedName) =>
       aliasedName,
       false,
       type: i1.DriftSqlType.int,
-      $customConstraints: 'NOT NULL DEFAULT 4292673536',
-      defaultValue: const i1.CustomExpression('4292673536'),
+      $customConstraints: 'NOT NULL DEFAULT 4293815147',
+      defaultValue: const i1.CustomExpression('4293815147'),
     );
 i1.GeneratedColumn<int> _column_47(String aliasedName) =>
     i1.GeneratedColumn<int>(
@@ -1581,8 +1581,8 @@ i1.GeneratedColumn<int> _column_53(String aliasedName) =>
       aliasedName,
       false,
       type: i1.DriftSqlType.int,
-      $customConstraints: 'NOT NULL DEFAULT 4294936627',
-      defaultValue: const i1.CustomExpression('4294936627'),
+      $customConstraints: 'NOT NULL DEFAULT 4294951229',
+      defaultValue: const i1.CustomExpression('4294951229'),
     );
 i1.GeneratedColumn<int> _column_54(String aliasedName) =>
     i1.GeneratedColumn<int>(
