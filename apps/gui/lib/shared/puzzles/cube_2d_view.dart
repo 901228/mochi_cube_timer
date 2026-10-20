@@ -1,7 +1,7 @@
-import "dart:math" show cos, sin, pi;
+import "dart:math" show cos, max, min, pi, sin, sqrt;
 
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/foundation.dart" show listEquals;
+import "package:flutter/foundation.dart" show listEquals, mapEquals;
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -58,6 +58,21 @@ class Cube2DView extends StatelessWidget {
         settings.pyraminxColorR.toColor(),
         settings.pyraminxColorB.toColor(),
       ],
+      // The layout's faces in order: U and the five round it, then D and the five round it.
+      .megaminx => [
+        settings.megaminxColorU.toColor(),
+        settings.megaminxColorBL.toColor(),
+        settings.megaminxColorBR.toColor(),
+        settings.megaminxColorR.toColor(),
+        settings.megaminxColorF.toColor(),
+        settings.megaminxColorL.toColor(),
+        settings.megaminxColorD.toColor(),
+        settings.megaminxColorDR.toColor(),
+        settings.megaminxColorDBR.toColor(),
+        settings.megaminxColorB.toColor(),
+        settings.megaminxColorDBL.toColor(),
+        settings.megaminxColorDL.toColor(),
+      ],
       .clock => throw StateError("Clock colors should not call `_colorsFor()`"),
       // TODO: implement colors for other puzzles
       _ => throw UnimplementedError("Colors for $puzzle are not implemented yet."),
@@ -89,8 +104,14 @@ class Cube2DView extends StatelessWidget {
                   layout: puzzleLayout,
                   state: state,
                   colors: _colorsFor(puzzle, settings),
-                  faces: puzzle == .pyraminx ? 4 : 6,
+                  faces: switch (puzzle) {
+                    .pyraminx => 4,
+                    .megaminx => 12,
+                    _ => 6,
+                  },
                   inset: 0.06,
+                  // The Megaminx has no colour scheme to read its orientation from, as the cubes do.
+                  labels: puzzle == .megaminx ? const {0: "U", 4: "F"} : const {},
                 ),
                 final ClockLayout clockLayout => ClockPainter(
                   layout: clockLayout,
@@ -135,6 +156,7 @@ class PuzzlePainter extends CustomPainter {
     this.stroke = const Color(0xFF000000),
     this.faces = 1,
     this.inset = 0,
+    this.labels = const {},
   });
 
   final PuzzleLayout layout;
@@ -147,6 +169,9 @@ class PuzzlePainter extends CustomPainter {
 
   /// How far each face shrinks toward its middle, so a gap appears between faces; 0 is none.
   final double inset;
+
+  /// Letters to write on the middle of some faces, by face number.
+  final Map<int, String> labels;
 
   Size _lastSize = Size.zero;
 
@@ -168,6 +193,59 @@ class PuzzlePainter extends CustomPainter {
       canvas.drawPath(path, fill);
       canvas.drawPath(path, line);
     }
+
+    // Too small to read, and only a smudge on the stickers.
+    if (scale * 0.75 < 8) return;
+    for (final MapEntry(key: face, value: text) in labels.entries) {
+      // The letter goes in the face's middle sticker, as big as fits there: it is about as wide and
+      // tall as a circle of its own size. When the sticker is too small for a readable one, the
+      // letter overlaps the lines round it.
+      final middle = layout[(face + 1) * (layout.length ~/ faces) - 1];
+      final cx = middle.fold(0.0, (sum, p) => sum + p.$1) / middle.length;
+      final cy = middle.fold(0.0, (sum, p) => sum + p.$2) / middle.length;
+      final fontSize = max(_inradius(middle) * (1 - inset) * scale * 1.7, 9.0);
+      // Outlined in white so it reads on any sticker, as csTimer's does, without the weight that
+      // would run a small letter together.
+      for (final stroked in [true, false]) {
+        final painter = TextPainter(
+          text: TextSpan(
+            text: text,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.w600,
+              height: 1,
+              foreground: Paint()
+                ..style = stroked ? PaintingStyle.stroke : PaintingStyle.fill
+                ..strokeWidth = fontSize * 0.14
+                ..strokeJoin = StrokeJoin.round
+                ..color = stroked ? const Color(0xFFFFFFFF) : const Color(0xFF000000),
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        // A capital sits on the baseline and stands about 0.7 of the size above it, so it is centred
+        // from there: the line's own middle is lower than the letter's.
+        final baseline = painter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+        painter.paint(
+          canvas,
+          Offset(dx + cx * scale - painter.width / 2, dy + cy * scale + fontSize * 0.35 - baseline),
+        );
+      }
+    }
+  }
+
+  /// How far the nearest side of a convex [polygon] is from the mean of its corners.
+  static double _inradius(List<Point> polygon) {
+    final cx = polygon.fold(0.0, (sum, p) => sum + p.$1) / polygon.length;
+    final cy = polygon.fold(0.0, (sum, p) => sum + p.$2) / polygon.length;
+    var nearest = double.infinity;
+    for (var i = 0; i < polygon.length; i++) {
+      final (x1, y1) = polygon[i];
+      final (x2, y2) = polygon[(i + 1) % polygon.length];
+      final length = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+      nearest = min(nearest, ((x2 - x1) * (cy - y1) - (y2 - y1) * (cx - x1)).abs() / length);
+    }
+    return nearest;
   }
 
   /// The middle of each face, as the mean of its stickers' corners.
@@ -211,6 +289,7 @@ class PuzzlePainter extends CustomPainter {
       old.stroke != stroke ||
       old.faces != faces ||
       old.inset != inset ||
+      !mapEquals(old.labels, labels) ||
       !listEquals(old.state, state) ||
       !listEquals(old.colors, colors);
 

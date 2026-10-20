@@ -4,8 +4,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:mochi_ui/mochi_ui/widgets.dart";
 
-import "../../shared/puzzles/puzzle_utils.dart";
 import "../../l10n/l10n.dart";
+import "../../shared/puzzles/puzzle_utils.dart";
 
 class PuzzleSelectionDialog extends StatelessWidget {
   const PuzzleSelectionDialog({super.key});
@@ -31,10 +31,10 @@ class PuzzleSelectionDialog extends StatelessWidget {
         crossAxisSpacing: 8,
         mainAxisSpacing: 16,
       ),
-      // HACK: currently the scrambler of `skewb`, `minx`, `fto` is not completed, so we return null for them.
+      // HACK: currently the scrambler of `skewb`, `fto` is not completed, so we return null for them.
       itemBuilder: (context, index) => _PuzzleTile(
         puzzle: Puzzle.values[index],
-        onPress: {"skewb", "minx", "fto"}.contains(Puzzle.values[index].id)
+        onPress: {"skewb", "fto"}.contains(Puzzle.values[index].id)
             ? null
             : () => _select(context, Puzzle.values[index]),
       ),
@@ -79,26 +79,4 @@ class _PuzzleTile extends StatelessWidget {
       builder: (_, _, _) => content,
     );
   }
-}
-
-// TODO: change the colors of the puzzles according to the theme
-class PuzzleColors extends ColorMapper {
-  const PuzzleColors({required this.outer, required this.inner, required this.symbol});
-
-  final Color outer, inner, symbol;
-
-  @override
-  Color substitute(String? id, String elementName, String attributeName, Color color) {
-    if (color == const Color(0xFF3F82FF)) return outer;
-    if (color == const Color(0xFF80A8FF)) return inner;
-    if (color == const Color(0xFFD3F5FF)) return symbol;
-    return color;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      other is PuzzleColors && other.outer == outer && other.inner == inner && other.symbol == symbol;
-
-  @override
-  int get hashCode => Object.hash(outer, inner, symbol);
 }
