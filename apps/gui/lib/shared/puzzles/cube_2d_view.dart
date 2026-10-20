@@ -59,6 +59,18 @@ class Cube2DView extends StatelessWidget {
         settings.pyraminxColorB.toColor(),
       ],
       // The layout's faces in order: U and the five round it, then D and the five round it.
+      // csTimer's FTO colours, in the layout's face order: U, R, F, L, B, BL, D, BR. Fixed rather
+      // than a setting, as with the Megaminx; a setting can follow once the colours are settled.
+      .fto => const [
+        Color(0xFFFFFFFF), // U
+        Color(0xFFFF0000), // R
+        Color(0xFF00DD00), // F
+        Color(0xFF880088), // L
+        Color(0xFF0000FF), // B
+        Color(0xFFFFAA00), // BL
+        Color(0xFFFFFF00), // D
+        Color(0xFFBBBBBB), // BR
+      ],
       .megaminx => [
         settings.megaminxColorU.toColor(),
         settings.megaminxColorBL.toColor(),
@@ -74,8 +86,6 @@ class Cube2DView extends StatelessWidget {
         settings.megaminxColorDL.toColor(),
       ],
       .clock => throw StateError("Clock colors should not call `_colorsFor()`"),
-      // TODO: implement colors for other puzzles
-      _ => throw UnimplementedError("Colors for $puzzle are not implemented yet."),
     };
   }
 
@@ -107,6 +117,7 @@ class Cube2DView extends StatelessWidget {
                   faces: switch (puzzle) {
                     .pyraminx => 4,
                     .megaminx => 12,
+                    .fto => 8,
                     _ => 6,
                   },
                   inset: 0.06,

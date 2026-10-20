@@ -7,4 +7,10 @@ void main() {
     expect(scramble.notation.split(" ").length, inInclusiveRange(30, 60));
     expect(scramble.state, hasLength(96));
   });
+
+  test("the FTO is scrambled with its 72 stickers", () async {
+    final scramble = await Puzzle.fto.getScramble();
+    expect(scramble.state, hasLength(72));
+    expect(scramble.notation, isNotEmpty);
+  });
 }
