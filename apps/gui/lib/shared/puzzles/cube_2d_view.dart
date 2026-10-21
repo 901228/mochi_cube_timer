@@ -59,17 +59,15 @@ class Cube2DView extends StatelessWidget {
         settings.pyraminxColorB.toColor(),
       ],
       // The layout's faces in order: U and the five round it, then D and the five round it.
-      // csTimer's FTO colours, in the layout's face order: U, R, F, L, B, BL, D, BR. Fixed rather
-      // than a setting, as with the Megaminx; a setting can follow once the colours are settled.
-      .fto => const [
-        Color(0xFFFFFFFF), // U
-        Color(0xFFFF0000), // R
-        Color(0xFF00DD00), // F
-        Color(0xFF880088), // L
-        Color(0xFF0000FF), // B
-        Color(0xFFFFAA00), // BL
-        Color(0xFFFFFF00), // D
-        Color(0xFFBBBBBB), // BR
+      .fto => [
+        settings.ftoColorU.toColor(),
+        settings.ftoColorR.toColor(),
+        settings.ftoColorF.toColor(),
+        settings.ftoColorL.toColor(),
+        settings.ftoColorB.toColor(),
+        settings.ftoColorBL.toColor(),
+        settings.ftoColorD.toColor(),
+        settings.ftoColorBR.toColor(),
       ],
       .megaminx => [
         settings.megaminxColorU.toColor(),

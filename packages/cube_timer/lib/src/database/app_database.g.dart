@@ -154,7 +154,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.cubeColors.U),
+    defaultValue: Constant(DefaultColors.cubeColors.U.value),
   );
   static const VerificationMeta _cubeColorRMeta = const VerificationMeta(
     'cubeColorR',
@@ -166,7 +166,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.cubeColors.R),
+    defaultValue: Constant(DefaultColors.cubeColors.R.value),
   );
   static const VerificationMeta _cubeColorFMeta = const VerificationMeta(
     'cubeColorF',
@@ -178,7 +178,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.cubeColors.F),
+    defaultValue: Constant(DefaultColors.cubeColors.F.value),
   );
   static const VerificationMeta _cubeColorDMeta = const VerificationMeta(
     'cubeColorD',
@@ -190,7 +190,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.cubeColors.D),
+    defaultValue: Constant(DefaultColors.cubeColors.D.value),
   );
   static const VerificationMeta _cubeColorLMeta = const VerificationMeta(
     'cubeColorL',
@@ -202,7 +202,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.cubeColors.L),
+    defaultValue: Constant(DefaultColors.cubeColors.L.value),
   );
   static const VerificationMeta _cubeColorBMeta = const VerificationMeta(
     'cubeColorB',
@@ -214,7 +214,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.cubeColors.B),
+    defaultValue: Constant(DefaultColors.cubeColors.B.value),
   );
   static const VerificationMeta _pyraminxColorUMeta = const VerificationMeta(
     'pyraminxColorU',
@@ -226,7 +226,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.pyraminxColors.U),
+    defaultValue: Constant(DefaultColors.pyraminxColors.U.value),
   );
   static const VerificationMeta _pyraminxColorBMeta = const VerificationMeta(
     'pyraminxColorB',
@@ -238,7 +238,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.pyraminxColors.B),
+    defaultValue: Constant(DefaultColors.pyraminxColors.B.value),
   );
   static const VerificationMeta _pyraminxColorRMeta = const VerificationMeta(
     'pyraminxColorR',
@@ -250,7 +250,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.pyraminxColors.R),
+    defaultValue: Constant(DefaultColors.pyraminxColors.R.value),
   );
   static const VerificationMeta _pyraminxColorLMeta = const VerificationMeta(
     'pyraminxColorL',
@@ -262,7 +262,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.pyraminxColors.L),
+    defaultValue: Constant(DefaultColors.pyraminxColors.L.value),
   );
   static const VerificationMeta _megaminxColorUMeta = const VerificationMeta(
     'megaminxColorU',
@@ -274,7 +274,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.u),
+    defaultValue: Constant(DefaultColors.megaminxColors.u.value),
   );
   static const VerificationMeta _megaminxColorBLMeta = const VerificationMeta(
     'megaminxColorBL',
@@ -286,7 +286,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.bl),
+    defaultValue: Constant(DefaultColors.megaminxColors.bl.value),
   );
   static const VerificationMeta _megaminxColorBRMeta = const VerificationMeta(
     'megaminxColorBR',
@@ -298,7 +298,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.br),
+    defaultValue: Constant(DefaultColors.megaminxColors.br.value),
   );
   static const VerificationMeta _megaminxColorRMeta = const VerificationMeta(
     'megaminxColorR',
@@ -310,7 +310,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.r),
+    defaultValue: Constant(DefaultColors.megaminxColors.r.value),
   );
   static const VerificationMeta _megaminxColorFMeta = const VerificationMeta(
     'megaminxColorF',
@@ -322,7 +322,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.f),
+    defaultValue: Constant(DefaultColors.megaminxColors.f.value),
   );
   static const VerificationMeta _megaminxColorLMeta = const VerificationMeta(
     'megaminxColorL',
@@ -334,7 +334,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.l),
+    defaultValue: Constant(DefaultColors.megaminxColors.l.value),
   );
   static const VerificationMeta _megaminxColorDMeta = const VerificationMeta(
     'megaminxColorD',
@@ -346,7 +346,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.d),
+    defaultValue: Constant(DefaultColors.megaminxColors.d.value),
   );
   static const VerificationMeta _megaminxColorDRMeta = const VerificationMeta(
     'megaminxColorDR',
@@ -358,7 +358,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.dr),
+    defaultValue: Constant(DefaultColors.megaminxColors.dr.value),
   );
   static const VerificationMeta _megaminxColorDBRMeta = const VerificationMeta(
     'megaminxColorDBR',
@@ -370,7 +370,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.dbr),
+    defaultValue: Constant(DefaultColors.megaminxColors.dbr.value),
   );
   static const VerificationMeta _megaminxColorBMeta = const VerificationMeta(
     'megaminxColorB',
@@ -382,7 +382,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.b),
+    defaultValue: Constant(DefaultColors.megaminxColors.b.value),
   );
   static const VerificationMeta _megaminxColorDBLMeta = const VerificationMeta(
     'megaminxColorDBL',
@@ -394,7 +394,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.dbl),
+    defaultValue: Constant(DefaultColors.megaminxColors.dbl.value),
   );
   static const VerificationMeta _megaminxColorDLMeta = const VerificationMeta(
     'megaminxColorDL',
@@ -406,7 +406,103 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.megaminxColors.dl),
+    defaultValue: Constant(DefaultColors.megaminxColors.dl.value),
+  );
+  static const VerificationMeta _ftoColorUMeta = const VerificationMeta(
+    'ftoColorU',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorU = GeneratedColumn<int>(
+    'fto_color_u',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.u.value),
+  );
+  static const VerificationMeta _ftoColorRMeta = const VerificationMeta(
+    'ftoColorR',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorR = GeneratedColumn<int>(
+    'fto_color_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.r.value),
+  );
+  static const VerificationMeta _ftoColorFMeta = const VerificationMeta(
+    'ftoColorF',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorF = GeneratedColumn<int>(
+    'fto_color_f',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.f.value),
+  );
+  static const VerificationMeta _ftoColorLMeta = const VerificationMeta(
+    'ftoColorL',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorL = GeneratedColumn<int>(
+    'fto_color_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.l.value),
+  );
+  static const VerificationMeta _ftoColorBMeta = const VerificationMeta(
+    'ftoColorB',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorB = GeneratedColumn<int>(
+    'fto_color_b',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.b.value),
+  );
+  static const VerificationMeta _ftoColorBLMeta = const VerificationMeta(
+    'ftoColorBL',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorBL = GeneratedColumn<int>(
+    'fto_color_b_l',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.bl.value),
+  );
+  static const VerificationMeta _ftoColorDMeta = const VerificationMeta(
+    'ftoColorD',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorD = GeneratedColumn<int>(
+    'fto_color_d',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.d.value),
+  );
+  static const VerificationMeta _ftoColorBRMeta = const VerificationMeta(
+    'ftoColorBR',
+  );
+  @override
+  late final GeneratedColumn<int> ftoColorBR = GeneratedColumn<int>(
+    'fto_color_b_r',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: Constant(DefaultColors.ftoColors.br.value),
   );
   static const VerificationMeta _clockColorFrontMeta = const VerificationMeta(
     'clockColorFront',
@@ -418,7 +514,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.clockColors.front),
+    defaultValue: Constant(DefaultColors.clockColors.front.value),
   );
   static const VerificationMeta _clockColorBackMeta = const VerificationMeta(
     'clockColorBack',
@@ -430,7 +526,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.clockColors.back),
+    defaultValue: Constant(DefaultColors.clockColors.back.value),
   );
   static const VerificationMeta _timerPressedColorMeta = const VerificationMeta(
     'timerPressedColor',
@@ -442,7 +538,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.timerColors.pressed),
+    defaultValue: Constant(DefaultColors.timerColors.pressed.value),
   );
   static const VerificationMeta _timerHoldingColorMeta = const VerificationMeta(
     'timerHoldingColor',
@@ -454,7 +550,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.timerColors.holding),
+    defaultValue: Constant(DefaultColors.timerColors.holding.value),
   );
   static const VerificationMeta _timerAcceptColorMeta = const VerificationMeta(
     'timerAcceptColor',
@@ -466,7 +562,7 @@ class $SettingsTable extends Settings
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
-    defaultValue: Constant(DefaultColors.timerColors.accept),
+    defaultValue: Constant(DefaultColors.timerColors.accept.value),
   );
   static const VerificationMeta _showRunningTimeMeta = const VerificationMeta(
     'showRunningTime',
@@ -518,6 +614,14 @@ class $SettingsTable extends Settings
     megaminxColorB,
     megaminxColorDBL,
     megaminxColorDL,
+    ftoColorU,
+    ftoColorR,
+    ftoColorF,
+    ftoColorL,
+    ftoColorB,
+    ftoColorBL,
+    ftoColorD,
+    ftoColorBR,
     clockColorFront,
     clockColorBack,
     timerPressedColor,
@@ -807,6 +911,60 @@ class $SettingsTable extends Settings
         ),
       );
     }
+    if (data.containsKey('fto_color_u')) {
+      context.handle(
+        _ftoColorUMeta,
+        ftoColorU.isAcceptableOrUnknown(data['fto_color_u']!, _ftoColorUMeta),
+      );
+    }
+    if (data.containsKey('fto_color_r')) {
+      context.handle(
+        _ftoColorRMeta,
+        ftoColorR.isAcceptableOrUnknown(data['fto_color_r']!, _ftoColorRMeta),
+      );
+    }
+    if (data.containsKey('fto_color_f')) {
+      context.handle(
+        _ftoColorFMeta,
+        ftoColorF.isAcceptableOrUnknown(data['fto_color_f']!, _ftoColorFMeta),
+      );
+    }
+    if (data.containsKey('fto_color_l')) {
+      context.handle(
+        _ftoColorLMeta,
+        ftoColorL.isAcceptableOrUnknown(data['fto_color_l']!, _ftoColorLMeta),
+      );
+    }
+    if (data.containsKey('fto_color_b')) {
+      context.handle(
+        _ftoColorBMeta,
+        ftoColorB.isAcceptableOrUnknown(data['fto_color_b']!, _ftoColorBMeta),
+      );
+    }
+    if (data.containsKey('fto_color_b_l')) {
+      context.handle(
+        _ftoColorBLMeta,
+        ftoColorBL.isAcceptableOrUnknown(
+          data['fto_color_b_l']!,
+          _ftoColorBLMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fto_color_d')) {
+      context.handle(
+        _ftoColorDMeta,
+        ftoColorD.isAcceptableOrUnknown(data['fto_color_d']!, _ftoColorDMeta),
+      );
+    }
+    if (data.containsKey('fto_color_b_r')) {
+      context.handle(
+        _ftoColorBRMeta,
+        ftoColorBR.isAcceptableOrUnknown(
+          data['fto_color_b_r']!,
+          _ftoColorBRMeta,
+        ),
+      );
+    }
     if (data.containsKey('clock_color_front')) {
       context.handle(
         _clockColorFrontMeta,
@@ -1006,6 +1164,38 @@ class $SettingsTable extends Settings
         DriftSqlType.int,
         data['${effectivePrefix}megaminx_color_d_l'],
       )!,
+      ftoColorU: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_u'],
+      )!,
+      ftoColorR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_r'],
+      )!,
+      ftoColorF: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_f'],
+      )!,
+      ftoColorL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_l'],
+      )!,
+      ftoColorB: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_b'],
+      )!,
+      ftoColorBL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_b_l'],
+      )!,
+      ftoColorD: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_d'],
+      )!,
+      ftoColorBR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_b_r'],
+      )!,
       clockColorFront: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}clock_color_front'],
@@ -1112,6 +1302,16 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   final int megaminxColorDBL;
   final int megaminxColorDL;
 
+  /// FTO colors, one per face
+  final int ftoColorU;
+  final int ftoColorR;
+  final int ftoColorF;
+  final int ftoColorL;
+  final int ftoColorB;
+  final int ftoColorBL;
+  final int ftoColorD;
+  final int ftoColorBR;
+
   /// clock colors
   final int clockColorFront;
   final int clockColorBack;
@@ -1157,6 +1357,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.megaminxColorB,
     required this.megaminxColorDBL,
     required this.megaminxColorDL,
+    required this.ftoColorU,
+    required this.ftoColorR,
+    required this.ftoColorF,
+    required this.ftoColorL,
+    required this.ftoColorB,
+    required this.ftoColorBL,
+    required this.ftoColorD,
+    required this.ftoColorBR,
     required this.clockColorFront,
     required this.clockColorBack,
     required this.timerPressedColor,
@@ -1212,6 +1420,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['megaminx_color_b'] = Variable<int>(megaminxColorB);
     map['megaminx_color_d_b_l'] = Variable<int>(megaminxColorDBL);
     map['megaminx_color_d_l'] = Variable<int>(megaminxColorDL);
+    map['fto_color_u'] = Variable<int>(ftoColorU);
+    map['fto_color_r'] = Variable<int>(ftoColorR);
+    map['fto_color_f'] = Variable<int>(ftoColorF);
+    map['fto_color_l'] = Variable<int>(ftoColorL);
+    map['fto_color_b'] = Variable<int>(ftoColorB);
+    map['fto_color_b_l'] = Variable<int>(ftoColorBL);
+    map['fto_color_d'] = Variable<int>(ftoColorD);
+    map['fto_color_b_r'] = Variable<int>(ftoColorBR);
     map['clock_color_front'] = Variable<int>(clockColorFront);
     map['clock_color_back'] = Variable<int>(clockColorBack);
     map['timer_pressed_color'] = Variable<int>(timerPressedColor);
@@ -1260,6 +1476,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       megaminxColorB: Value(megaminxColorB),
       megaminxColorDBL: Value(megaminxColorDBL),
       megaminxColorDL: Value(megaminxColorDL),
+      ftoColorU: Value(ftoColorU),
+      ftoColorR: Value(ftoColorR),
+      ftoColorF: Value(ftoColorF),
+      ftoColorL: Value(ftoColorL),
+      ftoColorB: Value(ftoColorB),
+      ftoColorBL: Value(ftoColorBL),
+      ftoColorD: Value(ftoColorD),
+      ftoColorBR: Value(ftoColorBR),
       clockColorFront: Value(clockColorFront),
       clockColorBack: Value(clockColorBack),
       timerPressedColor: Value(timerPressedColor),
@@ -1310,6 +1534,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       megaminxColorB: serializer.fromJson<int>(json['megaminxColorB']),
       megaminxColorDBL: serializer.fromJson<int>(json['megaminxColorDBL']),
       megaminxColorDL: serializer.fromJson<int>(json['megaminxColorDL']),
+      ftoColorU: serializer.fromJson<int>(json['ftoColorU']),
+      ftoColorR: serializer.fromJson<int>(json['ftoColorR']),
+      ftoColorF: serializer.fromJson<int>(json['ftoColorF']),
+      ftoColorL: serializer.fromJson<int>(json['ftoColorL']),
+      ftoColorB: serializer.fromJson<int>(json['ftoColorB']),
+      ftoColorBL: serializer.fromJson<int>(json['ftoColorBL']),
+      ftoColorD: serializer.fromJson<int>(json['ftoColorD']),
+      ftoColorBR: serializer.fromJson<int>(json['ftoColorBR']),
       clockColorFront: serializer.fromJson<int>(json['clockColorFront']),
       clockColorBack: serializer.fromJson<int>(json['clockColorBack']),
       timerPressedColor: serializer.fromJson<int>(json['timerPressedColor']),
@@ -1357,6 +1589,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'megaminxColorB': serializer.toJson<int>(megaminxColorB),
       'megaminxColorDBL': serializer.toJson<int>(megaminxColorDBL),
       'megaminxColorDL': serializer.toJson<int>(megaminxColorDL),
+      'ftoColorU': serializer.toJson<int>(ftoColorU),
+      'ftoColorR': serializer.toJson<int>(ftoColorR),
+      'ftoColorF': serializer.toJson<int>(ftoColorF),
+      'ftoColorL': serializer.toJson<int>(ftoColorL),
+      'ftoColorB': serializer.toJson<int>(ftoColorB),
+      'ftoColorBL': serializer.toJson<int>(ftoColorBL),
+      'ftoColorD': serializer.toJson<int>(ftoColorD),
+      'ftoColorBR': serializer.toJson<int>(ftoColorBR),
       'clockColorFront': serializer.toJson<int>(clockColorFront),
       'clockColorBack': serializer.toJson<int>(clockColorBack),
       'timerPressedColor': serializer.toJson<int>(timerPressedColor),
@@ -1400,6 +1640,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     int? megaminxColorB,
     int? megaminxColorDBL,
     int? megaminxColorDL,
+    int? ftoColorU,
+    int? ftoColorR,
+    int? ftoColorF,
+    int? ftoColorL,
+    int? ftoColorB,
+    int? ftoColorBL,
+    int? ftoColorD,
+    int? ftoColorBR,
     int? clockColorFront,
     int? clockColorBack,
     int? timerPressedColor,
@@ -1440,6 +1688,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     megaminxColorB: megaminxColorB ?? this.megaminxColorB,
     megaminxColorDBL: megaminxColorDBL ?? this.megaminxColorDBL,
     megaminxColorDL: megaminxColorDL ?? this.megaminxColorDL,
+    ftoColorU: ftoColorU ?? this.ftoColorU,
+    ftoColorR: ftoColorR ?? this.ftoColorR,
+    ftoColorF: ftoColorF ?? this.ftoColorF,
+    ftoColorL: ftoColorL ?? this.ftoColorL,
+    ftoColorB: ftoColorB ?? this.ftoColorB,
+    ftoColorBL: ftoColorBL ?? this.ftoColorBL,
+    ftoColorD: ftoColorD ?? this.ftoColorD,
+    ftoColorBR: ftoColorBR ?? this.ftoColorBR,
     clockColorFront: clockColorFront ?? this.clockColorFront,
     clockColorBack: clockColorBack ?? this.clockColorBack,
     timerPressedColor: timerPressedColor ?? this.timerPressedColor,
@@ -1542,6 +1798,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       megaminxColorDL: data.megaminxColorDL.present
           ? data.megaminxColorDL.value
           : this.megaminxColorDL,
+      ftoColorU: data.ftoColorU.present ? data.ftoColorU.value : this.ftoColorU,
+      ftoColorR: data.ftoColorR.present ? data.ftoColorR.value : this.ftoColorR,
+      ftoColorF: data.ftoColorF.present ? data.ftoColorF.value : this.ftoColorF,
+      ftoColorL: data.ftoColorL.present ? data.ftoColorL.value : this.ftoColorL,
+      ftoColorB: data.ftoColorB.present ? data.ftoColorB.value : this.ftoColorB,
+      ftoColorBL: data.ftoColorBL.present
+          ? data.ftoColorBL.value
+          : this.ftoColorBL,
+      ftoColorD: data.ftoColorD.present ? data.ftoColorD.value : this.ftoColorD,
+      ftoColorBR: data.ftoColorBR.present
+          ? data.ftoColorBR.value
+          : this.ftoColorBR,
       clockColorFront: data.clockColorFront.present
           ? data.clockColorFront.value
           : this.clockColorFront,
@@ -1599,6 +1867,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('megaminxColorB: $megaminxColorB, ')
           ..write('megaminxColorDBL: $megaminxColorDBL, ')
           ..write('megaminxColorDL: $megaminxColorDL, ')
+          ..write('ftoColorU: $ftoColorU, ')
+          ..write('ftoColorR: $ftoColorR, ')
+          ..write('ftoColorF: $ftoColorF, ')
+          ..write('ftoColorL: $ftoColorL, ')
+          ..write('ftoColorB: $ftoColorB, ')
+          ..write('ftoColorBL: $ftoColorBL, ')
+          ..write('ftoColorD: $ftoColorD, ')
+          ..write('ftoColorBR: $ftoColorBR, ')
           ..write('clockColorFront: $clockColorFront, ')
           ..write('clockColorBack: $clockColorBack, ')
           ..write('timerPressedColor: $timerPressedColor, ')
@@ -1644,6 +1920,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     megaminxColorB,
     megaminxColorDBL,
     megaminxColorDL,
+    ftoColorU,
+    ftoColorR,
+    ftoColorF,
+    ftoColorL,
+    ftoColorB,
+    ftoColorBL,
+    ftoColorD,
+    ftoColorBR,
     clockColorFront,
     clockColorBack,
     timerPressedColor,
@@ -1688,6 +1972,14 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.megaminxColorB == this.megaminxColorB &&
           other.megaminxColorDBL == this.megaminxColorDBL &&
           other.megaminxColorDL == this.megaminxColorDL &&
+          other.ftoColorU == this.ftoColorU &&
+          other.ftoColorR == this.ftoColorR &&
+          other.ftoColorF == this.ftoColorF &&
+          other.ftoColorL == this.ftoColorL &&
+          other.ftoColorB == this.ftoColorB &&
+          other.ftoColorBL == this.ftoColorBL &&
+          other.ftoColorD == this.ftoColorD &&
+          other.ftoColorBR == this.ftoColorBR &&
           other.clockColorFront == this.clockColorFront &&
           other.clockColorBack == this.clockColorBack &&
           other.timerPressedColor == this.timerPressedColor &&
@@ -1730,6 +2022,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<int> megaminxColorB;
   final Value<int> megaminxColorDBL;
   final Value<int> megaminxColorDL;
+  final Value<int> ftoColorU;
+  final Value<int> ftoColorR;
+  final Value<int> ftoColorF;
+  final Value<int> ftoColorL;
+  final Value<int> ftoColorB;
+  final Value<int> ftoColorBL;
+  final Value<int> ftoColorD;
+  final Value<int> ftoColorBR;
   final Value<int> clockColorFront;
   final Value<int> clockColorBack;
   final Value<int> timerPressedColor;
@@ -1770,6 +2070,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.megaminxColorB = const Value.absent(),
     this.megaminxColorDBL = const Value.absent(),
     this.megaminxColorDL = const Value.absent(),
+    this.ftoColorU = const Value.absent(),
+    this.ftoColorR = const Value.absent(),
+    this.ftoColorF = const Value.absent(),
+    this.ftoColorL = const Value.absent(),
+    this.ftoColorB = const Value.absent(),
+    this.ftoColorBL = const Value.absent(),
+    this.ftoColorD = const Value.absent(),
+    this.ftoColorBR = const Value.absent(),
     this.clockColorFront = const Value.absent(),
     this.clockColorBack = const Value.absent(),
     this.timerPressedColor = const Value.absent(),
@@ -1811,6 +2119,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.megaminxColorB = const Value.absent(),
     this.megaminxColorDBL = const Value.absent(),
     this.megaminxColorDL = const Value.absent(),
+    this.ftoColorU = const Value.absent(),
+    this.ftoColorR = const Value.absent(),
+    this.ftoColorF = const Value.absent(),
+    this.ftoColorL = const Value.absent(),
+    this.ftoColorB = const Value.absent(),
+    this.ftoColorBL = const Value.absent(),
+    this.ftoColorD = const Value.absent(),
+    this.ftoColorBR = const Value.absent(),
     this.clockColorFront = const Value.absent(),
     this.clockColorBack = const Value.absent(),
     this.timerPressedColor = const Value.absent(),
@@ -1852,6 +2168,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<int>? megaminxColorB,
     Expression<int>? megaminxColorDBL,
     Expression<int>? megaminxColorDL,
+    Expression<int>? ftoColorU,
+    Expression<int>? ftoColorR,
+    Expression<int>? ftoColorF,
+    Expression<int>? ftoColorL,
+    Expression<int>? ftoColorB,
+    Expression<int>? ftoColorBL,
+    Expression<int>? ftoColorD,
+    Expression<int>? ftoColorBR,
     Expression<int>? clockColorFront,
     Expression<int>? clockColorBack,
     Expression<int>? timerPressedColor,
@@ -1894,6 +2218,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (megaminxColorB != null) 'megaminx_color_b': megaminxColorB,
       if (megaminxColorDBL != null) 'megaminx_color_d_b_l': megaminxColorDBL,
       if (megaminxColorDL != null) 'megaminx_color_d_l': megaminxColorDL,
+      if (ftoColorU != null) 'fto_color_u': ftoColorU,
+      if (ftoColorR != null) 'fto_color_r': ftoColorR,
+      if (ftoColorF != null) 'fto_color_f': ftoColorF,
+      if (ftoColorL != null) 'fto_color_l': ftoColorL,
+      if (ftoColorB != null) 'fto_color_b': ftoColorB,
+      if (ftoColorBL != null) 'fto_color_b_l': ftoColorBL,
+      if (ftoColorD != null) 'fto_color_d': ftoColorD,
+      if (ftoColorBR != null) 'fto_color_b_r': ftoColorBR,
       if (clockColorFront != null) 'clock_color_front': clockColorFront,
       if (clockColorBack != null) 'clock_color_back': clockColorBack,
       if (timerPressedColor != null) 'timer_pressed_color': timerPressedColor,
@@ -1937,6 +2269,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<int>? megaminxColorB,
     Value<int>? megaminxColorDBL,
     Value<int>? megaminxColorDL,
+    Value<int>? ftoColorU,
+    Value<int>? ftoColorR,
+    Value<int>? ftoColorF,
+    Value<int>? ftoColorL,
+    Value<int>? ftoColorB,
+    Value<int>? ftoColorBL,
+    Value<int>? ftoColorD,
+    Value<int>? ftoColorBR,
     Value<int>? clockColorFront,
     Value<int>? clockColorBack,
     Value<int>? timerPressedColor,
@@ -1978,6 +2318,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       megaminxColorB: megaminxColorB ?? this.megaminxColorB,
       megaminxColorDBL: megaminxColorDBL ?? this.megaminxColorDBL,
       megaminxColorDL: megaminxColorDL ?? this.megaminxColorDL,
+      ftoColorU: ftoColorU ?? this.ftoColorU,
+      ftoColorR: ftoColorR ?? this.ftoColorR,
+      ftoColorF: ftoColorF ?? this.ftoColorF,
+      ftoColorL: ftoColorL ?? this.ftoColorL,
+      ftoColorB: ftoColorB ?? this.ftoColorB,
+      ftoColorBL: ftoColorBL ?? this.ftoColorBL,
+      ftoColorD: ftoColorD ?? this.ftoColorD,
+      ftoColorBR: ftoColorBR ?? this.ftoColorBR,
       clockColorFront: clockColorFront ?? this.clockColorFront,
       clockColorBack: clockColorBack ?? this.clockColorBack,
       timerPressedColor: timerPressedColor ?? this.timerPressedColor,
@@ -2093,6 +2441,30 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     if (megaminxColorDL.present) {
       map['megaminx_color_d_l'] = Variable<int>(megaminxColorDL.value);
     }
+    if (ftoColorU.present) {
+      map['fto_color_u'] = Variable<int>(ftoColorU.value);
+    }
+    if (ftoColorR.present) {
+      map['fto_color_r'] = Variable<int>(ftoColorR.value);
+    }
+    if (ftoColorF.present) {
+      map['fto_color_f'] = Variable<int>(ftoColorF.value);
+    }
+    if (ftoColorL.present) {
+      map['fto_color_l'] = Variable<int>(ftoColorL.value);
+    }
+    if (ftoColorB.present) {
+      map['fto_color_b'] = Variable<int>(ftoColorB.value);
+    }
+    if (ftoColorBL.present) {
+      map['fto_color_b_l'] = Variable<int>(ftoColorBL.value);
+    }
+    if (ftoColorD.present) {
+      map['fto_color_d'] = Variable<int>(ftoColorD.value);
+    }
+    if (ftoColorBR.present) {
+      map['fto_color_b_r'] = Variable<int>(ftoColorBR.value);
+    }
     if (clockColorFront.present) {
       map['clock_color_front'] = Variable<int>(clockColorFront.value);
     }
@@ -2150,6 +2522,14 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('megaminxColorB: $megaminxColorB, ')
           ..write('megaminxColorDBL: $megaminxColorDBL, ')
           ..write('megaminxColorDL: $megaminxColorDL, ')
+          ..write('ftoColorU: $ftoColorU, ')
+          ..write('ftoColorR: $ftoColorR, ')
+          ..write('ftoColorF: $ftoColorF, ')
+          ..write('ftoColorL: $ftoColorL, ')
+          ..write('ftoColorB: $ftoColorB, ')
+          ..write('ftoColorBL: $ftoColorBL, ')
+          ..write('ftoColorD: $ftoColorD, ')
+          ..write('ftoColorBR: $ftoColorBR, ')
           ..write('clockColorFront: $clockColorFront, ')
           ..write('clockColorBack: $clockColorBack, ')
           ..write('timerPressedColor: $timerPressedColor, ')
@@ -3475,6 +3855,14 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<int> megaminxColorB,
   Value<int> megaminxColorDBL,
   Value<int> megaminxColorDL,
+  Value<int> ftoColorU,
+  Value<int> ftoColorR,
+  Value<int> ftoColorF,
+  Value<int> ftoColorL,
+  Value<int> ftoColorB,
+  Value<int> ftoColorBL,
+  Value<int> ftoColorD,
+  Value<int> ftoColorBR,
   Value<int> clockColorFront,
   Value<int> clockColorBack,
   Value<int> timerPressedColor,
@@ -3516,6 +3904,14 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> megaminxColorB,
   Value<int> megaminxColorDBL,
   Value<int> megaminxColorDL,
+  Value<int> ftoColorU,
+  Value<int> ftoColorR,
+  Value<int> ftoColorF,
+  Value<int> ftoColorL,
+  Value<int> ftoColorB,
+  Value<int> ftoColorBL,
+  Value<int> ftoColorD,
+  Value<int> ftoColorBR,
   Value<int> clockColorFront,
   Value<int> clockColorBack,
   Value<int> timerPressedColor,
@@ -3697,6 +4093,46 @@ class $$SettingsTableFilterComposer
 
   ColumnFilters<int> get megaminxColorDL => $composableBuilder(
     column: $table.megaminxColorDL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorU => $composableBuilder(
+    column: $table.ftoColorU,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorR => $composableBuilder(
+    column: $table.ftoColorR,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorF => $composableBuilder(
+    column: $table.ftoColorF,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorL => $composableBuilder(
+    column: $table.ftoColorL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorB => $composableBuilder(
+    column: $table.ftoColorB,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorBL => $composableBuilder(
+    column: $table.ftoColorBL,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorD => $composableBuilder(
+    column: $table.ftoColorD,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get ftoColorBR => $composableBuilder(
+    column: $table.ftoColorBR,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3905,6 +4341,46 @@ class $$SettingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get ftoColorU => $composableBuilder(
+    column: $table.ftoColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ftoColorR => $composableBuilder(
+    column: $table.ftoColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ftoColorF => $composableBuilder(
+    column: $table.ftoColorF,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ftoColorL => $composableBuilder(
+    column: $table.ftoColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ftoColorB => $composableBuilder(
+    column: $table.ftoColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ftoColorBL => $composableBuilder(
+    column: $table.ftoColorBL,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ftoColorD => $composableBuilder(
+    column: $table.ftoColorD,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get ftoColorBR => $composableBuilder(
+    column: $table.ftoColorBR,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get clockColorFront => $composableBuilder(
     column: $table.clockColorFront,
     builder: (column) => ColumnOrderings(column),
@@ -4105,6 +4581,34 @@ class $$SettingsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get ftoColorU =>
+      $composableBuilder(column: $table.ftoColorU, builder: (column) => column);
+
+  GeneratedColumn<int> get ftoColorR =>
+      $composableBuilder(column: $table.ftoColorR, builder: (column) => column);
+
+  GeneratedColumn<int> get ftoColorF =>
+      $composableBuilder(column: $table.ftoColorF, builder: (column) => column);
+
+  GeneratedColumn<int> get ftoColorL =>
+      $composableBuilder(column: $table.ftoColorL, builder: (column) => column);
+
+  GeneratedColumn<int> get ftoColorB =>
+      $composableBuilder(column: $table.ftoColorB, builder: (column) => column);
+
+  GeneratedColumn<int> get ftoColorBL => $composableBuilder(
+    column: $table.ftoColorBL,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get ftoColorD =>
+      $composableBuilder(column: $table.ftoColorD, builder: (column) => column);
+
+  GeneratedColumn<int> get ftoColorBR => $composableBuilder(
+    column: $table.ftoColorBR,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<int> get clockColorFront => $composableBuilder(
     column: $table.clockColorFront,
     builder: (column) => column,
@@ -4200,6 +4704,14 @@ class $$SettingsTableTableManager
                 Value<int> megaminxColorB = const Value.absent(),
                 Value<int> megaminxColorDBL = const Value.absent(),
                 Value<int> megaminxColorDL = const Value.absent(),
+                Value<int> ftoColorU = const Value.absent(),
+                Value<int> ftoColorR = const Value.absent(),
+                Value<int> ftoColorF = const Value.absent(),
+                Value<int> ftoColorL = const Value.absent(),
+                Value<int> ftoColorB = const Value.absent(),
+                Value<int> ftoColorBL = const Value.absent(),
+                Value<int> ftoColorD = const Value.absent(),
+                Value<int> ftoColorBR = const Value.absent(),
                 Value<int> clockColorFront = const Value.absent(),
                 Value<int> clockColorBack = const Value.absent(),
                 Value<int> timerPressedColor = const Value.absent(),
@@ -4240,6 +4752,14 @@ class $$SettingsTableTableManager
                 megaminxColorB: megaminxColorB,
                 megaminxColorDBL: megaminxColorDBL,
                 megaminxColorDL: megaminxColorDL,
+                ftoColorU: ftoColorU,
+                ftoColorR: ftoColorR,
+                ftoColorF: ftoColorF,
+                ftoColorL: ftoColorL,
+                ftoColorB: ftoColorB,
+                ftoColorBL: ftoColorBL,
+                ftoColorD: ftoColorD,
+                ftoColorBR: ftoColorBR,
                 clockColorFront: clockColorFront,
                 clockColorBack: clockColorBack,
                 timerPressedColor: timerPressedColor,
@@ -4282,6 +4802,14 @@ class $$SettingsTableTableManager
                 Value<int> megaminxColorB = const Value.absent(),
                 Value<int> megaminxColorDBL = const Value.absent(),
                 Value<int> megaminxColorDL = const Value.absent(),
+                Value<int> ftoColorU = const Value.absent(),
+                Value<int> ftoColorR = const Value.absent(),
+                Value<int> ftoColorF = const Value.absent(),
+                Value<int> ftoColorL = const Value.absent(),
+                Value<int> ftoColorB = const Value.absent(),
+                Value<int> ftoColorBL = const Value.absent(),
+                Value<int> ftoColorD = const Value.absent(),
+                Value<int> ftoColorBR = const Value.absent(),
                 Value<int> clockColorFront = const Value.absent(),
                 Value<int> clockColorBack = const Value.absent(),
                 Value<int> timerPressedColor = const Value.absent(),
@@ -4322,6 +4850,14 @@ class $$SettingsTableTableManager
                 megaminxColorB: megaminxColorB,
                 megaminxColorDBL: megaminxColorDBL,
                 megaminxColorDL: megaminxColorDL,
+                ftoColorU: ftoColorU,
+                ftoColorR: ftoColorR,
+                ftoColorF: ftoColorF,
+                ftoColorL: ftoColorL,
+                ftoColorB: ftoColorB,
+                ftoColorBL: ftoColorBL,
+                ftoColorD: ftoColorD,
+                ftoColorBR: ftoColorBR,
                 clockColorFront: clockColorFront,
                 clockColorBack: clockColorBack,
                 timerPressedColor: timerPressedColor,

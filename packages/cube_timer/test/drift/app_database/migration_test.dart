@@ -15,6 +15,7 @@ import "generated/schema_v5.dart" as v5;
 import "generated/schema_v6.dart" as v6;
 import "generated/schema_v7.dart" as v7;
 import "generated/schema_v8.dart" as v8;
+import "generated/schema_v9.dart" as v9;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -79,9 +80,10 @@ void main() {
       pyraminxColorL: 9,
       clockColorFront: 10,
       clockColorBack: 11,
-      timerPressedColor: DefaultColors.timerColors.pressed,
-      timerHoldingColor: DefaultColors.timerColors.holding,
-      timerAcceptColor: DefaultColors.timerColors.accept,
+      // The defaults of the day, not today's, which may have moved since.
+      timerPressedColor: 0xFFFF7979,
+      timerHoldingColor: 0xFFFFFF79,
+      timerAcceptColor: 0xFF20E264,
     );
 
     const sessions = [
@@ -488,18 +490,87 @@ void main() {
         expect(rows.map((e) => e.toJson()), [
           {
             ...old.toJson(),
-            "megaminxColorU": DefaultColors.megaminxColors.u,
-            "megaminxColorBL": DefaultColors.megaminxColors.bl,
-            "megaminxColorBR": DefaultColors.megaminxColors.br,
-            "megaminxColorR": DefaultColors.megaminxColors.r,
-            "megaminxColorF": DefaultColors.megaminxColors.f,
-            "megaminxColorL": DefaultColors.megaminxColors.l,
-            "megaminxColorD": DefaultColors.megaminxColors.d,
-            "megaminxColorDR": DefaultColors.megaminxColors.dr,
-            "megaminxColorDBR": DefaultColors.megaminxColors.dbr,
-            "megaminxColorB": DefaultColors.megaminxColors.b,
-            "megaminxColorDBL": DefaultColors.megaminxColors.dbl,
-            "megaminxColorDL": DefaultColors.megaminxColors.dl,
+            "megaminxColorU": DefaultColors.megaminxColors.u.value,
+            "megaminxColorBL": DefaultColors.megaminxColors.bl.value,
+            "megaminxColorBR": DefaultColors.megaminxColors.br.value,
+            "megaminxColorR": DefaultColors.megaminxColors.r.value,
+            "megaminxColorF": DefaultColors.megaminxColors.f.value,
+            "megaminxColorL": DefaultColors.megaminxColors.l.value,
+            "megaminxColorD": DefaultColors.megaminxColors.d.value,
+            "megaminxColorDR": DefaultColors.megaminxColors.dr.value,
+            "megaminxColorDBR": DefaultColors.megaminxColors.dbr.value,
+            "megaminxColorB": DefaultColors.megaminxColors.b.value,
+            "megaminxColorDBL": DefaultColors.megaminxColors.dbl.value,
+            "megaminxColorDL": DefaultColors.megaminxColors.dl.value,
+          },
+        ]);
+      },
+    );
+  });
+
+  test("v8 to v9 keeps the settings, and gives the FTO its colours", () async {
+    const old = v8.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "text,vibration",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      recordAverageAlert: 0,
+      locale: "zh_TW",
+      themeMode: "dark",
+      primaryColor: 15,
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+      showRunningTime: 0,
+      megaminxColorU: 101,
+      megaminxColorBL: 102,
+      megaminxColorBR: 103,
+      megaminxColorR: 104,
+      megaminxColorF: 105,
+      megaminxColorL: 106,
+      megaminxColorD: 107,
+      megaminxColorDR: 108,
+      megaminxColorDBR: 109,
+      megaminxColorB: 110,
+      megaminxColorDBL: 111,
+      megaminxColorDL: 112,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 8,
+      newVersion: 9,
+      createOld: v8.DatabaseAtV8.new,
+      createNew: v9.DatabaseAtV9.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        final rows = await newDb.select(newDb.settings).get();
+        expect(rows.map((e) => e.toJson()), [
+          {
+            ...old.toJson(),
+            "ftoColorU": DefaultColors.ftoColors.u.value,
+            "ftoColorR": DefaultColors.ftoColors.r.value,
+            "ftoColorF": DefaultColors.ftoColors.f.value,
+            "ftoColorL": DefaultColors.ftoColors.l.value,
+            "ftoColorB": DefaultColors.ftoColors.b.value,
+            "ftoColorBL": DefaultColors.ftoColors.bl.value,
+            "ftoColorD": DefaultColors.ftoColors.d.value,
+            "ftoColorBR": DefaultColors.ftoColors.br.value,
           },
         ]);
       },

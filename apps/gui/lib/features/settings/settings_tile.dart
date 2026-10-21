@@ -1,3 +1,4 @@
+import "package:cube_timer/cube_timer.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
 const groupSpacing = 16.0;
@@ -43,27 +44,15 @@ class ColorTile extends StatelessWidget {
   final Color color;
   final Color defaultColor;
   final Future<void> Function(Color color) onSubmit;
-  final List<Color> presets;
+  final List<Color>? presets;
   const ColorTile({
     super.key,
     required this.title,
     required this.color,
     required this.defaultColor,
     required this.onSubmit,
-    this.presets = _presets,
+    this.presets,
   });
-
-  // Common sticker colors offered as quick picks.
-  static const _presets = [
-    Color(0xFFFFFFFF),
-    Color(0xFFFFFF00),
-    Color(0xFFFFC13D),
-    Color(0xFFEE6B6B),
-    Color(0xFF00FF7F),
-    Color(0xFF1E90FF),
-    Color(0xFF9B59B6),
-    Color(0xFF000000),
-  ];
 
   /// Formats [color] as an uppercase `RRGGBB` hex string, dropping alpha.
   String get _colorText => (color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, "0").toUpperCase();
@@ -85,7 +74,7 @@ class ColorTile extends StatelessWidget {
         title: title,
         initial: color,
         defaultColor: defaultColor,
-        swatches: presets,
+        swatches: presets ?? DefaultColorsPreset.presetList.map((e) => Color(e)).toList(),
       );
       if (newColor != null) await onSubmit(newColor);
     },

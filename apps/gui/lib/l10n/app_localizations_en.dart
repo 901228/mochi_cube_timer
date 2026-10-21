@@ -165,6 +165,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get puzzleMegaminxColors => 'Megaminx colors';
 
   @override
+  String get puzzleFtoColors => 'FTO colors';
+
+  @override
   String get puzzleClockColors => 'Clock colors';
 
   @override

@@ -200,7 +200,57 @@ class _PuzzleSettingsSectionsState extends State<PuzzleSettingsSections> {
             onSubmit: (c) => dao.save(SettingsCompanion(megaminxColorDL: Value(c.toARGB32()))),
           ),
         ]),
-        _group(3, l10n.puzzleClockColors, [
+        _group(3, l10n.puzzleFtoColors, [
+          ColorTile(
+            title: "U",
+            color: settings.ftoColorU.toColor(),
+            defaultColor: DefaultColors.ftoColors.u.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorU: Value(c.toARGB32()))),
+          ),
+          ColorTile(
+            title: "R",
+            color: settings.ftoColorR.toColor(),
+            defaultColor: DefaultColors.ftoColors.r.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorR: Value(c.toARGB32()))),
+          ),
+          ColorTile(
+            title: "F",
+            color: settings.ftoColorF.toColor(),
+            defaultColor: DefaultColors.ftoColors.f.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorF: Value(c.toARGB32()))),
+          ),
+          ColorTile(
+            title: "L",
+            color: settings.ftoColorL.toColor(),
+            defaultColor: DefaultColors.ftoColors.l.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorL: Value(c.toARGB32()))),
+          ),
+          ColorTile(
+            title: "B",
+            color: settings.ftoColorB.toColor(),
+            defaultColor: DefaultColors.ftoColors.b.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorB: Value(c.toARGB32()))),
+          ),
+          ColorTile(
+            title: "BL",
+            color: settings.ftoColorBL.toColor(),
+            defaultColor: DefaultColors.ftoColors.bl.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorBL: Value(c.toARGB32()))),
+          ),
+          ColorTile(
+            title: "D",
+            color: settings.ftoColorD.toColor(),
+            defaultColor: DefaultColors.ftoColors.d.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorD: Value(c.toARGB32()))),
+          ),
+          ColorTile(
+            title: "BR",
+            color: settings.ftoColorBR.toColor(),
+            defaultColor: DefaultColors.ftoColors.br.toColor(),
+            onSubmit: (c) => dao.save(SettingsCompanion(ftoColorBR: Value(c.toARGB32()))),
+          ),
+        ]),
+        _group(4, l10n.puzzleClockColors, [
           ColorTile(
             title: l10n.faceFront,
             color: settings.clockColorFront.toColor(),
