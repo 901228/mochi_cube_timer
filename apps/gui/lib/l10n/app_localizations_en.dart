@@ -171,18 +171,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get puzzleClockColors => 'Clock colors';
 
   @override
-  String get faceUp => 'Up';
-
-  @override
-  String get faceDown => 'Down';
-
-  @override
-  String get faceLeft => 'Left';
-
-  @override
-  String get faceRight => 'Right';
-
-  @override
   String get faceFront => 'Front';
 
   @override

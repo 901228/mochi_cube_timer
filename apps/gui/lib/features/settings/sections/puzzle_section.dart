@@ -64,37 +64,37 @@ class _PuzzleSettingsSectionsState extends State<PuzzleSettingsSections> {
       children: [
         _group(0, l10n.puzzleCubeColors, [
           ColorTile(
-            title: l10n.faceUp,
+            title: "U",
             color: settings.cubeColorU.toColor(),
             defaultColor: DefaultColors.cubeColors.U.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(cubeColorU: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceRight,
+            title: "R",
             color: settings.cubeColorR.toColor(),
             defaultColor: DefaultColors.cubeColors.R.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(cubeColorR: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceFront,
+            title: "F",
             color: settings.cubeColorF.toColor(),
             defaultColor: DefaultColors.cubeColors.F.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(cubeColorF: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceDown,
+            title: "D",
             color: settings.cubeColorD.toColor(),
             defaultColor: DefaultColors.cubeColors.D.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(cubeColorD: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceLeft,
+            title: "L",
             color: settings.cubeColorL.toColor(),
             defaultColor: DefaultColors.cubeColors.L.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(cubeColorL: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceBack,
+            title: "B",
             color: settings.cubeColorB.toColor(),
             defaultColor: DefaultColors.cubeColors.B.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(cubeColorB: Value(c.toARGB32()))),
@@ -102,25 +102,25 @@ class _PuzzleSettingsSectionsState extends State<PuzzleSettingsSections> {
         ]),
         _group(1, l10n.puzzlePyraminxColors, [
           ColorTile(
-            title: l10n.faceUp,
+            title: "U",
             color: settings.pyraminxColorU.toColor(),
             defaultColor: DefaultColors.pyraminxColors.U.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(pyraminxColorU: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceBack,
+            title: "B",
             color: settings.pyraminxColorB.toColor(),
             defaultColor: DefaultColors.pyraminxColors.B.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(pyraminxColorB: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceRight,
+            title: "R",
             color: settings.pyraminxColorR.toColor(),
             defaultColor: DefaultColors.pyraminxColors.R.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(pyraminxColorR: Value(c.toARGB32()))),
           ),
           ColorTile(
-            title: l10n.faceLeft,
+            title: "L",
             color: settings.pyraminxColorL.toColor(),
             defaultColor: DefaultColors.pyraminxColors.L.toColor(),
             onSubmit: (c) => dao.save(SettingsCompanion(pyraminxColorL: Value(c.toARGB32()))),

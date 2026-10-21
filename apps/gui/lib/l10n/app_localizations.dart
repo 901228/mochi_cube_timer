@@ -410,30 +410,6 @@ abstract class AppLocalizations {
   /// **'Clock colors'**
   String get puzzleClockColors;
 
-  /// No description provided for @faceUp.
-  ///
-  /// In en, this message translates to:
-  /// **'Up'**
-  String get faceUp;
-
-  /// No description provided for @faceDown.
-  ///
-  /// In en, this message translates to:
-  /// **'Down'**
-  String get faceDown;
-
-  /// No description provided for @faceLeft.
-  ///
-  /// In en, this message translates to:
-  /// **'Left'**
-  String get faceLeft;
-
-  /// No description provided for @faceRight.
-  ///
-  /// In en, this message translates to:
-  /// **'Right'**
-  String get faceRight;
-
   /// No description provided for @faceFront.
   ///
   /// In en, this message translates to:

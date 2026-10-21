@@ -171,18 +171,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get puzzleClockColors => '魔錶顏色';
 
   @override
-  String get faceUp => '上';
-
-  @override
-  String get faceDown => '下';
-
-  @override
-  String get faceLeft => '左';
-
-  @override
-  String get faceRight => '右';
-
-  @override
   String get faceFront => '前';
 
   @override
