@@ -122,7 +122,11 @@ class Cube2DView extends StatelessWidget {
                   },
                   inset: 0.06,
                   // The Megaminx has no colour scheme to read its orientation from, as the cubes do.
-                  labels: puzzle == .megaminx ? const {0: "U", 4: "F"} : const {},
+                  labels: switch (puzzle) {
+                    .megaminx => const {0: "U", 4: "F"},
+                    .fto => const {0: "U", 1: "R", 2: "F", 3: "L", 4: "B", 5: "BL", 6: "D", 7: "BR"},
+                    _ => const {},
+                  },
                 ),
                 final ClockLayout clockLayout => ClockPainter(
                   layout: clockLayout,
@@ -208,13 +212,25 @@ class PuzzlePainter extends CustomPainter {
     // Too small to read, and only a smudge on the stickers.
     if (scale * 0.75 < 8) return;
     for (final MapEntry(key: face, value: text) in labels.entries) {
-      // The letter goes in the face's middle sticker, as big as fits there: it is about as wide and
-      // tall as a circle of its own size. When the sticker is too small for a readable one, the
-      // letter overlaps the lines round it.
-      final middle = layout[(face + 1) * (layout.length ~/ faces) - 1];
-      final cx = middle.fold(0.0, (sum, p) => sum + p.$1) / middle.length;
-      final cy = middle.fold(0.0, (sum, p) => sum + p.$2) / middle.length;
-      final fontSize = max(_inradius(middle) * (1 - inset) * scale * 1.7, 9.0);
+      final perFace = layout.length ~/ faces;
+      final double cx, cy, fontSize;
+      if (faces == 8) {
+        // The FTO's face is nine triangles round one corner, so there is no middle sticker: the name
+        // goes on the corner, the middle of the square the face fills.
+        final points = [for (var i = 0; i < perFace; i++) ...layout[face * perFace + i]];
+        final xs = points.map((p) => p.$1), ys = points.map((p) => p.$2);
+        cx = (xs.reduce(min) + xs.reduce(max)) / 2;
+        cy = (ys.reduce(min) + ys.reduce(max)) / 2;
+        fontSize = max(scale * 0.4, 7.0);
+      } else {
+        // The letter goes in the face's middle sticker, as big as fits there: it is about as wide and
+        // tall as a circle of its own size. When the sticker is too small for a readable one, the
+        // letter overlaps the lines round it.
+        final middle = layout[(face + 1) * perFace - 1];
+        cx = middle.fold(0.0, (sum, p) => sum + p.$1) / middle.length;
+        cy = middle.fold(0.0, (sum, p) => sum + p.$2) / middle.length;
+        fontSize = max(_inradius(middle) * (1 - inset) * scale * 1.7, 9.0);
+      }
       // Outlined in white so it reads on any sticker, as csTimer's does, without the weight that
       // would run a small letter together.
       for (final stroked in [true, false]) {
