@@ -38,19 +38,10 @@ class PuzzleSelectionDialog extends StatelessWidget {
 }
 
 class _PuzzleTile extends StatelessWidget {
-  const _PuzzleTile({required this.puzzle, this.onPress});
+  const _PuzzleTile({required this.puzzle, required this.onPress});
 
   final Puzzle puzzle;
-  final VoidCallback? onPress;
-
-  // TODO: add all puzzle scramble and remove this
-  /// Greyscale filter
-  static const _disabledFilter = ColorFilter.matrix(<double>[
-    0.2126, 0.7152, 0.0722, 0, 0, //
-    0.2126, 0.7152, 0.0722, 0, 0, //
-    0.2126, 0.7152, 0.0722, 0, 0, //
-    0, 0, 0, 0.5, 0, //
-  ]);
+  final VoidCallback onPress;
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +53,6 @@ class _PuzzleTile extends StatelessWidget {
         Text(puzzle.displayName(context.l10n), textAlign: .center, maxLines: 2, overflow: .ellipsis),
       ],
     );
-
-    // disabled
-    if (onPress == null) {
-      content = ColorFiltered(colorFilter: _disabledFilter, child: content);
-    }
 
     return MochiTappable(
       onPress: onPress,
