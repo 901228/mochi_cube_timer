@@ -3,7 +3,8 @@
 part of 'app_database.dart';
 
 // ignore_for_file: type=lint
-class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEntry> {
+class $SettingsTable extends Settings
+    with TableInfo<$SettingsTable, SettingsEntry> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -17,7 +18,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _inspectionEnabledMeta = const VerificationMeta('inspectionEnabled');
+  static const VerificationMeta _inspectionEnabledMeta = const VerificationMeta(
+    'inspectionEnabled',
+  );
   @override
   late final GeneratedColumn<bool> inspectionEnabled = GeneratedColumn<bool>(
     'inspection_enabled',
@@ -25,10 +28,14 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("inspection_enabled" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("inspection_enabled" IN (0, 1))',
+    ),
     defaultValue: const Constant(true),
   );
-  static const VerificationMeta _inspectDurationMeta = const VerificationMeta('inspectDuration');
+  static const VerificationMeta _inspectDurationMeta = const VerificationMeta(
+    'inspectDuration',
+  );
   @override
   late final GeneratedColumn<int> inspectDuration = GeneratedColumn<int>(
     'inspect_duration',
@@ -38,7 +45,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: const Constant(15),
   );
-  static const VerificationMeta _alertEnabledMeta = const VerificationMeta('alertEnabled');
+  static const VerificationMeta _alertEnabledMeta = const VerificationMeta(
+    'alertEnabled',
+  );
   @override
   late final GeneratedColumn<bool> alertEnabled = GeneratedColumn<bool>(
     'alert_enabled',
@@ -46,11 +55,14 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("alert_enabled" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("alert_enabled" IN (0, 1))',
+    ),
     defaultValue: const Constant(true),
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Set<AlertType>, String> alertTypes = GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<Set<AlertType>, String>
+  alertTypes = GeneratedColumn<String>(
     'alert_types',
     aliasedName,
     false,
@@ -58,7 +70,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: const Constant("text,audio,vibration"),
   ).withConverter<Set<AlertType>>($SettingsTable.$converteralertTypes);
-  static const VerificationMeta _recordBestAlertMeta = const VerificationMeta('recordBestAlert');
+  static const VerificationMeta _recordBestAlertMeta = const VerificationMeta(
+    'recordBestAlert',
+  );
   @override
   late final GeneratedColumn<bool> recordBestAlert = GeneratedColumn<bool>(
     'record_best_alert',
@@ -66,10 +80,14 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("record_best_alert" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("record_best_alert" IN (0, 1))',
+    ),
     defaultValue: const Constant(true),
   );
-  static const VerificationMeta _recordWorstAlertMeta = const VerificationMeta('recordWorstAlert');
+  static const VerificationMeta _recordWorstAlertMeta = const VerificationMeta(
+    'recordWorstAlert',
+  );
   @override
   late final GeneratedColumn<bool> recordWorstAlert = GeneratedColumn<bool>(
     'record_worst_alert',
@@ -77,10 +95,13 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("record_worst_alert" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("record_worst_alert" IN (0, 1))',
+    ),
     defaultValue: const Constant(true),
   );
-  static const VerificationMeta _recordAverageAlertMeta = const VerificationMeta('recordAverageAlert');
+  static const VerificationMeta _recordAverageAlertMeta =
+      const VerificationMeta('recordAverageAlert');
   @override
   late final GeneratedColumn<bool> recordAverageAlert = GeneratedColumn<bool>(
     'record_average_alert',
@@ -88,7 +109,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("record_average_alert" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("record_average_alert" IN (0, 1))',
+    ),
     defaultValue: const Constant(true),
   );
   static const VerificationMeta _localeMeta = const VerificationMeta('locale');
@@ -101,15 +124,18 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<AppThemeMode, String> themeMode = GeneratedColumn<String>(
-    'theme_mode',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant("system"),
-  ).withConverter<AppThemeMode>($SettingsTable.$converterthemeMode);
-  static const VerificationMeta _primaryColorMeta = const VerificationMeta('primaryColor');
+  late final GeneratedColumnWithTypeConverter<AppThemeMode, String> themeMode =
+      GeneratedColumn<String>(
+        'theme_mode',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant("system"),
+      ).withConverter<AppThemeMode>($SettingsTable.$converterthemeMode);
+  static const VerificationMeta _primaryColorMeta = const VerificationMeta(
+    'primaryColor',
+  );
   @override
   late final GeneratedColumn<int> primaryColor = GeneratedColumn<int>(
     'primary_color',
@@ -118,7 +144,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _cubeColorUMeta = const VerificationMeta('cubeColorU');
+  static const VerificationMeta _cubeColorUMeta = const VerificationMeta(
+    'cubeColorU',
+  );
   @override
   late final GeneratedColumn<int> cubeColorU = GeneratedColumn<int>(
     'cube_color_u',
@@ -128,7 +156,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.cubeColors.U.value),
   );
-  static const VerificationMeta _cubeColorRMeta = const VerificationMeta('cubeColorR');
+  static const VerificationMeta _cubeColorRMeta = const VerificationMeta(
+    'cubeColorR',
+  );
   @override
   late final GeneratedColumn<int> cubeColorR = GeneratedColumn<int>(
     'cube_color_r',
@@ -138,7 +168,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.cubeColors.R.value),
   );
-  static const VerificationMeta _cubeColorFMeta = const VerificationMeta('cubeColorF');
+  static const VerificationMeta _cubeColorFMeta = const VerificationMeta(
+    'cubeColorF',
+  );
   @override
   late final GeneratedColumn<int> cubeColorF = GeneratedColumn<int>(
     'cube_color_f',
@@ -148,7 +180,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.cubeColors.F.value),
   );
-  static const VerificationMeta _cubeColorDMeta = const VerificationMeta('cubeColorD');
+  static const VerificationMeta _cubeColorDMeta = const VerificationMeta(
+    'cubeColorD',
+  );
   @override
   late final GeneratedColumn<int> cubeColorD = GeneratedColumn<int>(
     'cube_color_d',
@@ -158,7 +192,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.cubeColors.D.value),
   );
-  static const VerificationMeta _cubeColorLMeta = const VerificationMeta('cubeColorL');
+  static const VerificationMeta _cubeColorLMeta = const VerificationMeta(
+    'cubeColorL',
+  );
   @override
   late final GeneratedColumn<int> cubeColorL = GeneratedColumn<int>(
     'cube_color_l',
@@ -168,7 +204,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.cubeColors.L.value),
   );
-  static const VerificationMeta _cubeColorBMeta = const VerificationMeta('cubeColorB');
+  static const VerificationMeta _cubeColorBMeta = const VerificationMeta(
+    'cubeColorB',
+  );
   @override
   late final GeneratedColumn<int> cubeColorB = GeneratedColumn<int>(
     'cube_color_b',
@@ -178,7 +216,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.cubeColors.B.value),
   );
-  static const VerificationMeta _pyraminxColorUMeta = const VerificationMeta('pyraminxColorU');
+  static const VerificationMeta _pyraminxColorUMeta = const VerificationMeta(
+    'pyraminxColorU',
+  );
   @override
   late final GeneratedColumn<int> pyraminxColorU = GeneratedColumn<int>(
     'pyraminx_color_u',
@@ -188,7 +228,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.pyraminxColors.U.value),
   );
-  static const VerificationMeta _pyraminxColorBMeta = const VerificationMeta('pyraminxColorB');
+  static const VerificationMeta _pyraminxColorBMeta = const VerificationMeta(
+    'pyraminxColorB',
+  );
   @override
   late final GeneratedColumn<int> pyraminxColorB = GeneratedColumn<int>(
     'pyraminx_color_b',
@@ -198,7 +240,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.pyraminxColors.B.value),
   );
-  static const VerificationMeta _pyraminxColorRMeta = const VerificationMeta('pyraminxColorR');
+  static const VerificationMeta _pyraminxColorRMeta = const VerificationMeta(
+    'pyraminxColorR',
+  );
   @override
   late final GeneratedColumn<int> pyraminxColorR = GeneratedColumn<int>(
     'pyraminx_color_r',
@@ -208,7 +252,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.pyraminxColors.R.value),
   );
-  static const VerificationMeta _pyraminxColorLMeta = const VerificationMeta('pyraminxColorL');
+  static const VerificationMeta _pyraminxColorLMeta = const VerificationMeta(
+    'pyraminxColorL',
+  );
   @override
   late final GeneratedColumn<int> pyraminxColorL = GeneratedColumn<int>(
     'pyraminx_color_l',
@@ -218,7 +264,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.pyraminxColors.L.value),
   );
-  static const VerificationMeta _megaminxColorUMeta = const VerificationMeta('megaminxColorU');
+  static const VerificationMeta _megaminxColorUMeta = const VerificationMeta(
+    'megaminxColorU',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorU = GeneratedColumn<int>(
     'megaminx_color_u',
@@ -228,7 +276,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.u.value),
   );
-  static const VerificationMeta _megaminxColorBLMeta = const VerificationMeta('megaminxColorBL');
+  static const VerificationMeta _megaminxColorBLMeta = const VerificationMeta(
+    'megaminxColorBL',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorBL = GeneratedColumn<int>(
     'megaminx_color_b_l',
@@ -238,7 +288,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.bl.value),
   );
-  static const VerificationMeta _megaminxColorBRMeta = const VerificationMeta('megaminxColorBR');
+  static const VerificationMeta _megaminxColorBRMeta = const VerificationMeta(
+    'megaminxColorBR',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorBR = GeneratedColumn<int>(
     'megaminx_color_b_r',
@@ -248,7 +300,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.br.value),
   );
-  static const VerificationMeta _megaminxColorRMeta = const VerificationMeta('megaminxColorR');
+  static const VerificationMeta _megaminxColorRMeta = const VerificationMeta(
+    'megaminxColorR',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorR = GeneratedColumn<int>(
     'megaminx_color_r',
@@ -258,7 +312,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.r.value),
   );
-  static const VerificationMeta _megaminxColorFMeta = const VerificationMeta('megaminxColorF');
+  static const VerificationMeta _megaminxColorFMeta = const VerificationMeta(
+    'megaminxColorF',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorF = GeneratedColumn<int>(
     'megaminx_color_f',
@@ -268,7 +324,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.f.value),
   );
-  static const VerificationMeta _megaminxColorLMeta = const VerificationMeta('megaminxColorL');
+  static const VerificationMeta _megaminxColorLMeta = const VerificationMeta(
+    'megaminxColorL',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorL = GeneratedColumn<int>(
     'megaminx_color_l',
@@ -278,7 +336,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.l.value),
   );
-  static const VerificationMeta _megaminxColorDMeta = const VerificationMeta('megaminxColorD');
+  static const VerificationMeta _megaminxColorDMeta = const VerificationMeta(
+    'megaminxColorD',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorD = GeneratedColumn<int>(
     'megaminx_color_d',
@@ -288,7 +348,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.d.value),
   );
-  static const VerificationMeta _megaminxColorDRMeta = const VerificationMeta('megaminxColorDR');
+  static const VerificationMeta _megaminxColorDRMeta = const VerificationMeta(
+    'megaminxColorDR',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorDR = GeneratedColumn<int>(
     'megaminx_color_d_r',
@@ -298,7 +360,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.dr.value),
   );
-  static const VerificationMeta _megaminxColorDBRMeta = const VerificationMeta('megaminxColorDBR');
+  static const VerificationMeta _megaminxColorDBRMeta = const VerificationMeta(
+    'megaminxColorDBR',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorDBR = GeneratedColumn<int>(
     'megaminx_color_d_b_r',
@@ -308,7 +372,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.dbr.value),
   );
-  static const VerificationMeta _megaminxColorBMeta = const VerificationMeta('megaminxColorB');
+  static const VerificationMeta _megaminxColorBMeta = const VerificationMeta(
+    'megaminxColorB',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorB = GeneratedColumn<int>(
     'megaminx_color_b',
@@ -318,7 +384,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.b.value),
   );
-  static const VerificationMeta _megaminxColorDBLMeta = const VerificationMeta('megaminxColorDBL');
+  static const VerificationMeta _megaminxColorDBLMeta = const VerificationMeta(
+    'megaminxColorDBL',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorDBL = GeneratedColumn<int>(
     'megaminx_color_d_b_l',
@@ -328,7 +396,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.dbl.value),
   );
-  static const VerificationMeta _megaminxColorDLMeta = const VerificationMeta('megaminxColorDL');
+  static const VerificationMeta _megaminxColorDLMeta = const VerificationMeta(
+    'megaminxColorDL',
+  );
   @override
   late final GeneratedColumn<int> megaminxColorDL = GeneratedColumn<int>(
     'megaminx_color_d_l',
@@ -338,7 +408,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.megaminxColors.dl.value),
   );
-  static const VerificationMeta _ftoColorUMeta = const VerificationMeta('ftoColorU');
+  static const VerificationMeta _ftoColorUMeta = const VerificationMeta(
+    'ftoColorU',
+  );
   @override
   late final GeneratedColumn<int> ftoColorU = GeneratedColumn<int>(
     'fto_color_u',
@@ -348,7 +420,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.u.value),
   );
-  static const VerificationMeta _ftoColorRMeta = const VerificationMeta('ftoColorR');
+  static const VerificationMeta _ftoColorRMeta = const VerificationMeta(
+    'ftoColorR',
+  );
   @override
   late final GeneratedColumn<int> ftoColorR = GeneratedColumn<int>(
     'fto_color_r',
@@ -358,7 +432,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.r.value),
   );
-  static const VerificationMeta _ftoColorFMeta = const VerificationMeta('ftoColorF');
+  static const VerificationMeta _ftoColorFMeta = const VerificationMeta(
+    'ftoColorF',
+  );
   @override
   late final GeneratedColumn<int> ftoColorF = GeneratedColumn<int>(
     'fto_color_f',
@@ -368,7 +444,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.f.value),
   );
-  static const VerificationMeta _ftoColorLMeta = const VerificationMeta('ftoColorL');
+  static const VerificationMeta _ftoColorLMeta = const VerificationMeta(
+    'ftoColorL',
+  );
   @override
   late final GeneratedColumn<int> ftoColorL = GeneratedColumn<int>(
     'fto_color_l',
@@ -378,7 +456,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.l.value),
   );
-  static const VerificationMeta _ftoColorBMeta = const VerificationMeta('ftoColorB');
+  static const VerificationMeta _ftoColorBMeta = const VerificationMeta(
+    'ftoColorB',
+  );
   @override
   late final GeneratedColumn<int> ftoColorB = GeneratedColumn<int>(
     'fto_color_b',
@@ -388,7 +468,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.b.value),
   );
-  static const VerificationMeta _ftoColorBLMeta = const VerificationMeta('ftoColorBL');
+  static const VerificationMeta _ftoColorBLMeta = const VerificationMeta(
+    'ftoColorBL',
+  );
   @override
   late final GeneratedColumn<int> ftoColorBL = GeneratedColumn<int>(
     'fto_color_b_l',
@@ -398,7 +480,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.bl.value),
   );
-  static const VerificationMeta _ftoColorDMeta = const VerificationMeta('ftoColorD');
+  static const VerificationMeta _ftoColorDMeta = const VerificationMeta(
+    'ftoColorD',
+  );
   @override
   late final GeneratedColumn<int> ftoColorD = GeneratedColumn<int>(
     'fto_color_d',
@@ -408,7 +492,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.d.value),
   );
-  static const VerificationMeta _ftoColorBRMeta = const VerificationMeta('ftoColorBR');
+  static const VerificationMeta _ftoColorBRMeta = const VerificationMeta(
+    'ftoColorBR',
+  );
   @override
   late final GeneratedColumn<int> ftoColorBR = GeneratedColumn<int>(
     'fto_color_b_r',
@@ -418,7 +504,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.ftoColors.br.value),
   );
-  static const VerificationMeta _clockColorFrontMeta = const VerificationMeta('clockColorFront');
+  static const VerificationMeta _clockColorFrontMeta = const VerificationMeta(
+    'clockColorFront',
+  );
   @override
   late final GeneratedColumn<int> clockColorFront = GeneratedColumn<int>(
     'clock_color_front',
@@ -428,7 +516,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.clockColors.front.value),
   );
-  static const VerificationMeta _clockColorBackMeta = const VerificationMeta('clockColorBack');
+  static const VerificationMeta _clockColorBackMeta = const VerificationMeta(
+    'clockColorBack',
+  );
   @override
   late final GeneratedColumn<int> clockColorBack = GeneratedColumn<int>(
     'clock_color_back',
@@ -438,7 +528,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.clockColors.back.value),
   );
-  static const VerificationMeta _timerPressedColorMeta = const VerificationMeta('timerPressedColor');
+  static const VerificationMeta _timerPressedColorMeta = const VerificationMeta(
+    'timerPressedColor',
+  );
   @override
   late final GeneratedColumn<int> timerPressedColor = GeneratedColumn<int>(
     'timer_pressed_color',
@@ -448,7 +540,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.timerColors.pressed.value),
   );
-  static const VerificationMeta _timerHoldingColorMeta = const VerificationMeta('timerHoldingColor');
+  static const VerificationMeta _timerHoldingColorMeta = const VerificationMeta(
+    'timerHoldingColor',
+  );
   @override
   late final GeneratedColumn<int> timerHoldingColor = GeneratedColumn<int>(
     'timer_holding_color',
@@ -458,7 +552,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.timerColors.holding.value),
   );
-  static const VerificationMeta _timerAcceptColorMeta = const VerificationMeta('timerAcceptColor');
+  static const VerificationMeta _timerAcceptColorMeta = const VerificationMeta(
+    'timerAcceptColor',
+  );
   @override
   late final GeneratedColumn<int> timerAcceptColor = GeneratedColumn<int>(
     'timer_accept_color',
@@ -468,7 +564,9 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     requiredDuringInsert: false,
     defaultValue: Constant(DefaultColors.timerColors.accept.value),
   );
-  static const VerificationMeta _showRunningTimeMeta = const VerificationMeta('showRunningTime');
+  static const VerificationMeta _showRunningTimeMeta = const VerificationMeta(
+    'showRunningTime',
+  );
   @override
   late final GeneratedColumn<bool> showRunningTime = GeneratedColumn<bool>(
     'show_running_time',
@@ -476,10 +574,14 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("show_running_time" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_running_time" IN (0, 1))',
+    ),
     defaultValue: const Constant(true),
   );
-  static const VerificationMeta _stackmatEnabledMeta = const VerificationMeta('stackmatEnabled');
+  static const VerificationMeta _stackmatEnabledMeta = const VerificationMeta(
+    'stackmatEnabled',
+  );
   @override
   late final GeneratedColumn<bool> stackmatEnabled = GeneratedColumn<bool>(
     'stackmat_enabled',
@@ -487,10 +589,14 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("stackmat_enabled" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("stackmat_enabled" IN (0, 1))',
+    ),
     defaultValue: const Constant(false),
   );
-  static const VerificationMeta _timeDecimalsMeta = const VerificationMeta('timeDecimals');
+  static const VerificationMeta _timeDecimalsMeta = const VerificationMeta(
+    'timeDecimals',
+  );
   @override
   late final GeneratedColumn<int> timeDecimals = GeneratedColumn<int>(
     'time_decimals',
@@ -499,6 +605,75 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     type: DriftSqlType.int,
     requiredDuringInsert: false,
     defaultValue: const Constant(2),
+  );
+  static const VerificationMeta _holdDurationMeta = const VerificationMeta(
+    'holdDuration',
+  );
+  @override
+  late final GeneratedColumn<int> holdDuration = GeneratedColumn<int>(
+    'hold_duration',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(300),
+  );
+  static const VerificationMeta _showScrambleImageMeta = const VerificationMeta(
+    'showScrambleImage',
+  );
+  @override
+  late final GeneratedColumn<bool> showScrambleImage = GeneratedColumn<bool>(
+    'show_scramble_image',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_scramble_image" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _showSessionStatsMeta = const VerificationMeta(
+    'showSessionStats',
+  );
+  @override
+  late final GeneratedColumn<bool> showSessionStats = GeneratedColumn<bool>(
+    'show_session_stats',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_session_stats" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _showQuickActionsMeta = const VerificationMeta(
+    'showQuickActions',
+  );
+  @override
+  late final GeneratedColumn<bool> showQuickActions = GeneratedColumn<bool>(
+    'show_quick_actions',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_quick_actions" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _averageTrimMeta = const VerificationMeta(
+    'averageTrim',
+  );
+  @override
+  late final GeneratedColumn<int> averageTrim = GeneratedColumn<int>(
+    'average_trim',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(5),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -551,6 +726,11 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     showRunningTime,
     stackmatEnabled,
     timeDecimals,
+    holdDuration,
+    showScrambleImage,
+    showSessionStats,
+    showQuickActions,
+    averageTrim,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -558,7 +738,10 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
   String get actualTableName => $name;
   static const String $name = 'settings';
   @override
-  VerificationContext validateIntegrity(Insertable<SettingsEntry> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<SettingsEntry> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -567,256 +750,439 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     if (data.containsKey('inspection_enabled')) {
       context.handle(
         _inspectionEnabledMeta,
-        inspectionEnabled.isAcceptableOrUnknown(data['inspection_enabled']!, _inspectionEnabledMeta),
+        inspectionEnabled.isAcceptableOrUnknown(
+          data['inspection_enabled']!,
+          _inspectionEnabledMeta,
+        ),
       );
     }
     if (data.containsKey('inspect_duration')) {
       context.handle(
         _inspectDurationMeta,
-        inspectDuration.isAcceptableOrUnknown(data['inspect_duration']!, _inspectDurationMeta),
+        inspectDuration.isAcceptableOrUnknown(
+          data['inspect_duration']!,
+          _inspectDurationMeta,
+        ),
       );
     }
     if (data.containsKey('alert_enabled')) {
       context.handle(
         _alertEnabledMeta,
-        alertEnabled.isAcceptableOrUnknown(data['alert_enabled']!, _alertEnabledMeta),
+        alertEnabled.isAcceptableOrUnknown(
+          data['alert_enabled']!,
+          _alertEnabledMeta,
+        ),
       );
     }
     if (data.containsKey('record_best_alert')) {
       context.handle(
         _recordBestAlertMeta,
-        recordBestAlert.isAcceptableOrUnknown(data['record_best_alert']!, _recordBestAlertMeta),
+        recordBestAlert.isAcceptableOrUnknown(
+          data['record_best_alert']!,
+          _recordBestAlertMeta,
+        ),
       );
     }
     if (data.containsKey('record_worst_alert')) {
       context.handle(
         _recordWorstAlertMeta,
-        recordWorstAlert.isAcceptableOrUnknown(data['record_worst_alert']!, _recordWorstAlertMeta),
+        recordWorstAlert.isAcceptableOrUnknown(
+          data['record_worst_alert']!,
+          _recordWorstAlertMeta,
+        ),
       );
     }
     if (data.containsKey('record_average_alert')) {
       context.handle(
         _recordAverageAlertMeta,
-        recordAverageAlert.isAcceptableOrUnknown(data['record_average_alert']!, _recordAverageAlertMeta),
+        recordAverageAlert.isAcceptableOrUnknown(
+          data['record_average_alert']!,
+          _recordAverageAlertMeta,
+        ),
       );
     }
     if (data.containsKey('locale')) {
-      context.handle(_localeMeta, locale.isAcceptableOrUnknown(data['locale']!, _localeMeta));
+      context.handle(
+        _localeMeta,
+        locale.isAcceptableOrUnknown(data['locale']!, _localeMeta),
+      );
     }
     if (data.containsKey('primary_color')) {
       context.handle(
         _primaryColorMeta,
-        primaryColor.isAcceptableOrUnknown(data['primary_color']!, _primaryColorMeta),
+        primaryColor.isAcceptableOrUnknown(
+          data['primary_color']!,
+          _primaryColorMeta,
+        ),
       );
     }
     if (data.containsKey('cube_color_u')) {
       context.handle(
         _cubeColorUMeta,
-        cubeColorU.isAcceptableOrUnknown(data['cube_color_u']!, _cubeColorUMeta),
+        cubeColorU.isAcceptableOrUnknown(
+          data['cube_color_u']!,
+          _cubeColorUMeta,
+        ),
       );
     }
     if (data.containsKey('cube_color_r')) {
       context.handle(
         _cubeColorRMeta,
-        cubeColorR.isAcceptableOrUnknown(data['cube_color_r']!, _cubeColorRMeta),
+        cubeColorR.isAcceptableOrUnknown(
+          data['cube_color_r']!,
+          _cubeColorRMeta,
+        ),
       );
     }
     if (data.containsKey('cube_color_f')) {
       context.handle(
         _cubeColorFMeta,
-        cubeColorF.isAcceptableOrUnknown(data['cube_color_f']!, _cubeColorFMeta),
+        cubeColorF.isAcceptableOrUnknown(
+          data['cube_color_f']!,
+          _cubeColorFMeta,
+        ),
       );
     }
     if (data.containsKey('cube_color_d')) {
       context.handle(
         _cubeColorDMeta,
-        cubeColorD.isAcceptableOrUnknown(data['cube_color_d']!, _cubeColorDMeta),
+        cubeColorD.isAcceptableOrUnknown(
+          data['cube_color_d']!,
+          _cubeColorDMeta,
+        ),
       );
     }
     if (data.containsKey('cube_color_l')) {
       context.handle(
         _cubeColorLMeta,
-        cubeColorL.isAcceptableOrUnknown(data['cube_color_l']!, _cubeColorLMeta),
+        cubeColorL.isAcceptableOrUnknown(
+          data['cube_color_l']!,
+          _cubeColorLMeta,
+        ),
       );
     }
     if (data.containsKey('cube_color_b')) {
       context.handle(
         _cubeColorBMeta,
-        cubeColorB.isAcceptableOrUnknown(data['cube_color_b']!, _cubeColorBMeta),
+        cubeColorB.isAcceptableOrUnknown(
+          data['cube_color_b']!,
+          _cubeColorBMeta,
+        ),
       );
     }
     if (data.containsKey('pyraminx_color_u')) {
       context.handle(
         _pyraminxColorUMeta,
-        pyraminxColorU.isAcceptableOrUnknown(data['pyraminx_color_u']!, _pyraminxColorUMeta),
+        pyraminxColorU.isAcceptableOrUnknown(
+          data['pyraminx_color_u']!,
+          _pyraminxColorUMeta,
+        ),
       );
     }
     if (data.containsKey('pyraminx_color_b')) {
       context.handle(
         _pyraminxColorBMeta,
-        pyraminxColorB.isAcceptableOrUnknown(data['pyraminx_color_b']!, _pyraminxColorBMeta),
+        pyraminxColorB.isAcceptableOrUnknown(
+          data['pyraminx_color_b']!,
+          _pyraminxColorBMeta,
+        ),
       );
     }
     if (data.containsKey('pyraminx_color_r')) {
       context.handle(
         _pyraminxColorRMeta,
-        pyraminxColorR.isAcceptableOrUnknown(data['pyraminx_color_r']!, _pyraminxColorRMeta),
+        pyraminxColorR.isAcceptableOrUnknown(
+          data['pyraminx_color_r']!,
+          _pyraminxColorRMeta,
+        ),
       );
     }
     if (data.containsKey('pyraminx_color_l')) {
       context.handle(
         _pyraminxColorLMeta,
-        pyraminxColorL.isAcceptableOrUnknown(data['pyraminx_color_l']!, _pyraminxColorLMeta),
+        pyraminxColorL.isAcceptableOrUnknown(
+          data['pyraminx_color_l']!,
+          _pyraminxColorLMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_u')) {
       context.handle(
         _megaminxColorUMeta,
-        megaminxColorU.isAcceptableOrUnknown(data['megaminx_color_u']!, _megaminxColorUMeta),
+        megaminxColorU.isAcceptableOrUnknown(
+          data['megaminx_color_u']!,
+          _megaminxColorUMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_b_l')) {
       context.handle(
         _megaminxColorBLMeta,
-        megaminxColorBL.isAcceptableOrUnknown(data['megaminx_color_b_l']!, _megaminxColorBLMeta),
+        megaminxColorBL.isAcceptableOrUnknown(
+          data['megaminx_color_b_l']!,
+          _megaminxColorBLMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_b_r')) {
       context.handle(
         _megaminxColorBRMeta,
-        megaminxColorBR.isAcceptableOrUnknown(data['megaminx_color_b_r']!, _megaminxColorBRMeta),
+        megaminxColorBR.isAcceptableOrUnknown(
+          data['megaminx_color_b_r']!,
+          _megaminxColorBRMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_r')) {
       context.handle(
         _megaminxColorRMeta,
-        megaminxColorR.isAcceptableOrUnknown(data['megaminx_color_r']!, _megaminxColorRMeta),
+        megaminxColorR.isAcceptableOrUnknown(
+          data['megaminx_color_r']!,
+          _megaminxColorRMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_f')) {
       context.handle(
         _megaminxColorFMeta,
-        megaminxColorF.isAcceptableOrUnknown(data['megaminx_color_f']!, _megaminxColorFMeta),
+        megaminxColorF.isAcceptableOrUnknown(
+          data['megaminx_color_f']!,
+          _megaminxColorFMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_l')) {
       context.handle(
         _megaminxColorLMeta,
-        megaminxColorL.isAcceptableOrUnknown(data['megaminx_color_l']!, _megaminxColorLMeta),
+        megaminxColorL.isAcceptableOrUnknown(
+          data['megaminx_color_l']!,
+          _megaminxColorLMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_d')) {
       context.handle(
         _megaminxColorDMeta,
-        megaminxColorD.isAcceptableOrUnknown(data['megaminx_color_d']!, _megaminxColorDMeta),
+        megaminxColorD.isAcceptableOrUnknown(
+          data['megaminx_color_d']!,
+          _megaminxColorDMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_d_r')) {
       context.handle(
         _megaminxColorDRMeta,
-        megaminxColorDR.isAcceptableOrUnknown(data['megaminx_color_d_r']!, _megaminxColorDRMeta),
+        megaminxColorDR.isAcceptableOrUnknown(
+          data['megaminx_color_d_r']!,
+          _megaminxColorDRMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_d_b_r')) {
       context.handle(
         _megaminxColorDBRMeta,
-        megaminxColorDBR.isAcceptableOrUnknown(data['megaminx_color_d_b_r']!, _megaminxColorDBRMeta),
+        megaminxColorDBR.isAcceptableOrUnknown(
+          data['megaminx_color_d_b_r']!,
+          _megaminxColorDBRMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_b')) {
       context.handle(
         _megaminxColorBMeta,
-        megaminxColorB.isAcceptableOrUnknown(data['megaminx_color_b']!, _megaminxColorBMeta),
+        megaminxColorB.isAcceptableOrUnknown(
+          data['megaminx_color_b']!,
+          _megaminxColorBMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_d_b_l')) {
       context.handle(
         _megaminxColorDBLMeta,
-        megaminxColorDBL.isAcceptableOrUnknown(data['megaminx_color_d_b_l']!, _megaminxColorDBLMeta),
+        megaminxColorDBL.isAcceptableOrUnknown(
+          data['megaminx_color_d_b_l']!,
+          _megaminxColorDBLMeta,
+        ),
       );
     }
     if (data.containsKey('megaminx_color_d_l')) {
       context.handle(
         _megaminxColorDLMeta,
-        megaminxColorDL.isAcceptableOrUnknown(data['megaminx_color_d_l']!, _megaminxColorDLMeta),
+        megaminxColorDL.isAcceptableOrUnknown(
+          data['megaminx_color_d_l']!,
+          _megaminxColorDLMeta,
+        ),
       );
     }
     if (data.containsKey('fto_color_u')) {
-      context.handle(_ftoColorUMeta, ftoColorU.isAcceptableOrUnknown(data['fto_color_u']!, _ftoColorUMeta));
+      context.handle(
+        _ftoColorUMeta,
+        ftoColorU.isAcceptableOrUnknown(data['fto_color_u']!, _ftoColorUMeta),
+      );
     }
     if (data.containsKey('fto_color_r')) {
-      context.handle(_ftoColorRMeta, ftoColorR.isAcceptableOrUnknown(data['fto_color_r']!, _ftoColorRMeta));
+      context.handle(
+        _ftoColorRMeta,
+        ftoColorR.isAcceptableOrUnknown(data['fto_color_r']!, _ftoColorRMeta),
+      );
     }
     if (data.containsKey('fto_color_f')) {
-      context.handle(_ftoColorFMeta, ftoColorF.isAcceptableOrUnknown(data['fto_color_f']!, _ftoColorFMeta));
+      context.handle(
+        _ftoColorFMeta,
+        ftoColorF.isAcceptableOrUnknown(data['fto_color_f']!, _ftoColorFMeta),
+      );
     }
     if (data.containsKey('fto_color_l')) {
-      context.handle(_ftoColorLMeta, ftoColorL.isAcceptableOrUnknown(data['fto_color_l']!, _ftoColorLMeta));
+      context.handle(
+        _ftoColorLMeta,
+        ftoColorL.isAcceptableOrUnknown(data['fto_color_l']!, _ftoColorLMeta),
+      );
     }
     if (data.containsKey('fto_color_b')) {
-      context.handle(_ftoColorBMeta, ftoColorB.isAcceptableOrUnknown(data['fto_color_b']!, _ftoColorBMeta));
+      context.handle(
+        _ftoColorBMeta,
+        ftoColorB.isAcceptableOrUnknown(data['fto_color_b']!, _ftoColorBMeta),
+      );
     }
     if (data.containsKey('fto_color_b_l')) {
       context.handle(
         _ftoColorBLMeta,
-        ftoColorBL.isAcceptableOrUnknown(data['fto_color_b_l']!, _ftoColorBLMeta),
+        ftoColorBL.isAcceptableOrUnknown(
+          data['fto_color_b_l']!,
+          _ftoColorBLMeta,
+        ),
       );
     }
     if (data.containsKey('fto_color_d')) {
-      context.handle(_ftoColorDMeta, ftoColorD.isAcceptableOrUnknown(data['fto_color_d']!, _ftoColorDMeta));
+      context.handle(
+        _ftoColorDMeta,
+        ftoColorD.isAcceptableOrUnknown(data['fto_color_d']!, _ftoColorDMeta),
+      );
     }
     if (data.containsKey('fto_color_b_r')) {
       context.handle(
         _ftoColorBRMeta,
-        ftoColorBR.isAcceptableOrUnknown(data['fto_color_b_r']!, _ftoColorBRMeta),
+        ftoColorBR.isAcceptableOrUnknown(
+          data['fto_color_b_r']!,
+          _ftoColorBRMeta,
+        ),
       );
     }
     if (data.containsKey('clock_color_front')) {
       context.handle(
         _clockColorFrontMeta,
-        clockColorFront.isAcceptableOrUnknown(data['clock_color_front']!, _clockColorFrontMeta),
+        clockColorFront.isAcceptableOrUnknown(
+          data['clock_color_front']!,
+          _clockColorFrontMeta,
+        ),
       );
     }
     if (data.containsKey('clock_color_back')) {
       context.handle(
         _clockColorBackMeta,
-        clockColorBack.isAcceptableOrUnknown(data['clock_color_back']!, _clockColorBackMeta),
+        clockColorBack.isAcceptableOrUnknown(
+          data['clock_color_back']!,
+          _clockColorBackMeta,
+        ),
       );
     }
     if (data.containsKey('timer_pressed_color')) {
       context.handle(
         _timerPressedColorMeta,
-        timerPressedColor.isAcceptableOrUnknown(data['timer_pressed_color']!, _timerPressedColorMeta),
+        timerPressedColor.isAcceptableOrUnknown(
+          data['timer_pressed_color']!,
+          _timerPressedColorMeta,
+        ),
       );
     }
     if (data.containsKey('timer_holding_color')) {
       context.handle(
         _timerHoldingColorMeta,
-        timerHoldingColor.isAcceptableOrUnknown(data['timer_holding_color']!, _timerHoldingColorMeta),
+        timerHoldingColor.isAcceptableOrUnknown(
+          data['timer_holding_color']!,
+          _timerHoldingColorMeta,
+        ),
       );
     }
     if (data.containsKey('timer_accept_color')) {
       context.handle(
         _timerAcceptColorMeta,
-        timerAcceptColor.isAcceptableOrUnknown(data['timer_accept_color']!, _timerAcceptColorMeta),
+        timerAcceptColor.isAcceptableOrUnknown(
+          data['timer_accept_color']!,
+          _timerAcceptColorMeta,
+        ),
       );
     }
     if (data.containsKey('show_running_time')) {
       context.handle(
         _showRunningTimeMeta,
-        showRunningTime.isAcceptableOrUnknown(data['show_running_time']!, _showRunningTimeMeta),
+        showRunningTime.isAcceptableOrUnknown(
+          data['show_running_time']!,
+          _showRunningTimeMeta,
+        ),
       );
     }
     if (data.containsKey('stackmat_enabled')) {
       context.handle(
         _stackmatEnabledMeta,
-        stackmatEnabled.isAcceptableOrUnknown(data['stackmat_enabled']!, _stackmatEnabledMeta),
+        stackmatEnabled.isAcceptableOrUnknown(
+          data['stackmat_enabled']!,
+          _stackmatEnabledMeta,
+        ),
       );
     }
     if (data.containsKey('time_decimals')) {
       context.handle(
         _timeDecimalsMeta,
-        timeDecimals.isAcceptableOrUnknown(data['time_decimals']!, _timeDecimalsMeta),
+        timeDecimals.isAcceptableOrUnknown(
+          data['time_decimals']!,
+          _timeDecimalsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('hold_duration')) {
+      context.handle(
+        _holdDurationMeta,
+        holdDuration.isAcceptableOrUnknown(
+          data['hold_duration']!,
+          _holdDurationMeta,
+        ),
+      );
+    }
+    if (data.containsKey('show_scramble_image')) {
+      context.handle(
+        _showScrambleImageMeta,
+        showScrambleImage.isAcceptableOrUnknown(
+          data['show_scramble_image']!,
+          _showScrambleImageMeta,
+        ),
+      );
+    }
+    if (data.containsKey('show_session_stats')) {
+      context.handle(
+        _showSessionStatsMeta,
+        showSessionStats.isAcceptableOrUnknown(
+          data['show_session_stats']!,
+          _showSessionStatsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('show_quick_actions')) {
+      context.handle(
+        _showQuickActionsMeta,
+        showQuickActions.isAcceptableOrUnknown(
+          data['show_quick_actions']!,
+          _showQuickActionsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('average_trim')) {
+      context.handle(
+        _averageTrimMeta,
+        averageTrim.isAcceptableOrUnknown(
+          data['average_trim']!,
+          _averageTrimMeta,
+        ),
       );
     }
     return context;
@@ -828,7 +1194,10 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
   SettingsEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SettingsEntry(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
       inspectionEnabled: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}inspection_enabled'],
@@ -842,7 +1211,10 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
         data['${effectivePrefix}alert_enabled'],
       )!,
       alertTypes: $SettingsTable.$converteralertTypes.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}alert_types'])!,
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}alert_types'],
+        )!,
       ),
       recordBestAlert: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
@@ -856,9 +1228,15 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
         DriftSqlType.bool,
         data['${effectivePrefix}record_average_alert'],
       )!,
-      locale: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}locale']),
+      locale: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}locale'],
+      ),
       themeMode: $SettingsTable.$converterthemeMode.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}theme_mode'])!,
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}theme_mode'],
+        )!,
       ),
       primaryColor: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -952,16 +1330,34 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
         DriftSqlType.int,
         data['${effectivePrefix}megaminx_color_d_l'],
       )!,
-      ftoColorU: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}fto_color_u'])!,
-      ftoColorR: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}fto_color_r'])!,
-      ftoColorF: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}fto_color_f'])!,
-      ftoColorL: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}fto_color_l'])!,
-      ftoColorB: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}fto_color_b'])!,
+      ftoColorU: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_u'],
+      )!,
+      ftoColorR: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_r'],
+      )!,
+      ftoColorF: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_f'],
+      )!,
+      ftoColorL: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_l'],
+      )!,
+      ftoColorB: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_b'],
+      )!,
       ftoColorBL: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}fto_color_b_l'],
       )!,
-      ftoColorD: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}fto_color_d'])!,
+      ftoColorD: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}fto_color_d'],
+      )!,
       ftoColorBR: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}fto_color_b_r'],
@@ -998,6 +1394,26 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
         DriftSqlType.int,
         data['${effectivePrefix}time_decimals'],
       )!,
+      holdDuration: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}hold_duration'],
+      )!,
+      showScrambleImage: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_scramble_image'],
+      )!,
+      showSessionStats: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_session_stats'],
+      )!,
+      showQuickActions: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_quick_actions'],
+      )!,
+      averageTrim: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}average_trim'],
+      )!,
     );
   }
 
@@ -1006,7 +1422,8 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     return $SettingsTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<Set<AlertType>, String> $converteralertTypes = const AlertTypesConverter();
+  static TypeConverter<Set<AlertType>, String> $converteralertTypes =
+      const AlertTypesConverter();
   static JsonTypeConverter2<AppThemeMode, String, String> $converterthemeMode =
       const EnumNameConverter<AppThemeMode>(AppThemeMode.values);
 }
@@ -1107,6 +1524,22 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
 
   /// how many decimals the timer page shows a time with: 1, 2 or 3
   final int timeDecimals;
+
+  /// how long the screen is held, in milliseconds, before it is ready to start a solve
+  final int holdDuration;
+
+  /// whether the timer page shows the picture of the scramble
+  final bool showScrambleImage;
+
+  /// whether the timer page shows the statistics of the session
+  final bool showSessionStats;
+
+  /// whether the buttons under the time (penalty, comment, delete) are shown after a solve
+  final bool showQuickActions;
+
+  /// the share of the solves of an average, in percent, left out at each end: the best ones and the
+  /// worst ones. Rounded up to a whole solve, so 5 % trims one of an Ao5 and three of an Ao50.
+  final int averageTrim;
   const SettingsEntry({
     required this.id,
     required this.inspectionEnabled,
@@ -1157,6 +1590,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.showRunningTime,
     required this.stackmatEnabled,
     required this.timeDecimals,
+    required this.holdDuration,
+    required this.showScrambleImage,
+    required this.showSessionStats,
+    required this.showQuickActions,
+    required this.averageTrim,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1166,7 +1604,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['inspect_duration'] = Variable<int>(inspectDuration);
     map['alert_enabled'] = Variable<bool>(alertEnabled);
     {
-      map['alert_types'] = Variable<String>($SettingsTable.$converteralertTypes.toSql(alertTypes));
+      map['alert_types'] = Variable<String>(
+        $SettingsTable.$converteralertTypes.toSql(alertTypes),
+      );
     }
     map['record_best_alert'] = Variable<bool>(recordBestAlert);
     map['record_worst_alert'] = Variable<bool>(recordWorstAlert);
@@ -1175,7 +1615,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       map['locale'] = Variable<String>(locale);
     }
     {
-      map['theme_mode'] = Variable<String>($SettingsTable.$converterthemeMode.toSql(themeMode));
+      map['theme_mode'] = Variable<String>(
+        $SettingsTable.$converterthemeMode.toSql(themeMode),
+      );
     }
     if (!nullToAbsent || primaryColor != null) {
       map['primary_color'] = Variable<int>(primaryColor);
@@ -1218,6 +1660,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['show_running_time'] = Variable<bool>(showRunningTime);
     map['stackmat_enabled'] = Variable<bool>(stackmatEnabled);
     map['time_decimals'] = Variable<int>(timeDecimals);
+    map['hold_duration'] = Variable<int>(holdDuration);
+    map['show_scramble_image'] = Variable<bool>(showScrambleImage);
+    map['show_session_stats'] = Variable<bool>(showSessionStats);
+    map['show_quick_actions'] = Variable<bool>(showQuickActions);
+    map['average_trim'] = Variable<int>(averageTrim);
     return map;
   }
 
@@ -1231,9 +1678,13 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       recordBestAlert: Value(recordBestAlert),
       recordWorstAlert: Value(recordWorstAlert),
       recordAverageAlert: Value(recordAverageAlert),
-      locale: locale == null && nullToAbsent ? const Value.absent() : Value(locale),
+      locale: locale == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locale),
       themeMode: Value(themeMode),
-      primaryColor: primaryColor == null && nullToAbsent ? const Value.absent() : Value(primaryColor),
+      primaryColor: primaryColor == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryColor),
       cubeColorU: Value(cubeColorU),
       cubeColorR: Value(cubeColorR),
       cubeColorF: Value(cubeColorF),
@@ -1272,10 +1723,18 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       showRunningTime: Value(showRunningTime),
       stackmatEnabled: Value(stackmatEnabled),
       timeDecimals: Value(timeDecimals),
+      holdDuration: Value(holdDuration),
+      showScrambleImage: Value(showScrambleImage),
+      showSessionStats: Value(showSessionStats),
+      showQuickActions: Value(showQuickActions),
+      averageTrim: Value(averageTrim),
     );
   }
 
-  factory SettingsEntry.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory SettingsEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SettingsEntry(
       id: serializer.fromJson<int>(json['id']),
@@ -1287,7 +1746,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       recordWorstAlert: serializer.fromJson<bool>(json['recordWorstAlert']),
       recordAverageAlert: serializer.fromJson<bool>(json['recordAverageAlert']),
       locale: serializer.fromJson<String?>(json['locale']),
-      themeMode: $SettingsTable.$converterthemeMode.fromJson(serializer.fromJson<String>(json['themeMode'])),
+      themeMode: $SettingsTable.$converterthemeMode.fromJson(
+        serializer.fromJson<String>(json['themeMode']),
+      ),
       primaryColor: serializer.fromJson<int?>(json['primaryColor']),
       cubeColorU: serializer.fromJson<int>(json['cubeColorU']),
       cubeColorR: serializer.fromJson<int>(json['cubeColorR']),
@@ -1327,6 +1788,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       showRunningTime: serializer.fromJson<bool>(json['showRunningTime']),
       stackmatEnabled: serializer.fromJson<bool>(json['stackmatEnabled']),
       timeDecimals: serializer.fromJson<int>(json['timeDecimals']),
+      holdDuration: serializer.fromJson<int>(json['holdDuration']),
+      showScrambleImage: serializer.fromJson<bool>(json['showScrambleImage']),
+      showSessionStats: serializer.fromJson<bool>(json['showSessionStats']),
+      showQuickActions: serializer.fromJson<bool>(json['showQuickActions']),
+      averageTrim: serializer.fromJson<int>(json['averageTrim']),
     );
   }
   @override
@@ -1342,7 +1808,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'recordWorstAlert': serializer.toJson<bool>(recordWorstAlert),
       'recordAverageAlert': serializer.toJson<bool>(recordAverageAlert),
       'locale': serializer.toJson<String?>(locale),
-      'themeMode': serializer.toJson<String>($SettingsTable.$converterthemeMode.toJson(themeMode)),
+      'themeMode': serializer.toJson<String>(
+        $SettingsTable.$converterthemeMode.toJson(themeMode),
+      ),
       'primaryColor': serializer.toJson<int?>(primaryColor),
       'cubeColorU': serializer.toJson<int>(cubeColorU),
       'cubeColorR': serializer.toJson<int>(cubeColorR),
@@ -1382,6 +1850,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'showRunningTime': serializer.toJson<bool>(showRunningTime),
       'stackmatEnabled': serializer.toJson<bool>(stackmatEnabled),
       'timeDecimals': serializer.toJson<int>(timeDecimals),
+      'holdDuration': serializer.toJson<int>(holdDuration),
+      'showScrambleImage': serializer.toJson<bool>(showScrambleImage),
+      'showSessionStats': serializer.toJson<bool>(showSessionStats),
+      'showQuickActions': serializer.toJson<bool>(showQuickActions),
+      'averageTrim': serializer.toJson<int>(averageTrim),
     };
   }
 
@@ -1435,6 +1908,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     bool? showRunningTime,
     bool? stackmatEnabled,
     int? timeDecimals,
+    int? holdDuration,
+    bool? showScrambleImage,
+    bool? showSessionStats,
+    bool? showQuickActions,
+    int? averageTrim,
   }) => SettingsEntry(
     id: id ?? this.id,
     inspectionEnabled: inspectionEnabled ?? this.inspectionEnabled,
@@ -1485,6 +1963,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     showRunningTime: showRunningTime ?? this.showRunningTime,
     stackmatEnabled: stackmatEnabled ?? this.stackmatEnabled,
     timeDecimals: timeDecimals ?? this.timeDecimals,
+    holdDuration: holdDuration ?? this.holdDuration,
+    showScrambleImage: showScrambleImage ?? this.showScrambleImage,
+    showSessionStats: showSessionStats ?? this.showSessionStats,
+    showQuickActions: showQuickActions ?? this.showQuickActions,
+    averageTrim: averageTrim ?? this.averageTrim,
   );
   SettingsEntry copyWithCompanion(SettingsCompanion data) {
     return SettingsEntry(
@@ -1492,59 +1975,146 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       inspectionEnabled: data.inspectionEnabled.present
           ? data.inspectionEnabled.value
           : this.inspectionEnabled,
-      inspectDuration: data.inspectDuration.present ? data.inspectDuration.value : this.inspectDuration,
-      alertEnabled: data.alertEnabled.present ? data.alertEnabled.value : this.alertEnabled,
-      alertTypes: data.alertTypes.present ? data.alertTypes.value : this.alertTypes,
-      recordBestAlert: data.recordBestAlert.present ? data.recordBestAlert.value : this.recordBestAlert,
-      recordWorstAlert: data.recordWorstAlert.present ? data.recordWorstAlert.value : this.recordWorstAlert,
+      inspectDuration: data.inspectDuration.present
+          ? data.inspectDuration.value
+          : this.inspectDuration,
+      alertEnabled: data.alertEnabled.present
+          ? data.alertEnabled.value
+          : this.alertEnabled,
+      alertTypes: data.alertTypes.present
+          ? data.alertTypes.value
+          : this.alertTypes,
+      recordBestAlert: data.recordBestAlert.present
+          ? data.recordBestAlert.value
+          : this.recordBestAlert,
+      recordWorstAlert: data.recordWorstAlert.present
+          ? data.recordWorstAlert.value
+          : this.recordWorstAlert,
       recordAverageAlert: data.recordAverageAlert.present
           ? data.recordAverageAlert.value
           : this.recordAverageAlert,
       locale: data.locale.present ? data.locale.value : this.locale,
       themeMode: data.themeMode.present ? data.themeMode.value : this.themeMode,
-      primaryColor: data.primaryColor.present ? data.primaryColor.value : this.primaryColor,
-      cubeColorU: data.cubeColorU.present ? data.cubeColorU.value : this.cubeColorU,
-      cubeColorR: data.cubeColorR.present ? data.cubeColorR.value : this.cubeColorR,
-      cubeColorF: data.cubeColorF.present ? data.cubeColorF.value : this.cubeColorF,
-      cubeColorD: data.cubeColorD.present ? data.cubeColorD.value : this.cubeColorD,
-      cubeColorL: data.cubeColorL.present ? data.cubeColorL.value : this.cubeColorL,
-      cubeColorB: data.cubeColorB.present ? data.cubeColorB.value : this.cubeColorB,
-      pyraminxColorU: data.pyraminxColorU.present ? data.pyraminxColorU.value : this.pyraminxColorU,
-      pyraminxColorB: data.pyraminxColorB.present ? data.pyraminxColorB.value : this.pyraminxColorB,
-      pyraminxColorR: data.pyraminxColorR.present ? data.pyraminxColorR.value : this.pyraminxColorR,
-      pyraminxColorL: data.pyraminxColorL.present ? data.pyraminxColorL.value : this.pyraminxColorL,
-      megaminxColorU: data.megaminxColorU.present ? data.megaminxColorU.value : this.megaminxColorU,
-      megaminxColorBL: data.megaminxColorBL.present ? data.megaminxColorBL.value : this.megaminxColorBL,
-      megaminxColorBR: data.megaminxColorBR.present ? data.megaminxColorBR.value : this.megaminxColorBR,
-      megaminxColorR: data.megaminxColorR.present ? data.megaminxColorR.value : this.megaminxColorR,
-      megaminxColorF: data.megaminxColorF.present ? data.megaminxColorF.value : this.megaminxColorF,
-      megaminxColorL: data.megaminxColorL.present ? data.megaminxColorL.value : this.megaminxColorL,
-      megaminxColorD: data.megaminxColorD.present ? data.megaminxColorD.value : this.megaminxColorD,
-      megaminxColorDR: data.megaminxColorDR.present ? data.megaminxColorDR.value : this.megaminxColorDR,
-      megaminxColorDBR: data.megaminxColorDBR.present ? data.megaminxColorDBR.value : this.megaminxColorDBR,
-      megaminxColorB: data.megaminxColorB.present ? data.megaminxColorB.value : this.megaminxColorB,
-      megaminxColorDBL: data.megaminxColorDBL.present ? data.megaminxColorDBL.value : this.megaminxColorDBL,
-      megaminxColorDL: data.megaminxColorDL.present ? data.megaminxColorDL.value : this.megaminxColorDL,
+      primaryColor: data.primaryColor.present
+          ? data.primaryColor.value
+          : this.primaryColor,
+      cubeColorU: data.cubeColorU.present
+          ? data.cubeColorU.value
+          : this.cubeColorU,
+      cubeColorR: data.cubeColorR.present
+          ? data.cubeColorR.value
+          : this.cubeColorR,
+      cubeColorF: data.cubeColorF.present
+          ? data.cubeColorF.value
+          : this.cubeColorF,
+      cubeColorD: data.cubeColorD.present
+          ? data.cubeColorD.value
+          : this.cubeColorD,
+      cubeColorL: data.cubeColorL.present
+          ? data.cubeColorL.value
+          : this.cubeColorL,
+      cubeColorB: data.cubeColorB.present
+          ? data.cubeColorB.value
+          : this.cubeColorB,
+      pyraminxColorU: data.pyraminxColorU.present
+          ? data.pyraminxColorU.value
+          : this.pyraminxColorU,
+      pyraminxColorB: data.pyraminxColorB.present
+          ? data.pyraminxColorB.value
+          : this.pyraminxColorB,
+      pyraminxColorR: data.pyraminxColorR.present
+          ? data.pyraminxColorR.value
+          : this.pyraminxColorR,
+      pyraminxColorL: data.pyraminxColorL.present
+          ? data.pyraminxColorL.value
+          : this.pyraminxColorL,
+      megaminxColorU: data.megaminxColorU.present
+          ? data.megaminxColorU.value
+          : this.megaminxColorU,
+      megaminxColorBL: data.megaminxColorBL.present
+          ? data.megaminxColorBL.value
+          : this.megaminxColorBL,
+      megaminxColorBR: data.megaminxColorBR.present
+          ? data.megaminxColorBR.value
+          : this.megaminxColorBR,
+      megaminxColorR: data.megaminxColorR.present
+          ? data.megaminxColorR.value
+          : this.megaminxColorR,
+      megaminxColorF: data.megaminxColorF.present
+          ? data.megaminxColorF.value
+          : this.megaminxColorF,
+      megaminxColorL: data.megaminxColorL.present
+          ? data.megaminxColorL.value
+          : this.megaminxColorL,
+      megaminxColorD: data.megaminxColorD.present
+          ? data.megaminxColorD.value
+          : this.megaminxColorD,
+      megaminxColorDR: data.megaminxColorDR.present
+          ? data.megaminxColorDR.value
+          : this.megaminxColorDR,
+      megaminxColorDBR: data.megaminxColorDBR.present
+          ? data.megaminxColorDBR.value
+          : this.megaminxColorDBR,
+      megaminxColorB: data.megaminxColorB.present
+          ? data.megaminxColorB.value
+          : this.megaminxColorB,
+      megaminxColorDBL: data.megaminxColorDBL.present
+          ? data.megaminxColorDBL.value
+          : this.megaminxColorDBL,
+      megaminxColorDL: data.megaminxColorDL.present
+          ? data.megaminxColorDL.value
+          : this.megaminxColorDL,
       ftoColorU: data.ftoColorU.present ? data.ftoColorU.value : this.ftoColorU,
       ftoColorR: data.ftoColorR.present ? data.ftoColorR.value : this.ftoColorR,
       ftoColorF: data.ftoColorF.present ? data.ftoColorF.value : this.ftoColorF,
       ftoColorL: data.ftoColorL.present ? data.ftoColorL.value : this.ftoColorL,
       ftoColorB: data.ftoColorB.present ? data.ftoColorB.value : this.ftoColorB,
-      ftoColorBL: data.ftoColorBL.present ? data.ftoColorBL.value : this.ftoColorBL,
+      ftoColorBL: data.ftoColorBL.present
+          ? data.ftoColorBL.value
+          : this.ftoColorBL,
       ftoColorD: data.ftoColorD.present ? data.ftoColorD.value : this.ftoColorD,
-      ftoColorBR: data.ftoColorBR.present ? data.ftoColorBR.value : this.ftoColorBR,
-      clockColorFront: data.clockColorFront.present ? data.clockColorFront.value : this.clockColorFront,
-      clockColorBack: data.clockColorBack.present ? data.clockColorBack.value : this.clockColorBack,
+      ftoColorBR: data.ftoColorBR.present
+          ? data.ftoColorBR.value
+          : this.ftoColorBR,
+      clockColorFront: data.clockColorFront.present
+          ? data.clockColorFront.value
+          : this.clockColorFront,
+      clockColorBack: data.clockColorBack.present
+          ? data.clockColorBack.value
+          : this.clockColorBack,
       timerPressedColor: data.timerPressedColor.present
           ? data.timerPressedColor.value
           : this.timerPressedColor,
       timerHoldingColor: data.timerHoldingColor.present
           ? data.timerHoldingColor.value
           : this.timerHoldingColor,
-      timerAcceptColor: data.timerAcceptColor.present ? data.timerAcceptColor.value : this.timerAcceptColor,
-      showRunningTime: data.showRunningTime.present ? data.showRunningTime.value : this.showRunningTime,
-      stackmatEnabled: data.stackmatEnabled.present ? data.stackmatEnabled.value : this.stackmatEnabled,
-      timeDecimals: data.timeDecimals.present ? data.timeDecimals.value : this.timeDecimals,
+      timerAcceptColor: data.timerAcceptColor.present
+          ? data.timerAcceptColor.value
+          : this.timerAcceptColor,
+      showRunningTime: data.showRunningTime.present
+          ? data.showRunningTime.value
+          : this.showRunningTime,
+      stackmatEnabled: data.stackmatEnabled.present
+          ? data.stackmatEnabled.value
+          : this.stackmatEnabled,
+      timeDecimals: data.timeDecimals.present
+          ? data.timeDecimals.value
+          : this.timeDecimals,
+      holdDuration: data.holdDuration.present
+          ? data.holdDuration.value
+          : this.holdDuration,
+      showScrambleImage: data.showScrambleImage.present
+          ? data.showScrambleImage.value
+          : this.showScrambleImage,
+      showSessionStats: data.showSessionStats.present
+          ? data.showSessionStats.value
+          : this.showSessionStats,
+      showQuickActions: data.showQuickActions.present
+          ? data.showQuickActions.value
+          : this.showQuickActions,
+      averageTrim: data.averageTrim.present
+          ? data.averageTrim.value
+          : this.averageTrim,
     );
   }
 
@@ -1599,7 +2169,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('timerAcceptColor: $timerAcceptColor, ')
           ..write('showRunningTime: $showRunningTime, ')
           ..write('stackmatEnabled: $stackmatEnabled, ')
-          ..write('timeDecimals: $timeDecimals')
+          ..write('timeDecimals: $timeDecimals, ')
+          ..write('holdDuration: $holdDuration, ')
+          ..write('showScrambleImage: $showScrambleImage, ')
+          ..write('showSessionStats: $showSessionStats, ')
+          ..write('showQuickActions: $showQuickActions, ')
+          ..write('averageTrim: $averageTrim')
           ..write(')'))
         .toString();
   }
@@ -1655,6 +2230,11 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     showRunningTime,
     stackmatEnabled,
     timeDecimals,
+    holdDuration,
+    showScrambleImage,
+    showSessionStats,
+    showQuickActions,
+    averageTrim,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -1708,7 +2288,12 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.timerAcceptColor == this.timerAcceptColor &&
           other.showRunningTime == this.showRunningTime &&
           other.stackmatEnabled == this.stackmatEnabled &&
-          other.timeDecimals == this.timeDecimals);
+          other.timeDecimals == this.timeDecimals &&
+          other.holdDuration == this.holdDuration &&
+          other.showScrambleImage == this.showScrambleImage &&
+          other.showSessionStats == this.showSessionStats &&
+          other.showQuickActions == this.showQuickActions &&
+          other.averageTrim == this.averageTrim);
 }
 
 class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
@@ -1761,6 +2346,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<bool> showRunningTime;
   final Value<bool> stackmatEnabled;
   final Value<int> timeDecimals;
+  final Value<int> holdDuration;
+  final Value<bool> showScrambleImage;
+  final Value<bool> showSessionStats;
+  final Value<bool> showQuickActions;
+  final Value<int> averageTrim;
   const SettingsCompanion({
     this.id = const Value.absent(),
     this.inspectionEnabled = const Value.absent(),
@@ -1811,6 +2401,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.showRunningTime = const Value.absent(),
     this.stackmatEnabled = const Value.absent(),
     this.timeDecimals = const Value.absent(),
+    this.holdDuration = const Value.absent(),
+    this.showScrambleImage = const Value.absent(),
+    this.showSessionStats = const Value.absent(),
+    this.showQuickActions = const Value.absent(),
+    this.averageTrim = const Value.absent(),
   });
   SettingsCompanion.insert({
     this.id = const Value.absent(),
@@ -1862,6 +2457,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.showRunningTime = const Value.absent(),
     this.stackmatEnabled = const Value.absent(),
     this.timeDecimals = const Value.absent(),
+    this.holdDuration = const Value.absent(),
+    this.showScrambleImage = const Value.absent(),
+    this.showSessionStats = const Value.absent(),
+    this.showQuickActions = const Value.absent(),
+    this.averageTrim = const Value.absent(),
   });
   static Insertable<SettingsEntry> custom({
     Expression<int>? id,
@@ -1913,6 +2513,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<bool>? showRunningTime,
     Expression<bool>? stackmatEnabled,
     Expression<int>? timeDecimals,
+    Expression<int>? holdDuration,
+    Expression<bool>? showScrambleImage,
+    Expression<bool>? showSessionStats,
+    Expression<bool>? showQuickActions,
+    Expression<int>? averageTrim,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1922,7 +2527,8 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (alertTypes != null) 'alert_types': alertTypes,
       if (recordBestAlert != null) 'record_best_alert': recordBestAlert,
       if (recordWorstAlert != null) 'record_worst_alert': recordWorstAlert,
-      if (recordAverageAlert != null) 'record_average_alert': recordAverageAlert,
+      if (recordAverageAlert != null)
+        'record_average_alert': recordAverageAlert,
       if (locale != null) 'locale': locale,
       if (themeMode != null) 'theme_mode': themeMode,
       if (primaryColor != null) 'primary_color': primaryColor,
@@ -1964,6 +2570,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (showRunningTime != null) 'show_running_time': showRunningTime,
       if (stackmatEnabled != null) 'stackmat_enabled': stackmatEnabled,
       if (timeDecimals != null) 'time_decimals': timeDecimals,
+      if (holdDuration != null) 'hold_duration': holdDuration,
+      if (showScrambleImage != null) 'show_scramble_image': showScrambleImage,
+      if (showSessionStats != null) 'show_session_stats': showSessionStats,
+      if (showQuickActions != null) 'show_quick_actions': showQuickActions,
+      if (averageTrim != null) 'average_trim': averageTrim,
     });
   }
 
@@ -2017,6 +2628,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<bool>? showRunningTime,
     Value<bool>? stackmatEnabled,
     Value<int>? timeDecimals,
+    Value<int>? holdDuration,
+    Value<bool>? showScrambleImage,
+    Value<bool>? showSessionStats,
+    Value<bool>? showQuickActions,
+    Value<int>? averageTrim,
   }) {
     return SettingsCompanion(
       id: id ?? this.id,
@@ -2068,6 +2684,11 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       showRunningTime: showRunningTime ?? this.showRunningTime,
       stackmatEnabled: stackmatEnabled ?? this.stackmatEnabled,
       timeDecimals: timeDecimals ?? this.timeDecimals,
+      holdDuration: holdDuration ?? this.holdDuration,
+      showScrambleImage: showScrambleImage ?? this.showScrambleImage,
+      showSessionStats: showSessionStats ?? this.showSessionStats,
+      showQuickActions: showQuickActions ?? this.showQuickActions,
+      averageTrim: averageTrim ?? this.averageTrim,
     );
   }
 
@@ -2087,7 +2708,9 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       map['alert_enabled'] = Variable<bool>(alertEnabled.value);
     }
     if (alertTypes.present) {
-      map['alert_types'] = Variable<String>($SettingsTable.$converteralertTypes.toSql(alertTypes.value));
+      map['alert_types'] = Variable<String>(
+        $SettingsTable.$converteralertTypes.toSql(alertTypes.value),
+      );
     }
     if (recordBestAlert.present) {
       map['record_best_alert'] = Variable<bool>(recordBestAlert.value);
@@ -2102,7 +2725,9 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       map['locale'] = Variable<String>(locale.value);
     }
     if (themeMode.present) {
-      map['theme_mode'] = Variable<String>($SettingsTable.$converterthemeMode.toSql(themeMode.value));
+      map['theme_mode'] = Variable<String>(
+        $SettingsTable.$converterthemeMode.toSql(themeMode.value),
+      );
     }
     if (primaryColor.present) {
       map['primary_color'] = Variable<int>(primaryColor.value);
@@ -2221,6 +2846,21 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     if (timeDecimals.present) {
       map['time_decimals'] = Variable<int>(timeDecimals.value);
     }
+    if (holdDuration.present) {
+      map['hold_duration'] = Variable<int>(holdDuration.value);
+    }
+    if (showScrambleImage.present) {
+      map['show_scramble_image'] = Variable<bool>(showScrambleImage.value);
+    }
+    if (showSessionStats.present) {
+      map['show_session_stats'] = Variable<bool>(showSessionStats.value);
+    }
+    if (showQuickActions.present) {
+      map['show_quick_actions'] = Variable<bool>(showQuickActions.value);
+    }
+    if (averageTrim.present) {
+      map['average_trim'] = Variable<int>(averageTrim.value);
+    }
     return map;
   }
 
@@ -2275,13 +2915,19 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('timerAcceptColor: $timerAcceptColor, ')
           ..write('showRunningTime: $showRunningTime, ')
           ..write('stackmatEnabled: $stackmatEnabled, ')
-          ..write('timeDecimals: $timeDecimals')
+          ..write('timeDecimals: $timeDecimals, ')
+          ..write('holdDuration: $holdDuration, ')
+          ..write('showScrambleImage: $showScrambleImage, ')
+          ..write('showSessionStats: $showSessionStats, ')
+          ..write('showQuickActions: $showQuickActions, ')
+          ..write('averageTrim: $averageTrim')
           ..write(')'))
         .toString();
   }
 }
 
-class $SessionsTable extends Sessions with TableInfo<$SessionsTable, SessionEntry> {
+class $SessionsTable extends Sessions
+    with TableInfo<$SessionsTable, SessionEntry> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2305,7 +2951,9 @@ class $SessionsTable extends Sessions with TableInfo<$SessionsTable, SessionEntr
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
@@ -2315,7 +2963,9 @@ class $SessionsTable extends Sessions with TableInfo<$SessionsTable, SessionEntr
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
-  static const VerificationMeta _deletedAtMeta = const VerificationMeta('deletedAt');
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
     'deleted_at',
@@ -2332,22 +2982,34 @@ class $SessionsTable extends Sessions with TableInfo<$SessionsTable, SessionEntr
   String get actualTableName => $name;
   static const String $name = 'sessions';
   @override
-  VerificationContext validateIntegrity(Insertable<SessionEntry> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<SessionEntry> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('name')) {
-      context.handle(_nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
     }
     if (data.containsKey('deleted_at')) {
-      context.handle(_deletedAtMeta, deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
     }
     return context;
   }
@@ -2358,8 +3020,14 @@ class $SessionsTable extends Sessions with TableInfo<$SessionsTable, SessionEntr
   SessionEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SessionEntry(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -2390,7 +3058,12 @@ class SessionEntry extends DataClass implements Insertable<SessionEntry> {
   /// Soft delete, for the same reason as on Records: the deletion itself has
   /// to reach other devices.
   final DateTime? deletedAt;
-  const SessionEntry({required this.id, required this.name, required this.createdAt, this.deletedAt});
+  const SessionEntry({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+    this.deletedAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2408,11 +3081,16 @@ class SessionEntry extends DataClass implements Insertable<SessionEntry> {
       id: Value(id),
       name: Value(name),
       createdAt: Value(createdAt),
-      deletedAt: deletedAt == null && nullToAbsent ? const Value.absent() : Value(deletedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
-  factory SessionEntry.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory SessionEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SessionEntry(
       id: serializer.fromJson<String>(json['id']),
@@ -2561,7 +3239,8 @@ class SessionsCompanion extends UpdateCompanion<SessionEntry> {
   }
 }
 
-class $AppStateTable extends AppState with TableInfo<$AppStateTable, AppStateEntry> {
+class $AppStateTable extends AppState
+    with TableInfo<$AppStateTable, AppStateEntry> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2576,15 +3255,18 @@ class $AppStateTable extends AppState with TableInfo<$AppStateTable, AppStateEnt
     requiredDuringInsert: false,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Puzzle, String> puzzle = GeneratedColumn<String>(
-    'puzzle',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant("333"),
-  ).withConverter<Puzzle>($AppStateTable.$converterpuzzle);
-  static const VerificationMeta _sessionMeta = const VerificationMeta('session');
+  late final GeneratedColumnWithTypeConverter<Puzzle, String> puzzle =
+      GeneratedColumn<String>(
+        'puzzle',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant("333"),
+      ).withConverter<Puzzle>($AppStateTable.$converterpuzzle);
+  static const VerificationMeta _sessionMeta = const VerificationMeta(
+    'session',
+  );
   @override
   late final GeneratedColumn<String> session = GeneratedColumn<String>(
     'session',
@@ -2592,10 +3274,14 @@ class $AppStateTable extends AppState with TableInfo<$AppStateTable, AppStateEnt
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES sessions (id)'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sessions (id)',
+    ),
     defaultValue: const Constant(kDefaultSessionId),
   );
-  static const VerificationMeta _showArchivedMeta = const VerificationMeta('showArchived');
+  static const VerificationMeta _showArchivedMeta = const VerificationMeta(
+    'showArchived',
+  );
   @override
   late final GeneratedColumn<bool> showArchived = GeneratedColumn<bool>(
     'show_archived',
@@ -2603,7 +3289,9 @@ class $AppStateTable extends AppState with TableInfo<$AppStateTable, AppStateEnt
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("show_archived" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_archived" IN (0, 1))',
+    ),
     defaultValue: const Constant(false),
   );
   @override
@@ -2614,19 +3302,28 @@ class $AppStateTable extends AppState with TableInfo<$AppStateTable, AppStateEnt
   String get actualTableName => $name;
   static const String $name = 'app_state';
   @override
-  VerificationContext validateIntegrity(Insertable<AppStateEntry> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<AppStateEntry> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('session')) {
-      context.handle(_sessionMeta, session.isAcceptableOrUnknown(data['session']!, _sessionMeta));
+      context.handle(
+        _sessionMeta,
+        session.isAcceptableOrUnknown(data['session']!, _sessionMeta),
+      );
     }
     if (data.containsKey('show_archived')) {
       context.handle(
         _showArchivedMeta,
-        showArchived.isAcceptableOrUnknown(data['show_archived']!, _showArchivedMeta),
+        showArchived.isAcceptableOrUnknown(
+          data['show_archived']!,
+          _showArchivedMeta,
+        ),
       );
     }
     return context;
@@ -2638,11 +3335,20 @@ class $AppStateTable extends AppState with TableInfo<$AppStateTable, AppStateEnt
   AppStateEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AppStateEntry(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
       puzzle: $AppStateTable.$converterpuzzle.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}puzzle'])!,
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}puzzle'],
+        )!,
       ),
-      session: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}session'])!,
+      session: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session'],
+      )!,
       showArchived: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}show_archived'],
@@ -2655,7 +3361,8 @@ class $AppStateTable extends AppState with TableInfo<$AppStateTable, AppStateEnt
     return $AppStateTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<Puzzle, String> $converterpuzzle = const PuzzleTypeConverter();
+  static TypeConverter<Puzzle, String> $converterpuzzle =
+      const PuzzleTypeConverter();
 }
 
 class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
@@ -2680,7 +3387,9 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     {
-      map['puzzle'] = Variable<String>($AppStateTable.$converterpuzzle.toSql(puzzle));
+      map['puzzle'] = Variable<String>(
+        $AppStateTable.$converterpuzzle.toSql(puzzle),
+      );
     }
     map['session'] = Variable<String>(session);
     map['show_archived'] = Variable<bool>(showArchived);
@@ -2696,7 +3405,10 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
     );
   }
 
-  factory AppStateEntry.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory AppStateEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AppStateEntry(
       id: serializer.fromJson<int>(json['id']),
@@ -2716,7 +3428,12 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
     };
   }
 
-  AppStateEntry copyWith({int? id, Puzzle? puzzle, String? session, bool? showArchived}) => AppStateEntry(
+  AppStateEntry copyWith({
+    int? id,
+    Puzzle? puzzle,
+    String? session,
+    bool? showArchived,
+  }) => AppStateEntry(
     id: id ?? this.id,
     puzzle: puzzle ?? this.puzzle,
     session: session ?? this.session,
@@ -2727,7 +3444,9 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       id: data.id.present ? data.id.value : this.id,
       puzzle: data.puzzle.present ? data.puzzle.value : this.puzzle,
       session: data.session.present ? data.session.value : this.session,
-      showArchived: data.showArchived.present ? data.showArchived.value : this.showArchived,
+      showArchived: data.showArchived.present
+          ? data.showArchived.value
+          : this.showArchived,
     );
   }
 
@@ -2806,7 +3525,9 @@ class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
       map['id'] = Variable<int>(id.value);
     }
     if (puzzle.present) {
-      map['puzzle'] = Variable<String>($AppStateTable.$converterpuzzle.toSql(puzzle.value));
+      map['puzzle'] = Variable<String>(
+        $AppStateTable.$converterpuzzle.toSql(puzzle.value),
+      );
     }
     if (session.present) {
       map['session'] = Variable<String>(session.value);
@@ -2845,14 +3566,17 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     clientDefault: () => const Uuid().v4(),
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Puzzle, String> puzzle = GeneratedColumn<String>(
-    'puzzle',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<Puzzle>($RecordsTable.$converterpuzzle);
-  static const VerificationMeta _sessionMeta = const VerificationMeta('session');
+  late final GeneratedColumnWithTypeConverter<Puzzle, String> puzzle =
+      GeneratedColumn<String>(
+        'puzzle',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<Puzzle>($RecordsTable.$converterpuzzle);
+  static const VerificationMeta _sessionMeta = const VerificationMeta(
+    'session',
+  );
   @override
   late final GeneratedColumn<String> session = GeneratedColumn<String>(
     'session',
@@ -2860,9 +3584,13 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('REFERENCES sessions (id)'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES sessions (id)',
+    ),
   );
-  static const VerificationMeta _scrambleMeta = const VerificationMeta('scramble');
+  static const VerificationMeta _scrambleMeta = const VerificationMeta(
+    'scramble',
+  );
   @override
   late final GeneratedColumn<String> scramble = GeneratedColumn<String>(
     'scramble',
@@ -2880,7 +3608,9 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _datetimeMeta = const VerificationMeta('datetime');
+  static const VerificationMeta _datetimeMeta = const VerificationMeta(
+    'datetime',
+  );
   @override
   late final GeneratedColumn<DateTime> datetime = GeneratedColumn<DateTime>(
     'datetime',
@@ -2891,14 +3621,17 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     defaultValue: currentDateAndTime,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<Penalty, String> penalty = GeneratedColumn<String>(
-    'penalty',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  ).withConverter<Penalty>($RecordsTable.$converterpenalty);
-  static const VerificationMeta _commentMeta = const VerificationMeta('comment');
+  late final GeneratedColumnWithTypeConverter<Penalty, String> penalty =
+      GeneratedColumn<String>(
+        'penalty',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<Penalty>($RecordsTable.$converterpenalty);
+  static const VerificationMeta _commentMeta = const VerificationMeta(
+    'comment',
+  );
   @override
   late final GeneratedColumn<String> comment = GeneratedColumn<String>(
     'comment',
@@ -2907,7 +3640,9 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _deletedAtMeta = const VerificationMeta('deletedAt');
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
   @override
   late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
     'deleted_at',
@@ -2916,7 +3651,9 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _archivedMeta = const VerificationMeta('archived');
+  static const VerificationMeta _archivedMeta = const VerificationMeta(
+    'archived',
+  );
   @override
   late final GeneratedColumn<bool> archived = GeneratedColumn<bool>(
     'archived',
@@ -2924,7 +3661,9 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     false,
     type: DriftSqlType.bool,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("archived" IN (0, 1))'),
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("archived" IN (0, 1))',
+    ),
     defaultValue: const Constant(false),
   );
   @override
@@ -2946,38 +3685,62 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
   String get actualTableName => $name;
   static const String $name = 'records';
   @override
-  VerificationContext validateIntegrity(Insertable<RecordEntry> instance, {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<RecordEntry> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('session')) {
-      context.handle(_sessionMeta, session.isAcceptableOrUnknown(data['session']!, _sessionMeta));
+      context.handle(
+        _sessionMeta,
+        session.isAcceptableOrUnknown(data['session']!, _sessionMeta),
+      );
     } else if (isInserting) {
       context.missing(_sessionMeta);
     }
     if (data.containsKey('scramble')) {
-      context.handle(_scrambleMeta, scramble.isAcceptableOrUnknown(data['scramble']!, _scrambleMeta));
+      context.handle(
+        _scrambleMeta,
+        scramble.isAcceptableOrUnknown(data['scramble']!, _scrambleMeta),
+      );
     } else if (isInserting) {
       context.missing(_scrambleMeta);
     }
     if (data.containsKey('time')) {
-      context.handle(_timeMeta, time.isAcceptableOrUnknown(data['time']!, _timeMeta));
+      context.handle(
+        _timeMeta,
+        time.isAcceptableOrUnknown(data['time']!, _timeMeta),
+      );
     } else if (isInserting) {
       context.missing(_timeMeta);
     }
     if (data.containsKey('datetime')) {
-      context.handle(_datetimeMeta, datetime.isAcceptableOrUnknown(data['datetime']!, _datetimeMeta));
+      context.handle(
+        _datetimeMeta,
+        datetime.isAcceptableOrUnknown(data['datetime']!, _datetimeMeta),
+      );
     }
     if (data.containsKey('comment')) {
-      context.handle(_commentMeta, comment.isAcceptableOrUnknown(data['comment']!, _commentMeta));
+      context.handle(
+        _commentMeta,
+        comment.isAcceptableOrUnknown(data['comment']!, _commentMeta),
+      );
     }
     if (data.containsKey('deleted_at')) {
-      context.handle(_deletedAtMeta, deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
     }
     if (data.containsKey('archived')) {
-      context.handle(_archivedMeta, archived.isAcceptableOrUnknown(data['archived']!, _archivedMeta));
+      context.handle(
+        _archivedMeta,
+        archived.isAcceptableOrUnknown(data['archived']!, _archivedMeta),
+      );
     }
     return context;
   }
@@ -2988,23 +3751,50 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
   RecordEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return RecordEntry(
-      id: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
       puzzle: $RecordsTable.$converterpuzzle.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}puzzle'])!,
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}puzzle'],
+        )!,
       ),
-      session: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}session'])!,
-      scramble: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}scramble'])!,
-      time: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}time'])!,
-      datetime: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}datetime'])!,
+      session: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}session'],
+      )!,
+      scramble: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scramble'],
+      )!,
+      time: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}time'],
+      )!,
+      datetime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}datetime'],
+      )!,
       penalty: $RecordsTable.$converterpenalty.fromSql(
-        attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}penalty'])!,
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}penalty'],
+        )!,
       ),
-      comment: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}comment']),
+      comment: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}comment'],
+      ),
       deletedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}deleted_at'],
       ),
-      archived: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}archived'])!,
+      archived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}archived'],
+      )!,
     );
   }
 
@@ -3013,8 +3803,10 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     return $RecordsTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<Puzzle, String> $converterpuzzle = const PuzzleTypeConverter();
-  static TypeConverter<Penalty, String> $converterpenalty = const PenaltyTypeConverter();
+  static TypeConverter<Puzzle, String> $converterpuzzle =
+      const PuzzleTypeConverter();
+  static TypeConverter<Penalty, String> $converterpenalty =
+      const PenaltyTypeConverter();
 }
 
 class RecordEntry extends DataClass implements Insertable<RecordEntry> {
@@ -3065,14 +3857,18 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     {
-      map['puzzle'] = Variable<String>($RecordsTable.$converterpuzzle.toSql(puzzle));
+      map['puzzle'] = Variable<String>(
+        $RecordsTable.$converterpuzzle.toSql(puzzle),
+      );
     }
     map['session'] = Variable<String>(session);
     map['scramble'] = Variable<String>(scramble);
     map['time'] = Variable<int>(time);
     map['datetime'] = Variable<DateTime>(datetime);
     {
-      map['penalty'] = Variable<String>($RecordsTable.$converterpenalty.toSql(penalty));
+      map['penalty'] = Variable<String>(
+        $RecordsTable.$converterpenalty.toSql(penalty),
+      );
     }
     if (!nullToAbsent || comment != null) {
       map['comment'] = Variable<String>(comment);
@@ -3093,13 +3889,20 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
       time: Value(time),
       datetime: Value(datetime),
       penalty: Value(penalty),
-      comment: comment == null && nullToAbsent ? const Value.absent() : Value(comment),
-      deletedAt: deletedAt == null && nullToAbsent ? const Value.absent() : Value(deletedAt),
+      comment: comment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(comment),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
       archived: Value(archived),
     );
   }
 
-  factory RecordEntry.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+  factory RecordEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return RecordEntry(
       id: serializer.fromJson<String>(json['id']),
@@ -3187,8 +3990,18 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, puzzle, session, scramble, time, datetime, penalty, comment, deletedAt, archived);
+  int get hashCode => Object.hash(
+    id,
+    puzzle,
+    session,
+    scramble,
+    time,
+    datetime,
+    penalty,
+    comment,
+    deletedAt,
+    archived,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3310,7 +4123,9 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
       map['id'] = Variable<String>(id.value);
     }
     if (puzzle.present) {
-      map['puzzle'] = Variable<String>($RecordsTable.$converterpuzzle.toSql(puzzle.value));
+      map['puzzle'] = Variable<String>(
+        $RecordsTable.$converterpuzzle.toSql(puzzle.value),
+      );
     }
     if (session.present) {
       map['session'] = Variable<String>(session.value);
@@ -3325,7 +4140,9 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
       map['datetime'] = Variable<DateTime>(datetime.value);
     }
     if (penalty.present) {
-      map['penalty'] = Variable<String>($RecordsTable.$converterpenalty.toSql(penalty.value));
+      map['penalty'] = Variable<String>(
+        $RecordsTable.$converterpenalty.toSql(penalty.value),
+      );
     }
     if (comment.present) {
       map['comment'] = Variable<String>(comment.value);
@@ -3439,6 +4256,11 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<bool> showRunningTime,
   Value<bool> stackmatEnabled,
   Value<int> timeDecimals,
+  Value<int> holdDuration,
+  Value<bool> showScrambleImage,
+  Value<bool> showSessionStats,
+  Value<bool> showQuickActions,
+  Value<int> averageTrim,
 });
 typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<int> id,
@@ -3490,9 +4312,15 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<bool> showRunningTime,
   Value<bool> stackmatEnabled,
   Value<int> timeDecimals,
+  Value<int> holdDuration,
+  Value<bool> showScrambleImage,
+  Value<bool> showSessionStats,
+  Value<bool> showQuickActions,
+  Value<int> averageTrim,
 });
 
-class $$SettingsTableFilterComposer extends Composer<_$AppDatabase, $SettingsTable> {
+class $$SettingsTableFilterComposer
+    extends Composer<_$AppDatabase, $SettingsTable> {
   $$SettingsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -3500,159 +4328,281 @@ class $$SettingsTableFilterComposer extends Composer<_$AppDatabase, $SettingsTab
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get inspectionEnabled =>
-      $composableBuilder(column: $table.inspectionEnabled, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get inspectionEnabled => $composableBuilder(
+    column: $table.inspectionEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get inspectDuration =>
-      $composableBuilder(column: $table.inspectDuration, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get inspectDuration => $composableBuilder(
+    column: $table.inspectDuration,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get alertEnabled =>
-      $composableBuilder(column: $table.alertEnabled, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get alertEnabled => $composableBuilder(
+    column: $table.alertEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnWithTypeConverterFilters<Set<AlertType>, Set<AlertType>, String> get alertTypes => $composableBuilder(
+  ColumnWithTypeConverterFilters<Set<AlertType>, Set<AlertType>, String>
+  get alertTypes => $composableBuilder(
     column: $table.alertTypes,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<bool> get recordBestAlert =>
-      $composableBuilder(column: $table.recordBestAlert, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get recordBestAlert => $composableBuilder(
+    column: $table.recordBestAlert,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get recordWorstAlert =>
-      $composableBuilder(column: $table.recordWorstAlert, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get recordWorstAlert => $composableBuilder(
+    column: $table.recordWorstAlert,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get recordAverageAlert =>
-      $composableBuilder(column: $table.recordAverageAlert, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get recordAverageAlert => $composableBuilder(
+    column: $table.recordAverageAlert,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<String> get locale =>
-      $composableBuilder(column: $table.locale, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get locale => $composableBuilder(
+    column: $table.locale,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnWithTypeConverterFilters<AppThemeMode, AppThemeMode, String> get themeMode => $composableBuilder(
+  ColumnWithTypeConverterFilters<AppThemeMode, AppThemeMode, String>
+  get themeMode => $composableBuilder(
     column: $table.themeMode,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
-  ColumnFilters<int> get primaryColor =>
-      $composableBuilder(column: $table.primaryColor, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get primaryColor => $composableBuilder(
+    column: $table.primaryColor,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get cubeColorU =>
-      $composableBuilder(column: $table.cubeColorU, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get cubeColorU => $composableBuilder(
+    column: $table.cubeColorU,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get cubeColorR =>
-      $composableBuilder(column: $table.cubeColorR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get cubeColorR => $composableBuilder(
+    column: $table.cubeColorR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get cubeColorF =>
-      $composableBuilder(column: $table.cubeColorF, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get cubeColorF => $composableBuilder(
+    column: $table.cubeColorF,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get cubeColorD =>
-      $composableBuilder(column: $table.cubeColorD, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get cubeColorD => $composableBuilder(
+    column: $table.cubeColorD,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get cubeColorL =>
-      $composableBuilder(column: $table.cubeColorL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get cubeColorL => $composableBuilder(
+    column: $table.cubeColorL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get cubeColorB =>
-      $composableBuilder(column: $table.cubeColorB, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get cubeColorB => $composableBuilder(
+    column: $table.cubeColorB,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get pyraminxColorU =>
-      $composableBuilder(column: $table.pyraminxColorU, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get pyraminxColorU => $composableBuilder(
+    column: $table.pyraminxColorU,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get pyraminxColorB =>
-      $composableBuilder(column: $table.pyraminxColorB, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get pyraminxColorB => $composableBuilder(
+    column: $table.pyraminxColorB,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get pyraminxColorR =>
-      $composableBuilder(column: $table.pyraminxColorR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get pyraminxColorR => $composableBuilder(
+    column: $table.pyraminxColorR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get pyraminxColorL =>
-      $composableBuilder(column: $table.pyraminxColorL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get pyraminxColorL => $composableBuilder(
+    column: $table.pyraminxColorL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorU =>
-      $composableBuilder(column: $table.megaminxColorU, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorU => $composableBuilder(
+    column: $table.megaminxColorU,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorBL =>
-      $composableBuilder(column: $table.megaminxColorBL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorBL => $composableBuilder(
+    column: $table.megaminxColorBL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorBR =>
-      $composableBuilder(column: $table.megaminxColorBR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorBR => $composableBuilder(
+    column: $table.megaminxColorBR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorR =>
-      $composableBuilder(column: $table.megaminxColorR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorR => $composableBuilder(
+    column: $table.megaminxColorR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorF =>
-      $composableBuilder(column: $table.megaminxColorF, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorF => $composableBuilder(
+    column: $table.megaminxColorF,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorL =>
-      $composableBuilder(column: $table.megaminxColorL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorL => $composableBuilder(
+    column: $table.megaminxColorL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorD =>
-      $composableBuilder(column: $table.megaminxColorD, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorD => $composableBuilder(
+    column: $table.megaminxColorD,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorDR =>
-      $composableBuilder(column: $table.megaminxColorDR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorDR => $composableBuilder(
+    column: $table.megaminxColorDR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorDBR =>
-      $composableBuilder(column: $table.megaminxColorDBR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorDBR => $composableBuilder(
+    column: $table.megaminxColorDBR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorB =>
-      $composableBuilder(column: $table.megaminxColorB, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorB => $composableBuilder(
+    column: $table.megaminxColorB,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorDBL =>
-      $composableBuilder(column: $table.megaminxColorDBL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorDBL => $composableBuilder(
+    column: $table.megaminxColorDBL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get megaminxColorDL =>
-      $composableBuilder(column: $table.megaminxColorDL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get megaminxColorDL => $composableBuilder(
+    column: $table.megaminxColorDL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorU =>
-      $composableBuilder(column: $table.ftoColorU, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorU => $composableBuilder(
+    column: $table.ftoColorU,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorR =>
-      $composableBuilder(column: $table.ftoColorR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorR => $composableBuilder(
+    column: $table.ftoColorR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorF =>
-      $composableBuilder(column: $table.ftoColorF, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorF => $composableBuilder(
+    column: $table.ftoColorF,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorL =>
-      $composableBuilder(column: $table.ftoColorL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorL => $composableBuilder(
+    column: $table.ftoColorL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorB =>
-      $composableBuilder(column: $table.ftoColorB, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorB => $composableBuilder(
+    column: $table.ftoColorB,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorBL =>
-      $composableBuilder(column: $table.ftoColorBL, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorBL => $composableBuilder(
+    column: $table.ftoColorBL,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorD =>
-      $composableBuilder(column: $table.ftoColorD, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorD => $composableBuilder(
+    column: $table.ftoColorD,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get ftoColorBR =>
-      $composableBuilder(column: $table.ftoColorBR, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get ftoColorBR => $composableBuilder(
+    column: $table.ftoColorBR,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get clockColorFront =>
-      $composableBuilder(column: $table.clockColorFront, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get clockColorFront => $composableBuilder(
+    column: $table.clockColorFront,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get clockColorBack =>
-      $composableBuilder(column: $table.clockColorBack, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get clockColorBack => $composableBuilder(
+    column: $table.clockColorBack,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get timerPressedColor =>
-      $composableBuilder(column: $table.timerPressedColor, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get timerPressedColor => $composableBuilder(
+    column: $table.timerPressedColor,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get timerHoldingColor =>
-      $composableBuilder(column: $table.timerHoldingColor, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get timerHoldingColor => $composableBuilder(
+    column: $table.timerHoldingColor,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get timerAcceptColor =>
-      $composableBuilder(column: $table.timerAcceptColor, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get timerAcceptColor => $composableBuilder(
+    column: $table.timerAcceptColor,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get showRunningTime =>
-      $composableBuilder(column: $table.showRunningTime, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get showRunningTime => $composableBuilder(
+    column: $table.showRunningTime,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get stackmatEnabled =>
-      $composableBuilder(column: $table.stackmatEnabled, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get stackmatEnabled => $composableBuilder(
+    column: $table.stackmatEnabled,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get timeDecimals =>
-      $composableBuilder(column: $table.timeDecimals, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get timeDecimals => $composableBuilder(
+    column: $table.timeDecimals,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get holdDuration => $composableBuilder(
+    column: $table.holdDuration,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showScrambleImage => $composableBuilder(
+    column: $table.showScrambleImage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showSessionStats => $composableBuilder(
+    column: $table.showSessionStats,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showQuickActions => $composableBuilder(
+    column: $table.showQuickActions,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get averageTrim => $composableBuilder(
+    column: $table.averageTrim,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
-class $$SettingsTableOrderingComposer extends Composer<_$AppDatabase, $SettingsTable> {
+class $$SettingsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SettingsTable> {
   $$SettingsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -3660,155 +4610,279 @@ class $$SettingsTableOrderingComposer extends Composer<_$AppDatabase, $SettingsT
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get inspectionEnabled =>
-      $composableBuilder(column: $table.inspectionEnabled, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get inspectionEnabled => $composableBuilder(
+    column: $table.inspectionEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get inspectDuration =>
-      $composableBuilder(column: $table.inspectDuration, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get inspectDuration => $composableBuilder(
+    column: $table.inspectDuration,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get alertEnabled =>
-      $composableBuilder(column: $table.alertEnabled, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get alertEnabled => $composableBuilder(
+    column: $table.alertEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get alertTypes =>
-      $composableBuilder(column: $table.alertTypes, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get alertTypes => $composableBuilder(
+    column: $table.alertTypes,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get recordBestAlert =>
-      $composableBuilder(column: $table.recordBestAlert, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get recordBestAlert => $composableBuilder(
+    column: $table.recordBestAlert,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get recordWorstAlert =>
-      $composableBuilder(column: $table.recordWorstAlert, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get recordWorstAlert => $composableBuilder(
+    column: $table.recordWorstAlert,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get recordAverageAlert =>
-      $composableBuilder(column: $table.recordAverageAlert, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get recordAverageAlert => $composableBuilder(
+    column: $table.recordAverageAlert,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get locale =>
-      $composableBuilder(column: $table.locale, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get locale => $composableBuilder(
+    column: $table.locale,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get themeMode =>
-      $composableBuilder(column: $table.themeMode, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get themeMode => $composableBuilder(
+    column: $table.themeMode,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get primaryColor =>
-      $composableBuilder(column: $table.primaryColor, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get primaryColor => $composableBuilder(
+    column: $table.primaryColor,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get cubeColorU =>
-      $composableBuilder(column: $table.cubeColorU, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get cubeColorU => $composableBuilder(
+    column: $table.cubeColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get cubeColorR =>
-      $composableBuilder(column: $table.cubeColorR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get cubeColorR => $composableBuilder(
+    column: $table.cubeColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get cubeColorF =>
-      $composableBuilder(column: $table.cubeColorF, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get cubeColorF => $composableBuilder(
+    column: $table.cubeColorF,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get cubeColorD =>
-      $composableBuilder(column: $table.cubeColorD, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get cubeColorD => $composableBuilder(
+    column: $table.cubeColorD,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get cubeColorL =>
-      $composableBuilder(column: $table.cubeColorL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get cubeColorL => $composableBuilder(
+    column: $table.cubeColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get cubeColorB =>
-      $composableBuilder(column: $table.cubeColorB, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get cubeColorB => $composableBuilder(
+    column: $table.cubeColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get pyraminxColorU =>
-      $composableBuilder(column: $table.pyraminxColorU, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get pyraminxColorU => $composableBuilder(
+    column: $table.pyraminxColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get pyraminxColorB =>
-      $composableBuilder(column: $table.pyraminxColorB, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get pyraminxColorB => $composableBuilder(
+    column: $table.pyraminxColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get pyraminxColorR =>
-      $composableBuilder(column: $table.pyraminxColorR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get pyraminxColorR => $composableBuilder(
+    column: $table.pyraminxColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get pyraminxColorL =>
-      $composableBuilder(column: $table.pyraminxColorL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get pyraminxColorL => $composableBuilder(
+    column: $table.pyraminxColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorU =>
-      $composableBuilder(column: $table.megaminxColorU, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorU => $composableBuilder(
+    column: $table.megaminxColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorBL =>
-      $composableBuilder(column: $table.megaminxColorBL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorBL => $composableBuilder(
+    column: $table.megaminxColorBL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorBR =>
-      $composableBuilder(column: $table.megaminxColorBR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorBR => $composableBuilder(
+    column: $table.megaminxColorBR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorR =>
-      $composableBuilder(column: $table.megaminxColorR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorR => $composableBuilder(
+    column: $table.megaminxColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorF =>
-      $composableBuilder(column: $table.megaminxColorF, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorF => $composableBuilder(
+    column: $table.megaminxColorF,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorL =>
-      $composableBuilder(column: $table.megaminxColorL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorL => $composableBuilder(
+    column: $table.megaminxColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorD =>
-      $composableBuilder(column: $table.megaminxColorD, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorD => $composableBuilder(
+    column: $table.megaminxColorD,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorDR =>
-      $composableBuilder(column: $table.megaminxColorDR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorDR => $composableBuilder(
+    column: $table.megaminxColorDR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorDBR =>
-      $composableBuilder(column: $table.megaminxColorDBR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorDBR => $composableBuilder(
+    column: $table.megaminxColorDBR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorB =>
-      $composableBuilder(column: $table.megaminxColorB, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorB => $composableBuilder(
+    column: $table.megaminxColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorDBL =>
-      $composableBuilder(column: $table.megaminxColorDBL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorDBL => $composableBuilder(
+    column: $table.megaminxColorDBL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get megaminxColorDL =>
-      $composableBuilder(column: $table.megaminxColorDL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get megaminxColorDL => $composableBuilder(
+    column: $table.megaminxColorDL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorU =>
-      $composableBuilder(column: $table.ftoColorU, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorU => $composableBuilder(
+    column: $table.ftoColorU,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorR =>
-      $composableBuilder(column: $table.ftoColorR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorR => $composableBuilder(
+    column: $table.ftoColorR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorF =>
-      $composableBuilder(column: $table.ftoColorF, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorF => $composableBuilder(
+    column: $table.ftoColorF,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorL =>
-      $composableBuilder(column: $table.ftoColorL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorL => $composableBuilder(
+    column: $table.ftoColorL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorB =>
-      $composableBuilder(column: $table.ftoColorB, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorB => $composableBuilder(
+    column: $table.ftoColorB,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorBL =>
-      $composableBuilder(column: $table.ftoColorBL, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorBL => $composableBuilder(
+    column: $table.ftoColorBL,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorD =>
-      $composableBuilder(column: $table.ftoColorD, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorD => $composableBuilder(
+    column: $table.ftoColorD,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get ftoColorBR =>
-      $composableBuilder(column: $table.ftoColorBR, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get ftoColorBR => $composableBuilder(
+    column: $table.ftoColorBR,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get clockColorFront =>
-      $composableBuilder(column: $table.clockColorFront, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get clockColorFront => $composableBuilder(
+    column: $table.clockColorFront,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get clockColorBack =>
-      $composableBuilder(column: $table.clockColorBack, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get clockColorBack => $composableBuilder(
+    column: $table.clockColorBack,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get timerPressedColor =>
-      $composableBuilder(column: $table.timerPressedColor, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get timerPressedColor => $composableBuilder(
+    column: $table.timerPressedColor,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get timerHoldingColor =>
-      $composableBuilder(column: $table.timerHoldingColor, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get timerHoldingColor => $composableBuilder(
+    column: $table.timerHoldingColor,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get timerAcceptColor =>
-      $composableBuilder(column: $table.timerAcceptColor, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get timerAcceptColor => $composableBuilder(
+    column: $table.timerAcceptColor,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get showRunningTime =>
-      $composableBuilder(column: $table.showRunningTime, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get showRunningTime => $composableBuilder(
+    column: $table.showRunningTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get stackmatEnabled =>
-      $composableBuilder(column: $table.stackmatEnabled, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get stackmatEnabled => $composableBuilder(
+    column: $table.stackmatEnabled,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get timeDecimals =>
-      $composableBuilder(column: $table.timeDecimals, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get timeDecimals => $composableBuilder(
+    column: $table.timeDecimals,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get holdDuration => $composableBuilder(
+    column: $table.holdDuration,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get showScrambleImage => $composableBuilder(
+    column: $table.showScrambleImage,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get showSessionStats => $composableBuilder(
+    column: $table.showSessionStats,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get showQuickActions => $composableBuilder(
+    column: $table.showQuickActions,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get averageTrim => $composableBuilder(
+    column: $table.averageTrim,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
-class $$SettingsTableAnnotationComposer extends Composer<_$AppDatabase, $SettingsTable> {
+class $$SettingsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SettingsTable> {
   $$SettingsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -3816,28 +4890,44 @@ class $$SettingsTableAnnotationComposer extends Composer<_$AppDatabase, $Setting
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<bool> get inspectionEnabled =>
-      $composableBuilder(column: $table.inspectionEnabled, builder: (column) => column);
+  GeneratedColumn<bool> get inspectionEnabled => $composableBuilder(
+    column: $table.inspectionEnabled,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get inspectDuration =>
-      $composableBuilder(column: $table.inspectDuration, builder: (column) => column);
+  GeneratedColumn<int> get inspectDuration => $composableBuilder(
+    column: $table.inspectDuration,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get alertEnabled =>
-      $composableBuilder(column: $table.alertEnabled, builder: (column) => column);
+  GeneratedColumn<bool> get alertEnabled => $composableBuilder(
+    column: $table.alertEnabled,
+    builder: (column) => column,
+  );
 
   GeneratedColumnWithTypeConverter<Set<AlertType>, String> get alertTypes =>
-      $composableBuilder(column: $table.alertTypes, builder: (column) => column);
+      $composableBuilder(
+        column: $table.alertTypes,
+        builder: (column) => column,
+      );
 
-  GeneratedColumn<bool> get recordBestAlert =>
-      $composableBuilder(column: $table.recordBestAlert, builder: (column) => column);
+  GeneratedColumn<bool> get recordBestAlert => $composableBuilder(
+    column: $table.recordBestAlert,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get recordWorstAlert =>
-      $composableBuilder(column: $table.recordWorstAlert, builder: (column) => column);
+  GeneratedColumn<bool> get recordWorstAlert => $composableBuilder(
+    column: $table.recordWorstAlert,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get recordAverageAlert =>
-      $composableBuilder(column: $table.recordAverageAlert, builder: (column) => column);
+  GeneratedColumn<bool> get recordAverageAlert => $composableBuilder(
+    column: $table.recordAverageAlert,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get locale =>
       $composableBuilder(column: $table.locale, builder: (column) => column);
@@ -3845,74 +4935,120 @@ class $$SettingsTableAnnotationComposer extends Composer<_$AppDatabase, $Setting
   GeneratedColumnWithTypeConverter<AppThemeMode, String> get themeMode =>
       $composableBuilder(column: $table.themeMode, builder: (column) => column);
 
-  GeneratedColumn<int> get primaryColor =>
-      $composableBuilder(column: $table.primaryColor, builder: (column) => column);
+  GeneratedColumn<int> get primaryColor => $composableBuilder(
+    column: $table.primaryColor,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get cubeColorU =>
-      $composableBuilder(column: $table.cubeColorU, builder: (column) => column);
+  GeneratedColumn<int> get cubeColorU => $composableBuilder(
+    column: $table.cubeColorU,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get cubeColorR =>
-      $composableBuilder(column: $table.cubeColorR, builder: (column) => column);
+  GeneratedColumn<int> get cubeColorR => $composableBuilder(
+    column: $table.cubeColorR,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get cubeColorF =>
-      $composableBuilder(column: $table.cubeColorF, builder: (column) => column);
+  GeneratedColumn<int> get cubeColorF => $composableBuilder(
+    column: $table.cubeColorF,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get cubeColorD =>
-      $composableBuilder(column: $table.cubeColorD, builder: (column) => column);
+  GeneratedColumn<int> get cubeColorD => $composableBuilder(
+    column: $table.cubeColorD,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get cubeColorL =>
-      $composableBuilder(column: $table.cubeColorL, builder: (column) => column);
+  GeneratedColumn<int> get cubeColorL => $composableBuilder(
+    column: $table.cubeColorL,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get cubeColorB =>
-      $composableBuilder(column: $table.cubeColorB, builder: (column) => column);
+  GeneratedColumn<int> get cubeColorB => $composableBuilder(
+    column: $table.cubeColorB,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get pyraminxColorU =>
-      $composableBuilder(column: $table.pyraminxColorU, builder: (column) => column);
+  GeneratedColumn<int> get pyraminxColorU => $composableBuilder(
+    column: $table.pyraminxColorU,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get pyraminxColorB =>
-      $composableBuilder(column: $table.pyraminxColorB, builder: (column) => column);
+  GeneratedColumn<int> get pyraminxColorB => $composableBuilder(
+    column: $table.pyraminxColorB,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get pyraminxColorR =>
-      $composableBuilder(column: $table.pyraminxColorR, builder: (column) => column);
+  GeneratedColumn<int> get pyraminxColorR => $composableBuilder(
+    column: $table.pyraminxColorR,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get pyraminxColorL =>
-      $composableBuilder(column: $table.pyraminxColorL, builder: (column) => column);
+  GeneratedColumn<int> get pyraminxColorL => $composableBuilder(
+    column: $table.pyraminxColorL,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorU =>
-      $composableBuilder(column: $table.megaminxColorU, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorU => $composableBuilder(
+    column: $table.megaminxColorU,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorBL =>
-      $composableBuilder(column: $table.megaminxColorBL, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorBL => $composableBuilder(
+    column: $table.megaminxColorBL,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorBR =>
-      $composableBuilder(column: $table.megaminxColorBR, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorBR => $composableBuilder(
+    column: $table.megaminxColorBR,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorR =>
-      $composableBuilder(column: $table.megaminxColorR, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorR => $composableBuilder(
+    column: $table.megaminxColorR,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorF =>
-      $composableBuilder(column: $table.megaminxColorF, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorF => $composableBuilder(
+    column: $table.megaminxColorF,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorL =>
-      $composableBuilder(column: $table.megaminxColorL, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorL => $composableBuilder(
+    column: $table.megaminxColorL,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorD =>
-      $composableBuilder(column: $table.megaminxColorD, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorD => $composableBuilder(
+    column: $table.megaminxColorD,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorDR =>
-      $composableBuilder(column: $table.megaminxColorDR, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorDR => $composableBuilder(
+    column: $table.megaminxColorDR,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorDBR =>
-      $composableBuilder(column: $table.megaminxColorDBR, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorDBR => $composableBuilder(
+    column: $table.megaminxColorDBR,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorB =>
-      $composableBuilder(column: $table.megaminxColorB, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorB => $composableBuilder(
+    column: $table.megaminxColorB,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorDBL =>
-      $composableBuilder(column: $table.megaminxColorDBL, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorDBL => $composableBuilder(
+    column: $table.megaminxColorDBL,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get megaminxColorDL =>
-      $composableBuilder(column: $table.megaminxColorDL, builder: (column) => column);
+  GeneratedColumn<int> get megaminxColorDL => $composableBuilder(
+    column: $table.megaminxColorDL,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get ftoColorU =>
       $composableBuilder(column: $table.ftoColorU, builder: (column) => column);
@@ -3929,38 +5065,83 @@ class $$SettingsTableAnnotationComposer extends Composer<_$AppDatabase, $Setting
   GeneratedColumn<int> get ftoColorB =>
       $composableBuilder(column: $table.ftoColorB, builder: (column) => column);
 
-  GeneratedColumn<int> get ftoColorBL =>
-      $composableBuilder(column: $table.ftoColorBL, builder: (column) => column);
+  GeneratedColumn<int> get ftoColorBL => $composableBuilder(
+    column: $table.ftoColorBL,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get ftoColorD =>
       $composableBuilder(column: $table.ftoColorD, builder: (column) => column);
 
-  GeneratedColumn<int> get ftoColorBR =>
-      $composableBuilder(column: $table.ftoColorBR, builder: (column) => column);
+  GeneratedColumn<int> get ftoColorBR => $composableBuilder(
+    column: $table.ftoColorBR,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get clockColorFront =>
-      $composableBuilder(column: $table.clockColorFront, builder: (column) => column);
+  GeneratedColumn<int> get clockColorFront => $composableBuilder(
+    column: $table.clockColorFront,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get clockColorBack =>
-      $composableBuilder(column: $table.clockColorBack, builder: (column) => column);
+  GeneratedColumn<int> get clockColorBack => $composableBuilder(
+    column: $table.clockColorBack,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get timerPressedColor =>
-      $composableBuilder(column: $table.timerPressedColor, builder: (column) => column);
+  GeneratedColumn<int> get timerPressedColor => $composableBuilder(
+    column: $table.timerPressedColor,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get timerHoldingColor =>
-      $composableBuilder(column: $table.timerHoldingColor, builder: (column) => column);
+  GeneratedColumn<int> get timerHoldingColor => $composableBuilder(
+    column: $table.timerHoldingColor,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get timerAcceptColor =>
-      $composableBuilder(column: $table.timerAcceptColor, builder: (column) => column);
+  GeneratedColumn<int> get timerAcceptColor => $composableBuilder(
+    column: $table.timerAcceptColor,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get showRunningTime =>
-      $composableBuilder(column: $table.showRunningTime, builder: (column) => column);
+  GeneratedColumn<bool> get showRunningTime => $composableBuilder(
+    column: $table.showRunningTime,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<bool> get stackmatEnabled =>
-      $composableBuilder(column: $table.stackmatEnabled, builder: (column) => column);
+  GeneratedColumn<bool> get stackmatEnabled => $composableBuilder(
+    column: $table.stackmatEnabled,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<int> get timeDecimals =>
-      $composableBuilder(column: $table.timeDecimals, builder: (column) => column);
+  GeneratedColumn<int> get timeDecimals => $composableBuilder(
+    column: $table.timeDecimals,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get holdDuration => $composableBuilder(
+    column: $table.holdDuration,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get showScrambleImage => $composableBuilder(
+    column: $table.showScrambleImage,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get showSessionStats => $composableBuilder(
+    column: $table.showSessionStats,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get showQuickActions => $composableBuilder(
+    column: $table.showQuickActions,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get averageTrim => $composableBuilder(
+    column: $table.averageTrim,
+    builder: (column) => column,
+  );
 }
 
 class $$SettingsTableTableManager
@@ -3974,7 +5155,10 @@ class $$SettingsTableTableManager
           $$SettingsTableAnnotationComposer,
           $$SettingsTableCreateCompanionBuilder,
           $$SettingsTableUpdateCompanionBuilder,
-          (SettingsEntry, BaseReferences<_$AppDatabase, $SettingsTable, SettingsEntry>),
+          (
+            SettingsEntry,
+            BaseReferences<_$AppDatabase, $SettingsTable, SettingsEntry>,
+          ),
           SettingsEntry,
           PrefetchHooks Function()
         > {
@@ -3983,9 +5167,12 @@ class $$SettingsTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$SettingsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$SettingsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$SettingsTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$SettingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SettingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SettingsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -4037,6 +5224,11 @@ class $$SettingsTableTableManager
                 Value<bool> showRunningTime = const Value.absent(),
                 Value<bool> stackmatEnabled = const Value.absent(),
                 Value<int> timeDecimals = const Value.absent(),
+                Value<int> holdDuration = const Value.absent(),
+                Value<bool> showScrambleImage = const Value.absent(),
+                Value<bool> showSessionStats = const Value.absent(),
+                Value<bool> showQuickActions = const Value.absent(),
+                Value<int> averageTrim = const Value.absent(),
               }) => SettingsCompanion(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
@@ -4087,6 +5279,11 @@ class $$SettingsTableTableManager
                 showRunningTime: showRunningTime,
                 stackmatEnabled: stackmatEnabled,
                 timeDecimals: timeDecimals,
+                holdDuration: holdDuration,
+                showScrambleImage: showScrambleImage,
+                showSessionStats: showSessionStats,
+                showQuickActions: showQuickActions,
+                averageTrim: averageTrim,
               ),
           createCompanionCallback:
               ({
@@ -4139,6 +5336,11 @@ class $$SettingsTableTableManager
                 Value<bool> showRunningTime = const Value.absent(),
                 Value<bool> stackmatEnabled = const Value.absent(),
                 Value<int> timeDecimals = const Value.absent(),
+                Value<int> holdDuration = const Value.absent(),
+                Value<bool> showScrambleImage = const Value.absent(),
+                Value<bool> showSessionStats = const Value.absent(),
+                Value<bool> showQuickActions = const Value.absent(),
+                Value<int> averageTrim = const Value.absent(),
               }) => SettingsCompanion.insert(
                 id: id,
                 inspectionEnabled: inspectionEnabled,
@@ -4189,12 +5391,21 @@ class $$SettingsTableTableManager
                 showRunningTime: showRunningTime,
                 stackmatEnabled: stackmatEnabled,
                 timeDecimals: timeDecimals,
+                holdDuration: holdDuration,
+                showScrambleImage: showScrambleImage,
+                showSessionStats: showSessionStats,
+                showQuickActions: showQuickActions,
+                averageTrim: averageTrim,
               ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable<$SettingsTable, SettingsEntry>(table),
-                  BaseReferences<_$AppDatabase, $SettingsTable, SettingsEntry>(db, table, e),
+                  BaseReferences<_$AppDatabase, $SettingsTable, SettingsEntry>(
+                    db,
+                    table,
+                    e,
+                  ),
                 ),
               )
               .toList(),
@@ -4213,7 +5424,10 @@ typedef $$SettingsTableProcessedTableManager =
       $$SettingsTableAnnotationComposer,
       $$SettingsTableCreateCompanionBuilder,
       $$SettingsTableUpdateCompanionBuilder,
-      (SettingsEntry, BaseReferences<_$AppDatabase, $SettingsTable, SettingsEntry>),
+      (
+        SettingsEntry,
+        BaseReferences<_$AppDatabase, $SettingsTable, SettingsEntry>,
+      ),
       SettingsEntry,
       PrefetchHooks Function()
     >;
@@ -4232,11 +5446,15 @@ typedef $$SessionsTableUpdateCompanionBuilder = SessionsCompanion Function({
   Value<int> rowid,
 });
 
-final class $$SessionsTableReferences extends BaseReferences<_$AppDatabase, $SessionsTable, SessionEntry> {
+final class $$SessionsTableReferences
+    extends BaseReferences<_$AppDatabase, $SessionsTable, SessionEntry> {
   $$SessionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$AppStateTable, List<AppStateEntry>> _appStateRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(db.appState, aliasName: 'sessions__id__app_state__session');
+  static MultiTypedResultKey<$AppStateTable, List<AppStateEntry>>
+  _appStateRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.appState,
+    aliasName: 'sessions__id__app_state__session',
+  );
 
   $$AppStateTableProcessedTableManager get appStateRefs {
     final manager = $$AppStateTableTableManager(
@@ -4245,11 +5463,16 @@ final class $$SessionsTableReferences extends BaseReferences<_$AppDatabase, $Ses
     ).filter((f) => f.session.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_appStateRefsTable($_db));
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: cache));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
   }
 
-  static MultiTypedResultKey<$RecordsTable, List<RecordEntry>> _recordsRefsTable(_$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(db.records, aliasName: 'sessions__id__records__session');
+  static MultiTypedResultKey<$RecordsTable, List<RecordEntry>>
+  _recordsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.records,
+    aliasName: 'sessions__id__records__session',
+  );
 
   $$RecordsTableProcessedTableManager get recordsRefs {
     final manager = $$RecordsTableTableManager(
@@ -4258,11 +5481,14 @@ final class $$SessionsTableReferences extends BaseReferences<_$AppDatabase, $Ses
     ).filter((f) => f.session.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_recordsRefsTable($_db));
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: cache));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
   }
 }
 
-class $$SessionsTableFilterComposer extends Composer<_$AppDatabase, $SessionsTable> {
+class $$SessionsTableFilterComposer
+    extends Composer<_$AppDatabase, $SessionsTable> {
   $$SessionsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -4270,56 +5496,79 @@ class $$SessionsTableFilterComposer extends Composer<_$AppDatabase, $SessionsTab
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get deletedAt =>
-      $composableBuilder(column: $table.deletedAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  Expression<bool> appStateRefs(Expression<bool> Function($$AppStateTableFilterComposer f) f) {
+  Expression<bool> appStateRefs(
+    Expression<bool> Function($$AppStateTableFilterComposer f) f,
+  ) {
     final $$AppStateTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.appState,
       getReferencedColumn: (t) => t.session,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AppStateTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AppStateTableFilterComposer(
             $db: $db,
             $table: $db.appState,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
   }
 
-  Expression<bool> recordsRefs(Expression<bool> Function($$RecordsTableFilterComposer f) f) {
+  Expression<bool> recordsRefs(
+    Expression<bool> Function($$RecordsTableFilterComposer f) f,
+  ) {
     final $$RecordsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.records,
       getReferencedColumn: (t) => t.session,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$RecordsTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordsTableFilterComposer(
             $db: $db,
             $table: $db.records,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
   }
 }
 
-class $$SessionsTableOrderingComposer extends Composer<_$AppDatabase, $SessionsTable> {
+class $$SessionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SessionsTable> {
   $$SessionsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -4327,20 +5576,29 @@ class $$SessionsTableOrderingComposer extends Composer<_$AppDatabase, $SessionsT
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get deletedAt =>
-      $composableBuilder(column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
-class $$SessionsTableAnnotationComposer extends Composer<_$AppDatabase, $SessionsTable> {
+class $$SessionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SessionsTable> {
   $$SessionsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -4348,9 +5606,11 @@ class $$SessionsTableAnnotationComposer extends Composer<_$AppDatabase, $Session
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get name => $composableBuilder(column: $table.name, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -4366,31 +5626,43 @@ class $$SessionsTableAnnotationComposer extends Composer<_$AppDatabase, $Session
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.appState,
       getReferencedColumn: (t) => t.session,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$AppStateTableAnnotationComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AppStateTableAnnotationComposer(
             $db: $db,
             $table: $db.appState,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
   }
 
-  Expression<T> recordsRefs<T extends Object>(Expression<T> Function($$RecordsTableAnnotationComposer a) f) {
+  Expression<T> recordsRefs<T extends Object>(
+    Expression<T> Function($$RecordsTableAnnotationComposer a) f,
+  ) {
     final $$RecordsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.records,
       getReferencedColumn: (t) => t.session,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$RecordsTableAnnotationComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$RecordsTableAnnotationComposer(
             $db: $db,
             $table: $db.records,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return f(composer);
@@ -4417,9 +5689,12 @@ class $$SessionsTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$SessionsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$SessionsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$SessionsTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$SessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SessionsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
@@ -4459,24 +5734,39 @@ class $$SessionsTableTableManager
           prefetchHooksCallback: ({appStateRefs = false, recordsRefs = false}) {
             return PrefetchHooks(
               db: db,
-              explicitlyWatchedTables: [if (appStateRefs) db.appState, if (recordsRefs) db.records],
+              explicitlyWatchedTables: [
+                if (appStateRefs) db.appState,
+                if (recordsRefs) db.records,
+              ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (appStateRefs)
-                    await $_getPrefetchedData<SessionEntry, $SessionsTable, AppStateEntry>(
+                    await $_getPrefetchedData<
+                      SessionEntry,
+                      $SessionsTable,
+                      AppStateEntry
+                    >(
                       currentTable: table,
-                      referencedTable: $$SessionsTableReferences._appStateRefsTable(db),
-                      managerFromTypedResult: (p0) => $$SessionsTableReferences(db, table, p0).appStateRefs,
+                      referencedTable: $$SessionsTableReferences
+                          ._appStateRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$SessionsTableReferences(db, table, p0).appStateRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.session == item.id),
                       typedResults: items,
                     ),
                   if (recordsRefs)
-                    await $_getPrefetchedData<SessionEntry, $SessionsTable, RecordEntry>(
+                    await $_getPrefetchedData<
+                      SessionEntry,
+                      $SessionsTable,
+                      RecordEntry
+                    >(
                       currentTable: table,
-                      referencedTable: $$SessionsTableReferences._recordsRefsTable(db),
-                      managerFromTypedResult: (p0) => $$SessionsTableReferences(db, table, p0).recordsRefs,
+                      referencedTable: $$SessionsTableReferences
+                          ._recordsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$SessionsTableReferences(db, table, p0).recordsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.session == item.id),
                       typedResults: items,
@@ -4516,7 +5806,8 @@ typedef $$AppStateTableUpdateCompanionBuilder = AppStateCompanion Function({
   Value<bool> showArchived,
 });
 
-final class $$AppStateTableReferences extends BaseReferences<_$AppDatabase, $AppStateTable, AppStateEntry> {
+final class $$AppStateTableReferences
+    extends BaseReferences<_$AppDatabase, $AppStateTable, AppStateEntry> {
   $$AppStateTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $SessionsTable _sessionTable(_$AppDatabase db) =>
@@ -4525,14 +5816,20 @@ final class $$AppStateTableReferences extends BaseReferences<_$AppDatabase, $App
   $$SessionsTableProcessedTableManager get session {
     final $_column = $_itemColumn<String>('session')!;
 
-    final manager = $$SessionsTableTableManager($_db, $_db.sessions).filter((f) => f.id.sqlEquals($_column));
+    final manager = $$SessionsTableTableManager(
+      $_db,
+      $_db.sessions,
+    ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_sessionTable($_db));
     if (item == null) return manager;
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: [item]));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
   }
 }
 
-class $$AppStateTableFilterComposer extends Composer<_$AppDatabase, $AppStateTable> {
+class $$AppStateTableFilterComposer
+    extends Composer<_$AppDatabase, $AppStateTable> {
   $$AppStateTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -4540,14 +5837,21 @@ class $$AppStateTableFilterComposer extends Composer<_$AppDatabase, $AppStateTab
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<Puzzle, Puzzle, String> get puzzle =>
-      $composableBuilder(column: $table.puzzle, builder: (column) => ColumnWithTypeConverterFilters(column));
+      $composableBuilder(
+        column: $table.puzzle,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<bool> get showArchived =>
-      $composableBuilder(column: $table.showArchived, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get showArchived => $composableBuilder(
+    column: $table.showArchived,
+    builder: (column) => ColumnFilters(column),
+  );
 
   $$SessionsTableFilterComposer get session {
     final $$SessionsTableFilterComposer composer = $composerBuilder(
@@ -4555,20 +5859,26 @@ class $$AppStateTableFilterComposer extends Composer<_$AppDatabase, $AppStateTab
       getCurrentColumn: (t) => t.session,
       referencedTable: $db.sessions,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$SessionsTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableFilterComposer(
             $db: $db,
             $table: $db.sessions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$AppStateTableOrderingComposer extends Composer<_$AppDatabase, $AppStateTable> {
+class $$AppStateTableOrderingComposer
+    extends Composer<_$AppDatabase, $AppStateTable> {
   $$AppStateTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -4576,14 +5886,20 @@ class $$AppStateTableOrderingComposer extends Composer<_$AppDatabase, $AppStateT
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get puzzle =>
-      $composableBuilder(column: $table.puzzle, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get puzzle => $composableBuilder(
+    column: $table.puzzle,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get showArchived =>
-      $composableBuilder(column: $table.showArchived, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get showArchived => $composableBuilder(
+    column: $table.showArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   $$SessionsTableOrderingComposer get session {
     final $$SessionsTableOrderingComposer composer = $composerBuilder(
@@ -4591,20 +5907,26 @@ class $$AppStateTableOrderingComposer extends Composer<_$AppDatabase, $AppStateT
       getCurrentColumn: (t) => t.session,
       referencedTable: $db.sessions,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$SessionsTableOrderingComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableOrderingComposer(
             $db: $db,
             $table: $db.sessions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$AppStateTableAnnotationComposer extends Composer<_$AppDatabase, $AppStateTable> {
+class $$AppStateTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AppStateTable> {
   $$AppStateTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -4612,13 +5934,16 @@ class $$AppStateTableAnnotationComposer extends Composer<_$AppDatabase, $AppStat
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<Puzzle, String> get puzzle =>
       $composableBuilder(column: $table.puzzle, builder: (column) => column);
 
-  GeneratedColumn<bool> get showArchived =>
-      $composableBuilder(column: $table.showArchived, builder: (column) => column);
+  GeneratedColumn<bool> get showArchived => $composableBuilder(
+    column: $table.showArchived,
+    builder: (column) => column,
+  );
 
   $$SessionsTableAnnotationComposer get session {
     final $$SessionsTableAnnotationComposer composer = $composerBuilder(
@@ -4626,13 +5951,18 @@ class $$AppStateTableAnnotationComposer extends Composer<_$AppDatabase, $AppStat
       getCurrentColumn: (t) => t.session,
       referencedTable: $db.sessions,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$SessionsTableAnnotationComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableAnnotationComposer(
             $db: $db,
             $table: $db.sessions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
@@ -4659,15 +5989,24 @@ class $$AppStateTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$AppStateTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$AppStateTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$AppStateTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<Puzzle> puzzle = const Value.absent(),
-            Value<String> session = const Value.absent(),
-            Value<bool> showArchived = const Value.absent(),
-          }) => AppStateCompanion(id: id, puzzle: puzzle, session: session, showArchived: showArchived),
+          createFilteringComposer: () =>
+              $$AppStateTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AppStateTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AppStateTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<Puzzle> puzzle = const Value.absent(),
+                Value<String> session = const Value.absent(),
+                Value<bool> showArchived = const Value.absent(),
+              }) => AppStateCompanion(
+                id: id,
+                puzzle: puzzle,
+                session: session,
+                showArchived: showArchived,
+              ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -4712,8 +6051,11 @@ class $$AppStateTableTableManager
                       state = state.withJoin(
                         currentTable: table,
                         currentColumn: table.session,
-                        referencedTable: $$AppStateTableReferences._sessionTable(db),
-                        referencedColumn: $$AppStateTableReferences._sessionTable(db).id,
+                        referencedTable: $$AppStateTableReferences
+                            ._sessionTable(db),
+                        referencedColumn: $$AppStateTableReferences
+                            ._sessionTable(db)
+                            .id,
                       ) as T;
                     }
 
@@ -4769,7 +6111,8 @@ typedef $$RecordsTableUpdateCompanionBuilder = RecordsCompanion Function({
   Value<int> rowid,
 });
 
-final class $$RecordsTableReferences extends BaseReferences<_$AppDatabase, $RecordsTable, RecordEntry> {
+final class $$RecordsTableReferences
+    extends BaseReferences<_$AppDatabase, $RecordsTable, RecordEntry> {
   $$RecordsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $SessionsTable _sessionTable(_$AppDatabase db) =>
@@ -4778,14 +6121,20 @@ final class $$RecordsTableReferences extends BaseReferences<_$AppDatabase, $Reco
   $$SessionsTableProcessedTableManager get session {
     final $_column = $_itemColumn<String>('session')!;
 
-    final manager = $$SessionsTableTableManager($_db, $_db.sessions).filter((f) => f.id.sqlEquals($_column));
+    final manager = $$SessionsTableTableManager(
+      $_db,
+      $_db.sessions,
+    ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_sessionTable($_db));
     if (item == null) return manager;
-    return ProcessedTableManager(manager.$state.copyWith(prefetchedData: [item]));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
   }
 }
 
-class $$RecordsTableFilterComposer extends Composer<_$AppDatabase, $RecordsTable> {
+class $$RecordsTableFilterComposer
+    extends Composer<_$AppDatabase, $RecordsTable> {
   $$RecordsTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -4793,32 +6142,52 @@ class $$RecordsTableFilterComposer extends Composer<_$AppDatabase, $RecordsTable
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<Puzzle, Puzzle, String> get puzzle =>
-      $composableBuilder(column: $table.puzzle, builder: (column) => ColumnWithTypeConverterFilters(column));
+      $composableBuilder(
+        column: $table.puzzle,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get scramble =>
-      $composableBuilder(column: $table.scramble, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get scramble => $composableBuilder(
+    column: $table.scramble,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<int> get time =>
-      $composableBuilder(column: $table.time, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get time => $composableBuilder(
+    column: $table.time,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get datetime =>
-      $composableBuilder(column: $table.datetime, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get datetime => $composableBuilder(
+    column: $table.datetime,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<Penalty, Penalty, String> get penalty =>
-      $composableBuilder(column: $table.penalty, builder: (column) => ColumnWithTypeConverterFilters(column));
+      $composableBuilder(
+        column: $table.penalty,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
-  ColumnFilters<String> get comment =>
-      $composableBuilder(column: $table.comment, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get comment => $composableBuilder(
+    column: $table.comment,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get deletedAt =>
-      $composableBuilder(column: $table.deletedAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<bool> get archived =>
-      $composableBuilder(column: $table.archived, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get archived => $composableBuilder(
+    column: $table.archived,
+    builder: (column) => ColumnFilters(column),
+  );
 
   $$SessionsTableFilterComposer get session {
     final $$SessionsTableFilterComposer composer = $composerBuilder(
@@ -4826,20 +6195,26 @@ class $$RecordsTableFilterComposer extends Composer<_$AppDatabase, $RecordsTable
       getCurrentColumn: (t) => t.session,
       referencedTable: $db.sessions,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$SessionsTableFilterComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableFilterComposer(
             $db: $db,
             $table: $db.sessions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$RecordsTableOrderingComposer extends Composer<_$AppDatabase, $RecordsTable> {
+class $$RecordsTableOrderingComposer
+    extends Composer<_$AppDatabase, $RecordsTable> {
   $$RecordsTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -4847,32 +6222,50 @@ class $$RecordsTableOrderingComposer extends Composer<_$AppDatabase, $RecordsTab
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get puzzle =>
-      $composableBuilder(column: $table.puzzle, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get puzzle => $composableBuilder(
+    column: $table.puzzle,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get scramble =>
-      $composableBuilder(column: $table.scramble, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get scramble => $composableBuilder(
+    column: $table.scramble,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<int> get time =>
-      $composableBuilder(column: $table.time, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get time => $composableBuilder(
+    column: $table.time,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get datetime =>
-      $composableBuilder(column: $table.datetime, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get datetime => $composableBuilder(
+    column: $table.datetime,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get penalty =>
-      $composableBuilder(column: $table.penalty, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get penalty => $composableBuilder(
+    column: $table.penalty,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get comment =>
-      $composableBuilder(column: $table.comment, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get comment => $composableBuilder(
+    column: $table.comment,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get deletedAt =>
-      $composableBuilder(column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<bool> get archived =>
-      $composableBuilder(column: $table.archived, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get archived => $composableBuilder(
+    column: $table.archived,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   $$SessionsTableOrderingComposer get session {
     final $$SessionsTableOrderingComposer composer = $composerBuilder(
@@ -4880,20 +6273,26 @@ class $$RecordsTableOrderingComposer extends Composer<_$AppDatabase, $RecordsTab
       getCurrentColumn: (t) => t.session,
       referencedTable: $db.sessions,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$SessionsTableOrderingComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableOrderingComposer(
             $db: $db,
             $table: $db.sessions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
   }
 }
 
-class $$RecordsTableAnnotationComposer extends Composer<_$AppDatabase, $RecordsTable> {
+class $$RecordsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RecordsTable> {
   $$RecordsTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -4901,7 +6300,8 @@ class $$RecordsTableAnnotationComposer extends Composer<_$AppDatabase, $RecordsT
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<Puzzle, String> get puzzle =>
       $composableBuilder(column: $table.puzzle, builder: (column) => column);
@@ -4909,7 +6309,8 @@ class $$RecordsTableAnnotationComposer extends Composer<_$AppDatabase, $RecordsT
   GeneratedColumn<String> get scramble =>
       $composableBuilder(column: $table.scramble, builder: (column) => column);
 
-  GeneratedColumn<int> get time => $composableBuilder(column: $table.time, builder: (column) => column);
+  GeneratedColumn<int> get time =>
+      $composableBuilder(column: $table.time, builder: (column) => column);
 
   GeneratedColumn<DateTime> get datetime =>
       $composableBuilder(column: $table.datetime, builder: (column) => column);
@@ -4932,13 +6333,18 @@ class $$RecordsTableAnnotationComposer extends Composer<_$AppDatabase, $RecordsT
       getCurrentColumn: (t) => t.session,
       referencedTable: $db.sessions,
       getReferencedColumn: (t) => t.id,
-      builder: (joinBuilder, {$addJoinBuilderToRootComposer, $removeJoinBuilderFromRootComposer}) =>
-          $$SessionsTableAnnotationComposer(
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SessionsTableAnnotationComposer(
             $db: $db,
             $table: $db.sessions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer: $removeJoinBuilderFromRootComposer,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
           ),
     );
     return composer;
@@ -4965,9 +6371,12 @@ class $$RecordsTableTableManager
         TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () => $$RecordsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () => $$RecordsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () => $$RecordsTableAnnotationComposer($db: db, $table: table),
+          createFilteringComposer: () =>
+              $$RecordsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RecordsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RecordsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
@@ -5022,8 +6431,10 @@ class $$RecordsTableTableManager
               ),
           withReferenceMapper: (p0) => p0
               .map(
-                (e) =>
-                    (e.readTable<$RecordsTable, RecordEntry>(table), $$RecordsTableReferences(db, table, e)),
+                (e) => (
+                  e.readTable<$RecordsTable, RecordEntry>(table),
+                  $$RecordsTableReferences(db, table, e),
+                ),
               )
               .toList(),
           prefetchHooksCallback: ({session = false}) {
@@ -5050,8 +6461,12 @@ class $$RecordsTableTableManager
                       state = state.withJoin(
                         currentTable: table,
                         currentColumn: table.session,
-                        referencedTable: $$RecordsTableReferences._sessionTable(db),
-                        referencedColumn: $$RecordsTableReferences._sessionTable(db).id,
+                        referencedTable: $$RecordsTableReferences._sessionTable(
+                          db,
+                        ),
+                        referencedColumn: $$RecordsTableReferences
+                            ._sessionTable(db)
+                            .id,
                       ) as T;
                     }
 
@@ -5084,8 +6499,12 @@ typedef $$RecordsTableProcessedTableManager =
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$SettingsTableTableManager get settings => $$SettingsTableTableManager(_db, _db.settings);
-  $$SessionsTableTableManager get sessions => $$SessionsTableTableManager(_db, _db.sessions);
-  $$AppStateTableTableManager get appState => $$AppStateTableTableManager(_db, _db.appState);
-  $$RecordsTableTableManager get records => $$RecordsTableTableManager(_db, _db.records);
+  $$SettingsTableTableManager get settings =>
+      $$SettingsTableTableManager(_db, _db.settings);
+  $$SessionsTableTableManager get sessions =>
+      $$SessionsTableTableManager(_db, _db.sessions);
+  $$AppStateTableTableManager get appState =>
+      $$AppStateTableTableManager(_db, _db.appState);
+  $$RecordsTableTableManager get records =>
+      $$RecordsTableTableManager(_db, _db.records);
 }

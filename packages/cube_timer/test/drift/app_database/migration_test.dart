@@ -18,6 +18,7 @@ import "generated/schema_v8.dart" as v8;
 import "generated/schema_v9.dart" as v9;
 import "generated/schema_v10.dart" as v10;
 import "generated/schema_v11.dart" as v11;
+import "generated/schema_v12.dart" as v12;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -709,6 +710,82 @@ void main() {
         final rows = await newDb.select(newDb.settings).get();
         expect(rows.map((e) => e.toJson()), [
           {...old.toJson(), "timeDecimals": 2},
+        ]);
+      },
+    );
+  });
+
+  test("v11 to v12 keeps the settings, and gives the new ones their defaults", () async {
+    const old = v11.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "text,vibration",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      recordAverageAlert: 0,
+      locale: "zh_TW",
+      themeMode: "dark",
+      primaryColor: 15,
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+      showRunningTime: 0,
+      megaminxColorU: 101,
+      megaminxColorBL: 102,
+      megaminxColorBR: 103,
+      megaminxColorR: 104,
+      megaminxColorF: 105,
+      megaminxColorL: 106,
+      megaminxColorD: 107,
+      megaminxColorDR: 108,
+      megaminxColorDBR: 109,
+      megaminxColorB: 110,
+      megaminxColorDBL: 111,
+      megaminxColorDL: 112,
+      ftoColorU: 201,
+      ftoColorR: 202,
+      ftoColorF: 203,
+      ftoColorL: 204,
+      ftoColorB: 205,
+      ftoColorBL: 206,
+      ftoColorD: 207,
+      ftoColorBR: 208,
+      stackmatEnabled: 1,
+      timeDecimals: 3,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 11,
+      newVersion: 12,
+      createOld: v11.DatabaseAtV11.new,
+      createNew: v12.DatabaseAtV12.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        final rows = await newDb.select(newDb.settings).get();
+        expect(rows.map((e) => e.toJson()), [
+          {
+            ...old.toJson(),
+            "holdDuration": 300,
+            "showScrambleImage": 1,
+            "showSessionStats": 1,
+            "showQuickActions": 1,
+            "averageTrim": 5,
+          },
         ]);
       },
     );

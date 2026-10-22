@@ -12,7 +12,7 @@ class TimerConfig extends Equatable {
   factory TimerConfig.fromSettings(SettingsEntry s) => TimerConfig(
     inspectionEnabled: s.inspectionEnabled,
     inspectionDuration: Duration(seconds: s.inspectDuration),
-    // holdDuration: Duration(seconds: s.holdDuration),
+    holdDuration: Duration(milliseconds: s.holdDuration),
   );
 
   final bool inspectionEnabled;

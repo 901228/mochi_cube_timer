@@ -107,6 +107,22 @@ class Settings extends Table {
   /// how many decimals the timer page shows a time with: 1, 2 or 3
   IntColumn get timeDecimals => integer().withDefault(const Constant(2))();
 
+  /// how long the screen is held, in milliseconds, before it is ready to start a solve
+  IntColumn get holdDuration => integer().withDefault(const Constant(300))();
+
+  /// whether the timer page shows the picture of the scramble
+  BoolColumn get showScrambleImage => boolean().withDefault(const Constant(true))();
+
+  /// whether the timer page shows the statistics of the session
+  BoolColumn get showSessionStats => boolean().withDefault(const Constant(true))();
+
+  /// whether the buttons under the time (penalty, comment, delete) are shown after a solve
+  BoolColumn get showQuickActions => boolean().withDefault(const Constant(true))();
+
+  /// the share of the solves of an average, in percent, left out at each end: the best ones and the
+  /// worst ones. Rounded up to a whole solve, so 5 % trims one of an Ao5 and three of an Ao50.
+  IntColumn get averageTrim => integer().withDefault(const Constant(5))();
+
   @override
   Set<Column> get primaryKey => {id};
 }
