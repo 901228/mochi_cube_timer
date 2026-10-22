@@ -93,11 +93,19 @@ class Settings extends Table {
   /// timer colors
   IntColumn get timerPressedColor =>
       integer().withDefault(Constant(DefaultColors.timerColors.pressed.value))();
-  IntColumn get timerHoldingColor => integer().withDefault(Constant(DefaultColors.timerColors.holding.value))();
+  IntColumn get timerHoldingColor =>
+      integer().withDefault(Constant(DefaultColors.timerColors.holding.value))();
   IntColumn get timerAcceptColor => integer().withDefault(Constant(DefaultColors.timerColors.accept.value))();
 
   /// whether the time is shown while a solve runs, or only `...` until it stops
   BoolColumn get showRunningTime => boolean().withDefault(const Constant(true))();
+
+  /// whether a Stackmat on the audio input starts and stops the solves, the screen then only opening
+  /// inspection
+  BoolColumn get stackmatEnabled => boolean().withDefault(const Constant(false))();
+
+  /// how many decimals the timer page shows a time with: 1, 2 or 3
+  IntColumn get timeDecimals => integer().withDefault(const Constant(2))();
 
   @override
   Set<Column> get primaryKey => {id};

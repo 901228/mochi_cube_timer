@@ -34,6 +34,10 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
 
   Future<void> setShowRunningTime(bool v) => _write(SettingsCompanion(showRunningTime: Value(v)));
 
+  Future<void> setStackmatEnabled(bool v) => _write(SettingsCompanion(stackmatEnabled: Value(v)));
+
+  Future<void> setTimeDecimals(int v) => _write(SettingsCompanion(timeDecimals: Value(v)));
+
   /// A language code such as `zh`; null follows the system.
   Future<void> setLocale(String? v) => _write(SettingsCompanion(locale: Value(v)));
 

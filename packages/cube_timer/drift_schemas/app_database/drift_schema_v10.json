@@ -1,0 +1,905 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "settings",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "inspection_enabled",
+            "getter_name": "inspectionEnabled",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"inspection_enabled\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"inspection_enabled\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "inspect_duration",
+            "getter_name": "inspectDuration",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('15')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "alert_enabled",
+            "getter_name": "alertEnabled",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"alert_enabled\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"alert_enabled\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "alert_types",
+            "getter_name": "alertTypes",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'text,audio,vibration\\'')",
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const AlertTypesConverter()",
+              "dart_type_name": "Set<AlertType>"
+            }
+          },
+          {
+            "name": "record_best_alert",
+            "getter_name": "recordBestAlert",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"record_best_alert\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"record_best_alert\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "record_worst_alert",
+            "getter_name": "recordWorstAlert",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"record_worst_alert\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"record_worst_alert\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "record_average_alert",
+            "getter_name": "recordAverageAlert",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"record_average_alert\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"record_average_alert\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "locale",
+            "getter_name": "locale",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "theme_mode",
+            "getter_name": "themeMode",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'system\\'')",
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<AppThemeMode>(AppThemeMode.values)",
+              "dart_type_name": "AppThemeMode"
+            }
+          },
+          {
+            "name": "primary_color",
+            "getter_name": "primaryColor",
+            "moor_type": "int",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cube_color_u",
+            "getter_name": "cubeColorU",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967295')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cube_color_r",
+            "getter_name": "cubeColorR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4293815147')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cube_color_f",
+            "getter_name": "cubeColorF",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4278255487')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cube_color_d",
+            "getter_name": "cubeColorD",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967040')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cube_color_l",
+            "getter_name": "cubeColorL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294951229')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "cube_color_b",
+            "getter_name": "cubeColorB",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4280193279')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "pyraminx_color_u",
+            "getter_name": "pyraminxColorU",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967040')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "pyraminx_color_b",
+            "getter_name": "pyraminxColorB",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4278255487')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "pyraminx_color_r",
+            "getter_name": "pyraminxColorR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4293815147')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "pyraminx_color_l",
+            "getter_name": "pyraminxColorL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4280193279')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_u",
+            "getter_name": "megaminxColorU",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967295')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_b_l",
+            "getter_name": "megaminxColorBL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967040')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_b_r",
+            "getter_name": "megaminxColorBR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4280193279')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_r",
+            "getter_name": "megaminxColorR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4293815147')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_f",
+            "getter_name": "megaminxColorF",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4278216192')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_l",
+            "getter_name": "megaminxColorL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4289732808')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_d",
+            "getter_name": "megaminxColorD",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4288256409')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_d_r",
+            "getter_name": "megaminxColorDR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967227')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_d_b_r",
+            "getter_name": "megaminxColorDBR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294941183')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_b",
+            "getter_name": "megaminxColorB",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4286049792')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_d_b_l",
+            "getter_name": "megaminxColorDBL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294951229')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "megaminx_color_d_l",
+            "getter_name": "megaminxColorDL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4287159807')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_u",
+            "getter_name": "ftoColorU",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967295')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_r",
+            "getter_name": "ftoColorR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4293815147')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_f",
+            "getter_name": "ftoColorF",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4286049792')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_l",
+            "getter_name": "ftoColorL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4289732808')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_b",
+            "getter_name": "ftoColorB",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4280193279')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_b_l",
+            "getter_name": "ftoColorBL",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294951229')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_d",
+            "getter_name": "ftoColorD",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967040')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "fto_color_b_r",
+            "getter_name": "ftoColorBR",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4288256409')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "clock_color_front",
+            "getter_name": "clockColorFront",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4292081151')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "clock_color_back",
+            "getter_name": "clockColorBack",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4280193279')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "timer_pressed_color",
+            "getter_name": "timerPressedColor",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4293815147')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "timer_holding_color",
+            "getter_name": "timerHoldingColor",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4294967040')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "timer_accept_color",
+            "getter_name": "timerAcceptColor",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('4278255487')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "show_running_time",
+            "getter_name": "showRunningTime",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"show_running_time\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"show_running_time\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('1')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "stackmat_enabled",
+            "getter_name": "stackmatEnabled",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"stackmat_enabled\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"stackmat_enabled\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 1,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "sessions",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "() => const Uuid().v4()",
+            "dsl_features": []
+          },
+          {
+            "name": "name",
+            "getter_name": "name",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "created_at",
+            "getter_name": "createdAt",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('CAST(strftime(\\'%s\\', CURRENT_TIMESTAMP) AS INTEGER)')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "deleted_at",
+            "getter_name": "deletedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "references": [
+        1
+      ],
+      "type": "table",
+      "data": {
+        "name": "app_state",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "puzzle",
+            "getter_name": "puzzle",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('\\'333\\'')",
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const PuzzleTypeConverter()",
+              "dart_type_name": "Puzzle"
+            }
+          },
+          {
+            "name": "session",
+            "getter_name": "session",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sessions (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sessions (id)"
+            },
+            "default_dart": "const CustomExpression('\\'default\\'')",
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sessions",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "show_archived",
+            "getter_name": "showArchived",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"show_archived\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"show_archived\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "references": [
+        1
+      ],
+      "type": "table",
+      "data": {
+        "name": "records",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": "() => const Uuid().v4()",
+            "dsl_features": []
+          },
+          {
+            "name": "puzzle",
+            "getter_name": "puzzle",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const PuzzleTypeConverter()",
+              "dart_type_name": "Puzzle"
+            }
+          },
+          {
+            "name": "session",
+            "getter_name": "session",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "REFERENCES sessions (id)",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "REFERENCES sessions (id)"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "foreign_key": {
+                  "to": {
+                    "table": "sessions",
+                    "column": "id"
+                  },
+                  "initially_deferred": false,
+                  "on_update": null,
+                  "on_delete": null
+                }
+              }
+            ]
+          },
+          {
+            "name": "scramble",
+            "getter_name": "scramble",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "time",
+            "getter_name": "time",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "datetime",
+            "getter_name": "datetime",
+            "moor_type": "dateTime",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": "const CustomExpression('CAST(strftime(\\'%s\\', CURRENT_TIMESTAMP) AS INTEGER)')",
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "penalty",
+            "getter_name": "penalty",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const PenaltyTypeConverter()",
+              "dart_type_name": "Penalty"
+            }
+          },
+          {
+            "name": "comment",
+            "getter_name": "comment",
+            "moor_type": "string",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "deleted_at",
+            "getter_name": "deletedAt",
+            "moor_type": "dateTime",
+            "nullable": true,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "archived",
+            "getter_name": "archived",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"archived\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"archived\" IN (0, 1))"
+            },
+            "default_dart": "const CustomExpression('0')",
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "references": [
+        3
+      ],
+      "type": "index",
+      "data": {
+        "on": 3,
+        "name": "records_session_puzzle",
+        "sql": null,
+        "unique": false,
+        "columns": [
+          {
+            "column": "session",
+            "order_by": null
+          },
+          {
+            "column": "puzzle",
+            "order_by": null
+          },
+          {
+            "column": "datetime",
+            "order_by": null
+          }
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "settings",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"settings\" (\"id\" INTEGER NOT NULL, \"inspection_enabled\" INTEGER NOT NULL DEFAULT 1 CHECK (\"inspection_enabled\" IN (0, 1)), \"inspect_duration\" INTEGER NOT NULL DEFAULT 15, \"alert_enabled\" INTEGER NOT NULL DEFAULT 1 CHECK (\"alert_enabled\" IN (0, 1)), \"alert_types\" TEXT NOT NULL DEFAULT 'text,audio,vibration', \"record_best_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_best_alert\" IN (0, 1)), \"record_worst_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_worst_alert\" IN (0, 1)), \"record_average_alert\" INTEGER NOT NULL DEFAULT 1 CHECK (\"record_average_alert\" IN (0, 1)), \"locale\" TEXT NULL, \"theme_mode\" TEXT NOT NULL DEFAULT 'system', \"primary_color\" INTEGER NULL, \"cube_color_u\" INTEGER NOT NULL DEFAULT 4294967295, \"cube_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"cube_color_f\" INTEGER NOT NULL DEFAULT 4278255487, \"cube_color_d\" INTEGER NOT NULL DEFAULT 4294967040, \"cube_color_l\" INTEGER NOT NULL DEFAULT 4294951229, \"cube_color_b\" INTEGER NOT NULL DEFAULT 4280193279, \"pyraminx_color_u\" INTEGER NOT NULL DEFAULT 4294967040, \"pyraminx_color_b\" INTEGER NOT NULL DEFAULT 4278255487, \"pyraminx_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"pyraminx_color_l\" INTEGER NOT NULL DEFAULT 4280193279, \"megaminx_color_u\" INTEGER NOT NULL DEFAULT 4294967295, \"megaminx_color_b_l\" INTEGER NOT NULL DEFAULT 4294967040, \"megaminx_color_b_r\" INTEGER NOT NULL DEFAULT 4280193279, \"megaminx_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"megaminx_color_f\" INTEGER NOT NULL DEFAULT 4278216192, \"megaminx_color_l\" INTEGER NOT NULL DEFAULT 4289732808, \"megaminx_color_d\" INTEGER NOT NULL DEFAULT 4288256409, \"megaminx_color_d_r\" INTEGER NOT NULL DEFAULT 4294967227, \"megaminx_color_d_b_r\" INTEGER NOT NULL DEFAULT 4294941183, \"megaminx_color_b\" INTEGER NOT NULL DEFAULT 4286049792, \"megaminx_color_d_b_l\" INTEGER NOT NULL DEFAULT 4294951229, \"megaminx_color_d_l\" INTEGER NOT NULL DEFAULT 4287159807, \"fto_color_u\" INTEGER NOT NULL DEFAULT 4294967295, \"fto_color_r\" INTEGER NOT NULL DEFAULT 4293815147, \"fto_color_f\" INTEGER NOT NULL DEFAULT 4286049792, \"fto_color_l\" INTEGER NOT NULL DEFAULT 4289732808, \"fto_color_b\" INTEGER NOT NULL DEFAULT 4280193279, \"fto_color_b_l\" INTEGER NOT NULL DEFAULT 4294951229, \"fto_color_d\" INTEGER NOT NULL DEFAULT 4294967040, \"fto_color_b_r\" INTEGER NOT NULL DEFAULT 4288256409, \"clock_color_front\" INTEGER NOT NULL DEFAULT 4292081151, \"clock_color_back\" INTEGER NOT NULL DEFAULT 4280193279, \"timer_pressed_color\" INTEGER NOT NULL DEFAULT 4293815147, \"timer_holding_color\" INTEGER NOT NULL DEFAULT 4294967040, \"timer_accept_color\" INTEGER NOT NULL DEFAULT 4278255487, \"show_running_time\" INTEGER NOT NULL DEFAULT 1 CHECK (\"show_running_time\" IN (0, 1)), \"stackmat_enabled\" INTEGER NOT NULL DEFAULT 0 CHECK (\"stackmat_enabled\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "sessions",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"sessions\" (\"id\" TEXT NOT NULL, \"name\" TEXT NOT NULL, \"created_at\" INTEGER NOT NULL DEFAULT (CAST(strftime('%s', CURRENT_TIMESTAMP) AS INTEGER)), \"deleted_at\" INTEGER NULL, PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "app_state",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"app_state\" (\"id\" INTEGER NOT NULL, \"puzzle\" TEXT NOT NULL DEFAULT '333', \"session\" TEXT NOT NULL DEFAULT 'default' REFERENCES sessions (id), \"show_archived\" INTEGER NOT NULL DEFAULT 0 CHECK (\"show_archived\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "records",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"records\" (\"id\" TEXT NOT NULL, \"puzzle\" TEXT NOT NULL, \"session\" TEXT NOT NULL REFERENCES sessions (id), \"scramble\" TEXT NOT NULL, \"time\" INTEGER NOT NULL, \"datetime\" INTEGER NOT NULL DEFAULT (CAST(strftime('%s', CURRENT_TIMESTAMP) AS INTEGER)), \"penalty\" TEXT NOT NULL, \"comment\" TEXT NULL, \"deleted_at\" INTEGER NULL, \"archived\" INTEGER NOT NULL DEFAULT 0 CHECK (\"archived\" IN (0, 1)), PRIMARY KEY (\"id\"));"
+        }
+      ]
+    },
+    {
+      "name": "records_session_puzzle",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE INDEX records_session_puzzle ON records (session, puzzle, datetime)"
+        }
+      ]
+    }
+  ]
+}

@@ -16,6 +16,8 @@ import "generated/schema_v6.dart" as v6;
 import "generated/schema_v7.dart" as v7;
 import "generated/schema_v8.dart" as v8;
 import "generated/schema_v9.dart" as v9;
+import "generated/schema_v10.dart" as v10;
+import "generated/schema_v11.dart" as v11;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -572,6 +574,141 @@ void main() {
             "ftoColorD": DefaultColors.ftoColors.d.value,
             "ftoColorBR": DefaultColors.ftoColors.br.value,
           },
+        ]);
+      },
+    );
+  });
+
+  test("v9 to v10 keeps the settings, and leaves the Stackmat off", () async {
+    const old = v9.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "text,vibration",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      recordAverageAlert: 0,
+      locale: "zh_TW",
+      themeMode: "dark",
+      primaryColor: 15,
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+      showRunningTime: 0,
+      megaminxColorU: 101,
+      megaminxColorBL: 102,
+      megaminxColorBR: 103,
+      megaminxColorR: 104,
+      megaminxColorF: 105,
+      megaminxColorL: 106,
+      megaminxColorD: 107,
+      megaminxColorDR: 108,
+      megaminxColorDBR: 109,
+      megaminxColorB: 110,
+      megaminxColorDBL: 111,
+      megaminxColorDL: 112,
+      ftoColorU: 201,
+      ftoColorR: 202,
+      ftoColorF: 203,
+      ftoColorL: 204,
+      ftoColorB: 205,
+      ftoColorBL: 206,
+      ftoColorD: 207,
+      ftoColorBR: 208,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 9,
+      newVersion: 10,
+      createOld: v9.DatabaseAtV9.new,
+      createNew: v10.DatabaseAtV10.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        final rows = await newDb.select(newDb.settings).get();
+        expect(rows.map((e) => e.toJson()), [
+          {...old.toJson(), "stackmatEnabled": 0},
+        ]);
+      },
+    );
+  });
+
+  test("v10 to v11 keeps the settings, and shows two decimals", () async {
+    const old = v10.SettingsData(
+      id: 0,
+      inspectionEnabled: 0,
+      inspectDuration: 8,
+      alertEnabled: 0,
+      alertTypes: "text,vibration",
+      recordBestAlert: 0,
+      recordWorstAlert: 0,
+      recordAverageAlert: 0,
+      locale: "zh_TW",
+      themeMode: "dark",
+      primaryColor: 15,
+      cubeColorU: 0xFF123456,
+      cubeColorR: 1,
+      cubeColorF: 2,
+      cubeColorD: 3,
+      cubeColorL: 4,
+      cubeColorB: 5,
+      pyraminxColorU: 6,
+      pyraminxColorB: 7,
+      pyraminxColorR: 8,
+      pyraminxColorL: 9,
+      clockColorFront: 10,
+      clockColorBack: 11,
+      timerPressedColor: 12,
+      timerHoldingColor: 13,
+      timerAcceptColor: 14,
+      showRunningTime: 0,
+      megaminxColorU: 101,
+      megaminxColorBL: 102,
+      megaminxColorBR: 103,
+      megaminxColorR: 104,
+      megaminxColorF: 105,
+      megaminxColorL: 106,
+      megaminxColorD: 107,
+      megaminxColorDR: 108,
+      megaminxColorDBR: 109,
+      megaminxColorB: 110,
+      megaminxColorDBL: 111,
+      megaminxColorDL: 112,
+      ftoColorU: 201,
+      ftoColorR: 202,
+      ftoColorF: 203,
+      ftoColorL: 204,
+      ftoColorB: 205,
+      ftoColorBL: 206,
+      ftoColorD: 207,
+      ftoColorBR: 208,
+      stackmatEnabled: 1,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 10,
+      newVersion: 11,
+      createOld: v10.DatabaseAtV10.new,
+      createNew: v11.DatabaseAtV11.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) => batch.insert(oldDb.settings, old),
+      validateItems: (newDb) async {
+        final rows = await newDb.select(newDb.settings).get();
+        expect(rows.map((e) => e.toJson()), [
+          {...old.toJson(), "timeDecimals": 2},
         ]);
       },
     );

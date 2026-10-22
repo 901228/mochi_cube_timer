@@ -27,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
   // Bumped with every change to the tables: run `dart run drift_dev make-migrations` before and
   // after, and add the step below.
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -83,6 +83,12 @@ class AppDatabase extends _$AppDatabase {
         // The clock's back and the timer's pressed colour have new defaults, which SQLite cannot alter in
         // place, so the table is rebuilt; every stored colour is kept as it is.
         await m.alterTable(TableMigration(schema.settings));
+      },
+      from9To10: (m, schema) async {
+        await m.addColumn(schema.settings, schema.settings.stackmatEnabled);
+      },
+      from10To11: (m, schema) async {
+        await m.addColumn(schema.settings, schema.settings.timeDecimals);
       },
     ),
     beforeOpen: (_) async {
