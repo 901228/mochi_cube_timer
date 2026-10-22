@@ -124,8 +124,16 @@ class _StatsPageState extends State<_StatsPage> {
         ),
       );
 
-  List<Widget> _bestAo5Times(List<double> values) {
+  List<Widget> _bestAo5Times(List<double> values, int trimPercent) {
     final sortedValues = values.indexed.sorted((a, b) => a.$2.compareTo(b.$2));
+    // The solves the average leaves out, at each end.
+    final trimmed = {
+      for (final e
+          in sortedValues
+              .take(trimmedCount(values.length, trimPercent))
+              .followedBy(sortedValues.reversed.take(trimmedCount(values.length, trimPercent))))
+        e.$1,
+    };
     final style = timer.xl2.copyWith(fontWeight: .bold);
 
     Widget timesText(double? value, [bool firstLast = false]) {
@@ -136,10 +144,7 @@ class _StatsPageState extends State<_StatsPage> {
       );
     }
 
-    return [
-      for (final (i, value) in values.indexed)
-        timesText(value, i == sortedValues.first.$1 || i == sortedValues.last.$1),
-    ];
+    return [for (final (i, value) in values.indexed) timesText(value, trimmed.contains(i))];
   }
 
   @override
@@ -158,6 +163,7 @@ class _StatsPageState extends State<_StatsPage> {
         if (w != null) return w;
 
         final data = snapshot.data;
+        final trim = SettingsProvider.of(context).averageTrim;
 
         final currentStats = _card(
           title: context.l10n.statsCurrent,
@@ -165,10 +171,10 @@ class _StatsPageState extends State<_StatsPage> {
             mainAxisAlignment: .spaceAround,
             children: [
               ("Mo3", data?.times.mo(3)),
-              ("Ao5", data?.times.ao(5)),
-              ("Ao12", data?.times.ao(12)),
-              ("Ao50", data?.times.ao(50)),
-              ("Ao100", data?.times.ao(100)),
+              ("Ao5", data?.times.ao(5, trimPercent: trim)),
+              ("Ao12", data?.times.ao(12, trimPercent: trim)),
+              ("Ao50", data?.times.ao(50, trimPercent: trim)),
+              ("Ao100", data?.times.ao(100, trimPercent: trim)),
             ].map((v) => _statsTile(id: "current ${v.$1}", value: v.$2, description: v.$1)).toList(),
           ),
         );
@@ -203,12 +209,12 @@ class _StatsPageState extends State<_StatsPage> {
             mainAxisAlignment: .spaceAround,
             children: [
               ("Mo3", data?.times.bestMo(3)),
-              ("Ao5", data?.times.bestAo(5)),
-              ("Ao12", data?.times.bestAo(12)),
+              ("Ao5", data?.times.bestAo(5, trimPercent: trim)),
+              ("Ao12", data?.times.bestAo(12, trimPercent: trim)),
             ].map((v) => _statsTile(id: "best ${v.$1}", value: v.$2, description: v.$1)).toList(),
           ),
         );
-        final bestAo5Data = data?.times.bestAoWithList(5);
+        final bestAo5Data = data?.times.bestAoWithList(5, trimPercent: trim);
         final bestAo5 = _card(
           title: context.l10n.statsBestAo5,
           child: bestAo5Data == null
@@ -219,7 +225,7 @@ class _StatsPageState extends State<_StatsPage> {
                   children: [
                     _summaryText("best ao5", bestAo5Data.$1, color: colors.primary.base),
                     SizedBox(height: geometry.space.xs),
-                    ..._bestAo5Times(bestAo5Data.$2),
+                    ..._bestAo5Times(bestAo5Data.$2, trim),
                   ],
                 ),
         );

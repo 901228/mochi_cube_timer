@@ -350,6 +350,84 @@ abstract class AppLocalizations {
   /// **'Display'**
   String get timerDisplay;
 
+  /// No description provided for @timerHold.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold to start'**
+  String get timerHold;
+
+  /// No description provided for @timerHoldHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How long the screen is held before the timer is ready'**
+  String get timerHoldHint;
+
+  /// No description provided for @timerShown.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown on the timer page'**
+  String get timerShown;
+
+  /// No description provided for @timerShowScrambleImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Scramble image'**
+  String get timerShowScrambleImage;
+
+  /// No description provided for @timerShowScrambleImageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the picture of the scramble'**
+  String get timerShowScrambleImageHint;
+
+  /// No description provided for @timerShowSessionStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Session statistics'**
+  String get timerShowSessionStats;
+
+  /// No description provided for @timerShowSessionStatsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the statistics of the session'**
+  String get timerShowSessionStatsHint;
+
+  /// No description provided for @timerShowQuickActions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick actions'**
+  String get timerShowQuickActions;
+
+  /// No description provided for @timerShowQuickActionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the penalty, comment and delete buttons after a solve'**
+  String get timerShowQuickActionsHint;
+
+  /// No description provided for @statsAverages.
+  ///
+  /// In en, this message translates to:
+  /// **'Averages'**
+  String get statsAverages;
+
+  /// No description provided for @statsAverageTrim.
+  ///
+  /// In en, this message translates to:
+  /// **'Average trim'**
+  String get statsAverageTrim;
+
+  /// No description provided for @statsAverageTrimHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The share of the solves left out at each end of an average, the best and the worst ones'**
+  String get statsAverageTrimHint;
+
+  /// No description provided for @statsAverageTrimOption.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String statsAverageTrimOption(int percent);
+
   /// No description provided for @timerDecimals.
   ///
   /// In en, this message translates to:

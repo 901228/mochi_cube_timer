@@ -42,6 +42,27 @@ class TimerAppearanceSettingsSections extends StatelessWidget {
         ),
 
         MochiTileGroup(
+          label: Text(l10n.timerShown),
+          children: [
+            SettingsTile(
+              title: l10n.timerShowScrambleImage,
+              subtitle: l10n.timerShowScrambleImageHint,
+              suffix: MochiSwitch(value: settings.showScrambleImage, onChanged: dao.setShowScrambleImage),
+            ),
+            SettingsTile(
+              title: l10n.timerShowSessionStats,
+              subtitle: l10n.timerShowSessionStatsHint,
+              suffix: MochiSwitch(value: settings.showSessionStats, onChanged: dao.setShowSessionStats),
+            ),
+            SettingsTile(
+              title: l10n.timerShowQuickActions,
+              subtitle: l10n.timerShowQuickActionsHint,
+              suffix: MochiSwitch(value: settings.showQuickActions, onChanged: dao.setShowQuickActions),
+            ),
+          ],
+        ),
+
+        MochiTileGroup(
           label: Text(l10n.timerColors),
           children: [
             ColorTile(

@@ -18,6 +18,30 @@ class TimerSettingsSections extends StatelessWidget {
       spacing: groupSpacing,
       children: [
         MochiTileGroup(
+          label: Text(l10n.timerInput),
+          children: [
+            SettingsTile(
+              title: l10n.timerHold,
+              subtitle: l10n.timerHoldHint,
+              suffix: MochiSelect<int>(
+                value: settings.holdDuration,
+                onChanged: (ms) => dao.setHoldDuration(Duration(milliseconds: ms)),
+                options: [
+                  for (final ms in const [100, 200, 300, 500, 750, 1000])
+                    MochiSelectOption(value: ms, label: "${ms / 1000} s"),
+                ],
+              ),
+            ),
+            if (stackmatSupported)
+              SettingsTile(
+                title: l10n.timerStackmat,
+                subtitle: l10n.timerStackmatHint,
+                suffix: MochiSwitch(value: settings.stackmatEnabled, onChanged: dao.setStackmatEnabled),
+              ),
+          ],
+        ),
+
+        MochiTileGroup(
           label: Text(l10n.timerRecords),
           children: [
             SettingsTile(
@@ -37,18 +61,6 @@ class TimerSettingsSections extends StatelessWidget {
             ),
           ],
         ),
-
-        if (stackmatSupported)
-          MochiTileGroup(
-            label: Text(l10n.timerInput),
-            children: [
-              SettingsTile(
-                title: l10n.timerStackmat,
-                subtitle: l10n.timerStackmatHint,
-                suffix: MochiSwitch(value: settings.stackmatEnabled, onChanged: dao.setStackmatEnabled),
-              ),
-            ],
-          ),
       ],
     );
   }

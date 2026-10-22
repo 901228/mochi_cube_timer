@@ -16,7 +16,23 @@ class StatsSettingsSections extends StatelessWidget {
     return Column(
       spacing: groupSpacing,
       children: [
-        // TODO: session stats, max dnf attempts
+        MochiTileGroup(
+          label: Text(l10n.statsAverages),
+          children: [
+            SettingsTile(
+              title: l10n.statsAverageTrim,
+              subtitle: l10n.statsAverageTrimHint,
+              suffix: MochiSelect<int>(
+                value: settings.averageTrim,
+                onChanged: dao.setAverageTrim,
+                options: [
+                  for (final percent in const [0, 5, 10, 20])
+                    MochiSelectOption(value: percent, label: l10n.statsAverageTrimOption(percent)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

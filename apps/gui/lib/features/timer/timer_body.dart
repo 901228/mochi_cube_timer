@@ -138,6 +138,7 @@ class _TimerBodyState extends State<TimerBody> {
                             recordBreak: recordBreak,
                             averageBreaks: averageBreaks,
                             showRunningTime: settings.showRunningTime,
+                            showQuickActions: settings.showQuickActions,
                             decimals: settings.timeDecimals,
                           )),
             ],
@@ -245,8 +246,12 @@ class RunTimeText extends StatelessWidget {
     required this.recordBreak,
     required this.averageBreaks,
     required this.showRunningTime,
+    required this.showQuickActions,
     required this.decimals,
   });
+
+  /// Whether the buttons for the penalty, comment and delete are under the time once a solve is done.
+  final bool showQuickActions;
 
   /// How many decimals the time shows.
   final int decimals;
@@ -324,7 +329,7 @@ class RunTimeText extends StatelessWidget {
     final duration = context.select((TimerBloc bloc) => Duration(milliseconds: bloc.state.elapsed));
     final penalty = context.select((TimerBloc bloc) => bloc.state.penalty);
     final showActions = context.select(
-      (TimerBloc bloc) => bloc.state is TimerRunComplete && bloc.state.hold == .none,
+      (TimerBloc bloc) => showQuickActions && bloc.state is TimerRunComplete && bloc.state.hold == .none,
     );
 
     final hidden = context.select(

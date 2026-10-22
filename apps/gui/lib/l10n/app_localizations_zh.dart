@@ -141,6 +141,47 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timerDisplay => '顯示';
 
   @override
+  String get timerHold => '按住開始';
+
+  @override
+  String get timerHoldHint => '按住螢幕多久之後，計時器才會準備好';
+
+  @override
+  String get timerShown => '計時頁顯示';
+
+  @override
+  String get timerShowScrambleImage => '打亂圖';
+
+  @override
+  String get timerShowScrambleImageHint => '顯示打亂後的圖';
+
+  @override
+  String get timerShowSessionStats => 'Session 統計';
+
+  @override
+  String get timerShowSessionStatsHint => '顯示這個 session 的統計';
+
+  @override
+  String get timerShowQuickActions => '快速操作';
+
+  @override
+  String get timerShowQuickActionsHint => '完成一把後，顯示罰時、備註和刪除的按鈕';
+
+  @override
+  String get statsAverages => '平均';
+
+  @override
+  String get statsAverageTrim => '平均去頭尾';
+
+  @override
+  String get statsAverageTrimHint => '平均兩端各去掉的比例，也就是最好和最差的幾把';
+
+  @override
+  String statsAverageTrimOption(int percent) {
+    return '$percent%';
+  }
+
+  @override
   String get timerDecimals => '小數位數';
 
   @override

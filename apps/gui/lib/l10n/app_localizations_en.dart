@@ -142,6 +142,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerDisplay => 'Display';
 
   @override
+  String get timerHold => 'Hold to start';
+
+  @override
+  String get timerHoldHint => 'How long the screen is held before the timer is ready';
+
+  @override
+  String get timerShown => 'Shown on the timer page';
+
+  @override
+  String get timerShowScrambleImage => 'Scramble image';
+
+  @override
+  String get timerShowScrambleImageHint => 'Show the picture of the scramble';
+
+  @override
+  String get timerShowSessionStats => 'Session statistics';
+
+  @override
+  String get timerShowSessionStatsHint => 'Show the statistics of the session';
+
+  @override
+  String get timerShowQuickActions => 'Quick actions';
+
+  @override
+  String get timerShowQuickActionsHint => 'Show the penalty, comment and delete buttons after a solve';
+
+  @override
+  String get statsAverages => 'Averages';
+
+  @override
+  String get statsAverageTrim => 'Average trim';
+
+  @override
+  String get statsAverageTrimHint =>
+      'The share of the solves left out at each end of an average, the best and the worst ones';
+
+  @override
+  String statsAverageTrimOption(int percent) {
+    return '$percent%';
+  }
+
+  @override
   String get timerDecimals => 'Decimal places';
 
   @override
