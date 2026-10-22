@@ -63,14 +63,6 @@ cross, F2L, ...
 
 ## settings
 
-要加的設定
-+ hold to start：按住多久才算準備好，現在固定 0.3 秒（`TimerConfig.holdDuration`，bloc 已經在用）。只差設定欄位和介面，要有 DB migration，`fromSettings` 裡已經留了註解行
-+ scramble image：計時頁顯示或隱藏打亂圖的開關
-+ session stats：計時頁顯示或隱藏目前 session 統計（Mo3、Ao5、Ao12、Ao50 等）的開關
-+ quick action buttons：完成一把後出現的按鈕（OK、+2、DNF、備註、刪除）的開關
-+ average trim：平均去掉最好和最差各幾把。現在固定是 5% 無條件進位（`records.dao.dart` 的 `ao`、`bestAo`，Ao5 和 Ao12 都去掉 1 把），要改成可設定的數量；`mo` 不去頭尾，維持原樣
-+ max dnf attempts / DNFs disqualify average：一個平均最多容許幾個 DNF。現在是去頭尾後還剩 DNF 才整個平均算 DNF（`_trimmedMean` 裡的無限大），等於容許的 DNF 數就是 trim 數；做了 average trim 之後這兩個要一起設計，不然 trim 變大會讓容許的 DNF 跟著變多
-
 ## UI
 
 desktop的responsive UI
