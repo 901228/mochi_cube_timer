@@ -129,11 +129,16 @@ class _TimerBodyState extends State<TimerBody> {
               state is TimerRunInInspection
                   ? InspectionText(alertText: alertText)
                   : (state is TimerInitial || state.hold == .armed
-                        ? const IgnorePointer(child: Center(child: Text("0.00")))
+                        ? IgnorePointer(
+                            child: Center(
+                              child: Text(Duration.zero.timerString(decimals: settings.timeDecimals)),
+                            ),
+                          )
                         : RunTimeText(
                             recordBreak: recordBreak,
                             averageBreaks: averageBreaks,
                             showRunningTime: settings.showRunningTime,
+                            decimals: settings.timeDecimals,
                           )),
             ],
           ),
@@ -240,7 +245,11 @@ class RunTimeText extends StatelessWidget {
     required this.recordBreak,
     required this.averageBreaks,
     required this.showRunningTime,
+    required this.decimals,
   });
+
+  /// How many decimals the time shows.
+  final int decimals;
 
   /// Whether the time shows while the solve runs, or `...` stands in for it until it stops.
   final bool showRunningTime;
@@ -321,7 +330,7 @@ class RunTimeText extends StatelessWidget {
     final hidden = context.select(
       (TimerBloc bloc) => hidesTime(bloc.state, showRunningTime: showRunningTime),
     );
-    final timeText = Text(hidden ? "..." : duration.timerDisplayString(penalty));
+    final timeText = Text(hidden ? "..." : duration.timerDisplayString(penalty, decimals: decimals));
 
     return TimerText(
       time: penalty == .plus2

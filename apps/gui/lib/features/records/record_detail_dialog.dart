@@ -57,8 +57,9 @@ class RecordDetailDialog extends StatelessWidget {
         final record = snapshot.data!;
         final scramble = record.puzzle.scrambler.parse(record.scramble);
 
-        final rawTimerText = record.time.milliseconds.timerString;
-        final timerText = record.time.milliseconds.timerDisplayString(record.penalty);
+        // The whole of what was timed, to the millisecond.
+        final rawTimerText = record.time.milliseconds.timerString(decimals: 3);
+        final timerText = record.time.milliseconds.timerDisplayString(record.penalty, decimals: 3);
         final timerTextStyle = timer.xl4.copyWith(color: c.primary.base);
 
         return Column(

@@ -296,11 +296,47 @@ abstract class AppLocalizations {
   /// **'Choose how the timer will alert you'**
   String get timerAlertTypeHint;
 
+  /// No description provided for @timerInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer input'**
+  String get timerInput;
+
+  /// No description provided for @timerStackmat.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a Stackmat'**
+  String get timerStackmat;
+
+  /// No description provided for @timerStackmatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'The Stackmat on the audio input starts and stops the solves. The screen then only opens inspection.'**
+  String get timerStackmatHint;
+
   /// No description provided for @timerDisplay.
   ///
   /// In en, this message translates to:
   /// **'Display'**
   String get timerDisplay;
+
+  /// No description provided for @timerDecimals.
+  ///
+  /// In en, this message translates to:
+  /// **'Decimal places'**
+  String get timerDecimals;
+
+  /// No description provided for @timerDecimalsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'How many decimals the time on the timer page shows'**
+  String get timerDecimalsHint;
+
+  /// No description provided for @timerDecimalsOption.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 decimal} other{{count} decimals}}'**
+  String timerDecimalsOption(int count);
 
   /// No description provided for @timerShowRunningTime.
   ///

@@ -114,7 +114,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timerAlertTypeHint => '選擇計時器如何提醒你';
 
   @override
+  String get timerInput => '計時輸入';
+
+  @override
+  String get timerStackmat => '使用 Stackmat';
+
+  @override
+  String get timerStackmatHint => '由音訊輸入的 Stackmat 開始與停止計時，螢幕只會開啟觀察時間。';
+
+  @override
   String get timerDisplay => '顯示';
+
+  @override
+  String get timerDecimals => '小數位數';
+
+  @override
+  String get timerDecimalsHint => '計時頁顯示時間的小數位數';
+
+  @override
+  String timerDecimalsOption(int count) {
+    return '$count 位';
+  }
 
   @override
   String get timerShowRunningTime => '計時時顯示時間';

@@ -114,7 +114,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timerAlertTypeHint => 'Choose how the timer will alert you';
 
   @override
+  String get timerInput => 'Timer input';
+
+  @override
+  String get timerStackmat => 'Use a Stackmat';
+
+  @override
+  String get timerStackmatHint =>
+      'The Stackmat on the audio input starts and stops the solves. The screen then only opens inspection.';
+
+  @override
   String get timerDisplay => 'Display';
+
+  @override
+  String get timerDecimals => 'Decimal places';
+
+  @override
+  String get timerDecimalsHint => 'How many decimals the time on the timer page shows';
+
+  @override
+  String timerDecimalsOption(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count decimals',
+      one: '1 decimal',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get timerShowRunningTime => 'Show time while timing';

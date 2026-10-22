@@ -1,4 +1,5 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:flutter/foundation.dart" show kIsWeb;
 import "package:drift/drift.dart" show Value;
 import "package:flutter/services.dart";
 import "package:go_router/go_router.dart";
@@ -113,6 +114,19 @@ class TimerSettingsSections extends StatelessWidget {
           ],
         ),
 
+        // A Stackmat is an audio input, which the web has no way to listen to.
+        if (!kIsWeb)
+          MochiTileGroup(
+            label: Text(l10n.timerInput),
+            children: [
+              SettingsTile(
+                title: l10n.timerStackmat,
+                subtitle: l10n.timerStackmatHint,
+                suffix: MochiSwitch(value: settings.stackmatEnabled, onChanged: dao.setStackmatEnabled),
+              ),
+            ],
+          ),
+
         MochiTileGroup(
           label: Text(l10n.timerDisplay),
           children: [
@@ -120,6 +134,18 @@ class TimerSettingsSections extends StatelessWidget {
               title: l10n.timerShowRunningTime,
               subtitle: l10n.timerShowRunningTimeHint,
               suffix: MochiSwitch(value: settings.showRunningTime, onChanged: dao.setShowRunningTime),
+            ),
+            SettingsTile(
+              title: l10n.timerDecimals,
+              subtitle: l10n.timerDecimalsHint,
+              suffix: MochiSelect<int>(
+                value: settings.timeDecimals,
+                onChanged: dao.setTimeDecimals,
+                options: [
+                  for (final n in const [1, 2, 3])
+                    MochiSelectOption(value: n, label: l10n.timerDecimalsOption(n)),
+                ],
+              ),
             ),
           ],
         ),
