@@ -18,6 +18,18 @@ final class TimerPressCanceled extends TimerEvent {
   const TimerPressCanceled();
 }
 
+/// A Stackmat started counting: the solve starts, from inspection if there was one.
+final class TimerStackmatStarted extends TimerEvent {
+  const TimerStackmatStarted();
+}
+
+/// A Stackmat stopped at [elapsed] milliseconds, which is the solve's time rather than the app's own.
+final class TimerStackmatStopped extends TimerEvent {
+  const TimerStackmatStopped(this.elapsed);
+
+  final int elapsed;
+}
+
 /// Aborts the current inspection or solve and goes back to [TimerInitial].
 final class TimerReset extends TimerEvent {
   const TimerReset();

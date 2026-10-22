@@ -49,6 +49,7 @@ dependencies:
   intl: any
   package_info_plus: ^10.2.2
   wakelock_plus: ^1.8.1
+  record: ^7.1.2
 
 dev_dependencies:
   flutter_test:

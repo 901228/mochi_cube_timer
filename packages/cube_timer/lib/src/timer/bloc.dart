@@ -23,6 +23,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerReleased>(_onReleased);
     on<TimerPressCanceled>(_onPressCanceled);
     on<TimerReset>(_onReset);
+    on<TimerStackmatStarted>(_onStackmatStarted);
+    on<TimerStackmatStopped>(_onStackmatStopped);
     on<TimerCanceled>(_onTimerCanceled);
     on<_TimerHoldArmed>(_onHoldArmed);
     on<_TimerTicked>(_onTicked);
@@ -43,6 +45,11 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   StreamSubscription<int>? _tickerSubscription;
   StreamSubscription<TimerConfig>? _configSubscription;
   Timer? _holdTimer;
+
+  /// Whether the solve running was started by a Stackmat. Whoever starts a solve ends it: a touch
+  /// that began one is not undone by the Stackmat's idle packets, and a touch cannot end one the
+  /// Stackmat is timing, so a hand brushing the screen does not stop it.
+  bool _stackmatRun = false;
 
   int get _inspectionDuration => _runConfig.inspectionDuration.inMilliseconds;
   int get _inspectionDnfThreshold => _runConfig.inspectionDnfThreshold.inMilliseconds;
@@ -104,6 +111,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       // A solve stops on the press, not on the release, so the recorded time
       // does not depend on how long the finger stays down.
       case TimerRunInProgress():
+        if (_stackmatRun) return;
         _stopTicker();
         emit(TimerRunComplete(state.elapsed, penalty: state.penalty, hold: .stopping, recordId: null));
 
@@ -138,10 +146,12 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _cancelHold();
     switch (state) {
       case TimerInitial(hold: .armed) || TimerRunComplete(hold: .armed):
+        _stackmatRun = false;
         emit(const TimerRunInProgress(0));
         _restartTicker();
 
       case TimerRunInInspection(hold: .armed):
+        _stackmatRun = false;
         final elapsedInspection = _inspectionDuration - state.inspection;
         emit(TimerRunInProgress(0, penalty: _inspectionPenalty(elapsedInspection)));
         // Ends the inspection ticker and starts the solve ticker from zero.
@@ -189,13 +199,41 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     }
   }
 
+  void _onStackmatStarted(TimerStackmatStarted event, Emitter<TimerState> emit) {
+    _cancelHold();
+    switch (state) {
+      case TimerInitial() || TimerRunComplete():
+        _runConfig = _latestConfig;
+        _stackmatRun = true;
+        emit(const TimerRunInProgress(0));
+        _restartTicker();
+
+      case TimerRunInInspection():
+        _stackmatRun = true;
+        emit(TimerRunInProgress(0, penalty: _inspectionPenalty(_inspectionDuration - state.inspection)));
+        _restartTicker();
+
+      // Already running, from the screen or from an earlier packet: nothing to start.
+      case TimerRunInProgress():
+    }
+  }
+
+  void _onStackmatStopped(TimerStackmatStopped event, Emitter<TimerState> emit) {
+    if (state is! TimerRunInProgress || !_stackmatRun) return;
+    _stackmatRun = false;
+    _stopTicker();
+    emit(TimerRunComplete(event.elapsed, penalty: state.penalty, recordId: null));
+  }
+
   void _onReset(TimerReset event, Emitter<TimerState> emit) {
+    _stackmatRun = false;
     _cancelHold();
     _stopTicker();
     emit(const TimerInitial());
   }
 
   void _onTimerCanceled(TimerCanceled event, Emitter<TimerState> emit) {
+    _stackmatRun = false;
     _cancelHold();
     _stopTicker();
     if (state is TimerRunInProgress) {

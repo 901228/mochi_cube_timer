@@ -9,6 +9,7 @@ import "../../shared/utils.dart";
 import "../../theme.dart";
 import "../records/search_bar/record_add_dialog.dart";
 import "alert.dart";
+import "stackmat_bridge.dart";
 import "scramble_cubit.dart";
 import "timer_body.dart";
 import "timer_focus.dart";
@@ -24,12 +25,7 @@ class TimerPage extends StatelessWidget {
       create: (context) => TimerBloc(
         ticker: const Ticker(),
         recordsDao: db.recordsDao,
-        config: db.settingsDao.watch().map(
-          (settings) => TimerConfig(
-            inspectionEnabled: settings.inspectionEnabled,
-            inspectionDuration: Duration(seconds: settings.inspectDuration),
-          ),
-        ),
+        config: db.settingsDao.watch().map(TimerConfig.fromSettings),
       ),
       child: StreamBuilder(
         stream: db.settingsDao.watch(),
@@ -39,7 +35,10 @@ class TimerPage extends StatelessWidget {
 
           final settings = snapshot.data!;
           final data = AppStateProvider.of(context);
-          return _TimerView(puzzle: data.puzzle, sessionId: data.session.id, settings: settings);
+          return StackmatBridge(
+            enabled: settings.stackmatEnabled,
+            child: _TimerView(puzzle: data.puzzle, sessionId: data.session.id, settings: settings),
+          );
         },
       ),
     );
@@ -190,11 +189,17 @@ class _TimerViewState extends State<_TimerView> {
     },
   );
 
-  String _statsDisplay(double? value) {
+  /// [single] is one solve's time, cut off like a result is; the rest, which are averages, are
+  /// rounded: the WCA's regulation 9f1 truncates the one and rounds the other.
+  String _statsDisplay(double? value, {bool single = false}) {
     if (value == null) return "--";
     if (value == double.infinity) return "DNF";
 
-    return (value / 1000).toStringAsFixed(2);
+    final decimals = widget.settings.timeDecimals;
+    if (!single) return (value / 1000).toStringAsFixed(decimals);
+
+    final unit = const [1000, 100, 10, 1][decimals]; // milliseconds in the last digit shown
+    return (value ~/ unit * unit / 1000).toStringAsFixed(decimals);
   }
 
   @override
@@ -305,7 +310,7 @@ class _TimerViewState extends State<_TimerView> {
                         children: [
                           _statusLine(context.l10n.statDeviation, _statsDisplay(summary.deviation)),
                           _statusLine(context.l10n.statMean, _statsDisplay(summary.mean)),
-                          _statusLine(context.l10n.statBest, _statsDisplay(summary.best)),
+                          _statusLine(context.l10n.statBest, _statsDisplay(summary.best, single: true)),
                           _statusLine(context.l10n.statCount, summary.count.toString()),
                         ],
                       );
