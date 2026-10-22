@@ -22,7 +22,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTimer => 'Timer';
 
   @override
-  String get settingsPuzzle => 'Puzzle';
+  String get settingsTimerBehavior => 'Timer Behavior';
+
+  @override
+  String get settingsPuzzle => 'Puzzle Color';
+
+  @override
+  String get settingsInspection => 'Inspection Behavior';
+
+  @override
+  String get settingsTimerAppearance => 'Timer Appearance';
+
+  @override
+  String get settingsStats => 'Statistics';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsOther => 'Other';
 
   @override
   String get generalLocale => 'Locale';
@@ -47,9 +65,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get generalPrimaryColor => 'Primary color';
-
-  @override
-  String get settingsAbout => 'About';
 
   @override
   String get aboutVersion => 'Version';

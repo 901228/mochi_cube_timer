@@ -22,7 +22,25 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsTimer => '計時器';
 
   @override
-  String get settingsPuzzle => '方塊';
+  String get settingsTimerBehavior => '計時';
+
+  @override
+  String get settingsPuzzle => '方塊顏色';
+
+  @override
+  String get settingsInspection => '觀察';
+
+  @override
+  String get settingsTimerAppearance => '計時器外觀';
+
+  @override
+  String get settingsStats => '統計';
+
+  @override
+  String get settingsAbout => '關於';
+
+  @override
+  String get settingsOther => '其他';
 
   @override
   String get generalLocale => '語言';
@@ -47,9 +65,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get generalPrimaryColor => '主色';
-
-  @override
-  String get settingsAbout => '關於';
 
   @override
   String get aboutVersion => '版本';

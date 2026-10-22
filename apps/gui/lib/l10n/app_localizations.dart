@@ -116,11 +116,47 @@ abstract class AppLocalizations {
   /// **'Timer'**
   String get settingsTimer;
 
+  /// No description provided for @settingsTimerBehavior.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Behavior'**
+  String get settingsTimerBehavior;
+
   /// No description provided for @settingsPuzzle.
   ///
   /// In en, this message translates to:
-  /// **'Puzzle'**
+  /// **'Puzzle Color'**
   String get settingsPuzzle;
+
+  /// No description provided for @settingsInspection.
+  ///
+  /// In en, this message translates to:
+  /// **'Inspection Behavior'**
+  String get settingsInspection;
+
+  /// No description provided for @settingsTimerAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Timer Appearance'**
+  String get settingsTimerAppearance;
+
+  /// No description provided for @settingsStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get settingsStats;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get settingsOther;
 
   /// No description provided for @generalLocale.
   ///
@@ -169,12 +205,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Primary color'**
   String get generalPrimaryColor;
-
-  /// No description provided for @settingsAbout.
-  ///
-  /// In en, this message translates to:
-  /// **'About'**
-  String get settingsAbout;
 
   /// No description provided for @aboutVersion.
   ///

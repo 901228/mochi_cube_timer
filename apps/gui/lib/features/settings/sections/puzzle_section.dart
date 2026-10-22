@@ -30,7 +30,8 @@ class _PuzzleSettingsSectionsState extends State<PuzzleSettingsSections> {
     return MochiTileGroup(
       // The rules are drawn here, between the rows that are shown: the group would put one under
       // the heading even while the colours are folded away.
-      divider: MochiTileDivider.none,
+      divider: .none,
+      label: Text(title),
       children: [
         Column(
           mainAxisSize: MainAxisSize.min,

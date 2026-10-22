@@ -15,23 +15,58 @@ class RootSettingsSections extends StatelessWidget {
     return Column(
       spacing: groupSpacing,
       children: [
-        for (final (title, icon, section) in [
-          (context.l10n.settingsGeneral, TablerIcons.settings, "general"),
-          (context.l10n.settingsTimer, TablerIcons.clockHour4, "timer"),
-          (context.l10n.settingsPuzzle, TablerIcons.cube, "puzzle"),
-          (context.l10n.settingsAbout, TablerIcons.infoCircle, "about"),
-        ])
-          MochiTileGroup(
-            label: Text(title),
-            children: [
-              SettingsTile(
-                title: title,
-                icon: Icon(icon),
-                suffix: Icon(TablerIcons.chevronRight),
-                onPress: () => context.push("/settings/$section"),
-              ),
-            ],
-          ),
+        MochiTileGroup(
+          label: Text(context.l10n.settingsTimer),
+          children: [
+            SettingsTile(
+              title: context.l10n.settingsInspection,
+              icon: Icon(TablerIcons.stopwatch),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/inspection"),
+            ),
+            SettingsTile(
+              title: context.l10n.settingsTimerBehavior,
+              icon: Icon(TablerIcons.clockHour4),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/timer"),
+            ),
+            SettingsTile(
+              title: context.l10n.settingsTimerAppearance,
+              icon: Icon(TablerIcons.clockRecord),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/timerAppearance"),
+            ),
+            SettingsTile(
+              title: context.l10n.settingsPuzzle,
+              icon: Icon(TablerIcons.cube),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/puzzle"),
+            ),
+          ],
+        ),
+        MochiTileGroup(
+          label: Text(context.l10n.settingsOther),
+          children: [
+            SettingsTile(
+              title: context.l10n.settingsGeneral,
+              icon: Icon(TablerIcons.settings),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/general"),
+            ),
+            SettingsTile(
+              title: context.l10n.settingsStats,
+              icon: Icon(TablerIcons.chartLine),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/stats"),
+            ),
+            SettingsTile(
+              title: context.l10n.settingsAbout,
+              icon: Icon(TablerIcons.infoCircle),
+              suffix: Icon(TablerIcons.chevronRight),
+              onPress: () => context.push("/settings/about"),
+            ),
+          ],
+        ),
       ],
     );
   }
