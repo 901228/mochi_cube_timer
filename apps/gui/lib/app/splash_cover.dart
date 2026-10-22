@@ -94,29 +94,30 @@ class _SplashCoverState extends State<SplashCover> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    if (_gone) return widget.child;
-
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Stack(
         fit: StackFit.expand,
         children: [
           widget.child,
-          // Takes the presses meant for the app until it has faded.
-          AbsorbPointer(
-            child: FadeTransition(
-              opacity: ReverseAnimation(_fade),
-              child: ColoredBox(
-                color: _dark ? _mochaBase : _latteBase,
-                child: Center(
-                  child: ScaleTransition(
-                    scale: Tween(begin: 1.0, end: 1.3).animate(_grow),
-                    child: Image(image: _icon, width: _iconSize, height: _iconSize),
+          // Taken out when it has faded, but the app stays where it is in the tree: put anywhere
+          // else it would be built again, and its first scramble thrown away.
+          if (!_gone)
+            // Takes the presses meant for the app until it has faded.
+            AbsorbPointer(
+              child: FadeTransition(
+                opacity: ReverseAnimation(_fade),
+                child: ColoredBox(
+                  color: _dark ? _mochaBase : _latteBase,
+                  child: Center(
+                    child: ScaleTransition(
+                      scale: Tween(begin: 1.0, end: 1.3).animate(_grow),
+                      child: Image(image: _icon, width: _iconSize, height: _iconSize),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

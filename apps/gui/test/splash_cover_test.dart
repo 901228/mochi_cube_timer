@@ -33,4 +33,31 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(Image), findsNothing);
   });
+
+  testWidgets("the app is not built again when the cover goes", (tester) async {
+    final ready = Completer<void>();
+    await tester.pumpWidget(SplashCover(ready: ready.future, child: const _Counter()));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    await tester.pump();
+    final before = tester.state<_CounterState>(find.byType(_Counter));
+
+    ready.complete();
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    await tester.pumpAndSettle();
+    expect(find.byType(Image), findsNothing);
+    expect(tester.state<_CounterState>(find.byType(_Counter)), same(before));
+  });
+}
+
+class _Counter extends StatefulWidget {
+  const _Counter();
+
+  @override
+  State<_Counter> createState() => _CounterState();
+}
+
+class _CounterState extends State<_Counter> {
+  @override
+  Widget build(BuildContext context) =>
+      const Directionality(textDirection: TextDirection.ltr, child: Text("app"));
 }
