@@ -187,6 +187,13 @@ extension RecordExtremesBreak on RecordExtremes {
   }
 }
 
+/// The share of an average's solves, in percent, left out at each end unless the settings say otherwise.
+const kDefaultAverageTrim = 5;
+
+/// How many solves an average of [n] leaves out at each end for [percent]: rounded up to a whole solve,
+/// but never so many that none is left to average.
+int trimmedCount(int n, int percent) => math.min((n * percent + 99) ~/ 100, (n - 1) ~/ 2);
+
 /// The averages that are announced, and how many solves each spans.
 enum AverageKind {
   mo3("Mo3", 3),
@@ -198,12 +205,14 @@ enum AverageKind {
   final String label;
   final int size;
 
-  /// The average of the latest solves, or null if there are fewer than [size].
-  double? of(List<SolveTime> latestFirst) => this == mo3 ? latestFirst.mo(size) : latestFirst.ao(size);
+  /// The average of the latest solves, or null if there are fewer than [size]. An Ao leaves out
+  /// [trimPercent] of its solves at each end, see [trimmedCount].
+  double? of(List<SolveTime> latestFirst, {int trimPercent = kDefaultAverageTrim}) =>
+      this == mo3 ? latestFirst.mo(size) : latestFirst.ao(size, trimPercent: trimPercent);
 
   /// The best average over any [size] solves in a row.
-  double? bestOf(List<SolveTime> latestFirst) =>
-      this == mo3 ? latestFirst.bestMo(size) : latestFirst.bestAo(size);
+  double? bestOf(List<SolveTime> latestFirst, {int trimPercent = kDefaultAverageTrim}) =>
+      this == mo3 ? latestFirst.bestMo(size) : latestFirst.bestAo(size, trimPercent: trimPercent);
 }
 
 /// A best average that the latest solve set, and by how many milliseconds.
@@ -211,13 +220,17 @@ typedef AverageBreak = ({AverageKind kind, int by});
 
 /// The averages that [solve] sets a new best of, given the session [before] it, latest first.
 /// Needs a previous best to beat, so the first time there are enough solves is not one.
-List<AverageBreak> averageBreaks(List<SolveTime> before, SolveTime solve) {
+List<AverageBreak> averageBreaks(
+  List<SolveTime> before,
+  SolveTime solve, {
+  int trimPercent = kDefaultAverageTrim,
+}) {
   final after = [solve, ...before];
   return [
     for (final kind in AverageKind.values)
       if (before.length >= math.max(kind.size, kMinSolvesForRecord))
-        if (kind.of(after) case final now? when now.isFinite)
-          if (kind.bestOf(before) case final previous? when now < previous)
+        if (kind.of(after, trimPercent: trimPercent) case final now? when now.isFinite)
+          if (kind.bestOf(before, trimPercent: trimPercent) case final previous? when now < previous)
             (kind: kind, by: (previous - now).round()),
   ];
 }
@@ -334,19 +347,27 @@ extension RecordsDaoStatistics on RecordsDao {
   }
 
   static double? mo(List<SolveTime> t, int n) => _trimmedMean(t, n, trim: 0);
-  static double? ao(List<SolveTime> t, int n) => _trimmedMean(t, n, trim: (n * 0.05).ceil());
+  static double? ao(List<SolveTime> t, int n, {int trimPercent = kDefaultAverageTrim}) =>
+      _trimmedMean(t, n, trim: trimmedCount(n, trimPercent));
   static double? bestMo(List<SolveTime> t, int n) => _bestTrimmedMean(t, n, trim: 0)?.$1;
-  static double? bestAo(List<SolveTime> t, int n) => _bestTrimmedMean(t, n, trim: (n * 0.05).ceil())?.$1;
-  static (double, List<double>)? bestAoWithList(List<SolveTime> t, int n) =>
-      _bestTrimmedMean(t, n, trim: (n * 0.05).ceil());
+  static double? bestAo(List<SolveTime> t, int n, {int trimPercent = kDefaultAverageTrim}) =>
+      _bestTrimmedMean(t, n, trim: trimmedCount(n, trimPercent))?.$1;
+  static (double, List<double>)? bestAoWithList(
+    List<SolveTime> t,
+    int n, {
+    int trimPercent = kDefaultAverageTrim,
+  }) => _bestTrimmedMean(t, n, trim: trimmedCount(n, trimPercent));
 }
 
 extension StatisticsRecordTimeList on List<SolveTime> {
   double? mo(int n) => RecordsDaoStatistics.mo(this, n);
-  double? ao(int n) => RecordsDaoStatistics.ao(this, n);
+  double? ao(int n, {int trimPercent = kDefaultAverageTrim}) =>
+      RecordsDaoStatistics.ao(this, n, trimPercent: trimPercent);
   double? bestMo(int n) => RecordsDaoStatistics.bestMo(this, n);
-  double? bestAo(int n) => RecordsDaoStatistics.bestAo(this, n);
-  (double, List<double>)? bestAoWithList(int n) => RecordsDaoStatistics.bestAoWithList(this, n);
+  double? bestAo(int n, {int trimPercent = kDefaultAverageTrim}) =>
+      RecordsDaoStatistics.bestAo(this, n, trimPercent: trimPercent);
+  (double, List<double>)? bestAoWithList(int n, {int trimPercent = kDefaultAverageTrim}) =>
+      RecordsDaoStatistics.bestAoWithList(this, n, trimPercent: trimPercent);
 }
 
 typedef RecordExport = ({
