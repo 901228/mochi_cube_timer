@@ -3,8 +3,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../database/dao_provider.dart";
 import "../../l10n/l10n.dart";
-import "../../shared/utils.dart";
 import "sections/about_section.dart";
 import "sections/general_section.dart";
 import "sections/puzzle_section.dart";
@@ -54,22 +54,12 @@ class SettingsPage extends StatelessWidget {
         ),
         prefixes: [.back(onPress: () => context.pop())],
       ),
-      child: StreamBuilder<SettingsEntry>(
-        stream: dao.watch(),
-        builder: (context, snapshot) {
-          final w = streamHandler(
-            context,
-            snapshot,
-            description: "watching the settings for the settings page",
-          );
-          if (w != null) return w;
-
-          final settings = snapshot.data!;
-          return SingleChildScrollView(
-            padding: MediaQuery.paddingOf(context),
-            child: settingsSections[section]!(settings, dao),
-          );
-        },
+      // A Builder, so the padding is read from under the scaffold, which adds the header's height to it.
+      child: Builder(
+        builder: (context) => SingleChildScrollView(
+          padding: MediaQuery.paddingOf(context),
+          child: settingsSections[section]!(SettingsProvider.of(context), dao),
+        ),
       ),
     );
   }

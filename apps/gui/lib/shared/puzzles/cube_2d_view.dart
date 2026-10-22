@@ -3,8 +3,8 @@ import "dart:math" show cos, max, min, pi, sin, sqrt;
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/foundation.dart" show listEquals, mapEquals;
 import "package:flutter/widgets.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
 
+import "../../database/dao_provider.dart";
 import "../utils.dart";
 import "square1_painter.dart";
 
@@ -143,21 +143,7 @@ class Cube2DView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return settings != null
-        ? _cube(settings!)
-        : StreamBuilder(
-            stream: context.read<AppDatabase>().settingsDao.watch(),
-            builder: (context, snapshot) {
-              final w = streamHandler(
-                context,
-                snapshot,
-                description: "watching the settings for the cube view",
-              );
-              if (w != null) return w;
-
-              return _cube(snapshot.data!);
-            },
-          );
+    return _cube(settings ?? SettingsProvider.of(context));
   }
 }
 

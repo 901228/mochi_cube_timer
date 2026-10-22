@@ -13,6 +13,7 @@ import "package:go_router/go_router.dart";
 import "app/application.dart";
 import "app/splash_cover.dart";
 import "database/connection.dart";
+import "database/dao_provider.dart";
 
 void main() {
   // web url
@@ -52,7 +53,10 @@ void main() {
   runApp(
     RepositoryProvider.value(
       value: db,
-      child: SplashCover(ready: db.appStateDao.watch().first, child: const Application()),
+      child: SplashCover(
+        ready: Future.wait([db.appStateDao.watch().first, db.settingsDao.watch().first]),
+        child: SettingsScope(stream: db.settingsDao.watch(), child: const Application()),
+      ),
     ),
   );
 }

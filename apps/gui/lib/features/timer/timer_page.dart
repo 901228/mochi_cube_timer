@@ -27,13 +27,9 @@ class TimerPage extends StatelessWidget {
         recordsDao: db.recordsDao,
         config: db.settingsDao.watch().map(TimerConfig.fromSettings),
       ),
-      child: StreamBuilder(
-        stream: db.settingsDao.watch(),
-        builder: (context, snapshot) {
-          final w = streamHandler(context, snapshot, description: "watching the settings for the timer page");
-          if (w != null) return w;
-
-          final settings = snapshot.data!;
+      child: Builder(
+        builder: (context) {
+          final settings = SettingsProvider.of(context);
           final data = AppStateProvider.of(context);
           return StackmatBridge(
             enabled: settings.stackmatEnabled,
