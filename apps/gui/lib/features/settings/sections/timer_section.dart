@@ -1,8 +1,8 @@
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/foundation.dart" show kIsWeb;
 import "package:mochi_ui/mochi_ui.dart";
 
 import "../../../l10n/l10n.dart";
+import "../../timer/stackmat_bridge.dart";
 import "../settings_tile.dart";
 
 class TimerSettingsSections extends StatelessWidget {
@@ -38,8 +38,7 @@ class TimerSettingsSections extends StatelessWidget {
           ],
         ),
 
-        // A Stackmat is an audio input, which the web has no way to listen to.
-        if (!kIsWeb)
+        if (stackmatSupported)
           MochiTileGroup(
             label: Text(l10n.timerInput),
             children: [

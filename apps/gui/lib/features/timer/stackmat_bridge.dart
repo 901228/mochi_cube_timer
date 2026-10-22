@@ -1,14 +1,27 @@
 import "dart:async";
 
 import "package:cube_timer/cube_timer.dart";
-import "package:flutter/foundation.dart" show kIsWeb;
+import "package:flutter/foundation.dart" show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 import "stackmat_input.dart";
 
+/// Whether this device can listen to a Stackmat: the desktops only.
+///
+/// shortcut: phones are left out, since neither csTimer nor this app got a signal on the phones
+/// tried (the adapter, the headset jack standard and the phone's audio all vary); allow them
+/// when a Stackmat has been seen working on one.
+bool get stackmatSupported =>
+    !kIsWeb &&
+    const {
+      TargetPlatform.linux,
+      TargetPlatform.macOS,
+      TargetPlatform.windows,
+    }.contains(defaultTargetPlatform);
+
 /// While [enabled], listens to a Stackmat on the audio input and sends its start and stop to the
-/// timer. Off, or on the web where there is no input to listen to, it does nothing.
+/// timer. Off, or where [stackmatSupported] is false, it does nothing.
 class StackmatBridge extends StatefulWidget {
   const StackmatBridge({super.key, required this.enabled, required this.child});
 
@@ -44,7 +57,7 @@ class _StackmatBridgeState extends State<StackmatBridge> {
   }
 
   Future<void> _start() async {
-    if (kIsWeb || _input != null) return;
+    if (!stackmatSupported || _input != null) return;
     final input = StackmatInput();
     _input = input;
     final bloc = context.read<TimerBloc>();
