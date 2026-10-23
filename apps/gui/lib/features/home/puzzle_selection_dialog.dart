@@ -40,19 +40,14 @@ class _PuzzleSelectionDialogState extends State<PuzzleSelectionDialog> {
             MochiSegment(value: .algorithms, label: Text(l10n.homeKindAlgorithms)),
           ],
         ),
-        switch (_kind) {
-          .puzzles => _puzzles(),
-          .algorithms => _algorithms(l10n),
-        },
+        // Both stay in the tree, so the dialog is as tall as the puzzles make it for either tab.
+        IndexedStack(index: _kind.index, alignment: .center, children: [_puzzles(), _algorithms(l10n)]),
       ],
     );
   }
 
   /// The practice modes come with the algorithm sets; until those exist the tab only says so.
-  Widget _algorithms(AppLocalizations l10n) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 32),
-    child: Text(l10n.homeAlgorithmsSoon, textAlign: .center),
-  );
+  Widget _algorithms(AppLocalizations l10n) => Text(l10n.homeAlgorithmsSoon, textAlign: .center);
 
   Widget _puzzles() {
     return GridView.builder(

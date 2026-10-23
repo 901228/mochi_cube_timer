@@ -26,6 +26,7 @@ void main() {
     );
     await tester.pump();
 
+    final height = tester.getSize(find.byType(IndexedStack)).height;
     expect(find.text("3x3"), findsOneWidget);
     expect(find.text("Algorithm practice is not available yet"), findsNothing);
 
@@ -33,6 +34,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.text("3x3"), findsNothing);
     expect(find.text("Algorithm practice is not available yet"), findsOneWidget);
+    // Not shorter than the puzzles, or the dialog would jump as the tab changes.
+    expect(tester.getSize(find.byType(IndexedStack)).height, height);
 
     await tester.tap(find.text("Puzzles"));
     await tester.pump(const Duration(milliseconds: 500));
