@@ -7,8 +7,17 @@ import "package:mochi_ui/mochi_ui/widgets.dart";
 import "../../l10n/l10n.dart";
 import "../../shared/puzzles/puzzle_utils.dart";
 
-class PuzzleSelectionDialog extends StatelessWidget {
+enum _Kind { puzzles, algorithms }
+
+class PuzzleSelectionDialog extends StatefulWidget {
   const PuzzleSelectionDialog({super.key});
+
+  @override
+  State<PuzzleSelectionDialog> createState() => _PuzzleSelectionDialogState();
+}
+
+class _PuzzleSelectionDialogState extends State<PuzzleSelectionDialog> {
+  _Kind _kind = .puzzles;
 
   void _select(BuildContext context, Puzzle puzzle) {
     context.read<AppDatabase>().appStateDao.setPuzzle(puzzle);
@@ -17,6 +26,35 @@ class PuzzleSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
+    return Column(
+      mainAxisSize: .min,
+      spacing: 16,
+      children: [
+        MochiSegmentedControl<_Kind>(
+          value: _kind,
+          onChanged: (kind) => setState(() => _kind = kind),
+          children: [
+            MochiSegment(value: .puzzles, label: Text(l10n.homeKindPuzzles)),
+            MochiSegment(value: .algorithms, label: Text(l10n.homeKindAlgorithms)),
+          ],
+        ),
+        switch (_kind) {
+          .puzzles => _puzzles(),
+          .algorithms => _algorithms(l10n),
+        },
+      ],
+    );
+  }
+
+  /// The practice modes come with the algorithm sets; until those exist the tab only says so.
+  Widget _algorithms(AppLocalizations l10n) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 32),
+    child: Text(l10n.homeAlgorithmsSoon, textAlign: .center),
+  );
+
+  Widget _puzzles() {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

@@ -1088,6 +1088,24 @@ abstract class AppLocalizations {
   /// **'Select all'**
   String get homeSelectAll;
 
+  /// No description provided for @homeKindPuzzles.
+  ///
+  /// In en, this message translates to:
+  /// **'Puzzles'**
+  String get homeKindPuzzles;
+
+  /// No description provided for @homeKindAlgorithms.
+  ///
+  /// In en, this message translates to:
+  /// **'Algorithms'**
+  String get homeKindAlgorithms;
+
+  /// No description provided for @homeAlgorithmsSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Algorithm practice is not available yet'**
+  String get homeAlgorithmsSoon;
+
   /// No description provided for @homeSelectPuzzle.
   ///
   /// In en, this message translates to:

@@ -536,6 +536,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeSelectAll => '全選';
 
   @override
+  String get homeKindPuzzles => '方塊';
+
+  @override
+  String get homeKindAlgorithms => '公式練習';
+
+  @override
+  String get homeAlgorithmsSoon => '公式練習尚未開放';
+
+  @override
   String get homeSelectPuzzle => '選擇項目';
 
   @override

@@ -544,6 +544,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeSelectAll => 'Select all';
 
   @override
+  String get homeKindPuzzles => 'Puzzles';
+
+  @override
+  String get homeKindAlgorithms => 'Algorithms';
+
+  @override
+  String get homeAlgorithmsSoon => 'Algorithm practice is not available yet';
+
+  @override
   String get homeSelectPuzzle => 'Select a puzzle';
 
   @override
