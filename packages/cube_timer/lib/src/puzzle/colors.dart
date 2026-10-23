@@ -65,10 +65,7 @@ class DefaultColors {
     br: DefaultColorsPreset.grey,
   );
 
-  static const clockColors = (
-    front: DefaultColorsPreset.ice,
-    back: DefaultColorsPreset.blue,
-  );
+  static const clockColors = (front: DefaultColorsPreset.ice, back: DefaultColorsPreset.blue);
 
   /// The timer's time while a press is waiting, holding through inspection, and armed to start.
   static const timerColors = (
