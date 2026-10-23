@@ -242,7 +242,7 @@ class HomeShell extends StatelessWidget {
           final data = snapshot.data;
           final sideways =
               isPhone(MediaQuery.sizeOf(context)) && MediaQuery.orientationOf(context) == .landscape;
-          return MochiScaffold(
+          final scaffold = MochiScaffold(
             extendBody: true,
             immersive: context.watch<TimerFocusCubit>().state,
             padding: .zero,
@@ -381,6 +381,16 @@ class HomeShell extends StatelessWidget {
                     ),
                   ),
           );
+          // On its side, the notch's room at the ends of the screen is not kept: nothing the pages draw
+          // there is cut off, and the gap only made the timer look clipped.
+          return sideways
+              ? MediaQuery.removePadding(
+                  context: context,
+                  removeLeft: true,
+                  removeRight: true,
+                  child: scaffold,
+                )
+              : scaffold;
         },
       ),
     );
