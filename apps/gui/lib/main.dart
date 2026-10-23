@@ -3,7 +3,7 @@ import "dart:ui" show PlatformDispatcher;
 
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/foundation.dart" show kIsWeb;
-import "package:flutter/services.dart" show BrowserContextMenu, DeviceOrientation, SystemChrome, rootBundle;
+import "package:flutter/services.dart" show BrowserContextMenu, rootBundle;
 import "package:flutter/widgets.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
@@ -11,6 +11,8 @@ import "package:flutter_web_plugins/url_strategy.dart";
 import "package:go_router/go_router.dart";
 
 import "app/application.dart";
+import "app/orientation.dart";
+import "app/router.dart";
 import "app/splash_cover.dart";
 import "database/connection.dart";
 import "database/dao_provider.dart";
@@ -23,12 +25,9 @@ void main() {
   // Kept up until SplashCover, drawn the same, takes over from it.
   FlutterNativeSplash.preserve(widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
 
-  // shortcut: a phone is held upright only, as the pages are laid out for that and the timer, records
-  // and stats were never looked at wide; adapt them to landscape, then drop this and let it turn.
+  // A phone turns on its side on the timer only; the other pages were laid out upright.
   final view = PlatformDispatcher.instance.views.first;
-  if (!kIsWeb && view.physicalSize.shortestSide / view.devicePixelRatio < 600) {
-    unawaited(SystemChrome.setPreferredOrientations(const [DeviceOrientation.portraitUp]));
-  }
+  if (isPhone(view.physicalSize / view.devicePixelRatio)) followOrientations(router);
 
   // A long press opens the browser's own context menu, which cancels Flutter's long press gesture.
   if (kIsWeb) unawaited(BrowserContextMenu.disableContextMenu());
