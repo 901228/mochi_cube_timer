@@ -229,5 +229,6 @@
   "timerAlertFirst": "{seconds}s!",
   "@timerAlertFirst": {"placeholders": {"seconds": {"type": "int"}}},
   "timerAlertSecond": "{seconds}s!!",
-  "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}}
+  "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}},
+  "timerScrambleCopied": "Scramble copied"
 }

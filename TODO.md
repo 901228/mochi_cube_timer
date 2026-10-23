@@ -51,7 +51,6 @@ cross, F2L, ...
 ## 其他
 
 + 自動解cross？
-+ 複製scramble
 
 ## settings
 

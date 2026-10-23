@@ -685,4 +685,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String timerAlertSecond(int seconds) {
     return '${seconds}s!!';
   }
+
+  @override
+  String get timerScrambleCopied => 'Scramble copied';
 }

@@ -47,8 +47,8 @@
   "timerHold": "按住開始",
   "timerHoldHint": "按住螢幕多久之後，計時器才會準備好",
   "timerShown": "計時頁顯示",
-  "timerShowScrambleImage": "打亂圖",
-  "timerShowScrambleImageHint": "顯示打亂後的圖",
+  "timerShowScrambleImage": "轉亂圖",
+  "timerShowScrambleImageHint": "顯示轉亂的圖",
   "timerShowSessionStats": "Session 統計",
   "timerShowSessionStatsHint": "顯示這個 session 的統計",
   "timerShowQuickActions": "快速操作",
@@ -229,5 +229,6 @@
   "timerAlertFirst": "{seconds}秒!",
   "@timerAlertFirst": {"placeholders": {"seconds": {"type": "int"}}},
   "timerAlertSecond": "{seconds}秒!!",
-  "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}}
+  "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}},
+  "timerScrambleCopied": "已複製轉亂"
 }

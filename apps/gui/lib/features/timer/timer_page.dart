@@ -1,4 +1,5 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -9,8 +10,8 @@ import "../../shared/utils.dart";
 import "../../theme.dart";
 import "../records/search_bar/record_add_dialog.dart";
 import "alert.dart";
-import "stackmat_bridge.dart";
 import "scramble_cubit.dart";
+import "stackmat_bridge.dart";
 import "timer_body.dart";
 import "timer_focus.dart";
 
@@ -216,6 +217,12 @@ class _TimerViewState extends State<_TimerView> {
               _withScramble(
                 (scramble) => MochiTappable(
                   onPress: () => _showScramble(scramble),
+                  onLongPress: () async {
+                    await Clipboard.setData(ClipboardData(text: scramble.notation));
+                    if (context.mounted) {
+                      showMochiToast(context, title: Text(context.l10n.timerScrambleCopied));
+                    }
+                  },
                   // The size lives on the DefaultTextStyle rather than on the
                   // moves, so a hero's flight can read it off this context and
                   // lerp towards the one the dialog uses. The weight is left

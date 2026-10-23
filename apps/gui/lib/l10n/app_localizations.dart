@@ -1345,6 +1345,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{seconds}s!!'**
   String timerAlertSecond(int seconds);
+
+  /// No description provided for @timerScrambleCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Scramble copied'**
+  String get timerScrambleCopied;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -150,10 +150,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timerShown => '計時頁顯示';
 
   @override
-  String get timerShowScrambleImage => '打亂圖';
+  String get timerShowScrambleImage => '轉亂圖';
 
   @override
-  String get timerShowScrambleImageHint => '顯示打亂後的圖';
+  String get timerShowScrambleImageHint => '顯示轉亂的圖';
 
   @override
   String get timerShowSessionStats => 'Session 統計';
@@ -677,4 +677,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String timerAlertSecond(int seconds) {
     return '$seconds秒!!';
   }
+
+  @override
+  String get timerScrambleCopied => '已複製轉亂';
 }
