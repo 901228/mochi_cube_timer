@@ -5,6 +5,7 @@ import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 import "package:stream_transform/stream_transform.dart";
 
+import "../../app/orientation.dart";
 import "../../database/dao_provider.dart";
 import "../../l10n/l10n.dart";
 import "../../shared/puzzles.dart";
@@ -175,6 +176,47 @@ class HomeShell extends StatelessWidget {
     },
   );
 
+  /// The pages, the algorithms and the settings, beside the content or, given [close], in the drawer it
+  /// shuts before going anywhere.
+  Widget _sidebar(BuildContext context, {VoidCallback? close}) {
+    VoidCallback then(VoidCallback go) => () {
+      close?.call();
+      go();
+    };
+
+    return MochiSidebar(
+      size: .lg,
+      footer: [
+        MochiSidebarItem(
+          label: Text(context.l10n.commonSettings),
+          icon: Icon(TablerIcons.settings),
+          onPress: then(() => context.pushNamed("settings")),
+        ),
+      ],
+      header: MochiSidebarHeading(Text("Mochi Cube Timer")),
+      children: [
+        ...pages.mapIndexed(
+          (i, data) => MochiSidebarItem(
+            icon: Icon(data.icon),
+            label: Text(_pageLabel(context, data.id)),
+            onPress: then(() => navigationShell.goBranch(i)),
+            selected: navigationShell.currentIndex == i,
+          ),
+        ),
+
+        MochiDivider(),
+        MochiSidebarItem(
+          icon: Icon(TablerIcons.cubeSpark),
+          label: Text("Algorithms"),
+          onPress: then(() {
+            // TODO: algorithms page
+            // context.pushNamed("algorithms");
+          }),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -198,6 +240,7 @@ class HomeShell extends StatelessWidget {
           if (w != null) return w;
 
           final data = snapshot.data;
+          final sideways = isSideways(context);
           return MochiScaffold(
             extendBody: true,
             immersive: context.watch<TimerFocusCubit>().state,
@@ -269,89 +312,63 @@ class HomeShell extends StatelessWidget {
             headerOverlay: context.watch<RecordSelectionCubit>().active
                 ? _selectionHeader(context, data)
                 : null,
-            footer: MochiBottomNav<int>(
-              value: navigationShell.currentIndex,
-              onChanged: (value) {
-                navigationShell.goBranch(value);
-                context.read<RecordSelectionCubit>().clear();
-              },
-              items: pages
-                  .mapIndexed(
-                    (i, data) => MochiBottomNavItem<int>(
-                      value: i,
-                      label: Text(_pageLabel(context, data.id)),
-                      icon: Icon(data.icon),
-                    ),
-                  )
-                  .toList(),
-            ),
-            safeArea: true,
-            sidebar: MochiSidebar(
-              size: .lg,
-              footer: [
-                MochiSidebarItem(
-                  label: Text(context.l10n.commonSettings),
-                  icon: Icon(TablerIcons.settings),
-                  onPress: () {
-                    context.pushNamed("settings");
-                  },
-                ),
-              ],
-              header: MochiSidebarHeading(Text("Mochi Cube Timer")),
-              children: [
-                ...pages.mapIndexed(
-                  (i, data) => MochiSidebarItem(
-                    icon: Icon(data.icon),
-                    label: Text(_pageLabel(context, data.id)),
-                    onPress: () => navigationShell.goBranch(i),
-                    selected: navigationShell.currentIndex == i,
+            footer: sideways
+                ? null
+                : MochiBottomNav<int>(
+                    value: navigationShell.currentIndex,
+                    onChanged: (value) {
+                      navigationShell.goBranch(value);
+                      context.read<RecordSelectionCubit>().clear();
+                    },
+                    items: pages
+                        .mapIndexed(
+                          (i, data) => MochiBottomNavItem<int>(
+                            value: i,
+                            label: Text(_pageLabel(context, data.id)),
+                            icon: Icon(data.icon),
+                          ),
+                        )
+                        .toList(),
                   ),
-                ),
-
-                MochiDivider(),
-                MochiSidebarItem(
-                  icon: Icon(TablerIcons.cubeSpark),
-                  label: Text("Algorithms"),
-                  onPress: () {
-                    // TODO: algorithms page
-                    // context.pushNamed("algorithms");
-                  },
-                ),
-              ],
-            ),
+            safeArea: true,
+            // A phone on its side has no room for the bar along the bottom or a sidebar beside the timer:
+            // the menu button pulls out what the sidebar holds instead.
+            sidebar: sideways ? null : _sidebar(context),
             // Under the scaffold, for MochiScaffold.of: the drawer is not a route to pop.
             drawer: Builder(
-              builder: (context) => MochiSidebar(
-                size: .lg,
-                footer: [
-                  MochiSidebarItem(
-                    label: Text(context.l10n.commonSettings),
-                    icon: Icon(TablerIcons.settings),
-                    onPress: () {
-                      MochiScaffold.of(context).closeDrawer();
-                      context.pushNamed("settings");
-                    },
-                  ),
-                ],
-                header: MochiSidebarHeading(Text("Mochi Cube Timer")),
-                children: [
-                  MochiSidebarItem(
-                    icon: Icon(TablerIcons.clockHour4),
-                    label: Text("Timer"),
-                    selected: true,
-                    onPress: MochiScaffold.of(context).closeDrawer,
-                  ),
-                  MochiSidebarItem(
-                    icon: Icon(TablerIcons.cubeSpark),
-                    label: Text("Algorithms"),
-                    onPress: () {
-                      MochiScaffold.of(context).closeDrawer();
-                      // TODO: algorithms page
-                      // context.pushNamed("algorithms");
-                    },
-                  ),
-                ],
-              ),
+              builder: (context) => sideways
+                  ? _sidebar(context, close: MochiScaffold.of(context).closeDrawer)
+                  : MochiSidebar(
+                      size: .lg,
+                      footer: [
+                        MochiSidebarItem(
+                          label: Text(context.l10n.commonSettings),
+                          icon: Icon(TablerIcons.settings),
+                          onPress: () {
+                            MochiScaffold.of(context).closeDrawer();
+                            context.pushNamed("settings");
+                          },
+                        ),
+                      ],
+                      header: MochiSidebarHeading(Text("Mochi Cube Timer")),
+                      children: [
+                        MochiSidebarItem(
+                          icon: Icon(TablerIcons.clockHour4),
+                          label: Text("Timer"),
+                          selected: true,
+                          onPress: MochiScaffold.of(context).closeDrawer,
+                        ),
+                        MochiSidebarItem(
+                          icon: Icon(TablerIcons.cubeSpark),
+                          label: Text("Algorithms"),
+                          onPress: () {
+                            MochiScaffold.of(context).closeDrawer();
+                            // TODO: algorithms page
+                            // context.pushNamed("algorithms");
+                          },
+                        ),
+                      ],
+                    ),
             ),
             child: data == null
                 ? const Center(child: MochiCircularProgress())

@@ -3,6 +3,7 @@ import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../app/orientation.dart";
 import "../../database/dao_provider.dart";
 import "../../l10n/l10n.dart";
 import "../../shared/puzzles.dart";
@@ -203,6 +204,88 @@ class _TimerViewState extends State<_TimerView> {
   Widget build(BuildContext context) {
     final scrambles = context.watch<ScrambleCubit>();
     final settings = widget.settings;
+    final sideways = isSideways(context);
+
+    final Widget leftStats = !settings.showSessionStats
+        ? const SizedBox.shrink()
+        : StreamBuilder(
+            stream: _summary,
+            builder: (context, snapshot) {
+              final w = streamHandler(context, snapshot, description: "watching the summary of the session");
+              if (w != null) return w;
+
+              final summary = snapshot.data!;
+              return Column(
+                mainAxisSize: .min,
+                crossAxisAlignment: .start,
+                textDirection: .ltr,
+                children: [
+                  _statusLine(context.l10n.statDeviation, _statsDisplay(summary.deviation)),
+                  _statusLine(context.l10n.statMean, _statsDisplay(summary.mean)),
+                  _statusLine(context.l10n.statBest, _statsDisplay(summary.best, single: true)),
+                  _statusLine(context.l10n.statCount, summary.count.toString()),
+                ],
+              );
+            },
+          );
+    final Widget? cube = settings.showScrambleImage
+        ? _withScramble(
+            (scramble) => MochiTappable(
+              onPress: () => _showScramble(scramble),
+              builder: (context, value, child) => Cube2DView(
+                puzzle: scrambles.puzzle,
+                state: scramble.state,
+                settings: widget.settings,
+                compact: true,
+              ),
+            ),
+          )
+        : null;
+    final Widget rightStats = !settings.showSessionStats
+        ? const SizedBox.shrink()
+        : StreamBuilder(
+            stream: _times,
+            builder: (context, snapshot) {
+              final w = streamHandler(context, snapshot, description: "watching the times of the session");
+              if (w != null) return w;
+
+              final times = snapshot.data!;
+              return ValueListenableBuilder(
+                valueListenable: _averageBreaks,
+                builder: (context, broken, _) {
+                  Widget average(AverageKind kind) => _statusLine(
+                    kind.label,
+                    _statsDisplay(kind.of(times, trimPercent: widget.settings.averageTrim)),
+                    highlight: broken.any((b) => b.kind == kind),
+                  );
+
+                  return Column(
+                    mainAxisSize: .min,
+                    crossAxisAlignment: .end,
+                    textDirection: .ltr,
+                    children: [
+                      average(.mo3),
+                      average(.ao5),
+                      average(.ao12),
+                      _statusLine(
+                        "Ao50",
+                        _statsDisplay(times.ao(50, trimPercent: widget.settings.averageTrim)),
+                      ),
+                      // _statusLine("Ao100", _statsDisplay(times.ao(100))),
+                    ],
+                  );
+                },
+              );
+            },
+          );
+    final body = Center(
+      child: TimerBody(
+        alertText: widget.settings.alertEnabled && widget.settings.alertTypes.contains(AlertType.text),
+        settings: widget.settings,
+        recordBreak: _recordBreak,
+        averageBreaks: _averageBreaks,
+      ),
+    );
 
     Widget page(bool running) => Padding(
       padding: context.theme.geometry.pagePadding,
@@ -288,7 +371,9 @@ class _TimerViewState extends State<_TimerView> {
               ),
             ],
           ),
-          footer: !settings.showSessionStats && !settings.showScrambleImage
+          // On its side the phone has no height to spare under the time: the statistics and the cube
+          // go beside it instead, or they would cover the time's hint and buttons.
+          footer: sideways || (!settings.showSessionStats && !settings.showScrambleImage)
               ? null
               : IntrinsicHeight(
                   child: Row(
@@ -296,115 +381,33 @@ class _TimerViewState extends State<_TimerView> {
                     mainAxisAlignment: .spaceBetween,
                     crossAxisAlignment: .stretch,
                     children: [
-                      // left stats
-                      Expanded(
-                        child: !settings.showSessionStats
-                            ? const SizedBox.shrink()
-                            : StreamBuilder(
-                                stream: _summary,
-                                builder: (context, snapshot) {
-                                  final w = streamHandler(
-                                    context,
-                                    snapshot,
-                                    description: "watching the summary of the session",
-                                  );
-                                  if (w != null) return w;
-
-                                  final summary = snapshot.data!;
-                                  return Column(
-                                    mainAxisSize: .min,
-                                    crossAxisAlignment: .start,
-                                    textDirection: .ltr,
-                                    children: [
-                                      _statusLine(
-                                        context.l10n.statDeviation,
-                                        _statsDisplay(summary.deviation),
-                                      ),
-                                      _statusLine(context.l10n.statMean, _statsDisplay(summary.mean)),
-                                      _statusLine(
-                                        context.l10n.statBest,
-                                        _statsDisplay(summary.best, single: true),
-                                      ),
-                                      _statusLine(context.l10n.statCount, summary.count.toString()),
-                                    ],
-                                  );
-                                },
-                              ),
-                      ),
-
-                      // cube 2d view
-                      if (settings.showScrambleImage)
-                        _withScramble(
-                          (scramble) => MochiTappable(
-                            onPress: () => _showScramble(scramble),
-                            builder: (context, value, child) => Cube2DView(
-                              puzzle: scrambles.puzzle,
-                              state: scramble.state,
-                              settings: widget.settings,
-                              compact: true,
-                            ),
-                          ),
-                        ),
-
-                      // right stats
-                      Expanded(
-                        child: !settings.showSessionStats
-                            ? const SizedBox.shrink()
-                            : StreamBuilder(
-                                stream: _times,
-                                builder: (context, snapshot) {
-                                  final w = streamHandler(
-                                    context,
-                                    snapshot,
-                                    description: "watching the times of the session",
-                                  );
-                                  if (w != null) return w;
-
-                                  final times = snapshot.data!;
-                                  return ValueListenableBuilder(
-                                    valueListenable: _averageBreaks,
-                                    builder: (context, broken, _) {
-                                      Widget average(AverageKind kind) => _statusLine(
-                                        kind.label,
-                                        _statsDisplay(
-                                          kind.of(times, trimPercent: widget.settings.averageTrim),
-                                        ),
-                                        highlight: broken.any((b) => b.kind == kind),
-                                      );
-
-                                      return Column(
-                                        mainAxisSize: .min,
-                                        crossAxisAlignment: .end,
-                                        textDirection: .ltr,
-                                        children: [
-                                          average(.mo3),
-                                          average(.ao5),
-                                          average(.ao12),
-                                          _statusLine(
-                                            "Ao50",
-                                            _statsDisplay(
-                                              times.ao(50, trimPercent: widget.settings.averageTrim),
-                                            ),
-                                          ),
-                                          // _statusLine("Ao100", _statsDisplay(times.ao(100))),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                      ),
+                      Expanded(child: leftStats),
+                      ?cube,
+                      Expanded(child: rightStats),
                     ],
                   ),
                 ),
-          child: Center(
-            child: TimerBody(
-              alertText: widget.settings.alertEnabled && widget.settings.alertTypes.contains(AlertType.text),
-              settings: widget.settings,
-              recordBreak: _recordBreak,
-              averageBreaks: _averageBreaks,
-            ),
-          ),
+          child: sideways && !running
+              ? Stack(
+                  children: [
+                    body,
+                    Align(alignment: .bottomLeft, child: leftStats),
+                    Align(
+                      alignment: .bottomRight,
+                      child: Column(
+                        mainAxisSize: .min,
+                        crossAxisAlignment: .end,
+                        spacing: 8,
+                        children: [
+                          // Its own height, which upright the statistics beside it give it.
+                          if (cube != null) SizedBox(height: 96, child: cube),
+                          rightStats,
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : body,
         ),
       ),
     );

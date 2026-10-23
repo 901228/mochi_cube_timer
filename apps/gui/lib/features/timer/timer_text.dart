@@ -1,3 +1,5 @@
+import "dart:math" as math;
+
 import "package:flutter/widgets.dart";
 
 class TimerText extends StatelessWidget {
@@ -65,7 +67,8 @@ class TimerTextLayoutDelegate extends MultiChildLayoutDelegate {
       positionChild(rightHintId, Offset(size.width - rightHint.width, (size.height - rightHint.height) / 2));
     }
 
-    final remainedSize = Size(size.width, (size.height - text.height) / 2 - spacing);
+    // Nothing, rather than less than nothing, when the time takes the whole height.
+    final remainedSize = Size(size.width, math.max(0, (size.height - text.height) / 2 - spacing));
 
     // place hint
     if (hasChild(hintId)) {
