@@ -6,7 +6,9 @@ import "package:mochi_ui/mochi_ui.dart";
 import "package:stream_transform/stream_transform.dart";
 
 import "../../database/dao_provider.dart";
+import "../../l10n/l10n.dart";
 import "../../shared/puzzles.dart";
+import "../../shared/puzzles/puzzle_utils.dart";
 import "../../shared/utils.dart";
 import "../records/record_search_bar.dart";
 import "../records/records_list.dart";
@@ -14,8 +16,6 @@ import "../timer/scramble_cubit.dart";
 import "../timer/timer_focus.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
-import "../../l10n/l10n.dart";
-import "../../shared/puzzles/puzzle_utils.dart";
 
 class HomeShell extends StatelessWidget {
   const HomeShell({super.key, required this.pages, required this.navigationShell});
@@ -287,6 +287,7 @@ class HomeShell extends StatelessWidget {
             ),
             safeArea: true,
             sidebar: MochiSidebar(
+              size: .lg,
               footer: [
                 MochiSidebarItem(
                   label: Text(context.l10n.commonSettings),
@@ -297,28 +298,56 @@ class HomeShell extends StatelessWidget {
                 ),
               ],
               header: MochiSidebarHeading(Text("Mochi Cube Timer")),
-              children: pages
-                  .mapIndexed(
-                    (i, data) => MochiSidebarItem(
-                      icon: Icon(data.icon),
-                      label: Text(_pageLabel(context, data.id)),
-                      onPress: () => navigationShell.goBranch(i),
-                      selected: navigationShell.currentIndex == i,
-                    ),
-                  )
-                  .toList(),
+              children: [
+                ...pages.mapIndexed(
+                  (i, data) => MochiSidebarItem(
+                    icon: Icon(data.icon),
+                    label: Text(_pageLabel(context, data.id)),
+                    onPress: () => navigationShell.goBranch(i),
+                    selected: navigationShell.currentIndex == i,
+                  ),
+                ),
+
+                MochiDivider(),
+                MochiSidebarItem(
+                  icon: Icon(TablerIcons.cubeSpark),
+                  label: Text("Algorithms"),
+                  onPress: () {
+                    // TODO: algorithms page
+                    // context.pushNamed("algorithms");
+                  },
+                ),
+              ],
             ),
             // Under the scaffold, for MochiScaffold.of: the drawer is not a route to pop.
             drawer: Builder(
               builder: (context) => MochiSidebar(
-                children: [
-                  MochiSidebarHeading(Text("Mochi Cube Timer")),
+                size: .lg,
+                footer: [
                   MochiSidebarItem(
                     label: Text(context.l10n.commonSettings),
                     icon: Icon(TablerIcons.settings),
                     onPress: () {
                       MochiScaffold.of(context).closeDrawer();
                       context.pushNamed("settings");
+                    },
+                  ),
+                ],
+                header: MochiSidebarHeading(Text("Mochi Cube Timer")),
+                children: [
+                  MochiSidebarItem(
+                    icon: Icon(TablerIcons.clockHour4),
+                    label: Text("Timer"),
+                    selected: true,
+                    onPress: MochiScaffold.of(context).closeDrawer,
+                  ),
+                  MochiSidebarItem(
+                    icon: Icon(TablerIcons.cubeSpark),
+                    label: Text("Algorithms"),
+                    onPress: () {
+                      MochiScaffold.of(context).closeDrawer();
+                      // TODO: algorithms page
+                      // context.pushNamed("algorithms");
                     },
                   ),
                 ],
