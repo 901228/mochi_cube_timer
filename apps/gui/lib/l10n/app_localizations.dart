@@ -347,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @timerDisplay.
   ///
   /// In en, this message translates to:
-  /// **'Display'**
+  /// **'Time Display'**
   String get timerDisplay;
 
   /// No description provided for @timerHold.

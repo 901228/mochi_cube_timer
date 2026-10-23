@@ -138,7 +138,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get timerStackmatHint => '由音訊輸入的 Stackmat 開始與停止計時，螢幕只會開啟觀察時間。';
 
   @override
-  String get timerDisplay => '顯示';
+  String get timerDisplay => '時間顯示';
 
   @override
   String get timerHold => '按住開始';

@@ -43,7 +43,7 @@
   "timerInput": "Timer input",
   "timerStackmat": "Use a Stackmat",
   "timerStackmatHint": "The Stackmat on the audio input starts and stops the solves. The screen then only opens inspection.",
-  "timerDisplay": "Display",
+  "timerDisplay": "Time Display",
   "timerHold": "Hold to start",
   "timerHoldHint": "How long the screen is held before the timer is ready",
   "timerShown": "Shown on the timer page",

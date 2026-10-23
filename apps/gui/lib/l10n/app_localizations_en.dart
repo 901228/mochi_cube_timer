@@ -139,7 +139,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The Stackmat on the audio input starts and stops the solves. The screen then only opens inspection.';
 
   @override
-  String get timerDisplay => 'Display';
+  String get timerDisplay => 'Time Display';
 
   @override
   String get timerHold => 'Hold to start';

@@ -43,7 +43,7 @@
   "timerInput": "計時輸入",
   "timerStackmat": "使用 Stackmat",
   "timerStackmatHint": "由音訊輸入的 Stackmat 開始與停止計時，螢幕只會開啟觀察時間。",
-  "timerDisplay": "顯示",
+  "timerDisplay": "時間顯示",
   "timerHold": "按住開始",
   "timerHoldHint": "按住螢幕多久之後，計時器才會準備好",
   "timerShown": "計時頁顯示",
