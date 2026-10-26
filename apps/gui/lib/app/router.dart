@@ -2,6 +2,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../features/algorithms/algorithm_data.dart";
+import "../features/algorithms/algorithms_page.dart";
 import "../features/home/animated_branch_container.dart";
 import "../features/home/home_shell.dart";
 import "../features/records/records_list.dart";
@@ -15,6 +17,39 @@ final router = GoRouter(
   initialLocation: "/",
   routes: [
     GoRoute(path: "/", redirect: (_, _) => "/timer"),
+
+    GoRoute(
+      path: "/algorithms",
+      name: "algorithms",
+      pageBuilder: (context, state) => MochiPage(key: state.pageKey, child: const AlgorithmsOverviewPage()),
+      routes: [
+        GoRoute(
+          path: ":puzzle",
+          pageBuilder: (context, state) => MochiPage(
+            key: state.pageKey,
+            child: AlgorithmsOverviewPage(puzzleId: state.pathParameters["puzzle"]),
+          ),
+          routes: [
+            GoRoute(
+              path: ":set",
+              redirect: (_, state) {
+                final puzzleId = state.pathParameters["puzzle"]!;
+                final setId = state.pathParameters["set"]!;
+                return findAlgorithmSet(puzzleId, setId) != null ? null : "/algorithms";
+              },
+              pageBuilder: (context, state) {
+                final puzzleId = state.pathParameters["puzzle"]!;
+                final setId = state.pathParameters["set"]!;
+                return MochiPage(
+                  key: state.pageKey,
+                  child: AlgorithmSetPage(algorithmSet: findAlgorithmSet(puzzleId, setId)!),
+                );
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
 
     GoRoute(
       path: "/settings",

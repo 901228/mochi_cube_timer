@@ -689,4 +689,18 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get timerScrambleCopied => '已複製轉亂';
+
+  @override
+  String get algorithmsTitle => '公式';
+
+  @override
+  String get algorithmsSelectSet => '選擇公式集';
+
+  @override
+  String algorithmsCasesCount(int count) {
+    return '$count 種情況';
+  }
+
+  @override
+  String get algorithmsCopied => '已複製公式';
 }

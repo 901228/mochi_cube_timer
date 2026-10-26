@@ -1369,6 +1369,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scramble copied'**
   String get timerScrambleCopied;
+
+  /// No description provided for @algorithmsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Algorithms'**
+  String get algorithmsTitle;
+
+  /// No description provided for @algorithmsSelectSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an algorithm set'**
+  String get algorithmsSelectSet;
+
+  /// No description provided for @algorithmsCasesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} cases'**
+  String algorithmsCasesCount(int count);
+
+  /// No description provided for @algorithmsCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Algorithm copied'**
+  String get algorithmsCopied;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

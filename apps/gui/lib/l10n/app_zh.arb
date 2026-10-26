@@ -233,5 +233,10 @@
   "@timerAlertFirst": {"placeholders": {"seconds": {"type": "int"}}},
   "timerAlertSecond": "{seconds}秒!!",
   "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}},
-  "timerScrambleCopied": "已複製轉亂"
+  "timerScrambleCopied": "已複製轉亂",
+  "algorithmsTitle": "公式",
+  "algorithmsSelectSet": "選擇公式集",
+  "algorithmsCasesCount": "{count} 種情況",
+  "@algorithmsCasesCount": {"placeholders": {"count": {"type": "int"}}},
+  "algorithmsCopied": "已複製公式"
 }

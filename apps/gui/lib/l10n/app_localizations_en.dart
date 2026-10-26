@@ -697,4 +697,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get timerScrambleCopied => 'Scramble copied';
+
+  @override
+  String get algorithmsTitle => 'Algorithms';
+
+  @override
+  String get algorithmsSelectSet => 'Select an algorithm set';
+
+  @override
+  String algorithmsCasesCount(int count) {
+    return '$count cases';
+  }
+
+  @override
+  String get algorithmsCopied => 'Algorithm copied';
 }

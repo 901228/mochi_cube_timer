@@ -233,5 +233,10 @@
   "@timerAlertFirst": {"placeholders": {"seconds": {"type": "int"}}},
   "timerAlertSecond": "{seconds}s!!",
   "@timerAlertSecond": {"placeholders": {"seconds": {"type": "int"}}},
-  "timerScrambleCopied": "Scramble copied"
+  "timerScrambleCopied": "Scramble copied",
+  "algorithmsTitle": "Algorithms",
+  "algorithmsSelectSet": "Select an algorithm set",
+  "algorithmsCasesCount": "{count} cases",
+  "@algorithmsCasesCount": {"placeholders": {"count": {"type": "int"}}},
+  "algorithmsCopied": "Algorithm copied"
 }

@@ -207,11 +207,8 @@ class HomeShell extends StatelessWidget {
         MochiDivider(),
         MochiSidebarItem(
           icon: Icon(TablerIcons.cubeSpark),
-          label: Text("Algorithms"),
-          onPress: then(() {
-            // TODO: algorithms page
-            // context.pushNamed("algorithms");
-          }),
+          label: Text(context.l10n.algorithmsTitle),
+          onPress: then(() => context.pushNamed("algorithms")),
         ),
       ],
     );
@@ -360,11 +357,10 @@ class HomeShell extends StatelessWidget {
                         ),
                         MochiSidebarItem(
                           icon: Icon(TablerIcons.cubeSpark),
-                          label: Text("Algorithms"),
+                          label: Text(context.l10n.algorithmsTitle),
                           onPress: () {
                             MochiScaffold.of(context).closeDrawer();
-                            // TODO: algorithms page
-                            // context.pushNamed("algorithms");
+                            context.pushNamed("algorithms");
                           },
                         ),
                       ],
