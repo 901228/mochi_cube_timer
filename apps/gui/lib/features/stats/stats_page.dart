@@ -5,12 +5,12 @@ import "package:mochi_ui/mochi_ui.dart";
 import "package:stream_transform/stream_transform.dart";
 
 import "../../database/dao_provider.dart";
+import "../../l10n/l10n.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 import "stats_common.dart";
 import "times_distribution_graph.dart";
 import "times_graph.dart";
-import "../../l10n/l10n.dart";
 
 class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
@@ -74,19 +74,26 @@ class _StatsPageState extends State<_StatsPage> {
     }
   }
 
+  bool get isDesktop => context.responsive(mobile: false, desktop: true);
+
   /// A number that counts up from 0, and again whenever what it shows changes to another session,
   /// puzzle or archive view, rather than counting from the previous one's figure.
-  Widget _number(String id, double? value, {TextStyle? style, String Function(double value)? format}) =>
-      Align(
-        alignment: .centerStart,
-        child: MochiAnimatedNumber(
-          key: ValueKey((widget.sessionId, widget.puzzle, widget.showArchived, id)),
-          value: value,
-          format: format ?? (v) => _statsString(v),
-          fallback: _statsString(value == null || value.isFinite ? null : value),
-          style: style,
-        ),
-      );
+  Widget _number(
+    String id,
+    double? value, {
+    TextStyle? style,
+    String Function(double value)? format,
+    Alignment? alignment,
+  }) => Align(
+    alignment: alignment ?? (isDesktop ? .center : .centerStart),
+    child: MochiAnimatedNumber(
+      key: ValueKey((widget.sessionId, widget.puzzle, id)),
+      value: value,
+      format: format ?? (v) => _statsString(v),
+      fallback: _statsString(value == null || value.isFinite ? null : value),
+      style: style,
+    ),
+  );
 
   MochiGeometry get geometry => context.theme.geometry;
   MochiColors get colors => context.theme.colors;
@@ -94,8 +101,12 @@ class _StatsPageState extends State<_StatsPage> {
 
   TextStyle timesStyle({Color? color}) => timer.xl4.copyWith(fontWeight: .bold, color: color);
 
-  Widget _summaryText(String id, double? value, {Color? color}) =>
-      _number(id, value, style: timesStyle(color: color));
+  Widget _summaryText(String id, double? value, {Color? color, Alignment? alignment}) => _number(
+    id,
+    value,
+    style: timesStyle(color: color),
+    alignment: alignment,
+  );
 
   Widget _card({required String title, required Widget child}) => MochiCard(
     elevation: .md,
@@ -150,6 +161,10 @@ class _StatsPageState extends State<_StatsPage> {
   @override
   Widget build(BuildContext context) {
     final inset = MediaQuery.paddingOf(context);
+    final contentPadding =
+        inset +
+        context.theme.geometry.pagePadding +
+        EdgeInsets.symmetric(horizontal: geometry.space.sm, vertical: geometry.space.xs);
 
     return StreamBuilder(
       stream: _stream,
@@ -211,6 +226,8 @@ class _StatsPageState extends State<_StatsPage> {
               ("Mo3", data?.times.bestMo(3)),
               ("Ao5", data?.times.bestAo(5, trimPercent: trim)),
               ("Ao12", data?.times.bestAo(12, trimPercent: trim)),
+              if (isDesktop) ("Ao50", data?.times.bestAo(50, trimPercent: trim)),
+              if (isDesktop) ("Ao10", data?.times.bestAo(100, trimPercent: trim)),
             ].map((v) => _statsTile(id: "best ${v.$1}", value: v.$2, description: v.$1)).toList(),
           ),
         );
@@ -223,11 +240,46 @@ class _StatsPageState extends State<_StatsPage> {
                   mainAxisAlignment: .spaceAround,
                   crossAxisAlignment: .start,
                   children: [
-                    _summaryText("best ao5", bestAo5Data.$1, color: colors.primary.base),
+                    _summaryText(
+                      "best ao5",
+                      bestAo5Data.$1,
+                      color: colors.primary.base,
+                      alignment: .centerLeft,
+                    ),
                     SizedBox(height: geometry.space.xs),
                     ..._bestAo5Times(bestAo5Data.$2, trim),
                   ],
                 ),
+        );
+
+        // card group
+        final best = Row(
+          crossAxisAlignment: .stretch,
+          spacing: geometry.space.sm,
+          children: [
+            Expanded(child: currentStats),
+            Expanded(
+              child: Column(
+                mainAxisSize: .max,
+                spacing: geometry.space.sm,
+                children: [
+                  Expanded(child: solveCount),
+                  Expanded(child: solveMean),
+                  Expanded(child: bestSingle),
+                ],
+              ),
+            ),
+          ],
+        );
+        final recordsGraph = MochiCard(
+          elevation: .md,
+          title: Text(context.l10n.statsSolveTimes),
+          child: TimesGraph(data, aspectRatio: isDesktop ? 3 : 2),
+        );
+        final distrubutionGraph = MochiCard(
+          elevation: .md,
+          title: Text(context.l10n.statsDistribution),
+          child: TimesDistributionGraph(data, aspectRatio: isDesktop ? 3 : 2),
         );
 
         return DefaultTextStyle.merge(
@@ -235,51 +287,85 @@ class _StatsPageState extends State<_StatsPage> {
             applyHeightToFirstAscent: false,
             applyHeightToLastDescent: false,
           ),
-          child: SingleChildScrollView(
-            padding:
-                inset +
-                context.theme.geometry.pagePadding +
-                EdgeInsets.symmetric(horizontal: geometry.space.sm, vertical: geometry.space.xs),
-            child: Column(
-              mainAxisSize: .min,
-              spacing: geometry.space.sm,
-              children: [
-                IntrinsicHeight(
+          child: isDesktop
+              ? Padding(
+                  padding: contentPadding,
                   child: Row(
-                    crossAxisAlignment: .stretch,
+                    mainAxisSize: .max,
                     spacing: geometry.space.sm,
                     children: [
-                      Flexible(child: currentStats),
                       Flexible(
                         child: Column(
+                          mainAxisSize: .max,
                           spacing: geometry.space.sm,
-                          children: [solveCount, solveMean, bestSingle],
+                          children: [
+                            Expanded(child: best),
+                            distrubutionGraph,
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        child: Column(
+                          mainAxisSize: .max,
+                          spacing: geometry.space.sm,
+                          children: [
+                            recordsGraph,
+                            Expanded(
+                              child: Row(
+                                crossAxisAlignment: .stretch,
+                                spacing: geometry.space.sm,
+                                children: [
+                                  Expanded(child: bestStats),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: .max,
+                                      spacing: geometry.space.sm,
+                                      children: [
+                                        Flexible(flex: 1, fit: .tight, child: solveDeviation),
+                                        Flexible(flex: 3, fit: .tight, child: bestAo5),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                MochiCard(elevation: .md, title: Text(context.l10n.statsSolveTimes), child: TimesGraph(data)),
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: .stretch,
+                )
+              : SingleChildScrollView(
+                  padding: contentPadding,
+                  child: Column(
+                    mainAxisSize: .min,
                     spacing: geometry.space.sm,
                     children: [
-                      Flexible(
-                        child: Column(spacing: geometry.space.sm, children: [solveDeviation, bestStats]),
+                      IntrinsicHeight(child: best),
+                      recordsGraph,
+                      IntrinsicHeight(
+                        child: Row(
+                          crossAxisAlignment: .stretch,
+                          spacing: geometry.space.sm,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: .max,
+                                spacing: geometry.space.sm,
+                                children: [
+                                  Expanded(child: solveDeviation),
+                                  Expanded(child: bestStats),
+                                ],
+                              ),
+                            ),
+                            Expanded(child: bestAo5),
+                          ],
+                        ),
                       ),
-                      Flexible(child: bestAo5),
+                      distrubutionGraph,
                     ],
                   ),
                 ),
-                MochiCard(
-                  elevation: .md,
-                  title: Text(context.l10n.statsDistribution),
-                  child: TimesDistributionGraph(data),
-                ),
-              ],
-            ),
-          ),
         );
       },
     );
