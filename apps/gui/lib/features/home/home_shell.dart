@@ -18,10 +18,35 @@ import "../timer/timer_focus.dart";
 import "puzzle_selection_dialog.dart";
 import "session_selection_dialog.dart";
 
-class HomeShell extends StatelessWidget {
+class HomeShell extends StatefulWidget {
   const HomeShell({super.key, required this.pages, required this.navigationShell});
   final List<({String id, IconData icon, String path})> pages;
   final StatefulNavigationShell navigationShell;
+
+  @override
+  State<HomeShell> createState() => _HomeShellState();
+}
+
+class _HomeShellState extends State<HomeShell> {
+  late final _recordSelectionCubit = RecordSelectionCubit();
+  late final _timerFocusCubit = TimerFocusCubit();
+  late final _searchBarBottomCubit = SearchBarBottomCubit();
+
+  @override
+  void didUpdateWidget(HomeShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.navigationShell.currentIndex != widget.navigationShell.currentIndex) {
+      _recordSelectionCubit.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    _recordSelectionCubit.close();
+    _timerFocusCubit.close();
+    _searchBarBottomCubit.close();
+    super.dispose();
+  }
 
   Widget _selectionHeader(
     BuildContext context,
@@ -195,12 +220,12 @@ class HomeShell extends StatelessWidget {
       ],
       header: MochiSidebarHeading(Text("Mochi Cube Timer")),
       children: [
-        ...pages.mapIndexed(
+        ...widget.pages.mapIndexed(
           (i, data) => MochiSidebarItem(
             icon: Icon(data.icon),
             label: Text(_pageLabel(context, data.id)),
-            onPress: then(() => navigationShell.goBranch(i)),
-            selected: navigationShell.currentIndex == i,
+            onPress: then(() => widget.navigationShell.goBranch(i)),
+            selected: widget.navigationShell.currentIndex == i,
           ),
         ),
 
@@ -218,9 +243,9 @@ class HomeShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => RecordSelectionCubit()),
-        BlocProvider(create: (context) => TimerFocusCubit()),
-        BlocProvider(create: (context) => SearchBarBottomCubit()),
+        BlocProvider.value(value: _recordSelectionCubit),
+        BlocProvider.value(value: _timerFocusCubit),
+        BlocProvider.value(value: _searchBarBottomCubit),
       ],
       child: StreamBuilder(
         stream: context.read<AppDatabase>().appStateDao.watch().combineLatest(
@@ -283,7 +308,7 @@ class HomeShell extends StatelessWidget {
                       ),
               ),
               suffixes: [
-                if (pages[navigationShell.currentIndex].id != "timer")
+                if (widget.pages[widget.navigationShell.currentIndex].id != "timer")
                   MochiAction(
                     icon: (data?.appState.showArchived ?? false)
                         ? TablerIcons.archiveFilled
@@ -312,12 +337,9 @@ class HomeShell extends StatelessWidget {
             footer: sideways
                 ? null
                 : MochiBottomNav<int>(
-                    value: navigationShell.currentIndex,
-                    onChanged: (value) {
-                      navigationShell.goBranch(value);
-                      context.read<RecordSelectionCubit>().clear();
-                    },
-                    items: pages
+                    value: widget.navigationShell.currentIndex,
+                    onChanged: (value) => widget.navigationShell.goBranch(value),
+                    items: widget.pages
                         .mapIndexed(
                           (i, data) => MochiBottomNavItem<int>(
                             value: i,
@@ -372,7 +394,7 @@ class HomeShell extends StatelessWidget {
                     state: data.appState,
                     child: SessionsProvider(
                       state: data.sessions,
-                      child: _ScrambleScope(puzzle: data.appState.puzzle, child: navigationShell),
+                      child: _ScrambleScope(puzzle: data.appState.puzzle, child: widget.navigationShell),
                     ),
                   ),
           );

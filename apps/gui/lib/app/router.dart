@@ -6,7 +6,6 @@ import "../features/algorithms/algorithm_data.dart";
 import "../features/algorithms/algorithms_page.dart";
 import "../features/home/animated_branch_container.dart";
 import "../features/home/home_shell.dart";
-import "../features/records/records_list.dart";
 import "../features/records/records_page.dart";
 import "../features/settings/settings_page.dart";
 import "../features/stats/stats_page.dart";
@@ -83,17 +82,22 @@ final router = GoRouter(
         ),
       ),
       navigatorContainerBuilder: (context, navigationShell, children) => Builder(
-        builder: (context) => AnimatedBranchContainer(
-          currentIndex: navigationShell.currentIndex,
-          // Once a solve is on, a swipe is the shell's no longer: the timer has the screen.
-          draggable: !context.watch<TimerFocusCubit>().state,
-          onChanged: (index) {
-            // As the bottom bar does: a selection is of the page it was made on.
-            context.read<RecordSelectionCubit>().clear();
-            navigationShell.goBranch(index);
-          },
-          children: children,
-        ),
+        builder: (context) {
+          final isMobile = context.responsive(mobile: true, tablet: false);
+          if (!isMobile) {
+            return IndexedStack(index: navigationShell.currentIndex, children: children);
+          }
+
+          return AnimatedBranchContainer(
+            currentIndex: navigationShell.currentIndex,
+            // Once a solve is on, a swipe is the shell's no longer: the timer has the screen.
+            draggable: !context.watch<TimerFocusCubit>().state,
+            onChanged: (index) {
+              navigationShell.goBranch(index);
+            },
+            children: children,
+          );
+        },
       ),
 
       branches: [
