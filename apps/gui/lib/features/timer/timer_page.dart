@@ -102,8 +102,12 @@ class _TimerViewState extends State<_TimerView> {
   void _showScramble(Scramble scramble) =>
       showScrambleModal(context, puzzle: widget.puzzle, scramble: scramble, settings: widget.settings);
 
+  bool get isMobile => context.responsive(mobile: true, tablet: false);
+
   Widget _statusLine(String label, String value, {bool highlight = false}) {
-    final style = context.theme.typography.body.sm.copyWith(
+    final bodyFont = context.theme.typography.body;
+    final fontSize = isMobile ? bodyFont.sm : bodyFont.lg;
+    final style = fontSize.copyWith(
       fontFeatures: const [FontFeature.tabularFigures()],
       color: highlight ? context.colors.primary.base : null,
       fontWeight: highlight ? .bold : null,
@@ -379,11 +383,18 @@ class _TimerViewState extends State<_TimerView> {
                   child: Row(
                     mainAxisSize: .max,
                     mainAxisAlignment: .spaceBetween,
-                    crossAxisAlignment: .stretch,
+                    crossAxisAlignment: .end,
+                    spacing: 20,
                     children: [
-                      Expanded(child: leftStats),
-                      ?cube,
-                      Expanded(child: rightStats),
+                      leftStats,
+                      if (cube != null)
+                        Expanded(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(maxHeight: isMobile ? 160 : 240),
+                            child: cube,
+                          ),
+                        ),
+                      rightStats,
                     ],
                   ),
                 ),
