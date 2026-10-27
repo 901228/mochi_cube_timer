@@ -703,4 +703,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get algorithmsCopied => '已複製公式';
+
+  @override
+  String get algorithmsExpandAll => '全部展開';
+
+  @override
+  String get algorithmsCollapseAll => '全部收合';
+
+  @override
+  String algorithmsNoSets(String puzzle) {
+    return '$puzzle 目前沒有公式集';
+  }
 }

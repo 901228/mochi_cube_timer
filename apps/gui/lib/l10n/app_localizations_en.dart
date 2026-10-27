@@ -711,4 +711,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get algorithmsCopied => 'Algorithm copied';
+
+  @override
+  String get algorithmsExpandAll => 'Expand all';
+
+  @override
+  String get algorithmsCollapseAll => 'Collapse all';
+
+  @override
+  String algorithmsNoSets(String puzzle) {
+    return 'There are no algorithm sets for $puzzle';
+  }
 }

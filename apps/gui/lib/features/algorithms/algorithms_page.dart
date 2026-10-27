@@ -1,6 +1,7 @@
+import "package:collection/collection.dart";
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/services.dart";
-import "package:flutter_svg/flutter_svg.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:go_router/go_router.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -8,113 +9,155 @@ import "../../database/dao_provider.dart";
 import "../../l10n/l10n.dart";
 import "../../shared/puzzles/puzzle_utils.dart";
 import "../../shared/utils.dart";
-import "algorithm_data.dart";
+import "../home/puzzle_selection_dialog.dart";
+import "algorithm_data/common.dart";
 
-/// Overview page (`/algorithms`) listing every puzzle that has algorithm sets, or the single-puzzle
-/// overview (`/algorithms/:puzzle`) when filtered.
-class AlgorithmsOverviewPage extends StatelessWidget {
-  const AlgorithmsOverviewPage({super.key, this.puzzleId});
+class _Header extends StatelessWidget {
+  final String? title;
+  final bool canPop;
+  final bool isAllCollapsed;
+  final bool isBordered;
+  final VoidCallback? onCollapsedAll;
+  final VoidCallback? onExpandedAll;
 
-  final String? puzzleId;
+  const _Header({
+    this.title,
+    this.canPop = false,
+    required this.isAllCollapsed,
+    this.isBordered = false,
+    this.onCollapsedAll,
+    this.onExpandedAll,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    // CFOP solves cross on D (white) and finishes the last layer on yellow (cubeColorD).
-    final topColor = SettingsProvider.of(context).cubeColorD.toColor();
-    final filterPuzzle = puzzleId == null ? null : Puzzle.values.where((p) => p.id == puzzleId).firstOrNull;
-    final puzzles = [
-      for (final p in Puzzle.values)
-        if ((filterPuzzle == null || p == filterPuzzle) && algorithmSetsForPuzzle(p).isNotEmpty) p,
-    ];
-
-    return MochiScaffold(
-      extendBody: true,
-      header: MochiHeader(
-        alignment: .center,
-        variant: .bordered,
-        prefixes: [.back(onPress: () => context.pop())],
-        title: MochiButton(
-          appearance: .soft,
-          scaleOnPress: false,
-          onPress: () => showAlgorithmSetModal(context, currentPuzzle: filterPuzzle),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Text(
-              filterPuzzle == null ? l10n.algorithmsTitle : filterPuzzle.displayName(l10n),
-              style: context.theme.typography.title.md,
-            ),
-          ),
+    return MochiHeader(
+      variant: isBordered ? .bordered : .plain,
+      title: title != null ? Text(title!) : Container(),
+      prefixes: [if (canPop) .back(onPress: () => context.pop())],
+      suffixes: [
+        MochiAction(
+          icon: isAllCollapsed ? TablerIcons.chevronsDown : TablerIcons.chevronsUp,
+          label: isAllCollapsed ? context.l10n.algorithmsExpandAll : context.l10n.algorithmsCollapseAll,
+          onPress: () {
+            if (isAllCollapsed) {
+              onExpandedAll?.call();
+            } else {
+              onCollapsedAll?.call();
+            }
+          },
         ),
-      ),
-      child: Builder(
-        builder: (context) => SingleChildScrollView(
-          padding: MediaQuery.paddingOf(context),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            spacing: 24,
-            children: [
-              for (final puzzle in puzzles)
-                MochiTileGroup(
-                  label: Row(
-                    mainAxisSize: .min,
-                    spacing: 8,
-                    children: [
-                      SvgPicture.asset("assets/cube_icons/${puzzle.id}.svg", width: 20, height: 20),
-                      Text(puzzle.displayName(l10n)),
-                    ],
-                  ),
-                  children: [
-                    for (final set in algorithmSetsForPuzzle(puzzle))
-                      MochiTile(
-                        prefix: SizedBox(
-                          width: 44,
-                          height: 44,
-                          child: set.cases.first.buildDiagram(topColor: topColor),
-                        ),
-                        title: Text(set.name),
-                        subtitle: Text(set.subtitle),
-                        details: Text(l10n.algorithmsCasesCount(set.cases.length)),
-                        suffix: const Icon(TablerIcons.chevronRight),
-                        onPress: () => context.push("/algorithms/${puzzle.id}/${set.id}"),
-                      ),
-                  ],
-                ),
-            ],
-          ),
-        ),
-      ),
+      ],
     );
   }
 }
 
-/// Card-grid page (`/algorithms/:puzzle/:set`) showing the cases of one [AlgorithmSet], grouped by
-/// category. Each card shows only the diagram and the case name; tapping opens the detail modal.
-class AlgorithmSetPage extends StatelessWidget {
-  const AlgorithmSetPage({super.key, required this.algorithmSet});
+/// What the page under [AlgorithmsStandaloneShell] tells the shell's header about its accordion,
+/// so the header can show the expand / collapse all button. Empty while no page has one.
+class _AccordionController extends ChangeNotifier {
+  bool _disposed = false;
+  bool isAllCollapsed = false;
+  VoidCallback? toggleAll;
 
-  final AlgorithmSet algorithmSet;
+  void update({required bool isAllCollapsed, required VoidCallback? toggleAll}) {
+    if (_disposed || (this.isAllCollapsed == isAllCollapsed && this.toggleAll == toggleAll)) return;
+    this.isAllCollapsed = isAllCollapsed;
+    this.toggleAll = toggleAll;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+}
+
+class _AccordionScope extends InheritedWidget {
+  const _AccordionScope({required this.controller, required super.child});
+
+  final _AccordionController controller;
+
+  /// Not a dependency: the page only reports to it.
+  static _AccordionController? maybeOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<_AccordionScope>()?.controller;
+
+  @override
+  bool updateShouldNotify(_AccordionScope oldWidget) => controller != oldWidget.controller;
+}
+
+/// The standalone algorithms page's frame: a header that stays while the puzzle pages under it
+/// change, the same way [HomeShell]'s does.
+class AlgorithmsStandaloneShell extends StatefulWidget {
+  const AlgorithmsStandaloneShell({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<AlgorithmsStandaloneShell> createState() => _AlgorithmsStandaloneShellState();
+}
+
+class _AlgorithmsStandaloneShellState extends State<AlgorithmsStandaloneShell> {
+  final _accordion = _AccordionController();
+
+  @override
+  void dispose() {
+    _accordion.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final topColor = SettingsProvider.of(context).cubeColorD.toColor();
-    final groups = algorithmSet.grouped;
+    // Outside HomeShell, so no AppStateProvider above: watch the state here.
+    return StreamBuilder(
+      stream: context.read<AppDatabase>().appStateDao.watch(),
+      builder: (context, snapshot) {
+        final w = streamHandler(
+          context,
+          snapshot,
+          description: "watching the app state for the standalone algorithms page",
+        );
+        if (w != null) return w;
+
+        return ListenableBuilder(
+          listenable: _accordion,
+          builder: (context, _) => _build(context, snapshot.data!),
+        );
+      },
+    );
+  }
+
+  Widget _build(BuildContext context, AppStateDaoReturn appState) {
+    final toggleAll = _accordion.toggleAll;
 
     return MochiScaffold(
-      extendBody: true,
+      // The pages pad themselves, as they do in the home shell.
+      padding: .zero,
       header: MochiHeader(
         alignment: .center,
         variant: .bordered,
         prefixes: [.back(onPress: () => context.pop())],
+        suffixes: [
+          if (toggleAll != null)
+            MochiAction(
+              icon: _accordion.isAllCollapsed ? TablerIcons.chevronsDown : TablerIcons.chevronsUp,
+              label: _accordion.isAllCollapsed
+                  ? context.l10n.algorithmsExpandAll
+                  : context.l10n.algorithmsCollapseAll,
+              onPress: toggleAll,
+            ),
+        ],
         title: MochiButton(
           appearance: .soft,
           scaleOnPress: false,
-          onPress: () => showAlgorithmSetModal(
+          onPress: () => showMochiModal(
             context,
-            currentPuzzle: algorithmSet.puzzle,
-            currentSet: algorithmSet,
-            replaceRoute: true,
+            title: Text(context.l10n.homeSelectPuzzle),
+            body: PuzzleSelectionDialog(
+              showKinds: false,
+              // `replace`, not `go`: this page was pushed over home, and `go` would drop home.
+              onSelect: (puzzle) => context.replace("/algorithms-standalone/${puzzle.id}"),
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 2),
@@ -123,76 +166,254 @@ class AlgorithmSetPage extends StatelessWidget {
                 applyHeightToFirstAscent: false,
                 applyHeightToLastDescent: false,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: .center,
-                spacing: 2,
-                children: [
-                  DefaultTextStyle.merge(
-                    style: context.theme.typography.title.md,
-                    child: Text(algorithmSet.puzzle.displayName(l10n)),
-                  ),
-                  DefaultTextStyle.merge(
-                    style: context.theme.typography.title.sm.copyWith(color: context.colors.mutedForeground),
-                    child: Text(algorithmSet.name),
-                  ),
-                ],
+              child: DefaultTextStyle.merge(
+                style: context.theme.typography.title.md,
+                child: Text(appState.puzzle.displayName(context.l10n)),
               ),
             ),
           ),
         ),
       ),
-      child: Builder(
-        builder: (context) => SingleChildScrollView(
-          padding: MediaQuery.paddingOf(context),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            spacing: 24,
-            children: [
-              for (final (groupName, cases) in groups)
-                Column(
-                  crossAxisAlignment: .stretch,
-                  spacing: 12,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Text(
-                        groupName,
-                        style: context.theme.typography.title.sm.copyWith(
-                          color: context.colors.mutedForeground,
-                        ),
+      child: _AccordionScope(controller: _accordion, child: widget.child),
+    );
+  }
+}
+
+class AlgorithmsGroupPage extends StatefulWidget {
+  final AlgorithmGroups groups;
+  final String puzzleId;
+  final bool standalone;
+
+  const AlgorithmsGroupPage({
+    super.key,
+    required this.groups,
+    required this.puzzleId,
+    required this.standalone,
+  });
+
+  @override
+  State<AlgorithmsGroupPage> createState() => _AlgorithmsGroupPageState();
+}
+
+class _AlgorithmsGroupPageState extends State<AlgorithmsGroupPage> {
+  late Set<int> _accordionExpanded = widget.groups.mapIndexed((i, _) => i).toSet();
+  bool get _isAllCollapsed => _accordionExpanded.isEmpty;
+
+  _AccordionController? _shellAccordion;
+
+  void _expandAll() => _accordionExpanded = widget.groups.mapIndexed((i, _) => i).toSet();
+
+  void _toggleAll() => setState(() => _isAllCollapsed ? _expandAll() : _accordionExpanded.clear());
+
+  // Tells the shell's header the state after this frame, as it cannot be rebuilt during one.
+  void _reportToShell() {
+    if (!widget.standalone) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _shellAccordion?.update(isAllCollapsed: _isAllCollapsed, toggleAll: _toggleAll);
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _shellAccordion = _AccordionScope.maybeOf(context);
+  }
+
+  // The route reuses this State when only the puzzle changes, so the old indexes would point at
+  // other groups.
+  @override
+  void didUpdateWidget(AlgorithmsGroupPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.puzzleId != widget.puzzleId) _expandAll();
+  }
+
+  @override
+  void dispose() {
+    // The next page reports for itself; until then the header has no button to show.
+    final shell = _shellAccordion;
+    if (widget.standalone && shell != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (shell.toggleAll == _toggleAll) shell.update(isAllCollapsed: false, toggleAll: null);
+      });
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final g = context.theme.geometry;
+
+    // CFOP solves cross on D (white) and finishes the last layer on yellow (cubeColorD).
+    final topColor = SettingsProvider.of(context).cubeColorD.toColor();
+
+    _reportToShell();
+
+    final content = SingleChildScrollView(
+      // Standalone, the shell's header sits above this; otherwise the row below does.
+      padding: widget.standalone ? g.pagePadding : g.pagePadding.copyWith(top: 0),
+      child: MochiAccordion(
+        multiple: true,
+        spacing: g.space.lg,
+        contentSpacing: g.space.xs,
+        expanded: .lifted(
+          value: _accordionExpanded,
+          onChanged: (value) {
+            setState(() {
+              _accordionExpanded = value;
+            });
+          },
+        ),
+        items: [
+          for (final group in widget.groups)
+            MochiAccordionItem(
+              title: Text(group.name),
+              child: MochiTileGroup(
+                children: [
+                  for (final set in group.sets)
+                    MochiTile(
+                      prefix: SizedBox(
+                        width: 44,
+                        height: 44,
+                        child: set.cases.first.buildDiagram(topColor: topColor),
                       ),
+                      title: Text(set.name),
+                      subtitle: Text(set.subtitle),
+                      details: Text(l10n.algorithmsCasesCount(set.cases.length)),
+                      suffix: const Icon(TablerIcons.chevronRight),
+                      // Standalone: pushed over the shell (a top-level route); `go` would drop home.
+                      onPress: () => widget.standalone
+                          ? context.push("/algorithms-standalone/${widget.puzzleId}/${set.id}")
+                          : context.go("/algorithms/${widget.puzzleId}/${set.id}"),
                     ),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: .zero,
-                      itemCount: cases.length,
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 112,
-                        mainAxisExtent: 120,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemBuilder: (context, index) {
-                        final item = cases[index];
-                        return _AlgorithmCaseCard(
-                          item: item,
-                          topColor: topColor,
-                          onPress: () => showAlgorithmCaseDetailModal(
-                            context,
-                            algorithmSet: algorithmSet,
-                            item: item,
-                            topColor: topColor,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-            ],
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+
+    if (widget.standalone) return content;
+
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        Padding(
+          padding: .directional(top: g.pagePadding.top, end: g.pagePadding.directional(context).end),
+          child: _Header(
+            isAllCollapsed: _isAllCollapsed,
+            onCollapsedAll: _toggleAll,
+            onExpandedAll: _toggleAll,
           ),
         ),
+        Expanded(child: content),
+      ],
+    );
+  }
+}
+
+/// Card-grid page (`/algorithms/:puzzle/:set`) showing the cases of one [AlgorithmSet], grouped by
+/// category. Each card shows only the diagram and the case name; tapping opens the detail modal.
+class AlgorithmSetPage extends StatefulWidget {
+  final bool standalone;
+  const AlgorithmSetPage({super.key, required this.algorithmSet, this.standalone = true});
+
+  final AlgorithmSet algorithmSet;
+
+  @override
+  State<AlgorithmSetPage> createState() => _AlgorithmSetPageState();
+}
+
+class _AlgorithmSetPageState extends State<AlgorithmSetPage> {
+  late Set<int> _accordionExpanded = widget.algorithmSet.grouped.mapIndexed((i, _) => i).toSet();
+  bool get _isAllCollapsed => _accordionExpanded.isEmpty;
+
+  @override
+  Widget build(BuildContext context) {
+    final g = context.theme.geometry;
+    final topColor = SettingsProvider.of(context).cubeColorD.toColor();
+
+    final content = SingleChildScrollView(
+      padding: g.pagePadding.copyWith(top: 0),
+      child: MochiAccordion(
+        multiple: true,
+        spacing: g.space.lg,
+        contentSpacing: g.space.xs,
+        expanded: .lifted(
+          value: _accordionExpanded,
+          onChanged: (value) {
+            setState(() {
+              _accordionExpanded = value;
+            });
+          },
+        ),
+        items: [
+          for (final (groupName, cases) in widget.algorithmSet.grouped)
+            MochiAccordionItem(
+              title: Text(groupName),
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: .zero,
+                itemCount: cases.length,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 112,
+                  mainAxisExtent: 120,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) {
+                  final item = cases[index];
+                  return _AlgorithmCaseCard(
+                    item: item,
+                    topColor: topColor,
+                    onPress: () => showAlgorithmCaseDetailModal(
+                      context,
+                      algorithmSet: widget.algorithmSet,
+                      item: item,
+                      topColor: topColor,
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+
+    final header = _Header(
+      title: widget.algorithmSet.name,
+      canPop: true,
+      isAllCollapsed: _isAllCollapsed,
+      isBordered: widget.standalone,
+      onCollapsedAll: () {
+        setState(_accordionExpanded.clear);
+      },
+      onExpandedAll: () {
+        setState(() => _accordionExpanded = widget.algorithmSet.grouped.mapIndexed((i, _) => i).toSet());
+      },
+    );
+
+    if (widget.standalone) {
+      return MochiScaffold(header: header, child: content);
+    }
+
+    // A solid fill: the scaffold's background is behind this page and the puzzle page under it, so
+    // without one the page below shows through while this one slides in.
+    return ColoredBox(
+      color: context.colors.background,
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Padding(
+            padding: .directional(top: g.pagePadding.top, end: g.pagePadding.directional(context).end),
+            child: header,
+          ),
+          // The row took the top inset, so the list must not take it a second time.
+          Expanded(child: content),
+        ],
       ),
     );
   }
@@ -228,103 +449,6 @@ class _AlgorithmCaseCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// Modal opened by pressing the header title button on `/algorithms` or `/algorithms/:puzzle/:set`
-/// to switch between puzzles and their algorithm sets.
-Future<void> showAlgorithmSetModal(
-  BuildContext context, {
-  Puzzle? currentPuzzle,
-  AlgorithmSet? currentSet,
-  bool replaceRoute = false,
-}) {
-  return showMochiModal(
-    context,
-    title: Text(context.l10n.algorithmsSelectSet),
-    body: _AlgorithmSetSelector(
-      initialPuzzle: currentPuzzle ?? currentSet?.puzzle ?? .cube3,
-      currentSet: currentSet,
-      replaceRoute: replaceRoute,
-    ),
-  );
-}
-
-class _AlgorithmSetSelector extends StatefulWidget {
-  const _AlgorithmSetSelector({
-    required this.initialPuzzle,
-    required this.currentSet,
-    required this.replaceRoute,
-  });
-
-  final Puzzle initialPuzzle;
-  final AlgorithmSet? currentSet;
-  final bool replaceRoute;
-
-  @override
-  State<_AlgorithmSetSelector> createState() => _AlgorithmSetSelectorState();
-}
-
-class _AlgorithmSetSelectorState extends State<_AlgorithmSetSelector> {
-  late Puzzle _puzzle = widget.initialPuzzle;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final topColor = SettingsProvider.of(context).cubeColorD.toColor();
-    final puzzlesWithSets = [
-      for (final p in Puzzle.values)
-        if (algorithmSetsForPuzzle(p).isNotEmpty) p,
-    ];
-    final sets = algorithmSetsForPuzzle(_puzzle);
-
-    return Column(
-      mainAxisSize: .min,
-      crossAxisAlignment: .stretch,
-      spacing: 16,
-      children: [
-        if (puzzlesWithSets.length > 1)
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final p in puzzlesWithSets)
-                MochiButton(
-                  size: .sm,
-                  intent: p == _puzzle ? .primary : .neutral,
-                  appearance: p == _puzzle ? .soft : .outlined,
-                  onPress: () => setState(() => _puzzle = p),
-                  child: Text(p.displayName(l10n)),
-                ),
-            ],
-          ),
-        MochiTileGroup(
-          children: [
-            for (final set in sets)
-              MochiTile(
-                selected: set.id == widget.currentSet?.id && set.puzzle == widget.currentSet?.puzzle,
-                prefix: SizedBox(
-                  width: 36,
-                  height: 36,
-                  child: set.cases.first.buildDiagram(topColor: topColor),
-                ),
-                title: Text(set.name),
-                subtitle: Text(set.subtitle),
-                details: Text(l10n.algorithmsCasesCount(set.cases.length)),
-                onPress: () {
-                  final path = "/algorithms/${set.puzzle.id}/${set.id}";
-                  Navigator.of(context).pop();
-                  if (widget.replaceRoute) {
-                    context.pushReplacement(path);
-                  } else {
-                    context.push(path);
-                  }
-                },
-              ),
-          ],
-        ),
-      ],
     );
   }
 }

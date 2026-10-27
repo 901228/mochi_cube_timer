@@ -238,5 +238,9 @@
   "algorithmsSelectSet": "Select an algorithm set",
   "algorithmsCasesCount": "{count} cases",
   "@algorithmsCasesCount": {"placeholders": {"count": {"type": "int"}}},
-  "algorithmsCopied": "Algorithm copied"
+  "algorithmsCopied": "Algorithm copied",
+  "algorithmsExpandAll": "Expand all",
+  "algorithmsCollapseAll": "Collapse all",
+  "algorithmsNoSets": "There are no algorithm sets for {puzzle}",
+  "@algorithmsNoSets": {"placeholders": {"puzzle": {"type": "String"}}}
 }

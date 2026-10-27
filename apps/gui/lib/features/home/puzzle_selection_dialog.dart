@@ -10,7 +10,11 @@ import "../../shared/puzzles/puzzle_utils.dart";
 enum _Kind { puzzles, algorithms }
 
 class PuzzleSelectionDialog extends StatefulWidget {
-  const PuzzleSelectionDialog({super.key});
+  final void Function(Puzzle puzzle)? onSelect;
+
+  /// Whether the puzzles / algorithms switch is shown; off, only the puzzles are.
+  final bool showKinds;
+  const PuzzleSelectionDialog({super.key, this.onSelect, this.showKinds = true});
 
   @override
   State<PuzzleSelectionDialog> createState() => _PuzzleSelectionDialogState();
@@ -22,11 +26,15 @@ class _PuzzleSelectionDialogState extends State<PuzzleSelectionDialog> {
   void _select(BuildContext context, Puzzle puzzle) {
     context.read<AppDatabase>().appStateDao.setPuzzle(puzzle);
     Navigator.of(context).pop();
+
+    widget.onSelect?.call(puzzle);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+
+    if (!widget.showKinds) return _puzzles();
 
     return Column(
       mainAxisSize: .min,

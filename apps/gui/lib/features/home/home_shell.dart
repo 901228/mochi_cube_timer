@@ -64,8 +64,7 @@ class _HomeShellState extends State<HomeShell> {
           null => null,
         },
         // Under the status bar, which the overlay has to clear by itself with `extendBody`.
-        padding: EdgeInsets.all(context.theme.geometry.space.xs)
-            .copyWith(top: MediaQuery.paddingOf(context).top + context.theme.geometry.space.xs),
+        padding: EdgeInsets.all(g.space.xs).copyWith(top: MediaQuery.paddingOf(context).top + g.space.xs),
         child: MochiCard(
           appearance: .elevated,
           elevation: .lg,
@@ -201,6 +200,8 @@ class _HomeShellState extends State<HomeShell> {
     },
   );
 
+  MochiGeometry get g => context.theme.geometry;
+
   /// The pages, the algorithms and the settings, beside the content or, given [close], in the drawer it
   /// shuts before going anywhere.
   Widget _sidebar(BuildContext context, {VoidCallback? close}) {
@@ -229,11 +230,13 @@ class _HomeShellState extends State<HomeShell> {
           ),
         ),
 
-        MochiDivider(),
+        MochiDivider(gap: g.space.xs2, indent: g.space.xs),
+
         MochiSidebarItem(
           icon: Icon(TablerIcons.cubeSpark),
           label: Text(context.l10n.algorithmsTitle),
-          onPress: then(() => context.pushNamed("algorithms")),
+          selected: widget.navigationShell.currentIndex == 3,
+          onPress: then(() => widget.navigationShell.goBranch(3)),
         ),
       ],
     );
@@ -276,7 +279,13 @@ class _HomeShellState extends State<HomeShell> {
                 onPress: () => showMochiModal(
                   context,
                   title: Text(context.l10n.homeSelectPuzzle),
-                  body: PuzzleSelectionDialog(),
+                  body: PuzzleSelectionDialog(
+                    onSelect: (puzzle) {
+                      if (widget.navigationShell.currentIndex == 3) {
+                        context.go("/algorithms/${puzzle.id}");
+                      }
+                    },
+                  ),
                 ),
                 child: data == null
                     ? const Center(child: MochiCircularProgress())
@@ -308,7 +317,8 @@ class _HomeShellState extends State<HomeShell> {
                       ),
               ),
               suffixes: [
-                if (widget.pages[widget.navigationShell.currentIndex].id != "timer")
+                if (widget.pages.length > widget.navigationShell.currentIndex &&
+                    widget.pages[widget.navigationShell.currentIndex].id != "timer")
                   MochiAction(
                     icon: (data?.appState.showArchived ?? false)
                         ? TablerIcons.archiveFilled
@@ -377,12 +387,15 @@ class _HomeShellState extends State<HomeShell> {
                           selected: true,
                           onPress: MochiScaffold.of(context).closeDrawer,
                         ),
+
+                        MochiDivider(gap: g.space.xs2, indent: g.space.xs),
+
                         MochiSidebarItem(
                           icon: Icon(TablerIcons.cubeSpark),
                           label: Text(context.l10n.algorithmsTitle),
                           onPress: () {
                             MochiScaffold.of(context).closeDrawer();
-                            context.pushNamed("algorithms");
+                            context.pushNamed("algorithms-standalone");
                           },
                         ),
                       ],

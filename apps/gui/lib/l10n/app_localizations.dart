@@ -1393,6 +1393,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Algorithm copied'**
   String get algorithmsCopied;
+
+  /// No description provided for @algorithmsExpandAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand all'**
+  String get algorithmsExpandAll;
+
+  /// No description provided for @algorithmsCollapseAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse all'**
+  String get algorithmsCollapseAll;
+
+  /// No description provided for @algorithmsNoSets.
+  ///
+  /// In en, this message translates to:
+  /// **'There are no algorithm sets for {puzzle}'**
+  String algorithmsNoSets(String puzzle);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

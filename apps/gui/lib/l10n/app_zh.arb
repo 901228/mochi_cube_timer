@@ -238,5 +238,9 @@
   "algorithmsSelectSet": "選擇公式集",
   "algorithmsCasesCount": "{count} 種情況",
   "@algorithmsCasesCount": {"placeholders": {"count": {"type": "int"}}},
-  "algorithmsCopied": "已複製公式"
+  "algorithmsCopied": "已複製公式",
+  "algorithmsExpandAll": "全部展開",
+  "algorithmsCollapseAll": "全部收合",
+  "algorithmsNoSets": "{puzzle} 目前沒有公式集",
+  "@algorithmsNoSets": {"placeholders": {"puzzle": {"type": "String"}}}
 }
