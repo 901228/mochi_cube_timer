@@ -1,6 +1,8 @@
 import "package:cube_timer/cube_timer.dart";
 
 import "algorithm_data/common.dart";
+import "algorithm_data/fto_l3c.dart";
+import "algorithm_data/fto_l6x.dart";
 import "algorithm_data/oll.dart";
 import "algorithm_data/pll.dart";
 
@@ -33,6 +35,28 @@ final AlgorithmSets algorithmSets = {
           subtitle: "Orientation of the Last Layer",
           puzzle: .cube3,
           cases: ollCases,
+        ),
+      ],
+    ),
+  ],
+  Puzzle.fto.id: [
+    AlgorithmGroup(
+      id: "nautilus",
+      name: "Nautilus",
+      sets: [
+        AlgorithmSet(
+          id: "l6x",
+          name: "L6X",
+          subtitle: "Last Six Triangles",
+          puzzle: .fto,
+          cases: ftoL6xCases,
+        ),
+        AlgorithmSet(
+          id: "l3c",
+          name: "L3C",
+          subtitle: "Last Three Corners",
+          puzzle: .fto,
+          cases: ftoL3cCases,
         ),
       ],
     ),

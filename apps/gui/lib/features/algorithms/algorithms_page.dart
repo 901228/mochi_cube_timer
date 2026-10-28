@@ -475,6 +475,12 @@ Future<void> showAlgorithmCaseDetailModal(
         Center(
           child: SizedBox(width: 140, height: 140, child: item.buildDiagram(topColor: topColor)),
         ),
+        if (item.description case final description?)
+          Text(
+            description,
+            textAlign: .center,
+            style: context.theme.typography.body.md.copyWith(color: context.colors.mutedForeground),
+          ),
         MochiTileGroup(
           label: Text(context.l10n.algorithmsTitle),
           children: [

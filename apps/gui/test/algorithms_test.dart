@@ -3,6 +3,8 @@ import "package:drift/native.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mochi_cube_timer_gui/database/dao_provider.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data.dart";
+import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data/oll.dart";
+import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data/pll.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/algorithms_page.dart";
 import "package:mochi_cube_timer_gui/l10n/l10n.dart";
 import "package:mochi_ui/mochi_ui.dart";
@@ -30,6 +32,30 @@ void main() {
     }
   });
 
+  test("FTO L6X has 35 distinct cases, each with three stickers of every face and an algorithm", () {
+    final cases = algorithmSets.findSet("fto", setId: "l6x")!.cases;
+    expect(cases, hasLength(35));
+
+    final seen = <String>{};
+    for (final c in cases) {
+      final stickers = c.ftoStickers!;
+      expect(stickers.split("")..sort(), "ggglllooo".split("")..sort(), reason: c.name);
+      expect(seen.add(stickers), isTrue, reason: "${c.name} repeats another case's stickers");
+      expect(c.algorithms, isNotEmpty, reason: c.name);
+    }
+  });
+
+  test("FTO L3C has its 5 cases with every sticker known, and shares the Nautilus group with L6X", () {
+    final cases = algorithmSets.findSet("fto", setId: "l3c")!.cases;
+    expect(cases, hasLength(5));
+    expect(algorithmSets["fto"], hasLength(1));
+    expect(algorithmSets["fto"]!.single.sets.map((s) => s.id), ["l6x", "l3c"]);
+    for (final c in cases) {
+      expect(c.ftoStickers, matches(r"^[yoglrbp]{21}$"), reason: c.name);
+      expect(c.algorithms, isNotEmpty, reason: c.name);
+    }
+  });
+
   testWidgets("tapping a case card opens the detail modal with its algorithms", (tester) async {
     final db = AppDatabase(NativeDatabase.memory());
     addTearDown(() => tester.runAsync(db.close));
@@ -42,7 +68,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           locale: const Locale("en"),
-          home: AlgorithmSetPage(algorithmSet: findAlgorithmSet("333", "pll")!),
+          home: AlgorithmSetPage(algorithmSet: algorithmSets.findSet("333", setId: "pll")!),
         ),
       ),
     );

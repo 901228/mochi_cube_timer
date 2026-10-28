@@ -1,6 +1,7 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 
+import "../fto_painter.dart";
 import "../ll_painter.dart";
 
 /// A single algorithm case (e.g. "OLL 1", "Ua") with its diagram and multiple algorithms.
@@ -11,19 +12,27 @@ class AlgorithmCase {
     required this.name,
     required this.group,
     required this.algorithms,
+    this.description,
     this.ollMask,
     this.pllArrows,
+    this.ftoStickers,
   });
 
   final String id;
   final String name;
   final String group;
 
+  /// What the case is, when its name only numbers it.
+  final String? description;
+
   /// One or more algorithms for this case; the first one is the primary algorithm.
   final List<String> algorithms;
 
   final int? ollMask;
   final List<PllArrow>? pllArrows;
+
+  /// The stickers of an FTO last-layer case, as [FtoCaseDiagram] reads them.
+  final String? ftoStickers;
 
   Widget buildDiagram({required Color topColor, double arrowStrokeWidth = 12.0}) {
     if (ollMask case final mask?) {
@@ -36,6 +45,7 @@ class AlgorithmCase {
         painter: PllCasePainter(arrows: arrows, topColor: topColor, strokeWidth: arrowStrokeWidth),
       );
     }
+    if (ftoStickers case final stickers?) return FtoCaseDiagram(stickers: stickers);
     return const SizedBox.shrink();
   }
 }
