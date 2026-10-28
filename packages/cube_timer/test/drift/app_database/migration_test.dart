@@ -502,7 +502,8 @@ void main() {
             "megaminxColorD": DefaultColors.megaminxColors.d.value,
             "megaminxColorDR": DefaultColors.megaminxColors.dr.value,
             "megaminxColorDBR": DefaultColors.megaminxColors.dbr.value,
-            "megaminxColorB": DefaultColors.megaminxColors.b.value,
+            // The v8 default, lime: the schema is frozen at v8, and lime is gone from the presets.
+            "megaminxColorB": 0xFF77EE00,
             "megaminxColorDBL": DefaultColors.megaminxColors.dbl.value,
             "megaminxColorDL": DefaultColors.megaminxColors.dl.value,
           },
@@ -568,7 +569,8 @@ void main() {
             ...old.toJson(),
             "ftoColorU": DefaultColors.ftoColors.u.value,
             "ftoColorR": DefaultColors.ftoColors.r.value,
-            "ftoColorF": DefaultColors.ftoColors.f.value,
+            // The v9 default, lime: the schema is frozen at v9, and today's default is green.
+            "ftoColorF": 0xFF77EE00,
             "ftoColorL": DefaultColors.ftoColors.l.value,
             "ftoColorB": DefaultColors.ftoColors.b.value,
             "ftoColorBL": DefaultColors.ftoColors.bl.value,

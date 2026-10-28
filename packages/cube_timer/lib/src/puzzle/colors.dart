@@ -6,7 +6,6 @@ enum DefaultColorsPreset {
   green(0xFF00FF7F),
   blue(0xFF1E90FF),
   black(0xFF000000),
-  lime(0xFF77EE00),
   purple(0xFFB020C8),
   grey(0xFF999999),
   darkGreen(0xFF006600),
@@ -49,7 +48,7 @@ class DefaultColors {
     d: DefaultColorsPreset.grey,
     dr: DefaultColorsPreset.lightYellow,
     dbr: DefaultColorsPreset.pink,
-    b: DefaultColorsPreset.lime,
+    b: DefaultColorsPreset.green,
     dbl: DefaultColorsPreset.orange,
     dl: DefaultColorsPreset.lightBlue,
   );
@@ -57,7 +56,7 @@ class DefaultColors {
   static const ftoColors = (
     u: DefaultColorsPreset.white,
     r: DefaultColorsPreset.red,
-    f: DefaultColorsPreset.lime,
+    f: DefaultColorsPreset.green,
     l: DefaultColorsPreset.purple,
     b: DefaultColorsPreset.blue,
     bl: DefaultColorsPreset.orange,
