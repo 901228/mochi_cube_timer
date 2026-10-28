@@ -203,8 +203,9 @@ class _HomeShellState extends State<HomeShell> {
   MochiGeometry get g => context.theme.geometry;
 
   /// The pages, the algorithms and the settings, beside the content or, given [close], in the drawer it
-  /// shuts before going anywhere.
-  Widget _sidebar(BuildContext context, {VoidCallback? close}) {
+  /// shuts before going anywhere. The algorithms open on [puzzle], which is not known until the app
+  /// state has arrived.
+  Widget _sidebar(BuildContext context, {required Puzzle? puzzle, VoidCallback? close}) {
     VoidCallback then(VoidCallback go) => () {
       close?.call();
       go();
@@ -236,7 +237,8 @@ class _HomeShellState extends State<HomeShell> {
           icon: Icon(TablerIcons.cubeSpark),
           label: Text(context.l10n.algorithmsTitle),
           selected: widget.navigationShell.currentIndex == 3,
-          onPress: then(() => widget.navigationShell.goBranch(3)),
+          // Not `goBranch`: a branch comes back to where it was left, which may be another puzzle's.
+          onPress: puzzle == null ? null : then(() => context.go("/algorithms/${puzzle.id}")),
         ),
       ],
     );
@@ -362,11 +364,15 @@ class _HomeShellState extends State<HomeShell> {
             safeArea: true,
             // A phone on its side has no room for the bar along the bottom or a sidebar beside the timer:
             // the menu button pulls out what the sidebar holds instead.
-            sidebar: sideways ? null : _sidebar(context),
+            sidebar: sideways ? null : _sidebar(context, puzzle: data?.appState.puzzle),
             // Under the scaffold, for MochiScaffold.of: the drawer is not a route to pop.
             drawer: Builder(
               builder: (context) => sideways
-                  ? _sidebar(context, close: MochiScaffold.of(context).closeDrawer)
+                  ? _sidebar(
+                      context,
+                      puzzle: data?.appState.puzzle,
+                      close: MochiScaffold.of(context).closeDrawer,
+                    )
                   : MochiSidebar(
                       size: .lg,
                       footer: [
@@ -393,10 +399,12 @@ class _HomeShellState extends State<HomeShell> {
                         MochiSidebarItem(
                           icon: Icon(TablerIcons.cubeSpark),
                           label: Text(context.l10n.algorithmsTitle),
-                          onPress: () {
-                            MochiScaffold.of(context).closeDrawer();
-                            context.pushNamed("algorithms-standalone");
-                          },
+                          onPress: data == null
+                              ? null
+                              : () {
+                                  MochiScaffold.of(context).closeDrawer();
+                                  context.push("/algorithms-standalone/${data.appState.puzzle.id}");
+                                },
                         ),
                       ],
                     ),
