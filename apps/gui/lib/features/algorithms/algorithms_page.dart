@@ -13,57 +13,55 @@ import "../home/puzzle_selection_dialog.dart";
 import "algorithm_data/common.dart";
 
 class _Header extends StatelessWidget {
-  final String? title;
-  final bool canPop;
+  final String title;
   final bool isAllCollapsed;
-  final bool isBordered;
-  final VoidCallback? onCollapsedAll;
-  final VoidCallback? onExpandedAll;
+  final VoidCallback onToggleAll;
 
-  const _Header({
-    this.title,
-    this.canPop = false,
-    required this.isAllCollapsed,
-    this.isBordered = false,
-    this.onCollapsedAll,
-    this.onExpandedAll,
-  });
+  const _Header({required this.title, required this.isAllCollapsed, required this.onToggleAll});
 
   @override
   Widget build(BuildContext context) {
     return MochiHeader(
-      variant: isBordered ? .bordered : .plain,
-      title: title != null ? Text(title!) : Container(),
-      prefixes: [if (canPop) .back(onPress: () => context.pop())],
-      suffixes: [
-        MochiAction(
-          icon: isAllCollapsed ? TablerIcons.chevronsDown : TablerIcons.chevronsUp,
-          label: isAllCollapsed ? context.l10n.algorithmsExpandAll : context.l10n.algorithmsCollapseAll,
-          onPress: () {
-            if (isAllCollapsed) {
-              onExpandedAll?.call();
-            } else {
-              onCollapsedAll?.call();
-            }
-          },
-        ),
-      ],
+      variant: .bordered,
+      title: Text(title),
+      prefixes: [.back(onPress: () => context.pop())],
+      suffixes: [algorithmsToggleAllAction(context, isAllCollapsed: isAllCollapsed, onPress: onToggleAll)],
     );
   }
 }
 
-/// What the page under [AlgorithmsStandaloneShell] tells the shell's header about its accordion,
-/// so the header can show the expand / collapse all button. Empty while no page has one.
-class _AccordionController extends ChangeNotifier {
-  bool _disposed = false;
-  bool isAllCollapsed = false;
-  VoidCallback? toggleAll;
+/// The expand / collapse all button, for this page's headers and [HomeShell]'s.
+MochiAction algorithmsToggleAllAction(
+  BuildContext context, {
+  required bool isAllCollapsed,
+  required VoidCallback onPress,
+}) => MochiAction(
+  icon: isAllCollapsed ? TablerIcons.chevronsDown : TablerIcons.chevronsUp,
+  label: isAllCollapsed ? context.l10n.algorithmsExpandAll : context.l10n.algorithmsCollapseAll,
+  onPress: onPress,
+);
 
-  void update({required bool isAllCollapsed, required VoidCallback? toggleAll}) {
-    if (_disposed || (this.isAllCollapsed == isAllCollapsed && this.toggleAll == toggleAll)) return;
-    this.isAllCollapsed = isAllCollapsed;
-    this.toggleAll = toggleAll;
+/// What a page tells the header above it: its accordion, and the set it shows if it is one.
+typedef AlgorithmsHeaderReport = ({bool isAllCollapsed, VoidCallback toggleAll, String? setName});
+
+/// What the pages tell the header above them ([AlgorithmsStandaloneShell]'s or [HomeShell]'s), so it
+/// can show the expand / collapse all button and the set. A page can sit under another, as a set
+/// page does under its puzzle's, so the header shows the one reported last.
+class AlgorithmsHeaderController extends ChangeNotifier {
+  bool _disposed = false;
+  final _reports = <Object, AlgorithmsHeaderReport>{};
+
+  /// Empty while no page has anything to show.
+  AlgorithmsHeaderReport? get current => _reports.values.lastOrNull;
+
+  void report(Object owner, AlgorithmsHeaderReport report) {
+    if (_disposed || _reports[owner] == report) return;
+    _reports[owner] = report;
     notifyListeners();
+  }
+
+  void clear(Object owner) {
+    if (!_disposed && _reports.remove(owner) != null) notifyListeners();
   }
 
   @override
@@ -73,17 +71,47 @@ class _AccordionController extends ChangeNotifier {
   }
 }
 
-class _AccordionScope extends InheritedWidget {
-  const _AccordionScope({required this.controller, required super.child});
+class AlgorithmsHeaderScope extends InheritedWidget {
+  const AlgorithmsHeaderScope({super.key, required this.controller, required super.child});
 
-  final _AccordionController controller;
+  final AlgorithmsHeaderController controller;
 
   /// Not a dependency: the page only reports to it.
-  static _AccordionController? maybeOf(BuildContext context) =>
-      context.getInheritedWidgetOfExactType<_AccordionScope>()?.controller;
+  static AlgorithmsHeaderController? maybeOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<AlgorithmsHeaderScope>()?.controller;
 
   @override
-  bool updateShouldNotify(_AccordionScope oldWidget) => controller != oldWidget.controller;
+  bool updateShouldNotify(AlgorithmsHeaderScope oldWidget) => controller != oldWidget.controller;
+}
+
+/// For a page to report to the [AlgorithmsHeaderController] above it, if there is one.
+mixin _ReportsToHeader<T extends StatefulWidget> on State<T> {
+  AlgorithmsHeaderController? _header;
+
+  bool get _isAllCollapsed;
+  void _toggleAll();
+  String? get _setName => null;
+
+  // After this frame, as the header cannot be rebuilt during one.
+  void reportToHeader() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _header?.report(this, (isAllCollapsed: _isAllCollapsed, toggleAll: _toggleAll, setName: _setName));
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _header = AlgorithmsHeaderScope.maybeOf(context);
+  }
+
+  @override
+  void dispose() {
+    final header = _header;
+    if (header != null) WidgetsBinding.instance.addPostFrameCallback((_) => header.clear(this));
+    super.dispose();
+  }
 }
 
 /// The standalone algorithms page's frame: a header that stays while the puzzle pages under it
@@ -98,7 +126,7 @@ class AlgorithmsStandaloneShell extends StatefulWidget {
 }
 
 class _AlgorithmsStandaloneShellState extends State<AlgorithmsStandaloneShell> {
-  final _accordion = _AccordionController();
+  final _accordion = AlgorithmsHeaderController();
 
   @override
   void dispose() {
@@ -128,7 +156,7 @@ class _AlgorithmsStandaloneShellState extends State<AlgorithmsStandaloneShell> {
   }
 
   Widget _build(BuildContext context, AppStateDaoReturn appState) {
-    final toggleAll = _accordion.toggleAll;
+    final report = _accordion.current;
 
     return MochiScaffold(
       // The pages pad themselves, as they do in the home shell.
@@ -138,13 +166,11 @@ class _AlgorithmsStandaloneShellState extends State<AlgorithmsStandaloneShell> {
         variant: .bordered,
         prefixes: [.back(onPress: () => context.pop())],
         suffixes: [
-          if (toggleAll != null)
-            MochiAction(
-              icon: _accordion.isAllCollapsed ? TablerIcons.chevronsDown : TablerIcons.chevronsUp,
-              label: _accordion.isAllCollapsed
-                  ? context.l10n.algorithmsExpandAll
-                  : context.l10n.algorithmsCollapseAll,
-              onPress: toggleAll,
+          if (report != null)
+            algorithmsToggleAllAction(
+              context,
+              isAllCollapsed: report.isAllCollapsed,
+              onPress: report.toggleAll,
             ),
         ],
         title: MochiButton(
@@ -174,7 +200,7 @@ class _AlgorithmsStandaloneShellState extends State<AlgorithmsStandaloneShell> {
           ),
         ),
       ),
-      child: _AccordionScope(controller: _accordion, child: widget.child),
+      child: AlgorithmsHeaderScope(controller: _accordion, child: widget.child),
     );
   }
 }
@@ -195,31 +221,16 @@ class AlgorithmsGroupPage extends StatefulWidget {
   State<AlgorithmsGroupPage> createState() => _AlgorithmsGroupPageState();
 }
 
-class _AlgorithmsGroupPageState extends State<AlgorithmsGroupPage> {
+class _AlgorithmsGroupPageState extends State<AlgorithmsGroupPage>
+    with _ReportsToHeader<AlgorithmsGroupPage> {
   late Set<int> _accordionExpanded = widget.groups.mapIndexed((i, _) => i).toSet();
+  @override
   bool get _isAllCollapsed => _accordionExpanded.isEmpty;
-
-  _AccordionController? _shellAccordion;
 
   void _expandAll() => _accordionExpanded = widget.groups.mapIndexed((i, _) => i).toSet();
 
-  void _toggleAll() => setState(() => _isAllCollapsed ? _expandAll() : _accordionExpanded.clear());
-
-  // Tells the shell's header the state after this frame, as it cannot be rebuilt during one.
-  void _reportToShell() {
-    if (!widget.standalone) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _shellAccordion?.update(isAllCollapsed: _isAllCollapsed, toggleAll: _toggleAll);
-      }
-    });
-  }
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _shellAccordion = _AccordionScope.maybeOf(context);
-  }
+  void _toggleAll() => setState(() => _isAllCollapsed ? _expandAll() : _accordionExpanded.clear());
 
   // The route reuses this State when only the puzzle changes, so the old indexes would point at
   // other groups.
@@ -230,18 +241,6 @@ class _AlgorithmsGroupPageState extends State<AlgorithmsGroupPage> {
   }
 
   @override
-  void dispose() {
-    // The next page reports for itself; until then the header has no button to show.
-    final shell = _shellAccordion;
-    if (widget.standalone && shell != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (shell.toggleAll == _toggleAll) shell.update(isAllCollapsed: false, toggleAll: null);
-      });
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final g = context.theme.geometry;
@@ -249,67 +248,52 @@ class _AlgorithmsGroupPageState extends State<AlgorithmsGroupPage> {
     // CFOP solves cross on D (white) and finishes the last layer on yellow (cubeColorD).
     final topColor = SettingsProvider.of(context).cubeColorD.toColor();
 
-    _reportToShell();
+    reportToHeader();
 
-    final content = SingleChildScrollView(
-      // Standalone, the shell's header sits above this; otherwise the row below does.
-      padding: widget.standalone ? g.pagePadding : g.pagePadding.copyWith(top: 0),
-      child: MochiAccordion(
-        multiple: true,
-        spacing: g.space.lg,
-        contentSpacing: g.space.xs,
-        expanded: .lifted(
-          value: _accordionExpanded,
-          onChanged: (value) {
-            setState(() {
-              _accordionExpanded = value;
-            });
-          },
-        ),
-        items: [
-          for (final group in widget.groups)
-            MochiAccordionItem(
-              title: Text(group.name),
-              child: MochiTileGroup(
-                children: [
-                  for (final set in group.sets)
-                    MochiTile(
-                      prefix: SizedBox(
-                        width: 44,
-                        height: 44,
-                        child: set.cases.first.buildDiagram(topColor: topColor),
-                      ),
-                      title: Text(set.name),
-                      subtitle: Text(set.subtitle),
-                      details: Text(l10n.algorithmsCasesCount(set.cases.length)),
-                      suffix: const Icon(TablerIcons.chevronRight),
-                      // Standalone: pushed over the shell (a top-level route); `go` would drop home.
-                      onPress: () => widget.standalone
-                          ? context.push("/algorithms-standalone/${widget.puzzleId}/${set.id}")
-                          : context.go("/algorithms/${widget.puzzleId}/${set.id}"),
-                    ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-
-    if (widget.standalone) return content;
-
-    return Column(
-      crossAxisAlignment: .stretch,
-      children: [
-        Padding(
-          padding: .directional(top: g.pagePadding.top, end: g.pagePadding.directional(context).end),
-          child: _Header(
-            isAllCollapsed: _isAllCollapsed,
-            onCollapsedAll: _toggleAll,
-            onExpandedAll: _toggleAll,
+    return Padding(
+      padding: MediaQuery.paddingOf(context),
+      child: SingleChildScrollView(
+        padding: g.pagePadding,
+        child: MochiAccordion(
+          multiple: true,
+          spacing: g.space.lg,
+          contentSpacing: g.space.xs,
+          expanded: .lifted(
+            value: _accordionExpanded,
+            onChanged: (value) {
+              setState(() {
+                _accordionExpanded = value;
+              });
+            },
           ),
+          items: [
+            for (final group in widget.groups)
+              MochiAccordionItem(
+                title: Text(group.name),
+                child: MochiTileGroup(
+                  children: [
+                    for (final set in group.sets)
+                      MochiTile(
+                        prefix: SizedBox(
+                          width: 44,
+                          height: 44,
+                          child: set.cases.first.buildDiagram(topColor: topColor),
+                        ),
+                        title: Text(set.name),
+                        subtitle: Text(set.subtitle),
+                        details: Text(l10n.algorithmsCasesCount(set.cases.length)),
+                        suffix: const Icon(TablerIcons.chevronRight),
+                        // Standalone: pushed over the shell (a top-level route); `go` would drop home.
+                        onPress: () => widget.standalone
+                            ? context.push("/algorithms-standalone/${widget.puzzleId}/${set.id}")
+                            : context.go("/algorithms/${widget.puzzleId}/${set.id}"),
+                      ),
+                  ],
+                ),
+              ),
+          ],
         ),
-        Expanded(child: content),
-      ],
+      ),
     );
   }
 }
@@ -326,17 +310,30 @@ class AlgorithmSetPage extends StatefulWidget {
   State<AlgorithmSetPage> createState() => _AlgorithmSetPageState();
 }
 
-class _AlgorithmSetPageState extends State<AlgorithmSetPage> {
+class _AlgorithmSetPageState extends State<AlgorithmSetPage> with _ReportsToHeader<AlgorithmSetPage> {
   late Set<int> _accordionExpanded = widget.algorithmSet.grouped.mapIndexed((i, _) => i).toSet();
+
+  @override
   bool get _isAllCollapsed => _accordionExpanded.isEmpty;
+
+  @override
+  String? get _setName => widget.algorithmSet.name;
+
+  @override
+  void _toggleAll() => setState(() {
+    _accordionExpanded = _isAllCollapsed ? widget.algorithmSet.grouped.mapIndexed((i, _) => i).toSet() : {};
+  });
 
   @override
   Widget build(BuildContext context) {
     final g = context.theme.geometry;
     final topColor = SettingsProvider.of(context).cubeColorD.toColor();
 
+    reportToHeader();
+
     final content = SingleChildScrollView(
-      padding: g.pagePadding.copyWith(top: 0),
+      // Standalone, the header above is this page's own; otherwise it is the home shell's.
+      padding: widget.standalone ? g.pagePadding.copyWith(top: 0) : g.pagePadding,
       child: MochiAccordion(
         multiple: true,
         spacing: g.space.lg,
@@ -383,38 +380,23 @@ class _AlgorithmSetPageState extends State<AlgorithmSetPage> {
       ),
     );
 
-    final header = _Header(
-      title: widget.algorithmSet.name,
-      canPop: true,
-      isAllCollapsed: _isAllCollapsed,
-      isBordered: widget.standalone,
-      onCollapsedAll: () {
-        setState(_accordionExpanded.clear);
-      },
-      onExpandedAll: () {
-        setState(() => _accordionExpanded = widget.algorithmSet.grouped.mapIndexed((i, _) => i).toSet());
-      },
-    );
-
     if (widget.standalone) {
-      return MochiScaffold(header: header, child: content);
+      return MochiScaffold(
+        header: _Header(
+          title: widget.algorithmSet.name,
+          isAllCollapsed: _isAllCollapsed,
+          onToggleAll: _toggleAll,
+        ),
+        child: content,
+      );
     }
 
     // A solid fill: the scaffold's background is behind this page and the puzzle page under it, so
     // without one the page below shows through while this one slides in.
-    return ColoredBox(
+    return Container(
       color: context.colors.background,
-      child: Column(
-        crossAxisAlignment: .stretch,
-        children: [
-          Padding(
-            padding: .directional(top: g.pagePadding.top, end: g.pagePadding.directional(context).end),
-            child: header,
-          ),
-          // The row took the top inset, so the list must not take it a second time.
-          Expanded(child: content),
-        ],
-      ),
+      padding: MediaQuery.paddingOf(context),
+      child: content,
     );
   }
 }

@@ -11,6 +11,7 @@ import "../../l10n/l10n.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/puzzles/puzzle_utils.dart";
 import "../../shared/utils.dart";
+import "../algorithms/algorithms_page.dart";
 import "../records/record_search_bar.dart";
 import "../records/records_list.dart";
 import "../timer/scramble_cubit.dart";
@@ -31,6 +32,7 @@ class _HomeShellState extends State<HomeShell> {
   late final _recordSelectionCubit = RecordSelectionCubit();
   late final _timerFocusCubit = TimerFocusCubit();
   late final _searchBarBottomCubit = SearchBarBottomCubit();
+  final _algorithmsHeader = AlgorithmsHeaderController();
 
   @override
   void didUpdateWidget(HomeShell oldWidget) {
@@ -45,6 +47,7 @@ class _HomeShellState extends State<HomeShell> {
     _recordSelectionCubit.close();
     _timerFocusCubit.close();
     _searchBarBottomCubit.close();
+    _algorithmsHeader.dispose();
     super.dispose();
   }
 
@@ -268,162 +271,214 @@ class _HomeShellState extends State<HomeShell> {
 
           final data = snapshot.data;
           final sideways = isSideways(context);
-          return MochiScaffold(
-            extendBody: true,
-            immersive: context.watch<TimerFocusCubit>().state,
-            padding: .zero,
-            header: MochiHeader(
-              alignment: .center,
-              variant: .bordered,
-              title: MochiButton(
-                appearance: .soft,
-                scaleOnPress: false,
-                onPress: () => showMochiModal(
-                  context,
-                  title: Text(context.l10n.homeSelectPuzzle),
-                  body: PuzzleSelectionDialog(
-                    onSelect: (puzzle) {
-                      if (widget.navigationShell.currentIndex == 3) {
-                        context.go("/algorithms/${puzzle.id}");
-                      }
-                    },
+          return ListenableBuilder(
+            listenable: _algorithmsHeader,
+            builder: (context, _) {
+              final algorithms = widget.navigationShell.currentIndex == 3 ? _algorithmsHeader.current : null;
+              return MochiScaffold(
+                extendBody: true,
+                immersive: context.watch<TimerFocusCubit>().state,
+                padding: .zero,
+                header: MochiHeader(
+                  alignment: .center,
+                  variant: .bordered,
+                  prefixes: [if (algorithms?.setName != null) .back(onPress: () => context.pop())],
+                  title: _titleWithSet(
+                    context,
+                    algorithms?.setName,
+                    MochiButton(
+                      appearance: .soft,
+                      scaleOnPress: false,
+                      onPress: () => showMochiModal(
+                        context,
+                        title: Text(context.l10n.homeSelectPuzzle),
+                        body: PuzzleSelectionDialog(
+                          // TODO: enable algorithm list, them click the algorithm and go to the corresponding page
+                          showKinds: widget.navigationShell.currentIndex != 3,
+                          onSelect: (puzzle) {
+                            if (widget.navigationShell.currentIndex == 3) {
+                              context.go("/algorithms/${puzzle.id}");
+                            }
+                          },
+                        ),
+                      ),
+                      child: data == null
+                          ? const Center(child: MochiCircularProgress())
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              child: DefaultTextHeightBehavior(
+                                textHeightBehavior: const TextHeightBehavior(
+                                  applyHeightToFirstAscent: false,
+                                  applyHeightToLastDescent: false,
+                                ),
+                                child: algorithms == null
+                                    ? Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment: .center,
+                                        spacing: 2,
+                                        children: [
+                                          DefaultTextStyle.merge(
+                                            style: context.theme.typography.title.md,
+                                            child: Text(data.appState.puzzle.displayName(context.l10n)),
+                                          ),
+                                          DefaultTextStyle.merge(
+                                            style: context.theme.typography.title.sm.copyWith(
+                                              color: context.colors.mutedForeground,
+                                            ),
+                                            child: Text(data.appState.session.name),
+                                          ),
+                                        ],
+                                      )
+                                    : DefaultTextStyle.merge(
+                                        style: context.theme.typography.title.md,
+                                        child: Text(data.appState.puzzle.displayName(context.l10n)),
+                                      ),
+                              ),
+                            ),
+                    ),
                   ),
+                  suffixes: [
+                    if (algorithms != null)
+                      algorithmsToggleAllAction(
+                        context,
+                        isAllCollapsed: algorithms.isAllCollapsed,
+                        onPress: algorithms.toggleAll,
+                      ),
+                    if (widget.navigationShell.currentIndex != 3 &&
+                        widget.pages.length > widget.navigationShell.currentIndex &&
+                        widget.pages[widget.navigationShell.currentIndex].id != "timer")
+                      MochiAction(
+                        icon: (data?.appState.showArchived ?? false)
+                            ? TablerIcons.archiveFilled
+                            : TablerIcons.archive,
+                        enabled: data != null,
+                        selected: data?.appState.showArchived ?? false,
+                        label: context.l10n.homeShowArchived,
+                        onPress: data == null
+                            ? null
+                            : () => context.read<AppDatabase>().appStateDao.setShowArchived(
+                                !data.appState.showArchived,
+                              ),
+                      ),
+                    if (widget.navigationShell.currentIndex != 3)
+                      MochiAction(
+                        icon: TablerIcons.stack2,
+                        label: context.l10n.homeSessions,
+                        onPress: data == null
+                            ? null
+                            : () => showSessionSelectionDialog(context, sessionId: data.appState.session.id),
+                      ),
+                  ],
+                ),
+                headerOverlay: context.watch<RecordSelectionCubit>().active
+                    ? _selectionHeader(context, data)
+                    : null,
+                footer: sideways
+                    ? null
+                    : MochiBottomNav<int>(
+                        value: widget.navigationShell.currentIndex,
+                        onChanged: (value) => widget.navigationShell.goBranch(value),
+                        items: widget.pages
+                            .mapIndexed(
+                              (i, data) => MochiBottomNavItem<int>(
+                                value: i,
+                                label: Text(_pageLabel(context, data.id)),
+                                icon: Icon(data.icon),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                safeArea: true,
+                // A phone on its side has no room for the bar along the bottom or a sidebar beside the timer:
+                // the menu button pulls out what the sidebar holds instead.
+                sidebar: sideways ? null : _sidebar(context, puzzle: data?.appState.puzzle),
+                // Under the scaffold, for MochiScaffold.of: the drawer is not a route to pop.
+                drawer: Builder(
+                  builder: (context) => sideways
+                      ? _sidebar(
+                          context,
+                          puzzle: data?.appState.puzzle,
+                          close: MochiScaffold.of(context).closeDrawer,
+                        )
+                      : MochiSidebar(
+                          size: .lg,
+                          footer: [
+                            MochiSidebarItem(
+                              label: Text(context.l10n.commonSettings),
+                              icon: Icon(TablerIcons.settings),
+                              onPress: () {
+                                MochiScaffold.of(context).closeDrawer();
+                                context.pushNamed("settings");
+                              },
+                            ),
+                          ],
+                          header: MochiSidebarHeading(Text("Mochi Cube Timer")),
+                          children: [
+                            MochiSidebarItem(
+                              icon: Icon(TablerIcons.clockHour4),
+                              label: Text("Timer"),
+                              selected: true,
+                              onPress: MochiScaffold.of(context).closeDrawer,
+                            ),
+
+                            MochiDivider(gap: g.space.xs2, indent: g.space.xs),
+
+                            MochiSidebarItem(
+                              icon: Icon(TablerIcons.cubeSpark),
+                              label: Text(context.l10n.algorithmsTitle),
+                              onPress: data == null
+                                  ? null
+                                  : () {
+                                      MochiScaffold.of(context).closeDrawer();
+                                      context.push("/algorithms-standalone/${data.appState.puzzle.id}");
+                                    },
+                            ),
+                          ],
+                        ),
                 ),
                 child: data == null
                     ? const Center(child: MochiCircularProgress())
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: DefaultTextHeightBehavior(
-                          textHeightBehavior: const TextHeightBehavior(
-                            applyHeightToFirstAscent: false,
-                            applyHeightToLastDescent: false,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: .center,
-                            spacing: 2,
-                            children: [
-                              DefaultTextStyle.merge(
-                                style: context.theme.typography.title.md,
-                                child: Text(data.appState.puzzle.displayName(context.l10n)),
-                              ),
-                              DefaultTextStyle.merge(
-                                style: context.theme.typography.title.sm.copyWith(
-                                  color: context.colors.mutedForeground,
-                                ),
-                                child: Text(data.appState.session.name),
-                              ),
-                            ],
+                    : AppStateProvider(
+                        state: data.appState,
+                        child: SessionsProvider(
+                          state: data.sessions,
+                          child: AlgorithmsHeaderScope(
+                            controller: _algorithmsHeader,
+                            child: _ScrambleScope(
+                              puzzle: data.appState.puzzle,
+                              child: widget.navigationShell,
+                            ),
                           ),
                         ),
                       ),
-              ),
-              suffixes: [
-                if (widget.pages.length > widget.navigationShell.currentIndex &&
-                    widget.pages[widget.navigationShell.currentIndex].id != "timer")
-                  MochiAction(
-                    icon: (data?.appState.showArchived ?? false)
-                        ? TablerIcons.archiveFilled
-                        : TablerIcons.archive,
-                    enabled: data != null,
-                    selected: data?.appState.showArchived ?? false,
-                    label: context.l10n.homeShowArchived,
-                    onPress: data == null
-                        ? null
-                        : () => context.read<AppDatabase>().appStateDao.setShowArchived(
-                            !data.appState.showArchived,
-                          ),
-                  ),
-                MochiAction(
-                  icon: TablerIcons.stack2,
-                  label: context.l10n.homeSessions,
-                  onPress: data == null
-                      ? null
-                      : () => showSessionSelectionDialog(context, sessionId: data.appState.session.id),
-                ),
-              ],
-            ),
-            headerOverlay: context.watch<RecordSelectionCubit>().active
-                ? _selectionHeader(context, data)
-                : null,
-            footer: sideways
-                ? null
-                : MochiBottomNav<int>(
-                    value: widget.navigationShell.currentIndex,
-                    onChanged: (value) => widget.navigationShell.goBranch(value),
-                    items: widget.pages
-                        .mapIndexed(
-                          (i, data) => MochiBottomNavItem<int>(
-                            value: i,
-                            label: Text(_pageLabel(context, data.id)),
-                            icon: Icon(data.icon),
-                          ),
-                        )
-                        .toList(),
-                  ),
-            safeArea: true,
-            // A phone on its side has no room for the bar along the bottom or a sidebar beside the timer:
-            // the menu button pulls out what the sidebar holds instead.
-            sidebar: sideways ? null : _sidebar(context, puzzle: data?.appState.puzzle),
-            // Under the scaffold, for MochiScaffold.of: the drawer is not a route to pop.
-            drawer: Builder(
-              builder: (context) => sideways
-                  ? _sidebar(
-                      context,
-                      puzzle: data?.appState.puzzle,
-                      close: MochiScaffold.of(context).closeDrawer,
-                    )
-                  : MochiSidebar(
-                      size: .lg,
-                      footer: [
-                        MochiSidebarItem(
-                          label: Text(context.l10n.commonSettings),
-                          icon: Icon(TablerIcons.settings),
-                          onPress: () {
-                            MochiScaffold.of(context).closeDrawer();
-                            context.pushNamed("settings");
-                          },
-                        ),
-                      ],
-                      header: MochiSidebarHeading(Text("Mochi Cube Timer")),
-                      children: [
-                        MochiSidebarItem(
-                          icon: Icon(TablerIcons.clockHour4),
-                          label: Text("Timer"),
-                          selected: true,
-                          onPress: MochiScaffold.of(context).closeDrawer,
-                        ),
-
-                        MochiDivider(gap: g.space.xs2, indent: g.space.xs),
-
-                        MochiSidebarItem(
-                          icon: Icon(TablerIcons.cubeSpark),
-                          label: Text(context.l10n.algorithmsTitle),
-                          onPress: data == null
-                              ? null
-                              : () {
-                                  MochiScaffold.of(context).closeDrawer();
-                                  context.push("/algorithms-standalone/${data.appState.puzzle.id}");
-                                },
-                        ),
-                      ],
-                    ),
-            ),
-            child: data == null
-                ? const Center(child: MochiCircularProgress())
-                : AppStateProvider(
-                    state: data.appState,
-                    child: SessionsProvider(
-                      state: data.sessions,
-                      child: _ScrambleScope(puzzle: data.appState.puzzle, child: widget.navigationShell),
-                    ),
-                  ),
+              );
+            },
           );
         },
       ),
     );
-    // );
   }
+}
+
+/// The puzzle button, and after it the set the algorithms page is on, if it is on one.
+Widget _titleWithSet(BuildContext context, String? setName, Widget button) {
+  if (setName == null) return button;
+  return Row(
+    mainAxisSize: .min,
+    children: [
+      Flexible(child: button),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text(
+          "/",
+          style: context.theme.typography.title.md.copyWith(color: context.colors.mutedForeground),
+        ),
+      ),
+      Flexible(
+        child: Text(setName, style: context.theme.typography.title.md, overflow: .ellipsis),
+      ),
+    ],
+  );
 }
 
 String _pageLabel(BuildContext context, String id) => switch (id) {
