@@ -35,6 +35,7 @@ class SettingsPage extends StatelessWidget {
 
     return MochiScaffold(
       extendBody: true,
+      padding: .zero,
       header: MochiHeader(
         variant: .bordered,
         title: IntrinsicWidth(
@@ -65,7 +66,7 @@ class SettingsPage extends StatelessWidget {
       // A Builder, so the padding is read from under the scaffold, which adds the header's height to it.
       child: Builder(
         builder: (context) => SingleChildScrollView(
-          padding: MediaQuery.paddingOf(context),
+          padding: MediaQuery.paddingOf(context) + context.theme.geometry.pagePadding,
           child: settingsSections[section]!(SettingsProvider.of(context), dao),
         ),
       ),
