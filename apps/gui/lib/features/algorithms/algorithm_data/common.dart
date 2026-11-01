@@ -1,4 +1,3 @@
-import "package:cube_timer/cube_timer.dart";
 import "package:flutter/widgets.dart";
 
 import "../fto_painter.dart";
@@ -50,21 +49,14 @@ class AlgorithmCase {
   }
 }
 
-/// A named collection of [AlgorithmCase]s belonging to a [Puzzle] (e.g. 3x3x3 OLL or PLL).
+/// A named collection of [AlgorithmCase]s (e.g. 3x3x3 OLL or PLL).
 @immutable
 class AlgorithmSet {
-  const AlgorithmSet({
-    required this.id,
-    required this.name,
-    required this.subtitle,
-    required this.puzzle,
-    required this.cases,
-  });
+  const AlgorithmSet({required this.id, required this.name, required this.subtitle, required this.cases});
 
   final String id;
   final String name;
   final String subtitle;
-  final Puzzle puzzle;
   final List<AlgorithmCase> cases;
 
   /// Groups in the order they first appear in [cases].

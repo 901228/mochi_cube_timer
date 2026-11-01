@@ -13,29 +13,11 @@ typedef AlgorithmSets = Map<String, AlgorithmGroups>;
 final AlgorithmSets algorithmSets = {
   Puzzle.cube3.id: [
     AlgorithmGroup(
-      id: "pll",
-      name: "PLL",
+      id: "cfop",
+      name: "CFOP",
       sets: [
-        AlgorithmSet(
-          id: "pll",
-          name: "PLL",
-          subtitle: "Permutation of the Last Layer",
-          puzzle: .cube3,
-          cases: pllCases,
-        ),
-      ],
-    ),
-    AlgorithmGroup(
-      id: "oll",
-      name: "OLL",
-      sets: [
-        AlgorithmSet(
-          id: "oll",
-          name: "OLL",
-          subtitle: "Orientation of the Last Layer",
-          puzzle: .cube3,
-          cases: ollCases,
-        ),
+        AlgorithmSet(id: "pll", name: "PLL", subtitle: "Permutation of the Last Layer", cases: pllCases),
+        AlgorithmSet(id: "oll", name: "OLL", subtitle: "Orientation of the Last Layer", cases: ollCases),
       ],
     ),
   ],
@@ -44,20 +26,8 @@ final AlgorithmSets algorithmSets = {
       id: "nautilus",
       name: "Nautilus",
       sets: [
-        AlgorithmSet(
-          id: "l6x",
-          name: "L6X",
-          subtitle: "Last Six Triangles",
-          puzzle: .fto,
-          cases: ftoL6xCases,
-        ),
-        AlgorithmSet(
-          id: "l3c",
-          name: "L3C",
-          subtitle: "Last Three Corners",
-          puzzle: .fto,
-          cases: ftoL3cCases,
-        ),
+        AlgorithmSet(id: "l6x", name: "L6X", subtitle: "Last Six Triangles", cases: ftoL6xCases),
+        AlgorithmSet(id: "l3c", name: "L3C", subtitle: "Last Three Corners", cases: ftoL3cCases),
       ],
     ),
   ],
@@ -65,11 +35,11 @@ final AlgorithmSets algorithmSets = {
 
 extension AlgorithmSetsX on AlgorithmSets {
   AlgorithmSet? findSet(String puzzleId, {String? setId}) {
-    if (!containsKey(puzzleId)) return null;
+    final groups = this[puzzleId];
+    if (groups == null) return null;
 
-    final group = this[puzzleId]!;
-    for (final s in group.flatten()) {
-      if (s.puzzle.id == puzzleId && (setId == null || s.id == setId)) return s;
+    for (final s in groups.flatten()) {
+      if (setId == null || s.id == setId) return s;
     }
     return null;
   }
