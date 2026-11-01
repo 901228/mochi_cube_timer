@@ -1,4 +1,3 @@
-
 import "package:flutter/foundation.dart" show listEquals;
 import "package:flutter/widgets.dart";
 
@@ -118,10 +117,7 @@ class FtoCasePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final scale = (size.width / _width).clamp(0.0, size.height / _height);
-    final shift = Offset(
-      (size.width - _width * scale) / 2,
-      (size.height - _height * scale) / 2,
-    );
+    final shift = Offset((size.width - _width * scale) / 2, (size.height - _height * scale) / 2);
 
     Offset at(Offset p) => (p - _origin) * scale + shift;
 

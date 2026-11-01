@@ -14,7 +14,14 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Trapezoid / Vertical Diamonds",
     group: "Trapezoids",
     ftoStickers: "gggloooll",
-    algorithms: ["(U) {U,R} r U R' U' r' L R L'", "(U') {U,R} r U R' U' r' R U R U' R'", "(U') {U,R} r' U' R U r R' U' R' U R", "{U,R} R U R D R' U R D' R' U R'", "R BR r' U' R' U r BR'", "(U') R' F' r U R U' r' F"],
+    algorithms: [
+      "(U) {U,R} r U R' U' r' L R L'",
+      "(U') {U,R} r U R' U' r' R U R U' R'",
+      "(U') {U,R} r' U' R U r R' U' R' U R",
+      "{U,R} R U R D R' U R D' R' U R'",
+      "R BR r' U' R' U r BR'",
+      "(U') R' F' r U R U' r' F",
+    ],
   ),
   const AlgorithmCase(
     id: "t2",
@@ -30,7 +37,13 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Trapezoid / Left Diamond",
     group: "Trapezoids",
     ftoStickers: "ooogllggl",
-    algorithms: ["(U) {U,R} L R' L' r U R U' r'", "(U') {U,R} R' U' R U r' R U' R' U r", "BR r' U' R U r BR' R'", "(U') r U' r' B r U r' B'", "(U) r' F' r U R' r U' r' F R"],
+    algorithms: [
+      "(U) {U,R} L R' L' r U R U' r'",
+      "(U') {U,R} R' U' R U r' R U' R' U r",
+      "BR r' U' R U r BR' R'",
+      "(U') r U' r' B r U r' B'",
+      "(U) r' F' r U R' r U' r' F R",
+    ],
   ),
   const AlgorithmCase(
     id: "t4",
@@ -38,7 +51,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Trapezoid / Right Diamond",
     group: "Trapezoids",
     ftoStickers: "gggoololl",
-    algorithms: ["(U') {U,R} R U R' U' r R' U R U' r'", "(U) {U,R} R' L R BR' R' L' R BR", "(U) {U,R} R' U R' D' R U R' D R U R", "(U') F' r U R' U' r' F R"],
+    algorithms: [
+      "(U') {U,R} R U R' U' r R' U R U' r'",
+      "(U) {U,R} R' L R BR' R' L' R BR",
+      "(U) {U,R} R' U R' D' R U R' D R U R",
+      "(U') F' r U R' U' r' F R",
+    ],
   ),
   const AlgorithmCase(
     id: "t5",
@@ -46,7 +64,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Trapezoid / Headlights",
     group: "Trapezoids",
     ftoStickers: "lllogogog",
-    algorithms: ["(U) {U,R} r2' R U R U' r' U' r2 R' U' R' U r", "(U) {U,R} r U R' U' R2 r' U' r' U' R U r2' R", "(U') R' F' r U r R2' F R U r' F' r2 R'"],
+    algorithms: [
+      "(U) {U,R} r2' R U R U' r' U' r2 R' U' R' U r",
+      "(U) {U,R} r U R' U' R2 r' U' r' U' R U r2' R",
+      "(U') R' F' r U r R2' F R U r' F' r2 R'",
+    ],
   ),
   const AlgorithmCase(
     id: "h1",
@@ -78,7 +100,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Headlights / Left Diamond",
     group: "Headlights",
     ftoStickers: "lglgooolg",
-    algorithms: ["(U') {U,R} F U R U' R' F U' R U' R' U' F", "{U,L} F U (R U' R') F U' (R U' R') U' F", "r R BR' r' U R' r2 U r BR'", "{U,R} r U' R' U' R U' r' U r U' R' U' R U' r'"],
+    algorithms: [
+      "(U') {U,R} F U R U' R' F U' R U' R' U' F",
+      "{U,L} F U (R U' R') F U' (R U' R') U' F",
+      "r R BR' r' U R' r2 U r BR'",
+      "{U,R} r U' R' U' R U' r' U r U' R' U' R U' r'",
+    ],
   ),
   const AlgorithmCase(
     id: "h5",
@@ -86,7 +113,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Headlights / Right Diamond / Cat Ears",
     group: "Headlights",
     ftoStickers: "ogogolgll",
-    algorithms: ["{U,R} R' U R U' r' R U' R' U r", "(U') r' F r U' R' r U' r' F R", "R' r' F r U' R U' r' F r"],
+    algorithms: [
+      "{U,R} R' U R U' r' R U' R' U r",
+      "(U') r' F r U' R' r U' r' F R",
+      "R' r' F r U' R U' r' F r",
+    ],
   ),
   const AlgorithmCase(
     id: "h6",
@@ -102,7 +133,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Headlights / LB Diamond / Cat Ears",
     group: "Headlights",
     ftoStickers: "gogllolgo",
-    algorithms: ["(U') {U,R} R' U R U' R' U' R2 r' U' R' U r", "(U') {U,R} R U R' U' R U' r' U' R U r R2'", "{U,R} R U' R' U R U r' U' R U r R2'", "(U) r BR r' U' r BR' R' U' r BR r2' R"],
+    algorithms: [
+      "(U') {U,R} R' U R U' R' U' R2 r' U' R' U r",
+      "(U') {U,R} R U R' U' R U' r' U' R U r R2'",
+      "{U,R} R U' R' U R U r' U' R U r R2'",
+      "(U) r BR r' U' r BR' R' U' r BR r2' R",
+    ],
   ),
   const AlgorithmCase(
     id: "h8",
@@ -110,7 +146,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Headlights / LB Diamond",
     group: "Headlights",
     ftoStickers: "goglloogl",
-    algorithms: ["(U') {U,R} r' U' R U R' r U R' U' R", "(U) R' F' r U R r' U r' F' r", "(U') r BR' r' U R' U r BR' r' R", "{U,R} R' U' R F' U' R' U' R U' F"],
+    algorithms: [
+      "(U') {U,R} r' U' R U R' r U R' U' R",
+      "(U) R' F' r U R r' U r' F' r",
+      "(U') r BR' r' U R' U r BR' r' R",
+      "{U,R} R' U' R F' U' R' U' R U' F",
+    ],
   ),
   const AlgorithmCase(
     id: "h9",
@@ -118,7 +159,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Headlights / RB Diamond / Cat Ears",
     group: "Headlights",
     ftoStickers: "ogologllg",
-    algorithms: ["(U) {U,R} R' U R U' R' U' r U R' U' R2 r'", "(U) {U,R} R U R' U' R U' r2' R U R U' r'", "r' F r U' r' F' R U r' F' R2 r'"],
+    algorithms: [
+      "(U) {U,R} R' U R U' R' U' r U R' U' R2 r'",
+      "(U) {U,R} R U R' U' R U' r2' R U R U' r'",
+      "r' F r U' r' F' R U r' F' R2 r'",
+    ],
   ),
   const AlgorithmCase(
     id: "h10",
@@ -126,7 +171,13 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Headlights / RB Diamond",
     group: "Headlights",
     ftoStickers: "lololgggo",
-    algorithms: ["(U') {U,R} r U R' U' R r' U' R U R'", "{U,R} R U R D' R U R' D R' U R'", "(U) R BR r' U' R' r U' r BR r'", "r' F r U' R U' r' F r R'", "BL U BL' U' R U' BL U BL' R'"],
+    algorithms: [
+      "(U') {U,R} r U R' U' R r' U' R U R'",
+      "{U,R} R U R D' R U R' D R' U R'",
+      "(U) R BR r' U' R' r U' r BR r'",
+      "r' F r U' R U' r' F r R'",
+      "BL U BL' U' R U' BL U BL' R'",
+    ],
   ),
   const AlgorithmCase(
     id: "d1",
@@ -150,7 +201,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Three CC Diamonds / Cat Ears",
     group: "Diamonds",
     ftoStickers: "llolggoog",
-    algorithms: ["(U) {U,R} r U R' U' r2 R' U R2' L R L'", "{U,R} r' U' r R' U' R U R r' U' R' U' r", "R BR r' U' R2 r' U' r BR r2'", "{U,R} R U' R F' R' U R' U' R' F R"],
+    algorithms: [
+      "(U) {U,R} r U R' U' r2 R' U R2' L R L'",
+      "{U,R} r' U' r R' U' R U R r' U' R' U' r",
+      "R BR r' U' R2 r' U' r BR r2'",
+      "{U,R} R U' R F' R' U R' U' R' F R",
+    ],
   ),
   const AlgorithmCase(
     id: "d4",
@@ -174,7 +230,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Vertical + Left Diamonds / Right Center Matching",
     group: "Diamonds",
     ftoStickers: "llolgggoo",
-    algorithms: ["{U,R} F R' L' r U R U' r' L F'", "{U,R} r U R' U' R2 r' U r R2' U R U' r'", "R U' F r U' R' U r' F' R U R'"],
+    algorithms: [
+      "{U,R} F R' L' r U R U' r' L F'",
+      "{U,R} r U R' U' R2 r' U r R2' U R U' r'",
+      "R U' F r U' R' U r' F' R U R'",
+    ],
   ),
   const AlgorithmCase(
     id: "d7",
@@ -182,7 +242,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Vertical + Right Diamonds / Left Center Matching",
     group: "Diamonds",
     ftoStickers: "oggloogll",
-    algorithms: ["(U') {U,R} F' L R BR' R' L' R BR R' F", "(U') F' r U R2' r U r' F' R2 r'", "(U') F' r U R r U r' F' r' R'", "(U') {U,R} R U' R' F' U' R U R' F U' R U' R'"],
+    algorithms: [
+      "(U') {U,R} F' L R BR' R' L' R BR R' F",
+      "(U') F' r U R2' r U r' F' R2 r'",
+      "(U') F' r U R r U r' F' r' R'",
+      "(U') {U,R} R U' R' F' U' R U R' F U' R U' R'",
+    ],
   ),
   const AlgorithmCase(
     id: "d8",
@@ -190,7 +255,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Vertical + Right Diamonds / Right Center Matching",
     group: "Diamonds",
     ftoStickers: "lgggoooll",
-    algorithms: ["(U') {U,R} F' R BR' R' L R BR R' L' F", "(U') R' U R' F' r U R' U' r' F R' U' R", "{U,R} (R' U R) U R' F U' (R U R') F' U R"],
+    algorithms: [
+      "(U') {U,R} F' R BR' R' L R BR R' L' F",
+      "(U') R' U R' F' r U R' U' r' F R' U' R",
+      "{U,R} (R' U R) U R' F U' (R U R') F' U R",
+    ],
   ),
   const AlgorithmCase(
     id: "d9",
@@ -206,7 +275,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Horizontal Diamonds",
     group: "Diamonds",
     ftoStickers: "olggglool",
-    algorithms: ["(U') {U,R} R2' L R L' U r U R' U' r2 R'", "F' U' r' F r2 U R' U' r' F R", "R' F' r U R2 r' U' r' F r R'"],
+    algorithms: [
+      "(U') {U,R} R2' L R L' U r U R' U' r2 R'",
+      "F' U' r' F r2 U R' U' r' F R",
+      "R' F' r U R2 r' U' r' F r R'",
+    ],
   ),
   const AlgorithmCase(
     id: "d11",
@@ -214,7 +287,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Two Clockwise Diamonds / Cat Ears",
     group: "Diamonds",
     ftoStickers: "oglooggll",
-    algorithms: ["{U,R} r' R' L R L' R U' R' U r", "(U') R' F' r U r' U r' F' r R", "(U') R2 r' F r U' r U' r' F R", "(U') {U,R} R U' R' F' L R' L' R F R U R'"],
+    algorithms: [
+      "{U,R} r' R' L R L' R U' R' U r",
+      "(U') R' F' r U r' U r' F' r R",
+      "(U') R2 r' F r U' r U' r' F R",
+      "(U') {U,R} R U' R' F' L R' L' R F R U R'",
+    ],
   ),
   const AlgorithmCase(
     id: "d12",
@@ -230,7 +308,12 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Two CC Diamonds / Cat Ears",
     group: "Diamonds",
     ftoStickers: "oglgoollg",
-    algorithms: ["(U') {U,R} r U R' U' r R' U' R U r R2'", "(U') {U,R} r R2' U R U' r R' U' R' U r", "(U) R U R' U' {U,R} R U R' F R U' R' F'", "(U') r U R' U F' U' F R U' r'"],
+    algorithms: [
+      "(U') {U,R} r U R' U' r R' U' R U r R2'",
+      "(U') {U,R} r R2' U R U' r R' U' R' U r",
+      "(U) R U R' U' {U,R} R U R' F R U' R' F'",
+      "(U') r U R' U F' U' F R U' r'",
+    ],
   ),
   const AlgorithmCase(
     id: "d14",
@@ -254,7 +337,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Vertical Diamonds",
     group: "Diamonds",
     ftoStickers: "olglggloo",
-    algorithms: ["(U) {U,R} r' R2 U' R' U r U' R2' L R L'", "R r' F' r U R2' r U' r' F R", "(U') R r2' F r U' R' F r2 U' r' F"],
+    algorithms: [
+      "(U) {U,R} r' R2 U' R' U r U' R2' L R L'",
+      "R r' F' r U R2' r U' r' F R",
+      "(U') R r2' F r U' R' F r2 U' r' F",
+    ],
   ),
   const AlgorithmCase(
     id: "c1",
@@ -262,7 +349,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Three Cat Ears",
     group: "Cat Ears and Chameleons",
     ftoStickers: "olgoglgol",
-    algorithms: ["{U,R} r U R' U' R r' L' U' L R U R'", "R' F' r U R r' U' r' U' F U r", "{U,R} R U' R' U' r' U R U' r U' r' U R' U' r"],
+    algorithms: [
+      "{U,R} r U R' U' R r' L' U' L R U R'",
+      "R' F' r U R r' U' r' U' F U r",
+      "{U,R} R U' R' U' r' U R U' r U' r' U R' U' r",
+    ],
   ),
   const AlgorithmCase(
     id: "c2",
@@ -270,7 +361,11 @@ final List<AlgorithmCase> ftoL6xCases = [
     description: "Cat Ears",
     group: "Cat Ears and Chameleons",
     ftoStickers: "glooglgol",
-    algorithms: ["(U') {U,R} R U BR' R' U R U' BR U' R'", "(U') {U,R} R' U' F R U' R' U F' U R", "r' U' F' U r U r R' U' r' F R"],
+    algorithms: [
+      "(U') {U,R} R U BR' R' U R U' BR U' R'",
+      "(U') {U,R} R' U' F R U' R' U F' U R",
+      "r' U' F' U r U r R' U' r' F R",
+    ],
   ),
   const AlgorithmCase(
     id: "c3",
