@@ -384,7 +384,7 @@ class _TimerViewState extends State<_TimerView> {
                     mainAxisSize: .max,
                     mainAxisAlignment: .spaceBetween,
                     crossAxisAlignment: .end,
-                    spacing: 20,
+                    spacing: context.theme.geometry.space.md,
                     children: [
                       leftStats,
                       if (cube != null)
