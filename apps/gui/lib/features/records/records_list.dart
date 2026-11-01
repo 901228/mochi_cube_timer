@@ -169,7 +169,14 @@ class _RecordsListState extends State<RecordsList> {
         fit: .loose,
         clipBehavior: .none,
         children: [
-          Text(record.time.milliseconds.timerDisplayString(record.penalty), style: context.theme.timer.lg),
+          Text(
+            record.time.milliseconds.timerDisplayString(
+              record.penalty,
+              // from an hour on the fraction is left out; the detail dialog has the full time
+              decimals: record.time >= Duration.millisecondsPerHour ? 0 : 2,
+            ),
+            style: context.theme.timer.lg,
+          ),
           Positioned.directional(
             textDirection: Directionality.of(context),
             start: 0,

@@ -5,6 +5,7 @@ import "package:cube_timer/cube_timer.dart";
 import "package:fl_chart/fl_chart.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
+import "../../shared/utils.dart";
 import "stats_common.dart";
 import "../../l10n/l10n.dart";
 
@@ -76,6 +77,13 @@ class _TimesGraphState extends State<TimesGraph> with SingleTickerProviderStateM
     // if there is only one or all the same, the range is 0, giving it a fixed 1 second
     final yPad = hi > lo ? (hi - lo) * 0.1 : 1.0;
 
+    // a grid line every "nice" number of seconds, about 4 lines over the range
+    final interval = const <double>[0.5, 1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 1800, 3600].firstWhere(
+      (i) => i >= (hi - lo + yPad * 3) / 4,
+      orElse: () => 3600,
+    );
+    String label(double seconds) => statString(seconds * 1000, decimals: interval < 1 ? 1 : 0);
+
     final base = [c.success.base, c.primary.base];
     final n = spots.length;
     final lineColors = n < 2
@@ -114,7 +122,7 @@ class _TimesGraphState extends State<TimesGraph> with SingleTickerProviderStateM
 
               gridData: FlGridData(
                 drawVerticalLine: false,
-                horizontalInterval: 2,
+                horizontalInterval: interval,
                 getDrawingHorizontalLine: (_) => horizontalGridLine(context),
               ),
               borderData: borderData,
@@ -127,9 +135,9 @@ class _TimesGraphState extends State<TimesGraph> with SingleTickerProviderStateM
                     showTitles: true,
                     minIncluded: false,
                     maxIncluded: false,
-                    reservedSize: 44,
+                    reservedSize: 52,
                     getTitlesWidget: (value, meta) =>
-                        SideTitleWidget(meta: meta, child: Text(meta.formattedValue)),
+                        SideTitleWidget(meta: meta, child: Text(label(value))),
                   ),
                 ),
               ),
@@ -158,7 +166,7 @@ class _TimesGraphState extends State<TimesGraph> with SingleTickerProviderStateM
                   getTooltipItems: (spots) => spots
                       .map(
                         (s) => LineTooltipItem(
-                          times[s.x.toInt()].isDnf ? "DNF" : s.y.toStringAsFixed(2),
+                          times[s.x.toInt()].isDnf ? "DNF" : statString(s.y * 1000),
                           TextStyle(color: lineColors[s.x.toInt()], fontWeight: .bold),
                         ),
                       )

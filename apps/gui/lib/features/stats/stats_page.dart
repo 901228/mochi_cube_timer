@@ -64,15 +64,7 @@ class _StatsPageState extends State<_StatsPage> {
     }
   }
 
-  String _statsString(double? value) {
-    if (value == null) {
-      return "--";
-    } else if (value == double.infinity) {
-      return "DNF";
-    } else {
-      return (value / 1000).toStringAsFixed(2);
-    }
-  }
+  String _statsString(double? value) => statString(value);
 
   bool get isDesktop => context.responsive(mobile: false, desktop: true);
 
@@ -99,7 +91,7 @@ class _StatsPageState extends State<_StatsPage> {
   MochiColors get colors => context.theme.colors;
   MochiTypeface get timer => context.theme.timer;
 
-  TextStyle timesStyle({Color? color}) => timer.xl4.copyWith(fontWeight: .bold, color: color);
+  TextStyle timesStyle({Color? color}) => timer.xl3.copyWith(fontWeight: .bold, color: color);
 
   Widget _summaryText(String id, double? value, {Color? color, Alignment? alignment}) => _number(
     id,
@@ -122,15 +114,18 @@ class _StatsPageState extends State<_StatsPage> {
           applyHeightToFirstAscent: false,
           applyHeightToLastDescent: false,
         ),
-        child: Row(
-          mainAxisSize: .max,
+        // On mobile the label sits above the time: side by side they leave the time too little room.
+        child: Flex(
+          direction: isDesktop ? .horizontal : .vertical,
+          mainAxisSize: isDesktop ? .max : .min,
           mainAxisAlignment: .spaceBetween,
+          crossAxisAlignment: isDesktop ? .center : .stretch,
           children: [
             DefaultTextStyle(
               style: context.theme.typography.body.xs.copyWith(color: colors.mutedForeground),
               child: Text(description),
             ),
-            _number(id, value, style: timesStyle()),
+            _number(id, value, style: timesStyle(), alignment: isDesktop ? null : .centerRight),
           ],
         ),
       );
@@ -353,8 +348,8 @@ class _StatsPageState extends State<_StatsPage> {
                                 mainAxisSize: .max,
                                 spacing: geometry.space.sm,
                                 children: [
-                                  Expanded(child: solveDeviation),
-                                  Expanded(child: bestStats),
+                                  Flexible(flex: 1, fit: .tight, child: solveDeviation),
+                                  Flexible(flex: 2, fit: .tight, child: bestStats),
                                 ],
                               ),
                             ),

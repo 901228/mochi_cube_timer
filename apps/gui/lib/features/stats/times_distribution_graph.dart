@@ -5,6 +5,7 @@ import "package:mochi_ui/mochi_ui.dart";
 
 import "stats_common.dart";
 import "../../l10n/l10n.dart";
+import "../../shared/utils.dart";
 
 class TimesDistributionGraph extends StatelessWidget {
   final StatsReturn? data;
@@ -39,7 +40,7 @@ class TimesDistributionGraph extends StatelessWidget {
     // there is something in them.
     final end = d.start + d.counts.length * d.step;
     final decimals = d.step % 1000 == 0 ? 0 : (d.step % 100 == 0 ? 1 : 2);
-    String seconds(double ms) => (ms / 1000).toStringAsFixed(decimals);
+    String seconds(double ms) => statString(ms, decimals: decimals);
     final bars = [
       if (d.below > 0) (count: d.below, label: "<${seconds(d.start)}"),
       for (final (i, count) in d.counts.indexed) (count: count, label: "${seconds(d.start + i * d.step)}+"),
@@ -139,7 +140,7 @@ class TimesDistributionGraph extends StatelessWidget {
                   dash: 8,
                   gap: 8,
                   spacing: 2,
-                  label: context.l10n.statsMedian((d.median / 1000).toStringAsFixed(2)),
+                  label: context.l10n.statsMedian(statString(d.median)),
                   labelStyle: small.copyWith(fontWeight: .bold),
                 ),
               ),
