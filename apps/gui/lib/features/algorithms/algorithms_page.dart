@@ -160,6 +160,7 @@ class _AlgorithmsStandaloneShellState extends State<AlgorithmsStandaloneShell> {
 
     return MochiScaffold(
       // The pages pad themselves, as they do in the home shell.
+      extendBody: true,
       padding: .zero,
       header: MochiHeader(
         alignment: .center,
@@ -250,10 +251,12 @@ class _AlgorithmsGroupPageState extends State<AlgorithmsGroupPage>
 
     reportToHeader();
 
+    final inset = MediaQuery.paddingOf(context);
+    // The bottom inset is inside the scroll view, so the list scrolls on to the edge of the screen.
     return Padding(
-      padding: MediaQuery.paddingOf(context),
+      padding: inset.copyWith(bottom: 0),
       child: SingleChildScrollView(
-        padding: g.pagePadding,
+        padding: g.pagePadding + .only(bottom: inset.bottom),
         child: MochiAccordion(
           multiple: true,
           spacing: g.space.lg,
@@ -331,57 +334,68 @@ class _AlgorithmSetPageState extends State<AlgorithmSetPage> with _ReportsToHead
 
     reportToHeader();
 
-    final content = SingleChildScrollView(
-      // Standalone, the header above is this page's own; otherwise it is the home shell's.
-      padding: widget.standalone ? g.pagePadding.copyWith(top: 0) : g.pagePadding,
-      child: MochiAccordion(
-        multiple: true,
-        spacing: g.space.lg,
-        contentSpacing: g.space.xs,
-        expanded: .lifted(
-          value: _accordionExpanded,
-          onChanged: (value) {
-            setState(() {
-              _accordionExpanded = value;
-            });
-          },
-        ),
-        items: [
-          for (final (groupName, cases) in widget.algorithmSet.grouped)
-            MochiAccordionItem(
-              title: Text(groupName),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: .zero,
-                itemCount: cases.length,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 112,
-                  mainAxisExtent: 120,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemBuilder: (context, index) {
-                  final item = cases[index];
-                  return _AlgorithmCaseCard(
-                    item: item,
-                    topColor: topColor,
-                    onPress: () => showAlgorithmCaseDetailModal(
-                      context,
-                      algorithmSet: widget.algorithmSet,
-                      item: item,
-                      topColor: topColor,
-                    ),
-                  );
+    final content = Builder(
+      builder: (context) {
+        final inset = MediaQuery.paddingOf(context);
+        return Padding(
+          padding: inset.copyWith(bottom: 0),
+          child: SingleChildScrollView(
+            // Standalone, the header above is this page's own and the page runs under it, so the scroll view
+            // clears it; otherwise the header is the home shell's.
+            padding: g.pagePadding,
+            child: MochiAccordion(
+              multiple: true,
+              spacing: g.space.lg,
+              contentSpacing: g.space.xs,
+              expanded: .lifted(
+                value: _accordionExpanded,
+                onChanged: (value) {
+                  setState(() {
+                    _accordionExpanded = value;
+                  });
                 },
               ),
+              items: [
+                for (final (groupName, cases) in widget.algorithmSet.grouped)
+                  MochiAccordionItem(
+                    title: Text(groupName),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: .zero,
+                      itemCount: cases.length,
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 112,
+                        mainAxisExtent: 120,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) {
+                        final item = cases[index];
+                        return _AlgorithmCaseCard(
+                          item: item,
+                          topColor: topColor,
+                          onPress: () => showAlgorithmCaseDetailModal(
+                            context,
+                            algorithmSet: widget.algorithmSet,
+                            item: item,
+                            topColor: topColor,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
             ),
-        ],
-      ),
+          ),
+        );
+      },
     );
 
     if (widget.standalone) {
       return MochiScaffold(
+        extendBody: true,
+        padding: .zero,
         header: _Header(
           title: widget.algorithmSet.name,
           isAllCollapsed: _isAllCollapsed,
@@ -393,11 +407,7 @@ class _AlgorithmSetPageState extends State<AlgorithmSetPage> with _ReportsToHead
 
     // A solid fill: the scaffold's background is behind this page and the puzzle page under it, so
     // without one the page below shows through while this one slides in.
-    return Container(
-      color: context.colors.background,
-      padding: MediaQuery.paddingOf(context),
-      child: content,
-    );
+    return ColoredBox(color: context.colors.background, child: content);
   }
 }
 
