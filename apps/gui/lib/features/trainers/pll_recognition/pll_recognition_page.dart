@@ -72,6 +72,9 @@ class _PllRecognitionPageState extends State<PllRecognitionPage> {
   }
 }
 
+/// The height of the page under which the answers are drawn small.
+const _compactBelow = 780.0;
+
 typedef _Question = ({AlgorithmCase answer, List<int> stickers, PllRule rule});
 
 class _Practice extends StatefulWidget {
@@ -135,90 +138,112 @@ class _PracticeState extends State<_Practice> {
 
     // The question is at the top and the answers at the bottom, so they do not move when the answer is
     // shown between them: the page does not scroll, and the answer does, if it is too long for the room.
-    return Padding(
-      padding: g.pagePadding + .only(bottom: MediaQuery.paddingOf(context).bottom),
-      child: Column(
-        crossAxisAlignment: .stretch,
-        spacing: g.space.lg,
-        children: [
-          // Right on the left, wrong on the right.
-          Row(
-            mainAxisAlignment: .center,
-            spacing: g.space.xs,
+    // The answers are the most of the page: on a screen too short for the full size of them, they
+    // are smaller, so the room left for the question and the hint is not.
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxHeight < _compactBelow;
+        return Padding(
+          padding: g.pagePadding + .only(bottom: MediaQuery.paddingOf(context).bottom),
+          child: Column(
+            crossAxisAlignment: .stretch,
+            spacing: compact ? g.space.sm : g.space.lg,
             children: [
-              Text("$_correct", style: score.copyWith(color: context.theme.colors.success.base)),
-              Text("/", style: score.copyWith(color: colors.mutedForeground)),
-              Text("$_wrongCount", style: score.copyWith(color: context.theme.colors.danger.base)),
-            ],
-          ),
-          // As large as it may be, and smaller on a screen that is too short for it.
-          Flexible(
-            flex: 3,
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 360),
-                child: AspectRatio(
-                  aspectRatio: twoSideAspectRatio,
-                  child: TwoSideDiagram(stickers: _question.stickers),
+              // Right on the left, wrong on the right.
+              Row(
+                mainAxisAlignment: .center,
+                spacing: g.space.xs,
+                children: [
+                  Text("$_correct", style: score.copyWith(color: context.theme.colors.success.base)),
+                  Text("/", style: score.copyWith(color: colors.mutedForeground)),
+                  Text("$_wrongCount", style: score.copyWith(color: context.theme.colors.danger.base)),
+                ],
+              ),
+              // As large as it may be, and smaller on a screen that is too short for it.
+              Flexible(
+                flex: 3,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 360),
+                    child: AspectRatio(
+                      aspectRatio: twoSideAspectRatio,
+                      child: TwoSideDiagram(stickers: _question.stickers),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: SingleChildScrollView(
-              child: wrong == null
-                  ? null
-                  : Column(
+              Expanded(
+                flex: 2,
+                child: SingleChildScrollView(
+                  child: wrong == null
+                      ? null
+                      : Column(
+                          spacing: g.space.xs,
+                          children: [
+                            Text(
+                              l10n.trainerAnswerWas(_question.answer.name),
+                              textAlign: .center,
+                              style: context.theme.typography.title.lg,
+                            ),
+                            Text(
+                              l10n.trainerPattern(
+                                pllGroupTitle(l10n, _question.rule.group),
+                                pllRuleLabel(l10n, _question.rule),
+                              ),
+                              textAlign: .center,
+                              style: context.theme.typography.title.sm.copyWith(
+                                color: colors.mutedForeground,
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+              // Outside the hint, which may scroll, so it is always in reach; and always there, hidden,
+              // so the room it takes does not come and go.
+              Visibility(
+                visible: wrong != null,
+                maintainSize: true,
+                maintainAnimation: true,
+                maintainState: true,
+                child: MochiButton(onPress: _skip, child: Text(l10n.trainerNext)),
+              ),
+              for (final MapEntry(key: group, value: cases) in groups.entries)
+                Column(
+                  crossAxisAlignment: .start,
+                  spacing: compact ? g.space.xs3 : g.space.xs,
+                  children: [
+                    Text(
+                      group,
+                      style: (compact ? context.theme.typography.title.xs : context.theme.typography.title.sm)
+                          .copyWith(color: colors.mutedForeground),
+                    ),
+                    Wrap(
                       spacing: g.space.xs,
+                      runSpacing: compact ? g.space.xs2 : g.space.xs,
                       children: [
-                        Text(
-                          l10n.trainerAnswerWas(_question.answer.name),
-                          textAlign: .center,
-                          style: context.theme.typography.title.lg,
-                        ),
-                        Text(
-                          l10n.trainerPattern(
-                            pllGroupTitle(l10n, _question.rule.group),
-                            pllRuleLabel(l10n, _question.rule),
+                        for (final c in cases)
+                          MochiButton(
+                            appearance: .soft,
+                            size: compact ? .xs : null,
+                            intent: wrong == null
+                                ? .neutral
+                                : c.id == _question.answer.id
+                                ? .success
+                                : c.id == wrong.id
+                                ? .danger
+                                : .neutral,
+                            onPress: () => _pick(c),
+                            child: Text(c.name),
                           ),
-                          textAlign: .center,
-                          style: context.theme.typography.title.sm.copyWith(color: colors.mutedForeground),
-                        ),
-                        MochiButton(onPress: _skip, child: Text(l10n.trainerNext)),
                       ],
                     ),
-            ),
-          ),
-          for (final MapEntry(key: group, value: cases) in groups.entries)
-            Column(
-              crossAxisAlignment: .start,
-              spacing: g.space.xs,
-              children: [
-                Text(group, style: context.theme.typography.title.sm.copyWith(color: colors.mutedForeground)),
-                Wrap(
-                  spacing: g.space.xs,
-                  runSpacing: g.space.xs,
-                  children: [
-                    for (final c in cases)
-                      MochiButton(
-                        appearance: .soft,
-                        intent: wrong == null
-                            ? .neutral
-                            : c.id == _question.answer.id
-                            ? .success
-                            : c.id == wrong.id
-                            ? .danger
-                            : .neutral,
-                        onPress: () => _pick(c),
-                        child: Text(c.name),
-                      ),
                   ],
                 ),
-              ],
-            ),
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

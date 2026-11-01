@@ -128,11 +128,11 @@ void main() {
     await tester.tap(find.text("Ua"));
     await tester.pumpAndSettle();
     expect(find.text("1"), findsOneWidget);
-    if (find.text("Next").evaluate().isNotEmpty) {
-      expect(find.text("Next"), findsOneWidget);
+    // The answer is shown when it was wrong. The button for the next question is always laid out.
+    if (find.textContaining("It was").evaluate().isNotEmpty) {
       await tester.tap(find.text("Next"));
       await tester.pumpAndSettle();
-      expect(find.text("Next"), findsNothing);
+      expect(find.textContaining("It was"), findsNothing);
     }
   });
 }
