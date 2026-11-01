@@ -722,4 +722,308 @@ class AppLocalizationsEn extends AppLocalizations {
   String algorithmsNoSets(String puzzle) {
     return 'There are no algorithm sets for $puzzle';
   }
+
+  @override
+  String get trainersTitle => 'Trainers';
+
+  @override
+  String get trainerPllRecognitionTitle => 'Two-side PLL recognition';
+
+  @override
+  String get trainerPllRecognitionDescription => 'Name the PLL case from the front and right sides alone';
+
+  @override
+  String trainerAnswerWas(String name) {
+    return 'It was $name';
+  }
+
+  @override
+  String get trainerNext => 'Next';
+
+  @override
+  String get trainerTabPractice => 'Practice';
+
+  @override
+  String trainerPattern(String group, String rule) {
+    return '$group: $rule';
+  }
+
+  @override
+  String get pllGroupThreeBar => '3-bar';
+
+  @override
+  String get pllGroupThreeBarInfo => 'One side is all one colour.';
+
+  @override
+  String get pllGroupDoubleLights => 'Double lights';
+
+  @override
+  String get pllGroupDoubleLightsInfo =>
+      'Both sides have headlights: two corners of one colour with a different edge between them.';
+
+  @override
+  String get pllGroupLightsAndBar => 'Lights + 2-bar';
+
+  @override
+  String get pllGroupLightsAndBarInfo => 'Headlights on one side and a 2-bar on the other.';
+
+  @override
+  String get pllGroupLoneLights => 'Lone lights';
+
+  @override
+  String get pllGroupLoneLightsInfo => 'Headlights on one side; the other side has no bar and no lights.';
+
+  @override
+  String get pllGroupDoubleBar => 'Double 2-bar';
+
+  @override
+  String get pllGroupDoubleBarInfo => 'A 2-bar on each side.';
+
+  @override
+  String get pllGroupOutsideBar => 'Outside 2-bar';
+
+  @override
+  String get pllGroupOutsideBarInfo => 'Only one 2-bar, at the outer end.';
+
+  @override
+  String get pllGroupInsideBar => 'Inside 2-bar';
+
+  @override
+  String get pllGroupInsideBarInfo => 'Only one 2-bar, next to the middle of the strip.';
+
+  @override
+  String get pllGroupBookends => 'Bookends, no bar';
+
+  @override
+  String get pllGroupBookendsInfo => 'No bars or lights, but the two outermost stickers match.';
+
+  @override
+  String get pllGroupNoBookends => 'No bookends';
+
+  @override
+  String get pllGroupNoBookendsInfo => 'None of the above: the two outermost stickers differ.';
+
+  @override
+  String get pllRuleThreeBarHeadlights => 'Headlights on the other side';
+
+  @override
+  String get pllRuleThreeBarTwoBar => 'A 2-bar on the other side';
+
+  @override
+  String get pllRuleThreeBarFourColours => 'Three different colours on the other side (4 colours in all)';
+
+  @override
+  String get pllRuleDoubleLightsChecker => 'Only two colours, in a checkerboard (6-checker)';
+
+  @override
+  String get pllRuleDoubleLights21 =>
+      '3 colours: the edge of one side matches the corners of the other (2:1)';
+
+  @override
+  String get pllRuleDoubleLightsOpposite => '4 colours; each edge is opposite the colour of its lights';
+
+  @override
+  String get pllRuleDoubleLightsAdjacent => '4 colours; each edge is adjacent to the colour of its lights';
+
+  @override
+  String get pllRuleLightsBarInside3 => 'Inside bar, 3 colours';
+
+  @override
+  String get pllRuleLightsBarInside4 => 'Inside bar, 4 colours';
+
+  @override
+  String get pllRuleLightsBarOutside3 => 'Outside bar, 3 colours';
+
+  @override
+  String get pllRuleLightsBarOutside4 => 'Outside bar, 4 colours';
+
+  @override
+  String get pllRuleLoneLights5 => '5-checker';
+
+  @override
+  String get pllRuleLoneLights4 => '4-checker';
+
+  @override
+  String get pllRuleLoneLightsOpposite => 'The edge between the lights is opposite their colour';
+
+  @override
+  String get pllRuleLoneLightsAdjacent =>
+      'The edge between the lights is adjacent to their colour (no checker)';
+
+  @override
+  String get pllRuleDoubleBarOutside => 'Both bars outside';
+
+  @override
+  String get pllRuleDoubleBarInsideBookends => 'Both bars inside, the bookends match';
+
+  @override
+  String get pllRuleDoubleBarInsideNone => 'Both bars inside, the bookends differ';
+
+  @override
+  String get pllRuleDoubleBarSameBookends => 'Bars on the same side of the strip, the bookends match';
+
+  @override
+  String get pllRuleDoubleBarSameNone => 'Bars on the same side of the strip, the bookends differ';
+
+  @override
+  String get pllRuleOutsideBarNone => 'The bookends differ';
+
+  @override
+  String get pllRuleOutsideBarAdjacentTwice =>
+      'Bookends match; one colour appears twice, adjacent to the bar\'s';
+
+  @override
+  String get pllRuleOutsideBarOppositeTwice =>
+      'Bookends match; one colour appears twice, opposite the bar\'s';
+
+  @override
+  String get pllRuleOutsideBarAdjacent =>
+      'Bookends match; the sticker next to the bar is adjacent to its colour (4 colours)';
+
+  @override
+  String get pllRuleOutsideBarOpposite =>
+      'Bookends match; the sticker next to the bar is opposite its colour (4 colours)';
+
+  @override
+  String get pllRuleInsideBarAdjacent => 'Bookends match, in a colour adjacent to the bar\'s';
+
+  @override
+  String get pllRuleInsideBarOpposite => 'Bookends match, in a colour opposite the bar\'s';
+
+  @override
+  String get pllRuleInsideBarNone => 'The bookends differ';
+
+  @override
+  String get pllRuleBookends4 => 'A 4-checker between the bookends';
+
+  @override
+  String get pllRuleBookendsAdjacentTwice => 'One colour appears twice, adjacent to the bookends\'';
+
+  @override
+  String get pllRuleBookendsOppositeTwice => 'One colour appears twice, opposite the bookends\'';
+
+  @override
+  String get pllRuleNoBookendsInner4 => 'A 4-checker in the middle';
+
+  @override
+  String get pllRuleNoBookendsOuter4 => 'A 4-checker at the outer ends';
+
+  @override
+  String get pllRuleNoBookends5 => 'A 5-checker';
+
+  @override
+  String get pllGuideIntro =>
+      'From the front and right sides alone you can name any PLL. Read the six stickers along the top, left to right, and look for the features below, in order. The first that matches decides the group; then find the line in the group that fits.';
+
+  @override
+  String get pllGuideTermsTitle => 'The words';
+
+  @override
+  String get pllTermThreeBar => 'One side is all one colour.';
+
+  @override
+  String get pllTermHeadlights => 'Two corners of a side are one colour, with a different edge between them.';
+
+  @override
+  String get pllTermBar =>
+      'Two stickers of a side next to each other are one colour. Inside means it is next to the middle of the strip, outside means it is at an end.';
+
+  @override
+  String get pllTermBookends => 'The two outermost stickers, the first and the last, are one colour.';
+
+  @override
+  String get pllTermChecker => 'Two colours take turns, four or five stickers in a row.';
+
+  @override
+  String get pllTermColoursTitle => 'Adjacent and opposite';
+
+  @override
+  String get pllTermColours =>
+      'Colours are compared on the cube: opposite colours are on opposite faces (white and yellow, say), and any other two different colours are adjacent.';
+
+  @override
+  String get pllGuideOrderTitle => 'The order to look in';
+
+  @override
+  String get pllGuideOrder => '1. A 3-bar.\n2. Headlights.\n3. A 2-bar.\n4. Bookends.';
+
+  @override
+  String get pllGuideMirrorTitle => 'Mirror images';
+
+  @override
+  String get pllGuideMirror =>
+      'Every picture counts mirrored too: if it only fits when you read the six stickers from right to left, use the line as if it were drawn that way round.';
+
+  @override
+  String get pllGuideLetterTitle => 'Which letter?';
+
+  @override
+  String get pllGuideLetter =>
+      'Where a line names two cases, such as Ua and Ub, it shows both. They are told apart by which way round the pattern is: the one drawn as it is in the picture, or its mirror image. Two lines need one more look:';
+
+  @override
+  String get pllGuideLetterU =>
+      '3-bar with headlights (U), 3-bar on the left: if the edge on the right is opposite the 3-bar\'s colour it is Ua, if it is opposite the headlights\' colour it is Ub. With the 3-bar on the right it is the other way round.';
+
+  @override
+  String get pllGuideLetterA =>
+      'Both bars inside, bookends match (A): if the bookends\' colour is adjacent to the bars\' colour it is Aa, if it is opposite it is Ab.';
+
+  @override
+  String get pllGuideCredit => 'After Mark49152\'s Two-Sided PLL Recognition Guide.';
+
+  @override
+  String get trainerTabRules => 'Patterns';
+
+  @override
+  String get trainerTabAuf => 'AUF';
+
+  @override
+  String get trainerTermsInfo => 'The words';
+
+  @override
+  String get pllAufIntro =>
+      'AUF (Adjust U Face) is the last turn of the top layer that lines it up once the PLL is done. Which way to turn has no fixed answer per case: it depends on the algorithm you use. For many cases the patterns make it obvious; these are the hints for the less obvious ones.';
+
+  @override
+  String get pllAufUTitle => 'U: the 2:1 pattern';
+
+  @override
+  String get pllAufU1 => 'The odd edge is the opposite colour: the 3-bar is adjacent.';
+
+  @override
+  String get pllAufU2 => 'The odd edge is an adjacent colour: the 3-bar is opposite.';
+
+  @override
+  String get pllAufGbdTitle => 'Gb/d: opposite lights';
+
+  @override
+  String get pllAufGbd => 'The 2-bar touches the side with the 2:1 pattern.';
+
+  @override
+  String get pllAufJTitle => 'J: double 2-bar';
+
+  @override
+  String get pllAufJ => 'The 3-bar is next to the side whose colours are adjacent.';
+
+  @override
+  String get pllAufATitle => 'A: double 2-bar';
+
+  @override
+  String get pllAufA => 'The lights are next to the side whose colours are adjacent.';
+
+  @override
+  String get pllAufRGacTitle => 'R and Ga/c: bookends';
+
+  @override
+  String get pllAufR => 'R: the lights are further from the test pair.';
+
+  @override
+  String get pllAufGac => 'Ga/c: the lights are nearer to the test pair.';
+
+  @override
+  String get pllAufFTitle => 'F: checkers';
+
+  @override
+  String get pllAufF => 'The bar is next to the pair of opposite colours.';
 }

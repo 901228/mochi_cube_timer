@@ -1411,6 +1411,576 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There are no algorithm sets for {puzzle}'**
   String algorithmsNoSets(String puzzle);
+
+  /// No description provided for @trainersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trainers'**
+  String get trainersTitle;
+
+  /// No description provided for @trainerPllRecognitionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Two-side PLL recognition'**
+  String get trainerPllRecognitionTitle;
+
+  /// No description provided for @trainerPllRecognitionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Name the PLL case from the front and right sides alone'**
+  String get trainerPllRecognitionDescription;
+
+  /// No description provided for @trainerAnswerWas.
+  ///
+  /// In en, this message translates to:
+  /// **'It was {name}'**
+  String trainerAnswerWas(String name);
+
+  /// No description provided for @trainerNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get trainerNext;
+
+  /// No description provided for @trainerTabPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice'**
+  String get trainerTabPractice;
+
+  /// No description provided for @trainerPattern.
+  ///
+  /// In en, this message translates to:
+  /// **'{group}: {rule}'**
+  String trainerPattern(String group, String rule);
+
+  /// No description provided for @pllGroupThreeBar.
+  ///
+  /// In en, this message translates to:
+  /// **'3-bar'**
+  String get pllGroupThreeBar;
+
+  /// No description provided for @pllGroupThreeBarInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'One side is all one colour.'**
+  String get pllGroupThreeBarInfo;
+
+  /// No description provided for @pllGroupDoubleLights.
+  ///
+  /// In en, this message translates to:
+  /// **'Double lights'**
+  String get pllGroupDoubleLights;
+
+  /// No description provided for @pllGroupDoubleLightsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Both sides have headlights: two corners of one colour with a different edge between them.'**
+  String get pllGroupDoubleLightsInfo;
+
+  /// No description provided for @pllGroupLightsAndBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Lights + 2-bar'**
+  String get pllGroupLightsAndBar;
+
+  /// No description provided for @pllGroupLightsAndBarInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Headlights on one side and a 2-bar on the other.'**
+  String get pllGroupLightsAndBarInfo;
+
+  /// No description provided for @pllGroupLoneLights.
+  ///
+  /// In en, this message translates to:
+  /// **'Lone lights'**
+  String get pllGroupLoneLights;
+
+  /// No description provided for @pllGroupLoneLightsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Headlights on one side; the other side has no bar and no lights.'**
+  String get pllGroupLoneLightsInfo;
+
+  /// No description provided for @pllGroupDoubleBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Double 2-bar'**
+  String get pllGroupDoubleBar;
+
+  /// No description provided for @pllGroupDoubleBarInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'A 2-bar on each side.'**
+  String get pllGroupDoubleBarInfo;
+
+  /// No description provided for @pllGroupOutsideBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside 2-bar'**
+  String get pllGroupOutsideBar;
+
+  /// No description provided for @pllGroupOutsideBarInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Only one 2-bar, at the outer end.'**
+  String get pllGroupOutsideBarInfo;
+
+  /// No description provided for @pllGroupInsideBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Inside 2-bar'**
+  String get pllGroupInsideBar;
+
+  /// No description provided for @pllGroupInsideBarInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Only one 2-bar, next to the middle of the strip.'**
+  String get pllGroupInsideBarInfo;
+
+  /// No description provided for @pllGroupBookends.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookends, no bar'**
+  String get pllGroupBookends;
+
+  /// No description provided for @pllGroupBookendsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'No bars or lights, but the two outermost stickers match.'**
+  String get pllGroupBookendsInfo;
+
+  /// No description provided for @pllGroupNoBookends.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookends'**
+  String get pllGroupNoBookends;
+
+  /// No description provided for @pllGroupNoBookendsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'None of the above: the two outermost stickers differ.'**
+  String get pllGroupNoBookendsInfo;
+
+  /// No description provided for @pllRuleThreeBarHeadlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Headlights on the other side'**
+  String get pllRuleThreeBarHeadlights;
+
+  /// No description provided for @pllRuleThreeBarTwoBar.
+  ///
+  /// In en, this message translates to:
+  /// **'A 2-bar on the other side'**
+  String get pllRuleThreeBarTwoBar;
+
+  /// No description provided for @pllRuleThreeBarFourColours.
+  ///
+  /// In en, this message translates to:
+  /// **'Three different colours on the other side (4 colours in all)'**
+  String get pllRuleThreeBarFourColours;
+
+  /// No description provided for @pllRuleDoubleLightsChecker.
+  ///
+  /// In en, this message translates to:
+  /// **'Only two colours, in a checkerboard (6-checker)'**
+  String get pllRuleDoubleLightsChecker;
+
+  /// No description provided for @pllRuleDoubleLights21.
+  ///
+  /// In en, this message translates to:
+  /// **'3 colours: the edge of one side matches the corners of the other (2:1)'**
+  String get pllRuleDoubleLights21;
+
+  /// No description provided for @pllRuleDoubleLightsOpposite.
+  ///
+  /// In en, this message translates to:
+  /// **'4 colours; each edge is opposite the colour of its lights'**
+  String get pllRuleDoubleLightsOpposite;
+
+  /// No description provided for @pllRuleDoubleLightsAdjacent.
+  ///
+  /// In en, this message translates to:
+  /// **'4 colours; each edge is adjacent to the colour of its lights'**
+  String get pllRuleDoubleLightsAdjacent;
+
+  /// No description provided for @pllRuleLightsBarInside3.
+  ///
+  /// In en, this message translates to:
+  /// **'Inside bar, 3 colours'**
+  String get pllRuleLightsBarInside3;
+
+  /// No description provided for @pllRuleLightsBarInside4.
+  ///
+  /// In en, this message translates to:
+  /// **'Inside bar, 4 colours'**
+  String get pllRuleLightsBarInside4;
+
+  /// No description provided for @pllRuleLightsBarOutside3.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside bar, 3 colours'**
+  String get pllRuleLightsBarOutside3;
+
+  /// No description provided for @pllRuleLightsBarOutside4.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside bar, 4 colours'**
+  String get pllRuleLightsBarOutside4;
+
+  /// No description provided for @pllRuleLoneLights5.
+  ///
+  /// In en, this message translates to:
+  /// **'5-checker'**
+  String get pllRuleLoneLights5;
+
+  /// No description provided for @pllRuleLoneLights4.
+  ///
+  /// In en, this message translates to:
+  /// **'4-checker'**
+  String get pllRuleLoneLights4;
+
+  /// No description provided for @pllRuleLoneLightsOpposite.
+  ///
+  /// In en, this message translates to:
+  /// **'The edge between the lights is opposite their colour'**
+  String get pllRuleLoneLightsOpposite;
+
+  /// No description provided for @pllRuleLoneLightsAdjacent.
+  ///
+  /// In en, this message translates to:
+  /// **'The edge between the lights is adjacent to their colour (no checker)'**
+  String get pllRuleLoneLightsAdjacent;
+
+  /// No description provided for @pllRuleDoubleBarOutside.
+  ///
+  /// In en, this message translates to:
+  /// **'Both bars outside'**
+  String get pllRuleDoubleBarOutside;
+
+  /// No description provided for @pllRuleDoubleBarInsideBookends.
+  ///
+  /// In en, this message translates to:
+  /// **'Both bars inside, the bookends match'**
+  String get pllRuleDoubleBarInsideBookends;
+
+  /// No description provided for @pllRuleDoubleBarInsideNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Both bars inside, the bookends differ'**
+  String get pllRuleDoubleBarInsideNone;
+
+  /// No description provided for @pllRuleDoubleBarSameBookends.
+  ///
+  /// In en, this message translates to:
+  /// **'Bars on the same side of the strip, the bookends match'**
+  String get pllRuleDoubleBarSameBookends;
+
+  /// No description provided for @pllRuleDoubleBarSameNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Bars on the same side of the strip, the bookends differ'**
+  String get pllRuleDoubleBarSameNone;
+
+  /// No description provided for @pllRuleOutsideBarNone.
+  ///
+  /// In en, this message translates to:
+  /// **'The bookends differ'**
+  String get pllRuleOutsideBarNone;
+
+  /// No description provided for @pllRuleOutsideBarAdjacentTwice.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookends match; one colour appears twice, adjacent to the bar\'s'**
+  String get pllRuleOutsideBarAdjacentTwice;
+
+  /// No description provided for @pllRuleOutsideBarOppositeTwice.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookends match; one colour appears twice, opposite the bar\'s'**
+  String get pllRuleOutsideBarOppositeTwice;
+
+  /// No description provided for @pllRuleOutsideBarAdjacent.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookends match; the sticker next to the bar is adjacent to its colour (4 colours)'**
+  String get pllRuleOutsideBarAdjacent;
+
+  /// No description provided for @pllRuleOutsideBarOpposite.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookends match; the sticker next to the bar is opposite its colour (4 colours)'**
+  String get pllRuleOutsideBarOpposite;
+
+  /// No description provided for @pllRuleInsideBarAdjacent.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookends match, in a colour adjacent to the bar\'s'**
+  String get pllRuleInsideBarAdjacent;
+
+  /// No description provided for @pllRuleInsideBarOpposite.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookends match, in a colour opposite the bar\'s'**
+  String get pllRuleInsideBarOpposite;
+
+  /// No description provided for @pllRuleInsideBarNone.
+  ///
+  /// In en, this message translates to:
+  /// **'The bookends differ'**
+  String get pllRuleInsideBarNone;
+
+  /// No description provided for @pllRuleBookends4.
+  ///
+  /// In en, this message translates to:
+  /// **'A 4-checker between the bookends'**
+  String get pllRuleBookends4;
+
+  /// No description provided for @pllRuleBookendsAdjacentTwice.
+  ///
+  /// In en, this message translates to:
+  /// **'One colour appears twice, adjacent to the bookends\''**
+  String get pllRuleBookendsAdjacentTwice;
+
+  /// No description provided for @pllRuleBookendsOppositeTwice.
+  ///
+  /// In en, this message translates to:
+  /// **'One colour appears twice, opposite the bookends\''**
+  String get pllRuleBookendsOppositeTwice;
+
+  /// No description provided for @pllRuleNoBookendsInner4.
+  ///
+  /// In en, this message translates to:
+  /// **'A 4-checker in the middle'**
+  String get pllRuleNoBookendsInner4;
+
+  /// No description provided for @pllRuleNoBookendsOuter4.
+  ///
+  /// In en, this message translates to:
+  /// **'A 4-checker at the outer ends'**
+  String get pllRuleNoBookendsOuter4;
+
+  /// No description provided for @pllRuleNoBookends5.
+  ///
+  /// In en, this message translates to:
+  /// **'A 5-checker'**
+  String get pllRuleNoBookends5;
+
+  /// No description provided for @pllGuideIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'From the front and right sides alone you can name any PLL. Read the six stickers along the top, left to right, and look for the features below, in order. The first that matches decides the group; then find the line in the group that fits.'**
+  String get pllGuideIntro;
+
+  /// No description provided for @pllGuideTermsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The words'**
+  String get pllGuideTermsTitle;
+
+  /// No description provided for @pllTermThreeBar.
+  ///
+  /// In en, this message translates to:
+  /// **'One side is all one colour.'**
+  String get pllTermThreeBar;
+
+  /// No description provided for @pllTermHeadlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Two corners of a side are one colour, with a different edge between them.'**
+  String get pllTermHeadlights;
+
+  /// No description provided for @pllTermBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Two stickers of a side next to each other are one colour. Inside means it is next to the middle of the strip, outside means it is at an end.'**
+  String get pllTermBar;
+
+  /// No description provided for @pllTermBookends.
+  ///
+  /// In en, this message translates to:
+  /// **'The two outermost stickers, the first and the last, are one colour.'**
+  String get pllTermBookends;
+
+  /// No description provided for @pllTermChecker.
+  ///
+  /// In en, this message translates to:
+  /// **'Two colours take turns, four or five stickers in a row.'**
+  String get pllTermChecker;
+
+  /// No description provided for @pllTermColoursTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjacent and opposite'**
+  String get pllTermColoursTitle;
+
+  /// No description provided for @pllTermColours.
+  ///
+  /// In en, this message translates to:
+  /// **'Colours are compared on the cube: opposite colours are on opposite faces (white and yellow, say), and any other two different colours are adjacent.'**
+  String get pllTermColours;
+
+  /// No description provided for @pllGuideOrderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The order to look in'**
+  String get pllGuideOrderTitle;
+
+  /// No description provided for @pllGuideOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'1. A 3-bar.\n2. Headlights.\n3. A 2-bar.\n4. Bookends.'**
+  String get pllGuideOrder;
+
+  /// No description provided for @pllGuideMirrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mirror images'**
+  String get pllGuideMirrorTitle;
+
+  /// No description provided for @pllGuideMirror.
+  ///
+  /// In en, this message translates to:
+  /// **'Every picture counts mirrored too: if it only fits when you read the six stickers from right to left, use the line as if it were drawn that way round.'**
+  String get pllGuideMirror;
+
+  /// No description provided for @pllGuideLetterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which letter?'**
+  String get pllGuideLetterTitle;
+
+  /// No description provided for @pllGuideLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Where a line names two cases, such as Ua and Ub, it shows both. They are told apart by which way round the pattern is: the one drawn as it is in the picture, or its mirror image. Two lines need one more look:'**
+  String get pllGuideLetter;
+
+  /// No description provided for @pllGuideLetterU.
+  ///
+  /// In en, this message translates to:
+  /// **'3-bar with headlights (U), 3-bar on the left: if the edge on the right is opposite the 3-bar\'s colour it is Ua, if it is opposite the headlights\' colour it is Ub. With the 3-bar on the right it is the other way round.'**
+  String get pllGuideLetterU;
+
+  /// No description provided for @pllGuideLetterA.
+  ///
+  /// In en, this message translates to:
+  /// **'Both bars inside, bookends match (A): if the bookends\' colour is adjacent to the bars\' colour it is Aa, if it is opposite it is Ab.'**
+  String get pllGuideLetterA;
+
+  /// No description provided for @pllGuideCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'After Mark49152\'s Two-Sided PLL Recognition Guide.'**
+  String get pllGuideCredit;
+
+  /// No description provided for @trainerTabRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Patterns'**
+  String get trainerTabRules;
+
+  /// No description provided for @trainerTabAuf.
+  ///
+  /// In en, this message translates to:
+  /// **'AUF'**
+  String get trainerTabAuf;
+
+  /// No description provided for @trainerTermsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'The words'**
+  String get trainerTermsInfo;
+
+  /// No description provided for @pllAufIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'AUF (Adjust U Face) is the last turn of the top layer that lines it up once the PLL is done. Which way to turn has no fixed answer per case: it depends on the algorithm you use. For many cases the patterns make it obvious; these are the hints for the less obvious ones.'**
+  String get pllAufIntro;
+
+  /// No description provided for @pllAufUTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'U: the 2:1 pattern'**
+  String get pllAufUTitle;
+
+  /// No description provided for @pllAufU1.
+  ///
+  /// In en, this message translates to:
+  /// **'The odd edge is the opposite colour: the 3-bar is adjacent.'**
+  String get pllAufU1;
+
+  /// No description provided for @pllAufU2.
+  ///
+  /// In en, this message translates to:
+  /// **'The odd edge is an adjacent colour: the 3-bar is opposite.'**
+  String get pllAufU2;
+
+  /// No description provided for @pllAufGbdTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gb/d: opposite lights'**
+  String get pllAufGbdTitle;
+
+  /// No description provided for @pllAufGbd.
+  ///
+  /// In en, this message translates to:
+  /// **'The 2-bar touches the side with the 2:1 pattern.'**
+  String get pllAufGbd;
+
+  /// No description provided for @pllAufJTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'J: double 2-bar'**
+  String get pllAufJTitle;
+
+  /// No description provided for @pllAufJ.
+  ///
+  /// In en, this message translates to:
+  /// **'The 3-bar is next to the side whose colours are adjacent.'**
+  String get pllAufJ;
+
+  /// No description provided for @pllAufATitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A: double 2-bar'**
+  String get pllAufATitle;
+
+  /// No description provided for @pllAufA.
+  ///
+  /// In en, this message translates to:
+  /// **'The lights are next to the side whose colours are adjacent.'**
+  String get pllAufA;
+
+  /// No description provided for @pllAufRGacTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'R and Ga/c: bookends'**
+  String get pllAufRGacTitle;
+
+  /// No description provided for @pllAufR.
+  ///
+  /// In en, this message translates to:
+  /// **'R: the lights are further from the test pair.'**
+  String get pllAufR;
+
+  /// No description provided for @pllAufGac.
+  ///
+  /// In en, this message translates to:
+  /// **'Ga/c: the lights are nearer to the test pair.'**
+  String get pllAufGac;
+
+  /// No description provided for @pllAufFTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'F: checkers'**
+  String get pllAufFTitle;
+
+  /// No description provided for @pllAufF.
+  ///
+  /// In en, this message translates to:
+  /// **'The bar is next to the pair of opposite colours.'**
+  String get pllAufF;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

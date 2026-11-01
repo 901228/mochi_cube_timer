@@ -14,6 +14,8 @@ import "../features/settings/settings_page.dart";
 import "../features/stats/stats_page.dart";
 import "../features/timer/timer_focus.dart";
 import "../features/timer/timer_page.dart";
+import "../features/trainers/pll_recognition/pll_recognition_page.dart";
+import "../features/trainers/trainers_page.dart";
 
 String _algorithmsPath({required bool standalone}) => standalone ? "algorithms-standalone" : "algorithms";
 
@@ -81,6 +83,38 @@ GoRoute algorithmsRouter({required bool standalone}) {
   );
 }
 
+GoRoute trainersRouter({required bool standalone}) {
+  final path = standalone ? "trainers-standalone" : "trainers";
+
+  return GoRoute(
+    path: "/$path",
+    name: path,
+    pageBuilder: (context, state) {
+      final page = TrainersPage(standalone: standalone);
+      return standalone
+          ? MochiPage(key: state.pageKey, child: page)
+          : NoTransitionPage(key: state.pageKey, child: page);
+    },
+    routes: [
+      GoRoute(
+        path: "pll-recognition",
+        pageBuilder: (context, state) => MochiPage(
+          key: state.pageKey,
+          child: PllRecognitionPage(standalone: standalone),
+        ),
+      ),
+    ],
+  );
+}
+
+/// The pages the home shell's bottom navigation and swipe go between; the branches after them are
+/// reached from the sidebar.
+const _homePages = [
+  (id: "timer", icon: TablerIcons.clockHour4, path: "/timer"),
+  (id: "records", icon: TablerIcons.library, path: "/records"),
+  (id: "stats", icon: TablerIcons.chartLine, path: "/stats"),
+];
+
 final router = GoRouter(
   initialLocation: "/",
   routes: [
@@ -95,6 +129,8 @@ final router = GoRouter(
       ),
       routes: [algorithmsRouter(standalone: true)],
     ),
+
+    trainersRouter(standalone: true),
 
     GoRoute(
       path: "/settings",
@@ -119,14 +155,7 @@ final router = GoRouter(
     StatefulShellRoute(
       pageBuilder: (context, state, navigationShell) => MochiPage(
         key: state.pageKey,
-        child: HomeShell(
-          pages: [
-            (id: "timer", icon: TablerIcons.clockHour4, path: "/timer"),
-            (id: "records", icon: TablerIcons.library, path: "/records"),
-            (id: "stats", icon: TablerIcons.chartLine, path: "/stats"),
-          ],
-          navigationShell: navigationShell,
-        ),
+        child: HomeShell(pages: _homePages, navigationShell: navigationShell),
       ),
       navigatorContainerBuilder: (context, navigationShell, children) => Builder(
         builder: (context) {
@@ -142,7 +171,8 @@ final router = GoRouter(
             onChanged: (index) {
               navigationShell.goBranch(index);
             },
-            children: children,
+            // Not the branches reached from the sidebar: a swipe is for the pages.
+            children: children.take(_homePages.length).toList(),
           );
         },
       ),
@@ -157,6 +187,7 @@ final router = GoRouter(
           routes: [GoRoute(path: "/stats", name: "stats", builder: (context, state) => StatsPage())],
         ),
         StatefulShellBranch(routes: [algorithmsRouter(standalone: false)]),
+        StatefulShellBranch(routes: [trainersRouter(standalone: false)]),
       ],
     ),
   ],

@@ -29,6 +29,9 @@ dependencies:
   cube_timer:
     path: ../../packages/cube_timer
 
+  mochi_cube:
+    path: ../../../mochi_cube
+
   drift:
   drift_flutter: ^0.3.1
 

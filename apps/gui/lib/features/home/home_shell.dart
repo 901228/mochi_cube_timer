@@ -243,6 +243,12 @@ class _HomeShellState extends State<HomeShell> {
           // Not `goBranch`: a branch comes back to where it was left, which may be another puzzle's.
           onPress: puzzle == null ? null : then(() => context.go("/algorithms/${puzzle.id}")),
         ),
+        MochiSidebarItem(
+          icon: Icon(TablerIcons.barbell),
+          label: Text(context.l10n.trainersTitle),
+          selected: widget.navigationShell.currentIndex == 4,
+          onPress: then(() => context.go("/trainers")),
+        ),
       ],
     );
   }
@@ -279,97 +285,103 @@ class _HomeShellState extends State<HomeShell> {
                 extendBody: true,
                 immersive: context.watch<TimerFocusCubit>().state,
                 padding: .zero,
-                header: MochiHeader(
-                  alignment: .center,
-                  variant: .bordered,
-                  prefixes: [if (algorithms?.setName != null) .back(onPress: () => context.pop())],
-                  title: _titleWithSet(
-                    context,
-                    algorithms?.setName,
-                    MochiButton(
-                      appearance: .soft,
-                      scaleOnPress: false,
-                      onPress: () => showMochiModal(
-                        context,
-                        title: Text(context.l10n.homeSelectPuzzle),
-                        body: PuzzleSelectionDialog(
-                          // TODO: enable algorithm list, them click the algorithm and go to the corresponding page
-                          showKinds: widget.navigationShell.currentIndex != 3,
-                          onSelect: (puzzle) {
-                            if (widget.navigationShell.currentIndex == 3) {
-                              context.go("/algorithms/${puzzle.id}");
-                            }
-                          },
-                        ),
-                      ),
-                      child: data == null
-                          ? const Center(child: MochiCircularProgress())
-                          : Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: DefaultTextHeightBehavior(
-                                textHeightBehavior: const TextHeightBehavior(
-                                  applyHeightToFirstAscent: false,
-                                  applyHeightToLastDescent: false,
-                                ),
-                                child: algorithms == null
-                                    ? Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: .center,
-                                        spacing: 2,
-                                        children: [
-                                          DefaultTextStyle.merge(
-                                            style: context.theme.typography.title.md,
-                                            child: Text(data.appState.puzzle.displayName(context.l10n)),
-                                          ),
-                                          DefaultTextStyle.merge(
-                                            style: context.theme.typography.title.sm.copyWith(
-                                              color: context.colors.mutedForeground,
-                                            ),
-                                            child: Text(data.appState.session.name),
-                                          ),
-                                        ],
-                                      )
-                                    : DefaultTextStyle.merge(
-                                        style: context.theme.typography.title.md,
-                                        child: Text(data.appState.puzzle.displayName(context.l10n)),
-                                      ),
+                // The trainers draw their own, as there is no puzzle or session to pick for them.
+                header: widget.navigationShell.currentIndex == 4
+                    ? null
+                    : MochiHeader(
+                        alignment: .center,
+                        variant: .bordered,
+                        prefixes: [if (algorithms?.setName != null) .back(onPress: () => context.pop())],
+                        title: _titleWithSet(
+                          context,
+                          algorithms?.setName,
+                          MochiButton(
+                            appearance: .soft,
+                            scaleOnPress: false,
+                            onPress: () => showMochiModal(
+                              context,
+                              title: Text(context.l10n.homeSelectPuzzle),
+                              body: PuzzleSelectionDialog(
+                                // TODO: enable algorithm list, them click the algorithm and go to the corresponding page
+                                showKinds: widget.navigationShell.currentIndex != 3,
+                                onSelect: (puzzle) {
+                                  if (widget.navigationShell.currentIndex == 3) {
+                                    context.go("/algorithms/${puzzle.id}");
+                                  }
+                                },
                               ),
                             ),
-                    ),
-                  ),
-                  suffixes: [
-                    if (algorithms != null)
-                      algorithmsToggleAllAction(
-                        context,
-                        isAllCollapsed: algorithms.isAllCollapsed,
-                        onPress: algorithms.toggleAll,
+                            child: data == null
+                                ? const Center(child: MochiCircularProgress())
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 2),
+                                    child: DefaultTextHeightBehavior(
+                                      textHeightBehavior: const TextHeightBehavior(
+                                        applyHeightToFirstAscent: false,
+                                        applyHeightToLastDescent: false,
+                                      ),
+                                      child: algorithms == null
+                                          ? Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              mainAxisAlignment: .center,
+                                              spacing: 2,
+                                              children: [
+                                                DefaultTextStyle.merge(
+                                                  style: context.theme.typography.title.md,
+                                                  child: Text(data.appState.puzzle.displayName(context.l10n)),
+                                                ),
+                                                DefaultTextStyle.merge(
+                                                  style: context.theme.typography.title.sm.copyWith(
+                                                    color: context.colors.mutedForeground,
+                                                  ),
+                                                  child: Text(data.appState.session.name),
+                                                ),
+                                              ],
+                                            )
+                                          : DefaultTextStyle.merge(
+                                              style: context.theme.typography.title.md,
+                                              child: Text(data.appState.puzzle.displayName(context.l10n)),
+                                            ),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        suffixes: [
+                          if (algorithms != null)
+                            algorithmsToggleAllAction(
+                              context,
+                              isAllCollapsed: algorithms.isAllCollapsed,
+                              onPress: algorithms.toggleAll,
+                            ),
+                          if (widget.navigationShell.currentIndex != 3 &&
+                              widget.pages.length > widget.navigationShell.currentIndex &&
+                              widget.pages[widget.navigationShell.currentIndex].id != "timer")
+                            MochiAction(
+                              icon: (data?.appState.showArchived ?? false)
+                                  ? TablerIcons.archiveFilled
+                                  : TablerIcons.archive,
+                              enabled: data != null,
+                              selected: data?.appState.showArchived ?? false,
+                              label: context.l10n.homeShowArchived,
+                              onPress: data == null
+                                  ? null
+                                  : () => context.read<AppDatabase>().appStateDao.setShowArchived(
+                                      !data.appState.showArchived,
+                                    ),
+                            ),
+                          if (widget.navigationShell.currentIndex != 3)
+                            MochiAction(
+                              icon: TablerIcons.stack2,
+                              label: context.l10n.homeSessions,
+                              onPress: data == null
+                                  ? null
+                                  : () => showSessionSelectionDialog(
+                                      context,
+                                      sessionId: data.appState.session.id,
+                                    ),
+                            ),
+                        ],
                       ),
-                    if (widget.navigationShell.currentIndex != 3 &&
-                        widget.pages.length > widget.navigationShell.currentIndex &&
-                        widget.pages[widget.navigationShell.currentIndex].id != "timer")
-                      MochiAction(
-                        icon: (data?.appState.showArchived ?? false)
-                            ? TablerIcons.archiveFilled
-                            : TablerIcons.archive,
-                        enabled: data != null,
-                        selected: data?.appState.showArchived ?? false,
-                        label: context.l10n.homeShowArchived,
-                        onPress: data == null
-                            ? null
-                            : () => context.read<AppDatabase>().appStateDao.setShowArchived(
-                                !data.appState.showArchived,
-                              ),
-                      ),
-                    if (widget.navigationShell.currentIndex != 3)
-                      MochiAction(
-                        icon: TablerIcons.stack2,
-                        label: context.l10n.homeSessions,
-                        onPress: data == null
-                            ? null
-                            : () => showSessionSelectionDialog(context, sessionId: data.appState.session.id),
-                      ),
-                  ],
-                ),
                 headerOverlay: context.watch<RecordSelectionCubit>().active
                     ? _selectionHeader(context, data)
                     : null,
@@ -432,6 +444,14 @@ class _HomeShellState extends State<HomeShell> {
                                       MochiScaffold.of(context).closeDrawer();
                                       context.push("/algorithms-standalone/${data.appState.puzzle.id}");
                                     },
+                            ),
+                            MochiSidebarItem(
+                              icon: Icon(TablerIcons.barbell),
+                              label: Text(context.l10n.trainersTitle),
+                              onPress: () {
+                                MochiScaffold.of(context).closeDrawer();
+                                context.push("/trainers-standalone");
+                              },
                             ),
                           ],
                         ),

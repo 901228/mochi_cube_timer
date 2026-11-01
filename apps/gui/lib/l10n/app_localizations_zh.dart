@@ -714,4 +714,295 @@ class AppLocalizationsZh extends AppLocalizations {
   String algorithmsNoSets(String puzzle) {
     return '$puzzle 目前沒有公式集';
   }
+
+  @override
+  String get trainersTitle => '練習器';
+
+  @override
+  String get trainerPllRecognitionTitle => 'PLL 兩面辨識';
+
+  @override
+  String get trainerPllRecognitionDescription => '只看前、右兩面，判斷是哪個 PLL';
+
+  @override
+  String trainerAnswerWas(String name) {
+    return '答案是 $name';
+  }
+
+  @override
+  String get trainerNext => '下一題';
+
+  @override
+  String get trainerTabPractice => '練習';
+
+  @override
+  String trainerPattern(String group, String rule) {
+    return '$group：$rule';
+  }
+
+  @override
+  String get pllGroupThreeBar => '3-bar';
+
+  @override
+  String get pllGroupThreeBarInfo => '其中一側三個貼紙同色。';
+
+  @override
+  String get pllGroupDoubleLights => '雙燈';
+
+  @override
+  String get pllGroupDoubleLightsInfo => '兩側都有 headlights：左右兩個角同色，中間夾著不同色的邊。';
+
+  @override
+  String get pllGroupLightsAndBar => '一側 headlights＋另一側 2-bar';
+
+  @override
+  String get pllGroupLightsAndBarInfo => '一側是 headlights，另一側是 2-bar。';
+
+  @override
+  String get pllGroupLoneLights => '單側 headlights';
+
+  @override
+  String get pllGroupLoneLightsInfo => '一側是 headlights，另一側沒有 bar 也沒有 headlights。';
+
+  @override
+  String get pllGroupDoubleBar => '兩側都有 2-bar';
+
+  @override
+  String get pllGroupDoubleBarInfo => '兩側各有一個 2-bar。';
+
+  @override
+  String get pllGroupOutsideBar => '只有外側 2-bar';
+
+  @override
+  String get pllGroupOutsideBarInfo => '只有一個 2-bar，在外側。';
+
+  @override
+  String get pllGroupInsideBar => '只有內側 2-bar';
+
+  @override
+  String get pllGroupInsideBarInfo => '只有一個 2-bar，在靠近中間（兩面交界）的內側。';
+
+  @override
+  String get pllGroupBookends => '只有 bookends';
+
+  @override
+  String get pllGroupBookendsInfo => '沒有 bar 或 headlights，但最外側兩個貼紙同色。';
+
+  @override
+  String get pllGroupNoBookends => '什麼都沒有';
+
+  @override
+  String get pllGroupNoBookendsInfo => '以上都沒有：最外側兩個貼紙不同色。';
+
+  @override
+  String get pllRuleThreeBarHeadlights => '另一側是 headlights';
+
+  @override
+  String get pllRuleThreeBarTwoBar => '另一側是 2-bar';
+
+  @override
+  String get pllRuleThreeBarFourColours => '另一側三個貼紙都不同色（共 4 色）';
+
+  @override
+  String get pllRuleDoubleLightsChecker => '只有兩種顏色，棋盤狀交替（6-checker）';
+
+  @override
+  String get pllRuleDoubleLights21 => '3 色：一側的邊跟另一側的角同色（2:1）';
+
+  @override
+  String get pllRuleDoubleLightsOpposite => '4 色；兩條邊都是各自那對燈的對色';
+
+  @override
+  String get pllRuleDoubleLightsAdjacent => '4 色；兩條邊都是各自那對燈的相鄰色';
+
+  @override
+  String get pllRuleLightsBarInside3 => '2-bar 在內側，共 3 色';
+
+  @override
+  String get pllRuleLightsBarInside4 => '2-bar 在內側，共 4 色';
+
+  @override
+  String get pllRuleLightsBarOutside3 => '2-bar 在外側，共 3 色';
+
+  @override
+  String get pllRuleLightsBarOutside4 => '2-bar 在外側，共 4 色';
+
+  @override
+  String get pllRuleLoneLights5 => '5-checker（五個貼紙交替）';
+
+  @override
+  String get pllRuleLoneLights4 => '4-checker（四個貼紙交替）';
+
+  @override
+  String get pllRuleLoneLightsOpposite => '兩盞燈中間的邊是燈色的對色';
+
+  @override
+  String get pllRuleLoneLightsAdjacent => '兩盞燈中間的邊是燈色的相鄰色（沒有 checker）';
+
+  @override
+  String get pllRuleDoubleBarOutside => '兩個 2-bar 都在外側';
+
+  @override
+  String get pllRuleDoubleBarInsideBookends => '兩個 2-bar 都在內側，bookends 同色';
+
+  @override
+  String get pllRuleDoubleBarInsideNone => '兩個 2-bar 都在內側，bookends 不同色';
+
+  @override
+  String get pllRuleDoubleBarSameBookends => '兩個 2-bar 偏同一邊（一內一外），bookends 同色';
+
+  @override
+  String get pllRuleDoubleBarSameNone => '兩個 2-bar 偏同一邊（一內一外），bookends 不同色';
+
+  @override
+  String get pllRuleOutsideBarNone => 'bookends 不同色';
+
+  @override
+  String get pllRuleOutsideBarAdjacentTwice => 'bookends 同色；有一個顏色出現兩次，且是 2-bar 顏色的相鄰色';
+
+  @override
+  String get pllRuleOutsideBarOppositeTwice => 'bookends 同色；有一個顏色出現兩次，且是 2-bar 顏色的對色';
+
+  @override
+  String get pllRuleOutsideBarAdjacent => 'bookends 同色；緊鄰 2-bar 的貼紙是 2-bar 顏色的相鄰色（共 4 色）';
+
+  @override
+  String get pllRuleOutsideBarOpposite => 'bookends 同色；緊鄰 2-bar 的貼紙是 2-bar 顏色的對色（共 4 色）';
+
+  @override
+  String get pllRuleInsideBarAdjacent => 'bookends 同色，且是 2-bar 顏色的相鄰色';
+
+  @override
+  String get pllRuleInsideBarOpposite => 'bookends 同色，且是 2-bar 顏色的對色';
+
+  @override
+  String get pllRuleInsideBarNone => 'bookends 不同色';
+
+  @override
+  String get pllRuleBookends4 => 'bookends 之間是 4-checker';
+
+  @override
+  String get pllRuleBookendsAdjacentTwice => '有一個顏色出現兩次，且是 bookends 顏色的相鄰色';
+
+  @override
+  String get pllRuleBookendsOppositeTwice => '有一個顏色出現兩次，且是 bookends 顏色的對色';
+
+  @override
+  String get pllRuleNoBookendsInner4 => '中間是 4-checker';
+
+  @override
+  String get pllRuleNoBookendsOuter4 => '外側是 4-checker';
+
+  @override
+  String get pllRuleNoBookends5 => '5-checker（五個貼紙交替）';
+
+  @override
+  String get pllGuideIntro => '只看前、右兩面就能判斷任何一個 PLL。把頂排的六個貼紙由左到右讀過去，依序找下面的特徵：第一個符合的就決定是哪一組，再從那一組裡找符合的那一行。';
+
+  @override
+  String get pllGuideTermsTitle => '名詞';
+
+  @override
+  String get pllTermThreeBar => '同一面的三個貼紙同色。';
+
+  @override
+  String get pllTermHeadlights => '同一面左右兩個角同色，中間夾著不同色的邊。';
+
+  @override
+  String get pllTermBar => '同一面相鄰的兩個貼紙同色。靠近中間（兩面交界）的叫內側（inside），在最外端的叫外側（outside）。';
+
+  @override
+  String get pllTermBookends => '最外側的兩個貼紙（第一個和最後一個）同色。';
+
+  @override
+  String get pllTermChecker => '兩種顏色輪流出現，連續四個或五個貼紙。';
+
+  @override
+  String get pllTermColoursTitle => '相鄰色與對色';
+
+  @override
+  String get pllTermColours => '顏色是跟方塊本身比的：對色是相對兩面的顏色（例如白和黃），其他兩個不同的顏色就是相鄰色。';
+
+  @override
+  String get pllGuideOrderTitle => '看的順序';
+
+  @override
+  String get pllGuideOrder => '1. 3-bar\n2. headlights\n3. 2-bar\n4. bookends';
+
+  @override
+  String get pllGuideMirrorTitle => '鏡像';
+
+  @override
+  String get pllGuideMirror => '每張圖也可以左右鏡像：如果要把六個貼紙由右往左讀才符合，就把那一行也左右翻過來看。';
+
+  @override
+  String get pllGuideLetterTitle => 'a 還是 b？';
+
+  @override
+  String get pllGuideLetter => '一行有兩個 case（例如 Ua 和 Ub）時，兩個都會畫出來，差別在圖案的方向：照圖的方向，或是它的鏡像。有兩行需要多看一眼：';
+
+  @override
+  String get pllGuideLetterU =>
+      '3-bar 加 headlights（U），3-bar 在左邊：右邊那條邊是 3-bar 顏色的對色就是 Ua，是 headlights 顏色的對色就是 Ub；3-bar 在右邊則相反。';
+
+  @override
+  String get pllGuideLetterA => '兩個 2-bar 都在內側且 bookends 同色（A）：bookends 的顏色是 2-bar 顏色的相鄰色就是 Aa，是對色就是 Ab。';
+
+  @override
+  String get pllGuideCredit => '參考 Mark49152 的 Two-Sided PLL Recognition Guide。';
+
+  @override
+  String get trainerTabRules => '規則';
+
+  @override
+  String get trainerTabAuf => 'AUF';
+
+  @override
+  String get trainerTermsInfo => '名詞說明';
+
+  @override
+  String get pllAufIntro =>
+      'AUF（Adjust U Face）是 PLL 做完後，最後轉 U 層把頂層對齊的那一步。轉哪個方向沒有固定答案，要看你用的公式。多數 case 從圖案就看得出來，下面是比較不明顯的幾個提示。';
+
+  @override
+  String get pllAufUTitle => 'U：2:1 pattern';
+
+  @override
+  String get pllAufU1 => '落單的邊是對色：3-bar 在相鄰的那面。';
+
+  @override
+  String get pllAufU2 => '落單的邊是相鄰色：3-bar 在對面。';
+
+  @override
+  String get pllAufGbdTitle => 'Gb/d：對色的 lights';
+
+  @override
+  String get pllAufGbd => '2-bar 靠著有 2:1 pattern 的那一面。';
+
+  @override
+  String get pllAufJTitle => 'J：雙 2-bar';
+
+  @override
+  String get pllAufJ => '3-bar 靠著顏色相鄰的那一面。';
+
+  @override
+  String get pllAufATitle => 'A：雙 2-bar';
+
+  @override
+  String get pllAufA => 'lights 靠著顏色相鄰的那一面。';
+
+  @override
+  String get pllAufRGacTitle => 'R 與 Ga/c：bookends';
+
+  @override
+  String get pllAufR => 'R：lights 離判斷用的那一對貼紙比較遠。';
+
+  @override
+  String get pllAufGac => 'Ga/c：lights 離判斷用的那一對貼紙比較近。';
+
+  @override
+  String get pllAufFTitle => 'F：checker';
+
+  @override
+  String get pllAufF => '2-bar 靠著顏色相對的那一對。';
 }
