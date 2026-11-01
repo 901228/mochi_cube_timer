@@ -9,6 +9,7 @@ void main() {
     expect(ms(1497).timerString(decimals: 1), "1.4");
     expect(ms(1497).timerString(), "1.49");
     expect(ms(1497).timerString(decimals: 3), "1.497");
+    expect(ms(1997).timerString(decimals: 0), "1");
   });
 
   test("a time just under the next second does not grow a digit", () {
@@ -25,5 +26,15 @@ void main() {
   test("a penalty shows with the same decimals", () {
     expect(ms(1497).timerDisplayString(Penalty.plus2, decimals: 3), "3.497");
     expect(ms(1497).timerDisplayString(Penalty.dnf), "DNF");
+  });
+
+  test("a stat is a time, rounded unless it is a single", () {
+    expect(statString(null), "--");
+    expect(statString(double.infinity), "DNF");
+    expect(statString(135430), "2:15.43");
+    expect(statString(1996), "2.00");
+    expect(statString(1996, round: false), "1.99");
+    expect(statString(59996, decimals: 1), "1:00.0");
+    expect(statString(3723400), "1:02:03");
   });
 }

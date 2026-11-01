@@ -193,16 +193,8 @@ class _TimerViewState extends State<_TimerView> {
 
   /// [single] is one solve's time, cut off like a result is; the rest, which are averages, are
   /// rounded: the WCA's regulation 9f1 truncates the one and rounds the other.
-  String _statsDisplay(double? value, {bool single = false}) {
-    if (value == null) return "--";
-    if (value == double.infinity) return "DNF";
-
-    final decimals = widget.settings.timeDecimals;
-    if (!single) return (value / 1000).toStringAsFixed(decimals);
-
-    final unit = const [1000, 100, 10, 1][decimals]; // milliseconds in the last digit shown
-    return (value ~/ unit * unit / 1000).toStringAsFixed(decimals);
-  }
+  String _statsDisplay(double? value, {bool single = false}) =>
+      statString(value, decimals: widget.settings.timeDecimals, round: !single);
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 import "package:cube_timer/cube_timer.dart";
 
 extension DurationUtils on Duration {
-  /// The time with [decimals] (1 to 3) after the seconds, cut off rather than rounded: a result is
+  /// The time with [decimals] (0 to 3) after the seconds, cut off rather than rounded: a result is
   /// truncated, as the WCA's regulation 9f1 has it, so 1.497 s is 1.49 and not 1.50.
   String timerString({int decimals = 2}) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
@@ -21,7 +21,7 @@ extension DurationUtils on Duration {
     final minutePart = hasMinutes ? "${hours > 0 ? twoDigits(minutes) : minutes}:" : "";
     final secondPart = hasMinutes ? twoDigits(seconds) : "$seconds";
 
-    return "$negativeSign$hourPart$minutePart$secondPart.$fraction";
+    return "$negativeSign$hourPart$minutePart$secondPart${decimals > 0 ? ".$fraction" : ""}";
   }
 
   String timerDisplayString(Penalty penalty, {int decimals = 2}) => switch (penalty) {
@@ -29,6 +29,19 @@ extension DurationUtils on Duration {
     .dnf => "DNF",
     .plus2 => (this + Duration(seconds: 2)).timerString(decimals: decimals),
   };
+}
+
+/// A stat in milliseconds as a time: "--" without a value, "DNF" when infinite. With [round] the
+/// value is rounded to the [decimals] shown, as an average is; otherwise cut off, as a single is.
+/// From an hour on the fraction is left out, to keep the string short.
+String statString(double? ms, {int decimals = 2, bool round = true}) {
+  if (ms == null) return "--";
+  if (ms.isInfinite) return "DNF";
+  if (ms >= Duration.millisecondsPerHour) decimals = 0;
+
+  final unit = const [1000, 100, 10, 1][decimals]; // milliseconds in the last digit shown
+  final ticks = round ? (ms / unit).round() : ms ~/ unit;
+  return Duration(milliseconds: ticks * unit).timerString(decimals: decimals);
 }
 
 extension DateTimeUtils on DateTime {
