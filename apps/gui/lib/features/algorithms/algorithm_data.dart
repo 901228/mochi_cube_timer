@@ -1,6 +1,13 @@
 import "package:cube_timer/cube_timer.dart";
 
 import "algorithm_data/common.dart";
+import "algorithm_data/cube2_cll.dart";
+import "algorithm_data/cube2_ortega_oll.dart";
+import "algorithm_data/cube2_ortega_pbl.dart";
+import "algorithm_data/cube3_coll.dart";
+import "algorithm_data/cube3_f2l.dart";
+import "algorithm_data/cube3_sv.dart";
+import "algorithm_data/cube3_wv.dart";
 import "algorithm_data/fto_l3c.dart";
 import "algorithm_data/fto_l6x.dart";
 import "algorithm_data/oll.dart";
@@ -11,13 +18,59 @@ typedef AlgorithmSets = Map<String, AlgorithmGroups>;
 
 /// All built-in algorithm sets, across puzzles.
 final AlgorithmSets algorithmSets = {
+  Puzzle.cube2.id: [
+    AlgorithmGroup(
+      id: "ortega",
+      name: "Ortega",
+      sets: [
+        AlgorithmSet(
+          id: "ortega-oll",
+          name: "OLL",
+          subtitle: "Orientation of the Last Layer",
+          cases: ortegaOllCases,
+        ),
+        AlgorithmSet(
+          id: "ortega-pbl",
+          name: "PBL",
+          subtitle: "Permutation of Both Layers",
+          cases: ortegaPblCases,
+        ),
+      ],
+    ),
+    AlgorithmGroup(
+      id: "cll",
+      name: "CLL",
+      sets: [AlgorithmSet(id: "cll", name: "CLL", subtitle: "Corners of the Last Layer", cases: cllCases)],
+    ),
+  ],
   Puzzle.cube3.id: [
     AlgorithmGroup(
       id: "cfop",
       name: "CFOP",
       sets: [
+        AlgorithmSet(id: "f2l", name: "F2L", subtitle: "First Two Layers", cases: f2lCases),
         AlgorithmSet(id: "pll", name: "PLL", subtitle: "Permutation of the Last Layer", cases: pllCases),
         AlgorithmSet(id: "oll", name: "OLL", subtitle: "Orientation of the Last Layer", cases: ollCases),
+      ],
+    ),
+    AlgorithmGroup(
+      id: "last-slot",
+      name: "Last Slot",
+      sets: [
+        AlgorithmSet(id: "wv", name: "WV", subtitle: "Winter Variation", cases: wvCases),
+        AlgorithmSet(id: "sv", name: "SV", subtitle: "Summer Variation", cases: svCases),
+      ],
+    ),
+    AlgorithmGroup(
+      id: "last-layer",
+      name: "Last Layer",
+      sets: [
+        AlgorithmSet(
+          id: "coll",
+          name: "COLL",
+          subtitle: "Corners and Orientation of the Last Layer",
+          cases: collCases,
+        ),
       ],
     ),
   ],
