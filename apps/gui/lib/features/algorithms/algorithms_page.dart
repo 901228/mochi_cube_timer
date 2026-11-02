@@ -364,9 +364,10 @@ class _AlgorithmSetPageState extends State<AlgorithmSetPage> with _ReportsToHead
                       physics: const NeverScrollableScrollPhysics(),
                       padding: .zero,
                       itemCount: cases.length,
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                         maxCrossAxisExtent: 112,
-                        mainAxisExtent: 120,
+                        // A set of tall diagrams (such as two faces) needs tall cards.
+                        mainAxisExtent: widget.algorithmSet.cases.first.diagramAspectRatio < 1 ? 200 : 120,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                       ),
@@ -429,7 +430,10 @@ class _AlgorithmCaseCard extends StatelessWidget {
         children: [
           Expanded(
             child: Center(
-              child: AspectRatio(aspectRatio: 1, child: item.buildDiagram(topColor: topColor)),
+              child: AspectRatio(
+                aspectRatio: item.diagramAspectRatio,
+                child: item.buildDiagram(topColor: topColor),
+              ),
             ),
           ),
           Text(
@@ -452,6 +456,8 @@ Future<void> showAlgorithmCaseDetailModal(
   required AlgorithmCase item,
   required Color topColor,
 }) {
+  // Tall diagrams get more room, or their stickers end up smaller than a square diagram's.
+  final diagramHeight = item.diagramAspectRatio < 1 ? 260.0 : 140.0;
   return showMochiModal(
     context,
     title: Text(item.name),
@@ -465,7 +471,11 @@ Future<void> showAlgorithmCaseDetailModal(
       spacing: 20,
       children: [
         Center(
-          child: SizedBox(width: 140, height: 140, child: item.buildDiagram(topColor: topColor)),
+          child: SizedBox(
+            width: diagramHeight * item.diagramAspectRatio,
+            height: diagramHeight,
+            child: item.buildDiagram(topColor: topColor),
+          ),
         ),
         if (item.description case final description?)
           Text(

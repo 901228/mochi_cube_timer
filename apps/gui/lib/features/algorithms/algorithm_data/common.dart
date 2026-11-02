@@ -17,6 +17,8 @@ class AlgorithmCase {
     this.pllArrows,
     this.ftoStickers,
     this.cubeStickers,
+    this.isoStickers,
+    this.faceStickers,
   });
 
   final String id;
@@ -38,6 +40,15 @@ class AlgorithmCase {
   /// The stickers of an NxN last-layer case, as [CubeCaseDiagram] reads them.
   final String? cubeStickers;
 
+  /// The stickers of an NxN case seen from the front-right corner, as [CubeIsoDiagram] reads them.
+  final String? isoStickers;
+
+  /// The stickers of an NxN case that only touches two faces, as [CubeFacesDiagram] reads them.
+  final String? faceStickers;
+
+  /// Width over height of [buildDiagram]'s drawing; most are square, a pair of faces stands tall.
+  double get diagramAspectRatio => faceStickers == null ? 1 : cubeFacesAspectRatio(faceStickers!);
+
   Widget buildDiagram({required Color topColor, double arrowStrokeWidth = 12.0}) {
     if (ollMask case final mask?) {
       return CustomPaint(
@@ -51,6 +62,8 @@ class AlgorithmCase {
     }
     if (ftoStickers case final stickers?) return FtoCaseDiagram(stickers: stickers);
     if (cubeStickers case final stickers?) return CubeCaseDiagram(stickers: stickers);
+    if (isoStickers case final stickers?) return CubeIsoDiagram(stickers: stickers);
+    if (faceStickers case final stickers?) return CubeFacesDiagram(stickers: stickers);
     return const SizedBox.shrink();
   }
 }

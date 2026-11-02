@@ -101,6 +101,12 @@ extension AlgorithmGroupScale on AlgorithmGroup {
                 cubeStickers: c.cubeStickers == null
                     ? null
                     : scaleStickers(c.cubeStickers!, from: from, to: to),
+                isoStickers: c.isoStickers == null
+                    ? null
+                    : scaleFaceStickers(c.isoStickers!, from: from, to: to),
+                faceStickers: c.faceStickers == null
+                    ? null
+                    : scaleFaceStickers(c.faceStickers!, from: from, to: to),
               ),
           ],
         ),
@@ -118,19 +124,35 @@ List<int> _rowSpans(int from, int to) {
 /// moves together become one block, so each of their stickers is repeated across it.
 String scaleStickers(String stickers, {required int from, required int to}) {
   if (from == to) return stickers;
-  final spans = _rowSpans(from, to);
-  final index = [for (var i = 0; i < from; i++) ...List.filled(spans[i], i)];
+  final index = _rowIndex(from, to);
   final face = from * from;
-  final out = StringBuffer();
-  for (final r in index) {
-    for (final c in index) {
-      out.write(stickers[r * from + c]);
-    }
-  }
+  final out = StringBuffer(_scaleFace(stickers, 0, from, index));
   for (var side = 0; side < 4; side++) {
     for (final c in index) {
       out.write(stickers[face + side * from + c]);
     }
   }
   return out.toString();
+}
+
+/// For each row of the [to]-cube, the row of the [from]-cube it comes from.
+List<int> _rowIndex(int from, int to) {
+  final spans = _rowSpans(from, to);
+  return [for (var i = 0; i < from; i++) ...List.filled(spans[i], i)];
+}
+
+/// The `from * from` face of [stickers] at [start], stretched by [index].
+String _scaleFace(String stickers, int start, int from, List<int> index) => [
+  for (final r in index)
+    for (final c in index) stickers[start + r * from + c],
+].join();
+
+/// Stretches [stickers], whole `from * from` faces one after the other, of a [from]x[from] cube to [to]x[to],
+/// as [scaleStickers] does.
+String scaleFaceStickers(String stickers, {required int from, required int to}) {
+  if (from == to) return stickers;
+  final index = _rowIndex(from, to);
+  final face = from * from;
+  return [for (var f = 0; f < stickers.length ~/ face; f++) _scaleFace(stickers, f * face, from, index)]
+      .join();
 }

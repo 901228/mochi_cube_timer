@@ -54,4 +54,15 @@ void main() {
     );
     expect(scaleStickers(top + "x" * 16, from: 4, to: 4), top + "x" * 16);
   });
+
+  test("stickers stretch face by face, whatever the number of faces", () {
+    // 5x5 -> 7x7: rows 1 and 3 become two rows each, the middle row stays one.
+    final face = [for (var i = 0; i < 25; i++) String.fromCharCode(97 + i)].join();
+    final big = scaleFaceStickers(face * 3, from: 5, to: 7);
+    expect(big, hasLength(3 * 49));
+    expect(scaleFaceStickers(face * 2, from: 5, to: 7), hasLength(2 * 49));
+    expect(big.substring(0, 7), "abbcdde");
+    expect(big.substring(7, 14), "fgghiij");
+    expect(big.substring(49, 56), "abbcdde");
+  });
 }
