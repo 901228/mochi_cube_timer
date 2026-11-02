@@ -34,6 +34,9 @@ class _HomeShellState extends State<HomeShell> {
   late final _searchBarBottomCubit = SearchBarBottomCubit();
   final _algorithmsHeader = AlgorithmsHeaderController();
 
+  /// Where the algorithms branch was last seen, to tell whether it is still on the current puzzle.
+  String? _algorithmsLocation;
+
   @override
   void didUpdateWidget(HomeShell oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -205,6 +208,18 @@ class _HomeShellState extends State<HomeShell> {
 
   MochiGeometry get g => context.theme.geometry;
 
+  /// From another page the algorithms come back to where they were left, set and all, unless that was on
+  /// another puzzle; on them, or from another puzzle's, they go to the top of [puzzle].
+  void _openAlgorithms(BuildContext context, Puzzle puzzle) {
+    final leftOn = _algorithmsLocation == null ? null : Uri.parse(_algorithmsLocation!).pathSegments;
+    final onThisPuzzle = leftOn != null && leftOn.length > 1 && leftOn[1] == puzzle.id;
+    if (widget.navigationShell.currentIndex != 3 && onThisPuzzle) {
+      widget.navigationShell.goBranch(3);
+    } else {
+      context.go("/algorithms/${puzzle.id}");
+    }
+  }
+
   /// The pages, the algorithms and the settings, beside the content or, given [close], in the drawer it
   /// shuts before going anywhere. The algorithms open on [puzzle], which is not known until the app
   /// state has arrived.
@@ -240,14 +255,18 @@ class _HomeShellState extends State<HomeShell> {
           icon: Icon(TablerIcons.cubeSpark),
           label: Text(context.l10n.algorithmsTitle),
           selected: widget.navigationShell.currentIndex == 3,
-          // Not `goBranch`: a branch comes back to where it was left, which may be another puzzle's.
-          onPress: puzzle == null ? null : then(() => context.go("/algorithms/${puzzle.id}")),
+          onPress: puzzle == null ? null : then(() => _openAlgorithms(context, puzzle)),
         ),
         MochiSidebarItem(
           icon: Icon(TablerIcons.barbell),
           label: Text(context.l10n.trainersTitle),
           selected: widget.navigationShell.currentIndex == 4,
-          onPress: then(() => context.go("/trainers")),
+          // From another page the branch comes back to where it was left; on it, the item goes to its top.
+          onPress: then(
+            () => widget.navigationShell.currentIndex == 4
+                ? context.go("/trainers")
+                : widget.navigationShell.goBranch(4),
+          ),
         ),
       ],
     );
@@ -255,6 +274,9 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.navigationShell.currentIndex == 3) {
+      _algorithmsLocation = widget.navigationShell.shellRouteContext.routerState.uri.path;
+    }
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: _recordSelectionCubit),
