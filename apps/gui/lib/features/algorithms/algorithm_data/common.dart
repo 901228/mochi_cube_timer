@@ -1,5 +1,6 @@
 import "package:flutter/widgets.dart";
 
+import "../cube_painter.dart";
 import "../fto_painter.dart";
 import "../ll_painter.dart";
 
@@ -15,6 +16,7 @@ class AlgorithmCase {
     this.ollMask,
     this.pllArrows,
     this.ftoStickers,
+    this.cubeStickers,
   });
 
   final String id;
@@ -33,6 +35,9 @@ class AlgorithmCase {
   /// The stickers of an FTO last-layer case, as [FtoCaseDiagram] reads them.
   final String? ftoStickers;
 
+  /// The stickers of an NxN last-layer case, as [CubeCaseDiagram] reads them.
+  final String? cubeStickers;
+
   Widget buildDiagram({required Color topColor, double arrowStrokeWidth = 12.0}) {
     if (ollMask case final mask?) {
       return CustomPaint(
@@ -45,6 +50,7 @@ class AlgorithmCase {
       );
     }
     if (ftoStickers case final stickers?) return FtoCaseDiagram(stickers: stickers);
+    if (cubeStickers case final stickers?) return CubeCaseDiagram(stickers: stickers);
     return const SizedBox.shrink();
   }
 }
