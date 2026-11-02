@@ -35,7 +35,12 @@ class TimerPage extends StatelessWidget {
           final data = AppStateProvider.of(context);
           return StackmatBridge(
             enabled: settings.stackmatEnabled,
-            child: _TimerView(puzzle: data.puzzle, sessionId: data.session.id, settings: settings),
+            child: _TimerView(
+              puzzle: data.puzzle,
+              algorithmSet: data.algorithmSet,
+              sessionId: data.session.id,
+              settings: settings,
+            ),
           );
         },
       ),
@@ -45,9 +50,17 @@ class TimerPage extends StatelessWidget {
 
 class _TimerView extends StatefulWidget {
   final Puzzle puzzle;
+
+  /// The algorithm set being practised, whose solves are kept apart from [puzzle]'s own.
+  final String? algorithmSet;
   final String sessionId;
   final SettingsEntry settings;
-  const _TimerView({required this.puzzle, required this.sessionId, required this.settings});
+  const _TimerView({
+    required this.puzzle,
+    required this.algorithmSet,
+    required this.sessionId,
+    required this.settings,
+  });
 
   @override
   State<_TimerView> createState() => _TimerViewState();
@@ -72,8 +85,8 @@ class _TimerViewState extends State<_TimerView> {
 
   void _watchStats() {
     final dao = context.read<AppDatabase>().recordsDao;
-    _summary = dao.watchSummary(widget.sessionId, widget.puzzle);
-    _times = dao.watchTimes(widget.sessionId, widget.puzzle, limit: 50);
+    _summary = dao.watchSummary(widget.sessionId, widget.puzzle, algorithmSet: widget.algorithmSet);
+    _times = dao.watchTimes(widget.sessionId, widget.puzzle, algorithmSet: widget.algorithmSet, limit: 50);
   }
 
   @override
@@ -86,12 +99,14 @@ class _TimerViewState extends State<_TimerView> {
   void didUpdateWidget(_TimerView oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.puzzle != widget.puzzle) {
+    final practiceChanged =
+        oldWidget.puzzle != widget.puzzle || oldWidget.algorithmSet != widget.algorithmSet;
+    if (practiceChanged) {
       // the scramble follows the puzzle in ScrambleCubit
       context.read<TimerBloc>().add(TimerReset());
     }
 
-    if (oldWidget.sessionId != widget.sessionId || oldWidget.puzzle != widget.puzzle) {
+    if (oldWidget.sessionId != widget.sessionId || practiceChanged) {
       // update stats
       _watchStats();
     }
@@ -127,12 +142,23 @@ class _TimerViewState extends State<_TimerView> {
     final bloc = context.read<TimerBloc>();
     final scrambles = context.read<ScrambleCubit>();
     final dao = context.read<AppDatabase>().recordsDao;
-    final scramble = await scrambles.state;
+    final pending = scrambles.state;
+    final scramble = await pending;
     // Read before the solve is written, or it would be compared with itself.
-    final extremes = await dao.extremes(widget.sessionId, widget.puzzle);
-    final times = await dao.watchTimes(widget.sessionId, widget.puzzle, includeArchived: true).first;
+    final extremes = await dao.extremes(widget.sessionId, widget.puzzle, algorithmSet: widget.algorithmSet);
+    final times = await dao
+        .watchTimes(widget.sessionId, widget.puzzle, algorithmSet: widget.algorithmSet, includeArchived: true)
+        .first;
 
-    bloc.add(TimerRecorded(sessionId: widget.sessionId, puzzle: widget.puzzle, notation: scramble.notation));
+    bloc.add(
+      TimerRecorded(
+        sessionId: widget.sessionId,
+        puzzle: widget.puzzle,
+        notation: scramble.notation,
+        algorithmSet: widget.algorithmSet,
+        algorithmCase: scrambles.caseOf(pending),
+      ),
+    );
 
     scrambles.next();
     _announce(

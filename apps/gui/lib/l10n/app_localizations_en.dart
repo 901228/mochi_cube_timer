@@ -550,9 +550,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeKindAlgorithms => 'Algorithms';
 
   @override
-  String get homeAlgorithmsSoon => 'Algorithm practice is not available yet';
-
-  @override
   String get homeSelectPuzzle => 'Select a puzzle';
 
   @override
@@ -721,6 +718,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String algorithmsNoSets(String puzzle) {
     return 'There are no algorithm sets for $puzzle';
+  }
+
+  @override
+  String get practiceCrossName => 'Cross';
+
+  @override
+  String get practiceCrossDescription => 'Solve just the bottom cross';
+
+  @override
+  String get practiceViewList => 'List';
+
+  @override
+  String get practiceViewGrid => 'Grid';
+
+  @override
+  String get practiceCasesTitle => 'Cases to practise';
+
+  @override
+  String practiceCasesCount(int selected, int total) {
+    return '$selected of $total cases';
   }
 
   @override

@@ -5,6 +5,7 @@ export "database/daos/sessions.dao.dart";
 export "database/daos/settings.dao.dart";
 export "database/records.extension.dart";
 export "database/tables/app_state.table.dart";
+export "database/tables/practice_exclusions.table.dart";
 export "database/tables/records.table.dart";
 export "database/tables/sessions.table.dart";
 export "database/tables/settings.table.dart";

@@ -11,6 +11,7 @@ import "daos/sessions.dao.dart";
 import "daos/settings.dao.dart";
 import "tables/app_state.table.dart";
 import "tables/converters.dart";
+import "tables/practice_exclusions.table.dart";
 import "tables/records.table.dart";
 import "tables/sessions.table.dart";
 import "tables/settings.table.dart";
@@ -18,7 +19,7 @@ import "tables/settings.table.dart";
 part "app_database.g.dart";
 
 @DriftDatabase(
-  tables: [Settings, AppState, Records, Sessions],
+  tables: [Settings, AppState, Records, Sessions, PracticeExclusions],
   daos: [SettingsDao, AppStateDao, RecordsDao, SessionsDao],
 )
 class AppDatabase extends _$AppDatabase {
@@ -27,7 +28,7 @@ class AppDatabase extends _$AppDatabase {
   // Bumped with every change to the tables: run `dart run drift_dev make-migrations` before and
   // after, and add the step below.
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -96,6 +97,16 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(schema.settings, schema.settings.showSessionStats);
         await m.addColumn(schema.settings, schema.settings.showQuickActions);
         await m.addColumn(schema.settings, schema.settings.averageTrim);
+      },
+      from12To13: (m, schema) async {
+        // Rebuilt rather than a column dropped: show_archived is no longer kept between launches.
+        await m.alterTable(TableMigration(schema.appState, newColumns: [schema.appState.algorithmSet]));
+        await m.addColumn(schema.records, schema.records.algorithmSet);
+        await m.addColumn(schema.records, schema.records.algorithmCase);
+        await m.createTable(schema.practiceExclusions);
+        // The Megaminx B and FTO F defaults went from lime to green after v12; SQLite cannot alter a default in
+        // place, so the table is rebuilt, every stored colour kept as it is.
+        await m.alterTable(TableMigration(schema.settings));
       },
     ),
     beforeOpen: (_) async {

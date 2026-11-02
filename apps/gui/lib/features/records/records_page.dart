@@ -16,15 +16,26 @@ class RecordsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = AppStateProvider.of(context);
-    return _RecordsPage(puzzle: data.puzzle, session: data.session, showArchived: data.showArchived);
+    return _RecordsPage(
+      puzzle: data.puzzle,
+      algorithmSet: data.algorithmSet,
+      session: data.session,
+      showArchived: context.watch<ShowArchivedCubit>().state,
+    );
   }
 }
 
 class _RecordsPage extends StatefulWidget {
   final Puzzle puzzle;
+  final String? algorithmSet;
   final SessionEntry session;
   final bool showArchived;
-  const _RecordsPage({required this.puzzle, required this.session, required this.showArchived});
+  const _RecordsPage({
+    required this.puzzle,
+    required this.algorithmSet,
+    required this.session,
+    required this.showArchived,
+  });
 
   @override
   State<_RecordsPage> createState() => _RecordsPageState();
@@ -40,13 +51,14 @@ class _RecordsPageState extends State<_RecordsPage> {
   late Stream<int?> _best;
 
   void _watchBest() {
-    _best = recordsDao.watchBest(widget.session.id, widget.puzzle);
+    _best = recordsDao.watchBest(widget.session.id, widget.puzzle, algorithmSet: widget.algorithmSet);
   }
 
   void _watchSession() {
     _stream = recordsDao.watchSession(
       widget.session.id,
       widget.puzzle,
+      algorithmSet: widget.algorithmSet,
       showArchived: widget.showArchived,
       query: _query,
     );
@@ -64,6 +76,7 @@ class _RecordsPageState extends State<_RecordsPage> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.session.id != widget.session.id ||
         oldWidget.puzzle != widget.puzzle ||
+        oldWidget.algorithmSet != widget.algorithmSet ||
         oldWidget.showArchived != widget.showArchived) {
       _watchSession();
       _watchBest();

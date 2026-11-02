@@ -19,6 +19,7 @@ import "generated/schema_v9.dart" as v9;
 import "generated/schema_v10.dart" as v10;
 import "generated/schema_v11.dart" as v11;
 import "generated/schema_v12.dart" as v12;
+import "generated/schema_v13.dart" as v13;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -789,6 +790,45 @@ void main() {
             "averageTrim": 5,
           },
         ]);
+      },
+    );
+  });
+
+  test("v12 to v13 keeps the app state and solves, forgets show archived, and practises nothing", () async {
+    const record = v12.RecordsData(
+      id: "r1",
+      puzzle: "333",
+      session: "s2",
+      scramble: "R U R' U'",
+      time: 12345,
+      datetime: 3000,
+      penalty: "plus2",
+      comment: "nice",
+      archived: 1,
+    );
+
+    await verifier.testWithDataIntegrity(
+      oldVersion: 12,
+      newVersion: 13,
+      createOld: v12.DatabaseAtV12.new,
+      createNew: v13.DatabaseAtV13.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insert(oldDb.sessions, const v12.SessionsData(id: "s2", name: "OH", createdAt: 2000));
+        batch.insert(
+          oldDb.appState,
+          const v12.AppStateData(id: 0, puzzle: "555", session: "s2", showArchived: 1),
+        );
+        batch.insert(oldDb.records, record);
+      },
+      validateItems: (newDb) async {
+        expect(await newDb.select(newDb.appState).get(), [
+          const v13.AppStateData(id: 0, puzzle: "555", session: "s2"),
+        ]);
+        expect((await newDb.select(newDb.records).get()).map((e) => e.toJson()), [
+          {...record.toJson(), "algorithmSet": null, "algorithmCase": null},
+        ]);
+        expect(await newDb.select(newDb.practiceExclusions).get(), isEmpty);
       },
     );
   });

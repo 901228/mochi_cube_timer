@@ -268,6 +268,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
         scramble: event.notation,
         time: state.elapsed,
         penalty: state.penalty,
+        algorithmSet: event.algorithmSet,
+        algorithmCase: event.algorithmCase,
       );
 
       // The reset that happened while the insert was in flight wins: emitting

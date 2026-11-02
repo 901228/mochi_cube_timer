@@ -60,6 +60,7 @@ Future<bool?> showAddRecordModal(BuildContext context) {
           await recordsDao.add(
             session: appState.session.id,
             puzzle: appState.puzzle,
+            algorithmSet: appState.algorithmSet,
             scramble: scramble.notation,
             time: valueHolder.time!,
             penalty: valueHolder.penalty,

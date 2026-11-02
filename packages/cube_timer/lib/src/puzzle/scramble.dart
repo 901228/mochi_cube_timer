@@ -12,11 +12,14 @@ import "puzzle.dart";
 /// is slow enough to want a progress indicator; a future that has already
 /// completed resolves at once when stepped back to.
 class ScrambleHistory {
-  ScrambleHistory(this.puzzle) {
-    _entries.add(puzzle.getScramble());
+  /// With [generate], new scrambles come from it rather than [puzzle]'s scrambler.
+  ScrambleHistory(this.puzzle, {Future<Scramble> Function()? generate})
+    : _generate = generate ?? puzzle.getScramble {
+    _entries.add(_generate());
   }
 
   final Puzzle puzzle;
+  final Future<Scramble> Function() _generate;
   final List<Future<Scramble>> _entries = [];
 
   int _index = 0;
@@ -39,7 +42,7 @@ class ScrambleHistory {
   /// Step forward, generating a new scramble when already at the end.
   void next() {
     _index++;
-    if (_index == _entries.length) _entries.add(puzzle.getScramble());
+    if (_index == _entries.length) _entries.add(_generate());
   }
 
   void add(String scramble) {

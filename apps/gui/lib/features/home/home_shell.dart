@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:collection/collection.dart";
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -11,7 +13,11 @@ import "../../l10n/l10n.dart";
 import "../../shared/puzzles.dart";
 import "../../shared/puzzles/puzzle_utils.dart";
 import "../../shared/utils.dart";
+import "../algorithms/algorithm_data.dart";
+import "../algorithms/algorithm_data/common.dart";
 import "../algorithms/algorithms_page.dart";
+import "../algorithms/practice_cases_dialog.dart";
+import "../algorithms/practice_scramble.dart";
 import "../records/record_search_bar.dart";
 import "../records/records_list.dart";
 import "../timer/scramble_cubit.dart";
@@ -30,6 +36,7 @@ class HomeShell extends StatefulWidget {
 
 class _HomeShellState extends State<HomeShell> {
   late final _recordSelectionCubit = RecordSelectionCubit();
+  late final _showArchivedCubit = ShowArchivedCubit();
   late final _timerFocusCubit = TimerFocusCubit();
   late final _searchBarBottomCubit = SearchBarBottomCubit();
   final _algorithmsHeader = AlgorithmsHeaderController();
@@ -48,6 +55,7 @@ class _HomeShellState extends State<HomeShell> {
   @override
   void dispose() {
     _recordSelectionCubit.close();
+    _showArchivedCubit.close();
     _timerFocusCubit.close();
     _searchBarBottomCubit.close();
     _algorithmsHeader.dispose();
@@ -150,7 +158,7 @@ class _HomeShellState extends State<HomeShell> {
                         )
                         .toList(),
                   ),
-                  if (!(data?.appState.showArchived ?? false))
+                  if (!context.watch<ShowArchivedCubit>().state)
                     MochiAction(
                       icon: TablerIcons.arrowDownToArc,
                       label: context.l10n.commonArchive,
@@ -280,6 +288,7 @@ class _HomeShellState extends State<HomeShell> {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: _recordSelectionCubit),
+        BlocProvider.value(value: _showArchivedCubit),
         BlocProvider.value(value: _timerFocusCubit),
         BlocProvider.value(value: _searchBarBottomCubit),
       ],
@@ -303,6 +312,16 @@ class _HomeShellState extends State<HomeShell> {
             listenable: _algorithmsHeader,
             builder: (context, _) {
               final algorithms = widget.navigationShell.currentIndex == 3 ? _algorithmsHeader.current : null;
+              final practice = data?.appState.algorithmSet == null
+                  ? null
+                  : algorithmSets.findSet(data!.appState.puzzle.id, setId: data.appState.algorithmSet);
+              final puzzleName = data == null
+                  ? ""
+                  : [
+                      data.appState.puzzle.displayName(context.l10n),
+                      ?practice?.name,
+                      if (data.appState.algorithmSet == crossDrillId) context.l10n.practiceCrossName,
+                    ].join(" · ");
               return MochiScaffold(
                 extendBody: true,
                 immersive: context.watch<TimerFocusCubit>().state,
@@ -324,6 +343,8 @@ class _HomeShellState extends State<HomeShell> {
                               context,
                               title: Text(context.l10n.homeSelectPuzzle),
                               body: PuzzleSelectionDialog(
+                                current: data?.appState.puzzle,
+                                currentSet: data?.appState.algorithmSet,
                                 // TODO: enable algorithm list, them click the algorithm and go to the corresponding page
                                 showKinds: widget.navigationShell.currentIndex != 3,
                                 onSelect: (puzzle) {
@@ -350,7 +371,7 @@ class _HomeShellState extends State<HomeShell> {
                                               children: [
                                                 DefaultTextStyle.merge(
                                                   style: context.theme.typography.title.md,
-                                                  child: Text(data.appState.puzzle.displayName(context.l10n)),
+                                                  child: Text(puzzleName),
                                                 ),
                                                 DefaultTextStyle.merge(
                                                   style: context.theme.typography.title.sm.copyWith(
@@ -379,17 +400,25 @@ class _HomeShellState extends State<HomeShell> {
                               widget.pages.length > widget.navigationShell.currentIndex &&
                               widget.pages[widget.navigationShell.currentIndex].id != "timer")
                             MochiAction(
-                              icon: (data?.appState.showArchived ?? false)
+                              icon: context.watch<ShowArchivedCubit>().state
                                   ? TablerIcons.archiveFilled
                                   : TablerIcons.archive,
-                              enabled: data != null,
-                              selected: data?.appState.showArchived ?? false,
+                              selected: context.watch<ShowArchivedCubit>().state,
                               label: context.l10n.homeShowArchived,
-                              onPress: data == null
-                                  ? null
-                                  : () => context.read<AppDatabase>().appStateDao.setShowArchived(
-                                      !data.appState.showArchived,
-                                    ),
+                              onPress: context.read<ShowArchivedCubit>().toggle,
+                            ),
+                          if (widget.navigationShell.currentIndex != 3 &&
+                              practice != null &&
+                              widget.pages.length > widget.navigationShell.currentIndex &&
+                              widget.pages[widget.navigationShell.currentIndex].id == "timer")
+                            MochiAction(
+                              icon: TablerIcons.listCheck,
+                              label: context.l10n.practiceCasesTitle,
+                              onPress: () => showPracticeCasesDialog(
+                                context,
+                                puzzle: data!.appState.puzzle,
+                                set: practice,
+                              ),
                             ),
                           if (widget.navigationShell.currentIndex != 3)
                             MochiAction(
@@ -488,6 +517,7 @@ class _HomeShellState extends State<HomeShell> {
                             controller: _algorithmsHeader,
                             child: _ScrambleScope(
                               puzzle: data.appState.puzzle,
+                              practice: practice,
                               child: widget.navigationShell,
                             ),
                           ),
@@ -531,8 +561,11 @@ String _pageLabel(BuildContext context, String id) => switch (id) {
 
 /// Provides the [ScrambleCubit], following the puzzle without rebuilding the pages under it.
 class _ScrambleScope extends StatefulWidget {
-  const _ScrambleScope({required this.puzzle, required this.child});
+  const _ScrambleScope({required this.puzzle, required this.practice, required this.child});
   final Puzzle puzzle;
+
+  /// The algorithm set being practised, whose scrambles come from the cases picked for it.
+  final AlgorithmSet? practice;
   final Widget child;
 
   @override
@@ -541,15 +574,37 @@ class _ScrambleScope extends StatefulWidget {
 
 class _ScrambleScopeState extends State<_ScrambleScope> {
   late final _cubit = ScrambleCubit(widget.puzzle);
+  StreamSubscription<Set<String>>? _excluded;
+
+  @override
+  void initState() {
+    super.initState();
+    _follow();
+  }
 
   @override
   void didUpdateWidget(_ScrambleScope old) {
     super.didUpdateWidget(old);
-    _cubit.usePuzzle(widget.puzzle);
+    if (old.puzzle != widget.puzzle || old.practice?.id != widget.practice?.id) _follow();
+  }
+
+  /// Follows the puzzle, and for a practice the cases picked for it too.
+  void _follow() {
+    _excluded?.cancel();
+    _excluded = null;
+    final practice = widget.practice;
+    _cubit.usePuzzle(widget.puzzle, practice: practice);
+    if (practice == null) return;
+    _excluded = context
+        .read<AppDatabase>()
+        .appStateDao
+        .watchExcluded(widget.puzzle, practice.id)
+        .listen((excluded) => _cubit.usePuzzle(widget.puzzle, practice: practice, excluded: excluded));
   }
 
   @override
   void dispose() {
+    _excluded?.cancel();
     _cubit.close();
     super.dispose();
   }

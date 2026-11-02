@@ -38,6 +38,12 @@ class Records extends Table {
   /// archived
   BoolColumn get archived => boolean().withDefault(const Constant(false))();
 
+  /// The algorithm set the solve practised, or null for an ordinary solve; the two are kept apart.
+  TextColumn get algorithmSet => text().nullable()();
+
+  /// The case of [algorithmSet] the scramble was made from, or null when it was typed in.
+  TextColumn get algorithmCase => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }

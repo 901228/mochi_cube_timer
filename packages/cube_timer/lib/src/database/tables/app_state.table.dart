@@ -13,8 +13,8 @@ class AppState extends Table {
   /// current session, or [kDefaultSessionId] for the default session
   TextColumn get session => text().references(Sessions, #id).withDefault(const Constant(kDefaultSessionId))();
 
-  /// show recent or archived records in records page
-  BoolColumn get showArchived => boolean().withDefault(const Constant(false))();
+  /// The algorithm set of [puzzle] being practised, or null for ordinary solves.
+  TextColumn get algorithmSet => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};

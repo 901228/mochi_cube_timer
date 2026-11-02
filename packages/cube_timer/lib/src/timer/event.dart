@@ -53,11 +53,21 @@ class _TimerHoldArmed extends TimerEvent {
 }
 
 class TimerRecorded extends TimerEvent {
-  const TimerRecorded({required this.sessionId, required this.puzzle, required this.notation});
+  const TimerRecorded({
+    required this.sessionId,
+    required this.puzzle,
+    required this.notation,
+    this.algorithmSet,
+    this.algorithmCase,
+  });
 
   final String sessionId;
   final Puzzle puzzle;
   final String notation;
+
+  /// The algorithm set being practised and the case the scramble was made from, see [Records].
+  final String? algorithmSet;
+  final String? algorithmCase;
 }
 
 class TimerDeleteRecord extends TimerEvent {

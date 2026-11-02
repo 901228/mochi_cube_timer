@@ -2670,6 +2670,250 @@ i1.GeneratedColumn<int> _column_73(String aliasedName) =>
       $customConstraints: 'NOT NULL DEFAULT 5',
       defaultValue: const i1.CustomExpression('5'),
     );
+
+final class Schema13 extends i0.VersionedSchema {
+  Schema13({required super.database}) : super(version: 13);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    settings,
+    sessions,
+    appState,
+    records,
+    practiceExclusions,
+    recordsSessionPuzzle,
+  ];
+  late final Shape12 settings = Shape12(
+    source: i0.VersionedTable(
+      entityName: 'settings',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_41,
+        _column_36,
+        _column_37,
+        _column_38,
+        _column_5,
+        _column_39,
+        _column_40,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+        _column_13,
+        _column_14,
+        _column_15,
+        _column_43,
+        _column_44,
+        _column_45,
+        _column_46,
+        _column_47,
+        _column_48,
+        _column_49,
+        _column_50,
+        _column_51,
+        _column_74,
+        _column_53,
+        _column_54,
+        _column_55,
+        _column_56,
+        _column_75,
+        _column_58,
+        _column_59,
+        _column_60,
+        _column_61,
+        _column_62,
+        _column_16,
+        _column_63,
+        _column_64,
+        _column_65,
+        _column_66,
+        _column_42,
+        _column_67,
+        _column_68,
+        _column_69,
+        _column_70,
+        _column_71,
+        _column_72,
+        _column_73,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 sessions = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'sessions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [_column_21, _column_22, _column_23, _column_24],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape13 appState = Shape13(
+    source: i0.VersionedTable(
+      entityName: 'app_state',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [_column_0, _column_25, _column_26, _column_76],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape14 records = Shape14(
+    source: i0.VersionedTable(
+      entityName: 'records',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)'],
+      columns: [
+        _column_21,
+        _column_28,
+        _column_29,
+        _column_30,
+        _column_31,
+        _column_32,
+        _column_33,
+        _column_34,
+        _column_24,
+        _column_35,
+        _column_76,
+        _column_77,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape15 practiceExclusions = Shape15(
+    source: i0.VersionedTable(
+      entityName: 'practice_exclusions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(puzzle, algorithm_set, algorithm_case)'],
+      columns: [_column_28, _column_78, _column_79],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index recordsSessionPuzzle = i1.Index(
+    'records_session_puzzle',
+    'CREATE INDEX records_session_puzzle ON records (session, puzzle, datetime)',
+  );
+}
+
+i1.GeneratedColumn<int> _column_74(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'megaminx_color_b',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 4278255487',
+      defaultValue: const i1.CustomExpression('4278255487'),
+    );
+i1.GeneratedColumn<int> _column_75(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'fto_color_f',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 4278255487',
+      defaultValue: const i1.CustomExpression('4278255487'),
+    );
+
+class Shape13 extends i0.VersionedTable {
+  Shape13({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get puzzle =>
+      columnsByName['puzzle']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get session =>
+      columnsByName['session']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get algorithmSet =>
+      columnsByName['algorithm_set']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_76(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'algorithm_set',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+
+class Shape14 extends i0.VersionedTable {
+  Shape14({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get puzzle =>
+      columnsByName['puzzle']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get session =>
+      columnsByName['session']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get scramble =>
+      columnsByName['scramble']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get time =>
+      columnsByName['time']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get datetime =>
+      columnsByName['datetime']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get penalty =>
+      columnsByName['penalty']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get comment =>
+      columnsByName['comment']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get deletedAt =>
+      columnsByName['deleted_at']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get archived =>
+      columnsByName['archived']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get algorithmSet =>
+      columnsByName['algorithm_set']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get algorithmCase =>
+      columnsByName['algorithm_case']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_77(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'algorithm_case',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+
+class Shape15 extends i0.VersionedTable {
+  Shape15({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get puzzle =>
+      columnsByName['puzzle']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get algorithmSet =>
+      columnsByName['algorithm_set']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get algorithmCase =>
+      columnsByName['algorithm_case']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_78(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'algorithm_set',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_79(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'algorithm_case',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
@@ -2682,6 +2926,7 @@ i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema10 schema) from9To10,
   required Future<void> Function(i1.Migrator m, Schema11 schema) from10To11,
   required Future<void> Function(i1.Migrator m, Schema12 schema) from11To12,
+  required Future<void> Function(i1.Migrator m, Schema13 schema) from12To13,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -2740,6 +2985,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from11To12(migrator, schema);
         return 12;
+      case 12:
+        final schema = Schema13(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from12To13(migrator, schema);
+        return 13;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -2758,6 +3008,7 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema10 schema) from9To10,
   required Future<void> Function(i1.Migrator m, Schema11 schema) from10To11,
   required Future<void> Function(i1.Migrator m, Schema12 schema) from11To12,
+  required Future<void> Function(i1.Migrator m, Schema13 schema) from12To13,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
@@ -2771,5 +3022,6 @@ i1.OnUpgrade stepByStep({
     from9To10: from9To10,
     from10To11: from10To11,
     from11To12: from11To12,
+    from12To13: from12To13,
   ),
 );

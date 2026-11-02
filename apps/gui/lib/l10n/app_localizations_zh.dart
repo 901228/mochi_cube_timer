@@ -542,9 +542,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeKindAlgorithms => '公式練習';
 
   @override
-  String get homeAlgorithmsSoon => '公式練習尚未開放';
-
-  @override
   String get homeSelectPuzzle => '選擇項目';
 
   @override
@@ -713,6 +710,26 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String algorithmsNoSets(String puzzle) {
     return '$puzzle 目前沒有公式集';
+  }
+
+  @override
+  String get practiceCrossName => 'Cross';
+
+  @override
+  String get practiceCrossDescription => '只解底層十字';
+
+  @override
+  String get practiceViewList => '列表';
+
+  @override
+  String get practiceViewGrid => '格狀';
+
+  @override
+  String get practiceCasesTitle => '要練習的 case';
+
+  @override
+  String practiceCasesCount(int selected, int total) {
+    return '已選 $selected / $total 個 case';
   }
 
   @override

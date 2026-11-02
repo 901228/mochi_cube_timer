@@ -3279,23 +3279,19 @@ class $AppStateTable extends AppState
     ),
     defaultValue: const Constant(kDefaultSessionId),
   );
-  static const VerificationMeta _showArchivedMeta = const VerificationMeta(
-    'showArchived',
+  static const VerificationMeta _algorithmSetMeta = const VerificationMeta(
+    'algorithmSet',
   );
   @override
-  late final GeneratedColumn<bool> showArchived = GeneratedColumn<bool>(
-    'show_archived',
+  late final GeneratedColumn<String> algorithmSet = GeneratedColumn<String>(
+    'algorithm_set',
     aliasedName,
-    false,
-    type: DriftSqlType.bool,
+    true,
+    type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("show_archived" IN (0, 1))',
-    ),
-    defaultValue: const Constant(false),
   );
   @override
-  List<GeneratedColumn> get $columns => [id, puzzle, session, showArchived];
+  List<GeneratedColumn> get $columns => [id, puzzle, session, algorithmSet];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3317,12 +3313,12 @@ class $AppStateTable extends AppState
         session.isAcceptableOrUnknown(data['session']!, _sessionMeta),
       );
     }
-    if (data.containsKey('show_archived')) {
+    if (data.containsKey('algorithm_set')) {
       context.handle(
-        _showArchivedMeta,
-        showArchived.isAcceptableOrUnknown(
-          data['show_archived']!,
-          _showArchivedMeta,
+        _algorithmSetMeta,
+        algorithmSet.isAcceptableOrUnknown(
+          data['algorithm_set']!,
+          _algorithmSetMeta,
         ),
       );
     }
@@ -3349,10 +3345,10 @@ class $AppStateTable extends AppState
         DriftSqlType.string,
         data['${effectivePrefix}session'],
       )!,
-      showArchived: attachedDatabase.typeMapping.read(
-        DriftSqlType.bool,
-        data['${effectivePrefix}show_archived'],
-      )!,
+      algorithmSet: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}algorithm_set'],
+      ),
     );
   }
 
@@ -3374,13 +3370,13 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
   /// current session, or [kDefaultSessionId] for the default session
   final String session;
 
-  /// show recent or archived records in records page
-  final bool showArchived;
+  /// The algorithm set of [puzzle] being practised, or null for ordinary solves.
+  final String? algorithmSet;
   const AppStateEntry({
     required this.id,
     required this.puzzle,
     required this.session,
-    required this.showArchived,
+    this.algorithmSet,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3392,7 +3388,9 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       );
     }
     map['session'] = Variable<String>(session);
-    map['show_archived'] = Variable<bool>(showArchived);
+    if (!nullToAbsent || algorithmSet != null) {
+      map['algorithm_set'] = Variable<String>(algorithmSet);
+    }
     return map;
   }
 
@@ -3401,7 +3399,9 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       id: Value(id),
       puzzle: Value(puzzle),
       session: Value(session),
-      showArchived: Value(showArchived),
+      algorithmSet: algorithmSet == null && nullToAbsent
+          ? const Value.absent()
+          : Value(algorithmSet),
     );
   }
 
@@ -3414,7 +3414,7 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       id: serializer.fromJson<int>(json['id']),
       puzzle: serializer.fromJson<Puzzle>(json['puzzle']),
       session: serializer.fromJson<String>(json['session']),
-      showArchived: serializer.fromJson<bool>(json['showArchived']),
+      algorithmSet: serializer.fromJson<String?>(json['algorithmSet']),
     );
   }
   @override
@@ -3424,7 +3424,7 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
       'id': serializer.toJson<int>(id),
       'puzzle': serializer.toJson<Puzzle>(puzzle),
       'session': serializer.toJson<String>(session),
-      'showArchived': serializer.toJson<bool>(showArchived),
+      'algorithmSet': serializer.toJson<String?>(algorithmSet),
     };
   }
 
@@ -3432,21 +3432,21 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
     int? id,
     Puzzle? puzzle,
     String? session,
-    bool? showArchived,
+    Value<String?> algorithmSet = const Value.absent(),
   }) => AppStateEntry(
     id: id ?? this.id,
     puzzle: puzzle ?? this.puzzle,
     session: session ?? this.session,
-    showArchived: showArchived ?? this.showArchived,
+    algorithmSet: algorithmSet.present ? algorithmSet.value : this.algorithmSet,
   );
   AppStateEntry copyWithCompanion(AppStateCompanion data) {
     return AppStateEntry(
       id: data.id.present ? data.id.value : this.id,
       puzzle: data.puzzle.present ? data.puzzle.value : this.puzzle,
       session: data.session.present ? data.session.value : this.session,
-      showArchived: data.showArchived.present
-          ? data.showArchived.value
-          : this.showArchived,
+      algorithmSet: data.algorithmSet.present
+          ? data.algorithmSet.value
+          : this.algorithmSet,
     );
   }
 
@@ -3456,13 +3456,13 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
           ..write('id: $id, ')
           ..write('puzzle: $puzzle, ')
           ..write('session: $session, ')
-          ..write('showArchived: $showArchived')
+          ..write('algorithmSet: $algorithmSet')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, puzzle, session, showArchived);
+  int get hashCode => Object.hash(id, puzzle, session, algorithmSet);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3470,37 +3470,37 @@ class AppStateEntry extends DataClass implements Insertable<AppStateEntry> {
           other.id == this.id &&
           other.puzzle == this.puzzle &&
           other.session == this.session &&
-          other.showArchived == this.showArchived);
+          other.algorithmSet == this.algorithmSet);
 }
 
 class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
   final Value<int> id;
   final Value<Puzzle> puzzle;
   final Value<String> session;
-  final Value<bool> showArchived;
+  final Value<String?> algorithmSet;
   const AppStateCompanion({
     this.id = const Value.absent(),
     this.puzzle = const Value.absent(),
     this.session = const Value.absent(),
-    this.showArchived = const Value.absent(),
+    this.algorithmSet = const Value.absent(),
   });
   AppStateCompanion.insert({
     this.id = const Value.absent(),
     this.puzzle = const Value.absent(),
     this.session = const Value.absent(),
-    this.showArchived = const Value.absent(),
+    this.algorithmSet = const Value.absent(),
   });
   static Insertable<AppStateEntry> custom({
     Expression<int>? id,
     Expression<String>? puzzle,
     Expression<String>? session,
-    Expression<bool>? showArchived,
+    Expression<String>? algorithmSet,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (puzzle != null) 'puzzle': puzzle,
       if (session != null) 'session': session,
-      if (showArchived != null) 'show_archived': showArchived,
+      if (algorithmSet != null) 'algorithm_set': algorithmSet,
     });
   }
 
@@ -3508,13 +3508,13 @@ class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
     Value<int>? id,
     Value<Puzzle>? puzzle,
     Value<String>? session,
-    Value<bool>? showArchived,
+    Value<String?>? algorithmSet,
   }) {
     return AppStateCompanion(
       id: id ?? this.id,
       puzzle: puzzle ?? this.puzzle,
       session: session ?? this.session,
-      showArchived: showArchived ?? this.showArchived,
+      algorithmSet: algorithmSet ?? this.algorithmSet,
     );
   }
 
@@ -3532,8 +3532,8 @@ class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
     if (session.present) {
       map['session'] = Variable<String>(session.value);
     }
-    if (showArchived.present) {
-      map['show_archived'] = Variable<bool>(showArchived.value);
+    if (algorithmSet.present) {
+      map['algorithm_set'] = Variable<String>(algorithmSet.value);
     }
     return map;
   }
@@ -3544,7 +3544,7 @@ class AppStateCompanion extends UpdateCompanion<AppStateEntry> {
           ..write('id: $id, ')
           ..write('puzzle: $puzzle, ')
           ..write('session: $session, ')
-          ..write('showArchived: $showArchived')
+          ..write('algorithmSet: $algorithmSet')
           ..write(')'))
         .toString();
   }
@@ -3666,6 +3666,28 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _algorithmSetMeta = const VerificationMeta(
+    'algorithmSet',
+  );
+  @override
+  late final GeneratedColumn<String> algorithmSet = GeneratedColumn<String>(
+    'algorithm_set',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _algorithmCaseMeta = const VerificationMeta(
+    'algorithmCase',
+  );
+  @override
+  late final GeneratedColumn<String> algorithmCase = GeneratedColumn<String>(
+    'algorithm_case',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3678,6 +3700,8 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
     comment,
     deletedAt,
     archived,
+    algorithmSet,
+    algorithmCase,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3742,6 +3766,24 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
         archived.isAcceptableOrUnknown(data['archived']!, _archivedMeta),
       );
     }
+    if (data.containsKey('algorithm_set')) {
+      context.handle(
+        _algorithmSetMeta,
+        algorithmSet.isAcceptableOrUnknown(
+          data['algorithm_set']!,
+          _algorithmSetMeta,
+        ),
+      );
+    }
+    if (data.containsKey('algorithm_case')) {
+      context.handle(
+        _algorithmCaseMeta,
+        algorithmCase.isAcceptableOrUnknown(
+          data['algorithm_case']!,
+          _algorithmCaseMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -3795,6 +3837,14 @@ class $RecordsTable extends Records with TableInfo<$RecordsTable, RecordEntry> {
         DriftSqlType.bool,
         data['${effectivePrefix}archived'],
       )!,
+      algorithmSet: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}algorithm_set'],
+      ),
+      algorithmCase: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}algorithm_case'],
+      ),
     );
   }
 
@@ -3840,6 +3890,12 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
 
   /// archived
   final bool archived;
+
+  /// The algorithm set the solve practised, or null for an ordinary solve; the two are kept apart.
+  final String? algorithmSet;
+
+  /// The case of [algorithmSet] the scramble was made from, or null when it was typed in.
+  final String? algorithmCase;
   const RecordEntry({
     required this.id,
     required this.puzzle,
@@ -3851,6 +3907,8 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
     this.comment,
     this.deletedAt,
     required this.archived,
+    this.algorithmSet,
+    this.algorithmCase,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3877,6 +3935,12 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
       map['deleted_at'] = Variable<DateTime>(deletedAt);
     }
     map['archived'] = Variable<bool>(archived);
+    if (!nullToAbsent || algorithmSet != null) {
+      map['algorithm_set'] = Variable<String>(algorithmSet);
+    }
+    if (!nullToAbsent || algorithmCase != null) {
+      map['algorithm_case'] = Variable<String>(algorithmCase);
+    }
     return map;
   }
 
@@ -3896,6 +3960,12 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
           ? const Value.absent()
           : Value(deletedAt),
       archived: Value(archived),
+      algorithmSet: algorithmSet == null && nullToAbsent
+          ? const Value.absent()
+          : Value(algorithmSet),
+      algorithmCase: algorithmCase == null && nullToAbsent
+          ? const Value.absent()
+          : Value(algorithmCase),
     );
   }
 
@@ -3915,6 +3985,8 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
       comment: serializer.fromJson<String?>(json['comment']),
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       archived: serializer.fromJson<bool>(json['archived']),
+      algorithmSet: serializer.fromJson<String?>(json['algorithmSet']),
+      algorithmCase: serializer.fromJson<String?>(json['algorithmCase']),
     );
   }
   @override
@@ -3931,6 +4003,8 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
       'comment': serializer.toJson<String?>(comment),
       'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'archived': serializer.toJson<bool>(archived),
+      'algorithmSet': serializer.toJson<String?>(algorithmSet),
+      'algorithmCase': serializer.toJson<String?>(algorithmCase),
     };
   }
 
@@ -3945,6 +4019,8 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
     Value<String?> comment = const Value.absent(),
     Value<DateTime?> deletedAt = const Value.absent(),
     bool? archived,
+    Value<String?> algorithmSet = const Value.absent(),
+    Value<String?> algorithmCase = const Value.absent(),
   }) => RecordEntry(
     id: id ?? this.id,
     puzzle: puzzle ?? this.puzzle,
@@ -3956,6 +4032,10 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
     comment: comment.present ? comment.value : this.comment,
     deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
     archived: archived ?? this.archived,
+    algorithmSet: algorithmSet.present ? algorithmSet.value : this.algorithmSet,
+    algorithmCase: algorithmCase.present
+        ? algorithmCase.value
+        : this.algorithmCase,
   );
   RecordEntry copyWithCompanion(RecordsCompanion data) {
     return RecordEntry(
@@ -3969,6 +4049,12 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
       comment: data.comment.present ? data.comment.value : this.comment,
       deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       archived: data.archived.present ? data.archived.value : this.archived,
+      algorithmSet: data.algorithmSet.present
+          ? data.algorithmSet.value
+          : this.algorithmSet,
+      algorithmCase: data.algorithmCase.present
+          ? data.algorithmCase.value
+          : this.algorithmCase,
     );
   }
 
@@ -3984,7 +4070,9 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
           ..write('penalty: $penalty, ')
           ..write('comment: $comment, ')
           ..write('deletedAt: $deletedAt, ')
-          ..write('archived: $archived')
+          ..write('archived: $archived, ')
+          ..write('algorithmSet: $algorithmSet, ')
+          ..write('algorithmCase: $algorithmCase')
           ..write(')'))
         .toString();
   }
@@ -4001,6 +4089,8 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
     comment,
     deletedAt,
     archived,
+    algorithmSet,
+    algorithmCase,
   );
   @override
   bool operator ==(Object other) =>
@@ -4015,7 +4105,9 @@ class RecordEntry extends DataClass implements Insertable<RecordEntry> {
           other.penalty == this.penalty &&
           other.comment == this.comment &&
           other.deletedAt == this.deletedAt &&
-          other.archived == this.archived);
+          other.archived == this.archived &&
+          other.algorithmSet == this.algorithmSet &&
+          other.algorithmCase == this.algorithmCase);
 }
 
 class RecordsCompanion extends UpdateCompanion<RecordEntry> {
@@ -4029,6 +4121,8 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
   final Value<String?> comment;
   final Value<DateTime?> deletedAt;
   final Value<bool> archived;
+  final Value<String?> algorithmSet;
+  final Value<String?> algorithmCase;
   final Value<int> rowid;
   const RecordsCompanion({
     this.id = const Value.absent(),
@@ -4041,6 +4135,8 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
     this.comment = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.archived = const Value.absent(),
+    this.algorithmSet = const Value.absent(),
+    this.algorithmCase = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   RecordsCompanion.insert({
@@ -4054,6 +4150,8 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
     this.comment = const Value.absent(),
     this.deletedAt = const Value.absent(),
     this.archived = const Value.absent(),
+    this.algorithmSet = const Value.absent(),
+    this.algorithmCase = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : puzzle = Value(puzzle),
        session = Value(session),
@@ -4071,6 +4169,8 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
     Expression<String>? comment,
     Expression<DateTime>? deletedAt,
     Expression<bool>? archived,
+    Expression<String>? algorithmSet,
+    Expression<String>? algorithmCase,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4084,6 +4184,8 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
       if (comment != null) 'comment': comment,
       if (deletedAt != null) 'deleted_at': deletedAt,
       if (archived != null) 'archived': archived,
+      if (algorithmSet != null) 'algorithm_set': algorithmSet,
+      if (algorithmCase != null) 'algorithm_case': algorithmCase,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4099,6 +4201,8 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
     Value<String?>? comment,
     Value<DateTime?>? deletedAt,
     Value<bool>? archived,
+    Value<String?>? algorithmSet,
+    Value<String?>? algorithmCase,
     Value<int>? rowid,
   }) {
     return RecordsCompanion(
@@ -4112,6 +4216,8 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
       comment: comment ?? this.comment,
       deletedAt: deletedAt ?? this.deletedAt,
       archived: archived ?? this.archived,
+      algorithmSet: algorithmSet ?? this.algorithmSet,
+      algorithmCase: algorithmCase ?? this.algorithmCase,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4153,6 +4259,12 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
     if (archived.present) {
       map['archived'] = Variable<bool>(archived.value);
     }
+    if (algorithmSet.present) {
+      map['algorithm_set'] = Variable<String>(algorithmSet.value);
+    }
+    if (algorithmCase.present) {
+      map['algorithm_case'] = Variable<String>(algorithmCase.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4172,6 +4284,290 @@ class RecordsCompanion extends UpdateCompanion<RecordEntry> {
           ..write('comment: $comment, ')
           ..write('deletedAt: $deletedAt, ')
           ..write('archived: $archived, ')
+          ..write('algorithmSet: $algorithmSet, ')
+          ..write('algorithmCase: $algorithmCase, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PracticeExclusionsTable extends PracticeExclusions
+    with TableInfo<$PracticeExclusionsTable, PracticeExclusionEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PracticeExclusionsTable(this.attachedDatabase, [this._alias]);
+  @override
+  late final GeneratedColumnWithTypeConverter<Puzzle, String> puzzle =
+      GeneratedColumn<String>(
+        'puzzle',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<Puzzle>($PracticeExclusionsTable.$converterpuzzle);
+  static const VerificationMeta _algorithmSetMeta = const VerificationMeta(
+    'algorithmSet',
+  );
+  @override
+  late final GeneratedColumn<String> algorithmSet = GeneratedColumn<String>(
+    'algorithm_set',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _algorithmCaseMeta = const VerificationMeta(
+    'algorithmCase',
+  );
+  @override
+  late final GeneratedColumn<String> algorithmCase = GeneratedColumn<String>(
+    'algorithm_case',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [puzzle, algorithmSet, algorithmCase];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'practice_exclusions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PracticeExclusionEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('algorithm_set')) {
+      context.handle(
+        _algorithmSetMeta,
+        algorithmSet.isAcceptableOrUnknown(
+          data['algorithm_set']!,
+          _algorithmSetMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_algorithmSetMeta);
+    }
+    if (data.containsKey('algorithm_case')) {
+      context.handle(
+        _algorithmCaseMeta,
+        algorithmCase.isAcceptableOrUnknown(
+          data['algorithm_case']!,
+          _algorithmCaseMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_algorithmCaseMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {puzzle, algorithmSet, algorithmCase};
+  @override
+  PracticeExclusionEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PracticeExclusionEntry(
+      puzzle: $PracticeExclusionsTable.$converterpuzzle.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}puzzle'],
+        )!,
+      ),
+      algorithmSet: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}algorithm_set'],
+      )!,
+      algorithmCase: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}algorithm_case'],
+      )!,
+    );
+  }
+
+  @override
+  $PracticeExclusionsTable createAlias(String alias) {
+    return $PracticeExclusionsTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<Puzzle, String> $converterpuzzle =
+      const PuzzleTypeConverter();
+}
+
+class PracticeExclusionEntry extends DataClass
+    implements Insertable<PracticeExclusionEntry> {
+  final Puzzle puzzle;
+  final String algorithmSet;
+  final String algorithmCase;
+  const PracticeExclusionEntry({
+    required this.puzzle,
+    required this.algorithmSet,
+    required this.algorithmCase,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    {
+      map['puzzle'] = Variable<String>(
+        $PracticeExclusionsTable.$converterpuzzle.toSql(puzzle),
+      );
+    }
+    map['algorithm_set'] = Variable<String>(algorithmSet);
+    map['algorithm_case'] = Variable<String>(algorithmCase);
+    return map;
+  }
+
+  PracticeExclusionsCompanion toCompanion(bool nullToAbsent) {
+    return PracticeExclusionsCompanion(
+      puzzle: Value(puzzle),
+      algorithmSet: Value(algorithmSet),
+      algorithmCase: Value(algorithmCase),
+    );
+  }
+
+  factory PracticeExclusionEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PracticeExclusionEntry(
+      puzzle: serializer.fromJson<Puzzle>(json['puzzle']),
+      algorithmSet: serializer.fromJson<String>(json['algorithmSet']),
+      algorithmCase: serializer.fromJson<String>(json['algorithmCase']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'puzzle': serializer.toJson<Puzzle>(puzzle),
+      'algorithmSet': serializer.toJson<String>(algorithmSet),
+      'algorithmCase': serializer.toJson<String>(algorithmCase),
+    };
+  }
+
+  PracticeExclusionEntry copyWith({
+    Puzzle? puzzle,
+    String? algorithmSet,
+    String? algorithmCase,
+  }) => PracticeExclusionEntry(
+    puzzle: puzzle ?? this.puzzle,
+    algorithmSet: algorithmSet ?? this.algorithmSet,
+    algorithmCase: algorithmCase ?? this.algorithmCase,
+  );
+  PracticeExclusionEntry copyWithCompanion(PracticeExclusionsCompanion data) {
+    return PracticeExclusionEntry(
+      puzzle: data.puzzle.present ? data.puzzle.value : this.puzzle,
+      algorithmSet: data.algorithmSet.present
+          ? data.algorithmSet.value
+          : this.algorithmSet,
+      algorithmCase: data.algorithmCase.present
+          ? data.algorithmCase.value
+          : this.algorithmCase,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PracticeExclusionEntry(')
+          ..write('puzzle: $puzzle, ')
+          ..write('algorithmSet: $algorithmSet, ')
+          ..write('algorithmCase: $algorithmCase')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(puzzle, algorithmSet, algorithmCase);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PracticeExclusionEntry &&
+          other.puzzle == this.puzzle &&
+          other.algorithmSet == this.algorithmSet &&
+          other.algorithmCase == this.algorithmCase);
+}
+
+class PracticeExclusionsCompanion
+    extends UpdateCompanion<PracticeExclusionEntry> {
+  final Value<Puzzle> puzzle;
+  final Value<String> algorithmSet;
+  final Value<String> algorithmCase;
+  final Value<int> rowid;
+  const PracticeExclusionsCompanion({
+    this.puzzle = const Value.absent(),
+    this.algorithmSet = const Value.absent(),
+    this.algorithmCase = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PracticeExclusionsCompanion.insert({
+    required Puzzle puzzle,
+    required String algorithmSet,
+    required String algorithmCase,
+    this.rowid = const Value.absent(),
+  }) : puzzle = Value(puzzle),
+       algorithmSet = Value(algorithmSet),
+       algorithmCase = Value(algorithmCase);
+  static Insertable<PracticeExclusionEntry> custom({
+    Expression<String>? puzzle,
+    Expression<String>? algorithmSet,
+    Expression<String>? algorithmCase,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (puzzle != null) 'puzzle': puzzle,
+      if (algorithmSet != null) 'algorithm_set': algorithmSet,
+      if (algorithmCase != null) 'algorithm_case': algorithmCase,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PracticeExclusionsCompanion copyWith({
+    Value<Puzzle>? puzzle,
+    Value<String>? algorithmSet,
+    Value<String>? algorithmCase,
+    Value<int>? rowid,
+  }) {
+    return PracticeExclusionsCompanion(
+      puzzle: puzzle ?? this.puzzle,
+      algorithmSet: algorithmSet ?? this.algorithmSet,
+      algorithmCase: algorithmCase ?? this.algorithmCase,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (puzzle.present) {
+      map['puzzle'] = Variable<String>(
+        $PracticeExclusionsTable.$converterpuzzle.toSql(puzzle.value),
+      );
+    }
+    if (algorithmSet.present) {
+      map['algorithm_set'] = Variable<String>(algorithmSet.value);
+    }
+    if (algorithmCase.present) {
+      map['algorithm_case'] = Variable<String>(algorithmCase.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PracticeExclusionsCompanion(')
+          ..write('puzzle: $puzzle, ')
+          ..write('algorithmSet: $algorithmSet, ')
+          ..write('algorithmCase: $algorithmCase, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4185,6 +4581,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SessionsTable sessions = $SessionsTable(this);
   late final $AppStateTable appState = $AppStateTable(this);
   late final $RecordsTable records = $RecordsTable(this);
+  late final $PracticeExclusionsTable practiceExclusions =
+      $PracticeExclusionsTable(this);
   late final Index recordsSessionPuzzle = Index(
     'records_session_puzzle',
     'CREATE INDEX records_session_puzzle ON records (session, puzzle, datetime)',
@@ -4202,6 +4600,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     sessions,
     appState,
     records,
+    practiceExclusions,
     recordsSessionPuzzle,
   ];
 }
@@ -5797,13 +6196,13 @@ typedef $$AppStateTableCreateCompanionBuilder = AppStateCompanion Function({
   Value<int> id,
   Value<Puzzle> puzzle,
   Value<String> session,
-  Value<bool> showArchived,
+  Value<String?> algorithmSet,
 });
 typedef $$AppStateTableUpdateCompanionBuilder = AppStateCompanion Function({
   Value<int> id,
   Value<Puzzle> puzzle,
   Value<String> session,
-  Value<bool> showArchived,
+  Value<String?> algorithmSet,
 });
 
 final class $$AppStateTableReferences
@@ -5848,8 +6247,8 @@ class $$AppStateTableFilterComposer
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
 
-  ColumnFilters<bool> get showArchived => $composableBuilder(
-    column: $table.showArchived,
+  ColumnFilters<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5896,8 +6295,8 @@ class $$AppStateTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get showArchived => $composableBuilder(
-    column: $table.showArchived,
+  ColumnOrderings<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -5940,8 +6339,8 @@ class $$AppStateTableAnnotationComposer
   GeneratedColumnWithTypeConverter<Puzzle, String> get puzzle =>
       $composableBuilder(column: $table.puzzle, builder: (column) => column);
 
-  GeneratedColumn<bool> get showArchived => $composableBuilder(
-    column: $table.showArchived,
+  GeneratedColumn<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
     builder: (column) => column,
   );
 
@@ -6000,24 +6399,24 @@ class $$AppStateTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<Puzzle> puzzle = const Value.absent(),
                 Value<String> session = const Value.absent(),
-                Value<bool> showArchived = const Value.absent(),
+                Value<String?> algorithmSet = const Value.absent(),
               }) => AppStateCompanion(
                 id: id,
                 puzzle: puzzle,
                 session: session,
-                showArchived: showArchived,
+                algorithmSet: algorithmSet,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
                 Value<Puzzle> puzzle = const Value.absent(),
                 Value<String> session = const Value.absent(),
-                Value<bool> showArchived = const Value.absent(),
+                Value<String?> algorithmSet = const Value.absent(),
               }) => AppStateCompanion.insert(
                 id: id,
                 puzzle: puzzle,
                 session: session,
-                showArchived: showArchived,
+                algorithmSet: algorithmSet,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -6095,6 +6494,8 @@ typedef $$RecordsTableCreateCompanionBuilder = RecordsCompanion Function({
   Value<String?> comment,
   Value<DateTime?> deletedAt,
   Value<bool> archived,
+  Value<String?> algorithmSet,
+  Value<String?> algorithmCase,
   Value<int> rowid,
 });
 typedef $$RecordsTableUpdateCompanionBuilder = RecordsCompanion Function({
@@ -6108,6 +6509,8 @@ typedef $$RecordsTableUpdateCompanionBuilder = RecordsCompanion Function({
   Value<String?> comment,
   Value<DateTime?> deletedAt,
   Value<bool> archived,
+  Value<String?> algorithmSet,
+  Value<String?> algorithmCase,
   Value<int> rowid,
 });
 
@@ -6189,6 +6592,16 @@ class $$RecordsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get algorithmCase => $composableBuilder(
+    column: $table.algorithmCase,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$SessionsTableFilterComposer get session {
     final $$SessionsTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -6267,6 +6680,16 @@ class $$RecordsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get algorithmCase => $composableBuilder(
+    column: $table.algorithmCase,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SessionsTableOrderingComposer get session {
     final $$SessionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -6326,6 +6749,16 @@ class $$RecordsTableAnnotationComposer
 
   GeneratedColumn<bool> get archived =>
       $composableBuilder(column: $table.archived, builder: (column) => column);
+
+  GeneratedColumn<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get algorithmCase => $composableBuilder(
+    column: $table.algorithmCase,
+    builder: (column) => column,
+  );
 
   $$SessionsTableAnnotationComposer get session {
     final $$SessionsTableAnnotationComposer composer = $composerBuilder(
@@ -6389,6 +6822,8 @@ class $$RecordsTableTableManager
                 Value<String?> comment = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
                 Value<bool> archived = const Value.absent(),
+                Value<String?> algorithmSet = const Value.absent(),
+                Value<String?> algorithmCase = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecordsCompanion(
                 id: id,
@@ -6401,6 +6836,8 @@ class $$RecordsTableTableManager
                 comment: comment,
                 deletedAt: deletedAt,
                 archived: archived,
+                algorithmSet: algorithmSet,
+                algorithmCase: algorithmCase,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -6415,6 +6852,8 @@ class $$RecordsTableTableManager
                 Value<String?> comment = const Value.absent(),
                 Value<DateTime?> deletedAt = const Value.absent(),
                 Value<bool> archived = const Value.absent(),
+                Value<String?> algorithmSet = const Value.absent(),
+                Value<String?> algorithmCase = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => RecordsCompanion.insert(
                 id: id,
@@ -6427,6 +6866,8 @@ class $$RecordsTableTableManager
                 comment: comment,
                 deletedAt: deletedAt,
                 archived: archived,
+                algorithmSet: algorithmSet,
+                algorithmCase: algorithmCase,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -6495,6 +6936,197 @@ typedef $$RecordsTableProcessedTableManager =
       RecordEntry,
       PrefetchHooks Function({bool session})
     >;
+typedef $$PracticeExclusionsTableCreateCompanionBuilder =
+    PracticeExclusionsCompanion Function({
+      required Puzzle puzzle,
+      required String algorithmSet,
+      required String algorithmCase,
+      Value<int> rowid,
+    });
+typedef $$PracticeExclusionsTableUpdateCompanionBuilder =
+    PracticeExclusionsCompanion Function({
+      Value<Puzzle> puzzle,
+      Value<String> algorithmSet,
+      Value<String> algorithmCase,
+      Value<int> rowid,
+    });
+
+class $$PracticeExclusionsTableFilterComposer
+    extends Composer<_$AppDatabase, $PracticeExclusionsTable> {
+  $$PracticeExclusionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnWithTypeConverterFilters<Puzzle, Puzzle, String> get puzzle =>
+      $composableBuilder(
+        column: $table.puzzle,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get algorithmCase => $composableBuilder(
+    column: $table.algorithmCase,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PracticeExclusionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $PracticeExclusionsTable> {
+  $$PracticeExclusionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get puzzle => $composableBuilder(
+    column: $table.puzzle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get algorithmCase => $composableBuilder(
+    column: $table.algorithmCase,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PracticeExclusionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PracticeExclusionsTable> {
+  $$PracticeExclusionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumnWithTypeConverter<Puzzle, String> get puzzle =>
+      $composableBuilder(column: $table.puzzle, builder: (column) => column);
+
+  GeneratedColumn<String> get algorithmSet => $composableBuilder(
+    column: $table.algorithmSet,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get algorithmCase => $composableBuilder(
+    column: $table.algorithmCase,
+    builder: (column) => column,
+  );
+}
+
+class $$PracticeExclusionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PracticeExclusionsTable,
+          PracticeExclusionEntry,
+          $$PracticeExclusionsTableFilterComposer,
+          $$PracticeExclusionsTableOrderingComposer,
+          $$PracticeExclusionsTableAnnotationComposer,
+          $$PracticeExclusionsTableCreateCompanionBuilder,
+          $$PracticeExclusionsTableUpdateCompanionBuilder,
+          (
+            PracticeExclusionEntry,
+            BaseReferences<
+              _$AppDatabase,
+              $PracticeExclusionsTable,
+              PracticeExclusionEntry
+            >,
+          ),
+          PracticeExclusionEntry,
+          PrefetchHooks Function()
+        > {
+  $$PracticeExclusionsTableTableManager(
+    _$AppDatabase db,
+    $PracticeExclusionsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PracticeExclusionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PracticeExclusionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PracticeExclusionsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<Puzzle> puzzle = const Value.absent(),
+                Value<String> algorithmSet = const Value.absent(),
+                Value<String> algorithmCase = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PracticeExclusionsCompanion(
+                puzzle: puzzle,
+                algorithmSet: algorithmSet,
+                algorithmCase: algorithmCase,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required Puzzle puzzle,
+                required String algorithmSet,
+                required String algorithmCase,
+                Value<int> rowid = const Value.absent(),
+              }) => PracticeExclusionsCompanion.insert(
+                puzzle: puzzle,
+                algorithmSet: algorithmSet,
+                algorithmCase: algorithmCase,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PracticeExclusionsTable, PracticeExclusionEntry>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $PracticeExclusionsTable,
+                    PracticeExclusionEntry
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PracticeExclusionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PracticeExclusionsTable,
+      PracticeExclusionEntry,
+      $$PracticeExclusionsTableFilterComposer,
+      $$PracticeExclusionsTableOrderingComposer,
+      $$PracticeExclusionsTableAnnotationComposer,
+      $$PracticeExclusionsTableCreateCompanionBuilder,
+      $$PracticeExclusionsTableUpdateCompanionBuilder,
+      (
+        PracticeExclusionEntry,
+        BaseReferences<
+          _$AppDatabase,
+          $PracticeExclusionsTable,
+          PracticeExclusionEntry
+        >,
+      ),
+      PracticeExclusionEntry,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6507,4 +7139,6 @@ class $AppDatabaseManager {
       $$AppStateTableTableManager(_db, _db.appState);
   $$RecordsTableTableManager get records =>
       $$RecordsTableTableManager(_db, _db.records);
+  $$PracticeExclusionsTableTableManager get practiceExclusions =>
+      $$PracticeExclusionsTableTableManager(_db, _db.practiceExclusions);
 }

@@ -6,6 +6,8 @@ part of 'app_state.dao.dart';
 mixin _$AppStateDaoMixin on DatabaseAccessor<AppDatabase> {
   $SessionsTable get sessions => attachedDatabase.sessions;
   $AppStateTable get appState => attachedDatabase.appState;
+  $PracticeExclusionsTable get practiceExclusions =>
+      attachedDatabase.practiceExclusions;
   AppStateDaoManager get managers => AppStateDaoManager(this);
 }
 
@@ -16,4 +18,9 @@ class AppStateDaoManager {
       $$SessionsTableTableManager(_db.attachedDatabase, _db.sessions);
   $$AppStateTableTableManager get appState =>
       $$AppStateTableTableManager(_db.attachedDatabase, _db.appState);
+  $$PracticeExclusionsTableTableManager get practiceExclusions =>
+      $$PracticeExclusionsTableTableManager(
+        _db.attachedDatabase,
+        _db.practiceExclusions,
+      );
 }

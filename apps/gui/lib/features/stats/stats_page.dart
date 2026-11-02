@@ -6,6 +6,7 @@ import "package:stream_transform/stream_transform.dart";
 
 import "../../database/dao_provider.dart";
 import "../../l10n/l10n.dart";
+import "../records/records_list.dart";
 import "../../shared/utils.dart";
 import "../../theme.dart";
 import "stats_common.dart";
@@ -19,15 +20,26 @@ class StatsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = AppStateProvider.of(context);
 
-    return _StatsPage(puzzle: data.puzzle, sessionId: data.session.id, showArchived: data.showArchived);
+    return _StatsPage(
+      puzzle: data.puzzle,
+      algorithmSet: data.algorithmSet,
+      sessionId: data.session.id,
+      showArchived: context.watch<ShowArchivedCubit>().state,
+    );
   }
 }
 
 class _StatsPage extends StatefulWidget {
   final Puzzle puzzle;
+  final String? algorithmSet;
   final String sessionId;
   final bool showArchived;
-  const _StatsPage({required this.puzzle, required this.sessionId, required this.showArchived});
+  const _StatsPage({
+    required this.puzzle,
+    required this.algorithmSet,
+    required this.sessionId,
+    required this.showArchived,
+  });
 
   @override
   State<_StatsPage> createState() => _StatsPageState();
@@ -39,9 +51,19 @@ class _StatsPageState extends State<_StatsPage> {
   void _watchStats() {
     final dao = context.read<AppDatabase>().recordsDao;
     _stream = dao
-        .watchSummary(widget.sessionId, widget.puzzle, showArchived: widget.showArchived)
+        .watchSummary(
+          widget.sessionId,
+          widget.puzzle,
+          algorithmSet: widget.algorithmSet,
+          showArchived: widget.showArchived,
+        )
         .combineLatest(
-          dao.watchTimes(widget.sessionId, widget.puzzle, showArchived: widget.showArchived),
+          dao.watchTimes(
+            widget.sessionId,
+            widget.puzzle,
+            algorithmSet: widget.algorithmSet,
+            showArchived: widget.showArchived,
+          ),
           (summary, times) => (summary: summary, times: times),
         );
   }
@@ -58,6 +80,7 @@ class _StatsPageState extends State<_StatsPage> {
 
     if (oldWidget.sessionId != widget.sessionId ||
         oldWidget.puzzle != widget.puzzle ||
+        oldWidget.algorithmSet != widget.algorithmSet ||
         oldWidget.showArchived != widget.showArchived) {
       // update stats
       _watchStats();

@@ -1100,12 +1100,6 @@ abstract class AppLocalizations {
   /// **'Algorithms'**
   String get homeKindAlgorithms;
 
-  /// No description provided for @homeAlgorithmsSoon.
-  ///
-  /// In en, this message translates to:
-  /// **'Algorithm practice is not available yet'**
-  String get homeAlgorithmsSoon;
-
   /// No description provided for @homeSelectPuzzle.
   ///
   /// In en, this message translates to:
@@ -1411,6 +1405,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There are no algorithm sets for {puzzle}'**
   String algorithmsNoSets(String puzzle);
+
+  /// No description provided for @practiceCrossName.
+  ///
+  /// In en, this message translates to:
+  /// **'Cross'**
+  String get practiceCrossName;
+
+  /// No description provided for @practiceCrossDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Solve just the bottom cross'**
+  String get practiceCrossDescription;
+
+  /// No description provided for @practiceViewList.
+  ///
+  /// In en, this message translates to:
+  /// **'List'**
+  String get practiceViewList;
+
+  /// No description provided for @practiceViewGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Grid'**
+  String get practiceViewGrid;
+
+  /// No description provided for @practiceCasesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cases to practise'**
+  String get practiceCasesTitle;
+
+  /// No description provided for @practiceCasesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{selected} of {total} cases'**
+  String practiceCasesCount(int selected, int total);
 
   /// No description provided for @trainersTitle.
   ///

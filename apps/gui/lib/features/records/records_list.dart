@@ -11,6 +11,14 @@ import "record_detail_dialog.dart";
 import "../../l10n/l10n.dart";
 
 /// null = not selecting.
+/// Whether the records and stats show the archived solves instead of the rest; not kept, so the app always
+/// opens on the rest.
+class ShowArchivedCubit extends Cubit<bool> {
+  ShowArchivedCubit() : super(false);
+
+  void toggle() => emit(!state);
+}
+
 class RecordSelectionCubit extends Cubit<Set<String>?> {
   RecordSelectionCubit() : super(null);
 

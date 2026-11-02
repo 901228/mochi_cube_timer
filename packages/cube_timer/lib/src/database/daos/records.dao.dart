@@ -43,16 +43,18 @@ Expression<int> _effective($RecordsTable t) => CaseWhenExpression(
 );
 
 /// The records of one session and puzzle that are not deleted: the archived ones, or the rest, or
-/// with [includeArchived] both.
+/// with [includeArchived] both. Ordinary solves, or with [algorithmSet] that set's practice.
 Expression<bool> _scope(
   $RecordsTable t,
   String session,
   Puzzle puzzle, {
+  String? algorithmSet,
   bool showArchived = false,
   bool includeArchived = false,
 }) =>
     t.session.equals(session) &
     t.puzzle.equals(puzzle.id) &
+    (algorithmSet == null ? t.algorithmSet.isNull() : t.algorithmSet.equals(algorithmSet)) &
     t.deletedAt.isNull() &
     (includeArchived ? const Constant(true) : t.archived.equals(showArchived));
 
@@ -72,11 +74,18 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
   Selectable<RecordEntry> _query(
     String session,
     Puzzle puzzle, {
+    String? algorithmSet,
     bool showArchived = false,
     RecordQuery query = const RecordQuery(),
   }) => select(records)
     ..where((t) {
-      Expression<bool> base = _scope(t, session, puzzle, showArchived: showArchived);
+      Expression<bool> base = _scope(
+        t,
+        session,
+        puzzle,
+        algorithmSet: algorithmSet,
+        showArchived: showArchived,
+      );
 
       if (query.comment.isNotEmpty) base &= t.comment.like("%${query.comment}%");
       if (query.penalties.isNotEmpty) base &= t.penalty.isInValues(query.penalties);
@@ -92,16 +101,18 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
   Stream<List<RecordEntry>> watchSession(
     String session,
     Puzzle puzzle, {
+    String? algorithmSet,
     bool showArchived = false,
     RecordQuery query = const RecordQuery(),
-  }) => _query(session, puzzle, showArchived: showArchived, query: query).watch();
+  }) => _query(session, puzzle, algorithmSet: algorithmSet, showArchived: showArchived, query: query).watch();
 
   Future<List<RecordEntry>> getSession(
     String session,
     Puzzle puzzle, {
+    String? algorithmSet,
     bool showArchived = false,
     RecordQuery query = const RecordQuery(),
-  }) => _query(session, puzzle, showArchived: showArchived, query: query).get();
+  }) => _query(session, puzzle, algorithmSet: algorithmSet, showArchived: showArchived, query: query).get();
 
   /// watch single record
   Stream<RecordEntry> watchRecord(String id) =>
@@ -117,6 +128,8 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
     required int time,
     Penalty penalty = .none,
     String? comment,
+    String? algorithmSet,
+    String? algorithmCase,
   }) async {
     final row = await into(records).insertReturning(
       RecordsCompanion.insert(
@@ -126,6 +139,8 @@ class RecordsDao extends DatabaseAccessor<AppDatabase> with _$RecordsDaoMixin {
         time: time,
         penalty: penalty,
         comment: Value(comment),
+        algorithmSet: Value(algorithmSet),
+        algorithmCase: Value(algorithmCase),
       ),
     );
     return row.id;
@@ -237,7 +252,7 @@ List<AverageBreak> averageBreaks(
 
 extension RecordsDaoStatistics on RecordsDao {
   /// The archived solves count too: archiving clears the list, not what the session has achieved.
-  Future<RecordExtremes> extremes(String session, Puzzle puzzle) async {
+  Future<RecordExtremes> extremes(String session, Puzzle puzzle, {String? algorithmSet}) async {
     final eff = _effective(records);
     final solved = records.penalty.equalsValue(Penalty.dnf).not();
 
@@ -248,22 +263,27 @@ extension RecordsDaoStatistics on RecordsDao {
     final row =
         await (selectOnly(records)
               ..addColumns([count, best, worst])
-              ..where(_scope(records, session, puzzle, includeArchived: true)))
+              ..where(_scope(records, session, puzzle, algorithmSet: algorithmSet, includeArchived: true)))
             .getSingle();
     return (solved: row.read(count)!, best: row.read(best), worst: row.read(worst));
   }
 
   /// The best solved time in ms, archived solves included, as [extremes] counts it: the personal best.
-  Stream<int?> watchBest(String session, Puzzle puzzle) {
+  Stream<int?> watchBest(String session, Puzzle puzzle, {String? algorithmSet}) {
     final best = _effective(records).min(filter: records.penalty.equalsValue(Penalty.dnf).not());
     return (selectOnly(records)
           ..addColumns([best])
-          ..where(_scope(records, session, puzzle, includeArchived: true)))
+          ..where(_scope(records, session, puzzle, algorithmSet: algorithmSet, includeArchived: true)))
         .watchSingle()
         .map((r) => r.read(best));
   }
 
-  Stream<SessionSummary> watchSummary(String session, Puzzle puzzle, {bool showArchived = false}) {
+  Stream<SessionSummary> watchSummary(
+    String session,
+    Puzzle puzzle, {
+    String? algorithmSet,
+    bool showArchived = false,
+  }) {
     final eff = _effective(records);
     final solved = records.penalty.equalsValue(Penalty.dnf).not();
 
@@ -275,7 +295,7 @@ extension RecordsDaoStatistics on RecordsDao {
 
     final q = selectOnly(records)
       ..addColumns([count, solvedCount, mean, meanSq, best])
-      ..where(_scope(records, session, puzzle, showArchived: showArchived));
+      ..where(_scope(records, session, puzzle, algorithmSet: algorithmSet, showArchived: showArchived));
 
     return q.watchSingle().map((r) {
       final n = r.read(solvedCount)!;
@@ -292,6 +312,7 @@ extension RecordsDaoStatistics on RecordsDao {
   Stream<List<SolveTime>> watchTimes(
     String session,
     Puzzle puzzle, {
+    String? algorithmSet,
     bool showArchived = false,
     bool includeArchived = false,
     int? limit,
@@ -299,7 +320,16 @@ extension RecordsDaoStatistics on RecordsDao {
     final eff = _effective(records);
     final q = selectOnly(records)
       ..addColumns([eff, records.penalty])
-      ..where(_scope(records, session, puzzle, showArchived: showArchived, includeArchived: includeArchived))
+      ..where(
+        _scope(
+          records,
+          session,
+          puzzle,
+          algorithmSet: algorithmSet,
+          showArchived: showArchived,
+          includeArchived: includeArchived,
+        ),
+      )
       ..orderBy([OrderingTerm.desc(records.datetime)]);
     if (limit != null) q.limit(limit);
 
@@ -410,7 +440,9 @@ extension RecordsDaoData on RecordsDao {
 
   Future<List<RecordExport>> export(String session, Puzzle puzzle, {bool includeDeleted = false}) =>
       (select(records)..where((t) {
-            Expression<bool> base = t.session.equals(session) & t.puzzle.equals(puzzle.id);
+            // Ordinary solves only, until exporting the practice of an algorithm set is asked for.
+            Expression<bool> base =
+                t.session.equals(session) & t.puzzle.equals(puzzle.id) & t.algorithmSet.isNull();
             if (!includeDeleted) {
               base &= t.deletedAt.isNull();
             }
