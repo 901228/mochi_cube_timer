@@ -6,6 +6,7 @@ import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data/oll.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data/pll.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/algorithms_page.dart";
+import "package:mochi_cube_timer_gui/features/algorithms/cube_painter.dart";
 import "package:mochi_cube_timer_gui/l10n/l10n.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -54,6 +55,35 @@ void main() {
       expect(c.ftoStickers, matches(r"^[yoglrbp]{21}$"), reason: c.name);
       expect(c.algorithms, isNotEmpty, reason: c.name);
     }
+  });
+
+  test("NxN sets have their cases, unique ids, algorithms and well-formed diagrams", () {
+    const sizes = {
+      "222": {"ortega-oll": 7, "ortega-pbl": 6, "cll": 40},
+      "333": {"f2l": 41, "wv": 27, "sv": 27, "coll": 40},
+      "444": {"oll-parity": 3, "pll-parity": 22},
+      "555": {"l2c": 18, "l2e": 13},
+      "666": {"oll-parity": 3, "pll-parity": 22},
+      "777": {"l2c": 18, "l2e": 13},
+    };
+    sizes.forEach((puzzle, sets) {
+      sets.forEach((setId, count) {
+        final cases = algorithmSets.findSet(puzzle, setId: setId)!.cases;
+        expect(cases, hasLength(count), reason: "$puzzle $setId");
+        expect(cases.map((c) => c.id).toSet(), hasLength(count), reason: "$puzzle $setId ids");
+        for (final c in cases) {
+          expect(c.algorithms, isNotEmpty, reason: c.name);
+          if (c.cubeStickers case final s?) expect(cubeStickersSize(s), int.parse(puzzle[0]), reason: c.name);
+        }
+      });
+    });
+  });
+
+  test("6x6 parity is the 4x4 one in 6x6 moves", () {
+    final cube4 = algorithmSets.findSet("444", setId: "pll-parity")!.cases.first.algorithms.first;
+    final cube6 = algorithmSets.findSet("666", setId: "pll-parity")!.cases.first.algorithms.first;
+    expect(cube4, "2R2 U2 2R2 Uw2 2R2 Uw2");
+    expect(cube6, "3Rw2 R2 U2 3Rw2 R2 3Uw2 3Rw2 R2 3Uw2");
   });
 
   testWidgets("tapping a case card opens the detail modal with its algorithms", (tester) async {

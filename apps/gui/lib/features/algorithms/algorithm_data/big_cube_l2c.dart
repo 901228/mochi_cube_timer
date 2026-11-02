@@ -1,0 +1,93 @@
+import "common.dart";
+
+/// L2C: solve the last two centers of a 5x5. From SpeedCubeDB.
+const List<AlgorithmCase> l2cCases = [
+  AlgorithmCase(
+    id: "l2c-1",
+    name: "L2C 1",
+    group: "All",
+    algorithms: [
+      "U2 Rw U Rw' U Rw U2 Rw'",
+      "Rw U2 Rw' U' Rw U' Rw'",
+      "U2 r U r' U r U2 r'",
+      "U Rw U' Lw' U Rw' U' Lw",
+    ],
+  ),
+  AlgorithmCase(
+    id: "l2c-2",
+    name: "L2C 2",
+    group: "All",
+    algorithms: [
+      "Rw U M' U2 M U Rw'",
+      "Rw U' Rw' U2 Rw U2 Rw' U Rw U2 Rw'",
+      "U Rw U Rw' U' Rw U Rw' U Rw U2' Rw'",
+      "U2 Rw U' M' U Rw' U' M",
+    ],
+  ),
+  AlgorithmCase(id: "l2c-3", name: "L2C 3", group: "All", algorithms: ["Rw U Rw'", "r U r'"]),
+  AlgorithmCase(
+    id: "l2c-4",
+    name: "L2C 4",
+    group: "All",
+    algorithms: ["Rw U Rw' U' Rw U' Rw'", "U' r U r' U r U' r'"],
+  ),
+  AlgorithmCase(
+    id: "l2c-5",
+    name: "L2C 5",
+    group: "All",
+    algorithms: ["Rw U' Rw' U' Rw U' Rw'", "U 3Rw U Rw' U' 3R'"],
+  ),
+  AlgorithmCase(id: "l2c-6", name: "L2C 6", group: "All", algorithms: ["Rw U2 Rw' U Rw U2 Rw'"]),
+  AlgorithmCase(id: "l2c-7", name: "L2C 7", group: "All", algorithms: ["Rw U' Rw'", "r U' r'"]),
+  AlgorithmCase(id: "l2c-8", name: "L2C 8", group: "All", algorithms: ["Rw U' Rw' U Rw U Rw'"]),
+  AlgorithmCase(
+    id: "l2c-9",
+    name: "L2C 9",
+    group: "All",
+    algorithms: ["Rw U Rw' U Rw U Rw'", "U' 3Rw U' Rw' U 3R'"],
+  ),
+  AlgorithmCase(id: "l2c-10", name: "L2C 10", group: "All", algorithms: ["Rw U2 Rw' U' Rw U2 Rw'"]),
+  AlgorithmCase(
+    id: "l2c-11",
+    name: "L2C 11",
+    group: "All",
+    algorithms: [
+      "U2 Rw U Rw' U' Rw U Rw' U' Rw U Rw' U'",
+      "Rw U M' U2 M U' Rw'",
+      "U2 Rw U' Rw' U Rw U' Rw' U Rw U' Rw'",
+      "U Rw U' Rw' U' Rw U' Rw' U Rw U2 Rw'",
+    ],
+  ),
+  AlgorithmCase(id: "l2c-12", name: "L2C 12", group: "All", algorithms: ["Rw U' Rw' U2 Rw U' Rw'"]),
+  AlgorithmCase(id: "l2c-13", name: "L2C 13", group: "All", algorithms: ["Rw U2 Rw'"]),
+  AlgorithmCase(id: "l2c-14", name: "L2C 14", group: "All", algorithms: ["Rw U Rw' U' Rw U2 Rw'"]),
+  AlgorithmCase(
+    id: "l2c-15",
+    name: "L2C 15",
+    group: "All",
+    algorithms: [
+      "Rw U Rw' U Rw U2 Rw'",
+      "Rw U' Rw' U Rw U2 Rw'",
+      "U' F r U' r' U' r U2 r'",
+      "U' Rw U' Lw' U Rw' U' Lw",
+    ],
+  ),
+  AlgorithmCase(
+    id: "l2c-16",
+    name: "L2C 16",
+    group: "All",
+    algorithms: ["Rw U' Rw' U Rw U' Rw'", "U2 Rw U Lw' U Rw' U' Lw"],
+  ),
+  AlgorithmCase(id: "l2c-17", name: "L2C 17", group: "All", algorithms: ["Rw U Rw' U' Rw U Rw'"]),
+  AlgorithmCase(
+    id: "l2c-18",
+    name: "L2C 18",
+    group: "All",
+    algorithms: [
+      "M' U2 M U Rw U2 Rw'",
+      "r U2 r' U2 r U' r'",
+      "U2 r U2 r' U2 r U r'",
+      "U' Rw U' M' U' Rw' U M",
+    ],
+  ),
+];

@@ -1,5 +1,10 @@
 import "package:cube_timer/cube_timer.dart";
 
+import "alg_scale.dart";
+import "algorithm_data/big_cube_l2c.dart";
+import "algorithm_data/big_cube_l2e.dart";
+import "algorithm_data/big_cube_oll_parity.dart";
+import "algorithm_data/big_cube_pll_parity.dart";
 import "algorithm_data/common.dart";
 import "algorithm_data/cube2_cll.dart";
 import "algorithm_data/cube2_ortega_oll.dart";
@@ -15,6 +20,40 @@ import "algorithm_data/pll.dart";
 
 /// use `id` of [Puzzle] as key to prevent the additional search for the puzzle by puzzleId
 typedef AlgorithmSets = Map<String, AlgorithmGroups>;
+
+/// 4x4 parity, written for 4x4 and scaled to the other even cubes.
+const _parity = AlgorithmGroup(
+  id: "parity",
+  name: "Parity",
+  sets: [
+    AlgorithmSet(
+      id: "oll-parity",
+      name: "OLL Parity",
+      subtitle: "Flip a single dedge",
+      cases: ollParityCases,
+    ),
+    AlgorithmSet(
+      id: "pll-parity",
+      name: "PLL Parity",
+      subtitle: "PLL with two dedges swapped",
+      cases: pllParityCases,
+    ),
+  ],
+);
+
+/// 5x5 edge pairing, written for 5x5 and scaled to the other odd cubes.
+const _edges = AlgorithmGroup(
+  id: "edges",
+  name: "Edges",
+  sets: [AlgorithmSet(id: "l2e", name: "L2E", subtitle: "Last Two Edges", cases: l2eCases)],
+);
+
+/// 5x5 last two centers, written for 5x5 and scaled to the other odd cubes.
+const _centers = AlgorithmGroup(
+  id: "centers",
+  name: "Centers",
+  sets: [AlgorithmSet(id: "l2c", name: "L2C", subtitle: "Last Two Centers", cases: l2cCases)],
+);
 
 /// All built-in algorithm sets, across puzzles.
 final AlgorithmSets algorithmSets = {
@@ -74,6 +113,10 @@ final AlgorithmSets algorithmSets = {
       ],
     ),
   ],
+  Puzzle.cube4.id: [_parity],
+  Puzzle.cube5.id: [_centers, _edges],
+  Puzzle.cube6.id: [_parity.scaledTo(from: 4, to: 6)],
+  Puzzle.cube7.id: [_centers.scaledTo(from: 5, to: 7), _edges.scaledTo(from: 5, to: 7)],
   Puzzle.fto.id: [
     AlgorithmGroup(
       id: "nautilus",
