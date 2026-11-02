@@ -31,12 +31,14 @@ const _parity = AlgorithmGroup(
       name: "OLL Parity",
       subtitle: "Flip a single dedge",
       cases: ollParityCases,
+      lastLayer: true,
     ),
     AlgorithmSet(
       id: "pll-parity",
       name: "PLL Parity",
       subtitle: "PLL with two dedges swapped",
       cases: pllParityCases,
+      lastLayer: true,
     ),
   ],
 );
@@ -67,19 +69,29 @@ final AlgorithmSets algorithmSets = {
           name: "OLL",
           subtitle: "Orientation of the Last Layer",
           cases: ortegaOllCases,
+          lastLayer: true,
         ),
         AlgorithmSet(
           id: "ortega-pbl",
           name: "PBL",
           subtitle: "Permutation of Both Layers",
           cases: ortegaPblCases,
+          lastLayer: true,
         ),
       ],
     ),
     AlgorithmGroup(
       id: "cll",
       name: "CLL",
-      sets: [AlgorithmSet(id: "cll", name: "CLL", subtitle: "Corners of the Last Layer", cases: cllCases)],
+      sets: [
+        AlgorithmSet(
+          id: "cll",
+          name: "CLL",
+          subtitle: "Corners of the Last Layer",
+          cases: cllCases,
+          lastLayer: true,
+        ),
+      ],
     ),
   ],
   Puzzle.cube3.id: [
@@ -88,8 +100,20 @@ final AlgorithmSets algorithmSets = {
       name: "CFOP",
       sets: [
         AlgorithmSet(id: "f2l", name: "F2L", subtitle: "First Two Layers", cases: f2lCases),
-        AlgorithmSet(id: "pll", name: "PLL", subtitle: "Permutation of the Last Layer", cases: pllCases),
-        AlgorithmSet(id: "oll", name: "OLL", subtitle: "Orientation of the Last Layer", cases: ollCases),
+        AlgorithmSet(
+          id: "pll",
+          name: "PLL",
+          subtitle: "Permutation of the Last Layer",
+          cases: pllCases,
+          lastLayer: true,
+        ),
+        AlgorithmSet(
+          id: "oll",
+          name: "OLL",
+          subtitle: "Orientation of the Last Layer",
+          cases: ollCases,
+          lastLayer: true,
+        ),
       ],
     ),
     AlgorithmGroup(
@@ -109,6 +133,7 @@ final AlgorithmSets algorithmSets = {
           name: "COLL",
           subtitle: "Corners and Orientation of the Last Layer",
           cases: collCases,
+          lastLayer: true,
         ),
       ],
     ),

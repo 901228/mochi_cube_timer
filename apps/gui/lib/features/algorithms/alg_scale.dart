@@ -87,6 +87,7 @@ extension AlgorithmGroupScale on AlgorithmGroup {
           id: s.id,
           name: s.name,
           subtitle: s.subtitle,
+          lastLayer: s.lastLayer,
           cases: [
             for (final c in s.cases)
               AlgorithmCase(

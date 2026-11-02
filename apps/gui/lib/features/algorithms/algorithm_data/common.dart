@@ -71,12 +71,21 @@ class AlgorithmCase {
 /// A named collection of [AlgorithmCase]s (e.g. 3x3x3 OLL or PLL).
 @immutable
 class AlgorithmSet {
-  const AlgorithmSet({required this.id, required this.name, required this.subtitle, required this.cases});
+  const AlgorithmSet({
+    required this.id,
+    required this.name,
+    required this.subtitle,
+    required this.cases,
+    this.lastLayer = false,
+  });
 
   final String id;
   final String name;
   final String subtitle;
   final List<AlgorithmCase> cases;
+
+  /// Whether the cases are of the last layer, which comes up at any angle: its practice turns U at random.
+  final bool lastLayer;
 
   /// Groups in the order they first appear in [cases].
   List<(String group, List<AlgorithmCase> cases)> get grouped {
