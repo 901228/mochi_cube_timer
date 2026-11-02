@@ -6,6 +6,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-1",
     name: "F2L 1",
     group: "Free Pairs",
+    isoStickers: "lllllgllgllwgglggloollooloo",
     algorithms: [
       "U R U' R'",
       "R' F R F'",
@@ -29,6 +30,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-2",
     name: "F2L 2",
     group: "Free Pairs",
+    isoStickers: "llllllloolgggglgglwlllooloo",
     algorithms: [
       "F R' F' R",
       "y' U' R' U R",
@@ -52,6 +54,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-3",
     name: "F2L 3",
     group: "Free Pairs",
+    isoStickers: "lllollllgllwgglgglolllooloo",
     algorithms: [
       "F' U' F",
       "y' R' U' R",
@@ -75,6 +78,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-4",
     name: "F2L 4",
     group: "Free Pairs",
+    isoStickers: "lgllllllollggglgglwlllooloo",
     algorithms: [
       "R U R'",
       "y' f R f'",
@@ -98,6 +102,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-5",
     name: "F2L 5",
     group: "Disconnected Pairs",
+    isoStickers: "lgllllllgllwgglgglolllooloo",
     algorithms: [
       "U' R U R' U2 R U' R'",
       "F2 L' U' L U F2",
@@ -121,6 +126,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-6",
     name: "F2L 6",
     group: "Disconnected Pairs",
+    isoStickers: "lllollllollggglgglwlllooloo",
     algorithms: [
       "U' r U' R' U R U r'",
       "y' U R' U' R U2 R' U R",
@@ -144,6 +150,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-7",
     name: "F2L 7",
     group: "Disconnected Pairs",
+    isoStickers: "lllgllllgllwgglgglolllooloo",
     algorithms: [
       "U' R U2 R' U' R U2 R'",
       "M' U' M U2 r U' r'",
@@ -166,6 +173,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-8",
     name: "F2L 8",
     group: "Disconnected Pairs",
+    isoStickers: "lollllllollggglgglwlllooloo",
     algorithms: [
       "r' U2 R2 U R2 U r",
       "d R' U2 R U R' U2 R",
@@ -187,6 +195,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-9",
     name: "F2L 9",
     group: "Disconnected Pairs",
+    isoStickers: "lollllllgllwgglgglolllooloo",
     algorithms: [
       "U' R U' R' U F' U' F",
       "F R U R' U' F' R U' R'",
@@ -210,6 +219,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-10",
     name: "F2L 10",
     group: "Disconnected Pairs",
+    isoStickers: "lllgllllollggglgglwlllooloo",
     algorithms: [
       "U' R U R' U R U R'",
       "U2 R U' R' U' R U R'",
@@ -233,6 +243,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-11",
     name: "F2L 11",
     group: "Connected Pairs",
+    isoStickers: "lllllollgllwgglgglogllooloo",
     algorithms: [
       "U' R U2 R' U F' U' F",
       "y' R U2 R2 U' R2 U' R'",
@@ -256,6 +267,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-12",
     name: "F2L 12",
     group: "Connected Pairs",
+    isoStickers: "lllllllgologgglgglwlllooloo",
     algorithms: [
       "R U' R' U R U' R' U2 R U' R'",
       "R' U2 R2 U R2 U R",
@@ -279,6 +291,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-13",
     name: "F2L 13",
     group: "Connected Pairs",
+    isoStickers: "llllllloglgwgglgglolllooloo",
     algorithms: [
       "y' U R' U R U' R' U' R",
       "M' U' R U R' U2 R U' r'",
@@ -300,6 +313,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-14",
     name: "F2L 14",
     group: "Connected Pairs",
+    isoStickers: "lllllgllollggglgglwollooloo",
     algorithms: [
       "U' R U' R' U R U R'",
       "R U2 R' U2 R U R' U2 R U' R'",
@@ -321,6 +335,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-15",
     name: "F2L 15",
     group: "Connected Pairs",
+    isoStickers: "lllllllgglowgglgglolllooloo",
     algorithms: [
       "M U r U' r' U' M'",
       "R U R' U2 R U' R' U R U' R'",
@@ -344,6 +359,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-16",
     name: "F2L 16",
     group: "Connected Pairs",
+    isoStickers: "lllllollollggglgglwgllooloo",
     algorithms: [
       "R U' R' U2 F' U' F",
       "R U' R' U2 y' R' U' R",
@@ -367,6 +383,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-17",
     name: "F2L 17",
     group: "Connected Pairs",
+    isoStickers: "lllllgllwllogglgglgollooloo",
     algorithms: [
       "R U2 R' U' R U R'",
       "y2 L U2 L' U' L U L'",
@@ -388,6 +405,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-18",
     name: "F2L 18",
     group: "Connected Pairs",
+    isoStickers: "lllllllowlgogglgglglllooloo",
     algorithms: [
       "y' R' U2 R U R' U' R",
       "y L' U2 L U L' U' L",
@@ -405,6 +423,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-19",
     name: "F2L 19",
     group: "Disconnected Pairs",
+    isoStickers: "lgllllllwllogglgglglllooloo",
     algorithms: [
       "U R U2 R' U R U' R'",
       "U R U2 R2 F R F'",
@@ -426,6 +445,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-20",
     name: "F2L 20",
     group: "Disconnected Pairs",
+    isoStickers: "lllollllwllogglgglglllooloo",
     algorithms: [
       "y' U' R' U2 R U' R' U R",
       "U' R U' R2 F R F' R U' R'",
@@ -446,6 +466,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-21",
     name: "F2L 21",
     group: "Disconnected Pairs",
+    isoStickers: "lllgllllwllogglgglglllooloo",
     algorithms: [
       "U2 R U R' U R U' R'",
       "R U' R' U2 R U R'",
@@ -469,6 +490,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-22",
     name: "F2L 22",
     group: "Disconnected Pairs",
+    isoStickers: "lollllllwllogglgglglllooloo",
     algorithms: [
       "r U' r' U2 r U r'",
       "F' L' U2 L F",
@@ -492,6 +514,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-23",
     name: "F2L 23",
     group: "Connected Pairs",
+    isoStickers: "lllllllgwloogglgglglllooloo",
     algorithms: [
       "U R U' R' U' R U' R' U R U' R'",
       "R U R' U2 R U R' U' R U R'",
@@ -515,6 +538,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-24",
     name: "F2L 24",
     group: "Connected Pairs",
+    isoStickers: "lllllollwllogglgglggllooloo",
     algorithms: [
       "F U R U' R' F' R U' R'",
       "U' R U R2 F R F' R U' R'",
@@ -538,6 +562,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-25",
     name: "F2L 25",
     group: "Corner In Slot",
+    isoStickers: "lllllgllllllgglggglollooooo",
     algorithms: [
       "U' R' F R F' R U R'",
       "R' F' R U R U' R' F",
@@ -561,6 +586,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-26",
     name: "F2L 26",
     group: "Corner In Slot",
+    isoStickers: "lllllllollglgglgggllllooooo",
     algorithms: [
       "U R U' R' F R' F' R",
       "R S' R' U R S R'",
@@ -584,6 +610,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-27",
     name: "F2L 27",
     group: "Corner In Slot",
+    isoStickers: "lllllgllllllgglggwlolloogoo",
     algorithms: [
       "R U' R' U R U' R'",
       "F' U' F U2 R U' R'",
@@ -604,6 +631,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-28",
     name: "F2L 28",
     group: "Corner In Slot",
+    isoStickers: "lllllllollglgglggolllloowoo",
     algorithms: [
       "R U R' U' F R' F' R",
       "y L' U L U' L' U L",
@@ -622,6 +650,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-29",
     name: "F2L 29",
     group: "Corner In Slot",
+    isoStickers: "lllllllollglgglggwlllloogoo",
     algorithms: [
       "R' F R F' U R U' R'",
       "y L' U' L U L' U' L",
@@ -644,6 +673,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-30",
     name: "F2L 30",
     group: "Corner In Slot",
+    isoStickers: "lllllgllllllgglggololloowoo",
     algorithms: [
       "R U R' U' R U R'",
       "U' R U2 R' U2 R U R'",
@@ -665,6 +695,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-31",
     name: "F2L 31",
     group: "Edge In Slot",
+    isoStickers: "llllllllwlloggogglgllgooloo",
     algorithms: [
       "U' R' F R F' R U' R'",
       "R U' R' U y' R' U R",
@@ -688,6 +719,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-32",
     name: "F2L 32",
     group: "Edge In Slot",
+    isoStickers: "llllllllwlloggggglglloooloo",
     algorithms: [
       "U R U' R' U R U' R' U R U' R'",
       "R U R' U' R U R' U' R U R'",
@@ -711,6 +743,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-33",
     name: "F2L 33",
     group: "Edge In Slot",
+    isoStickers: "llllllllgllwggggglolloooloo",
     algorithms: [
       "U' R U' R' U2 R U' R'",
       "y R' D R U' R' D' R",
@@ -733,6 +766,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-34",
     name: "F2L 34",
     group: "Edge In Slot",
+    isoStickers: "llllllllollgggggglwlloooloo",
     algorithms: [
       "U R U R' U2 R U R'",
       "U' R U2 R' U R U R'",
@@ -755,6 +789,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-35",
     name: "F2L 35",
     group: "Edge In Slot",
+    isoStickers: "llllllllgllwggogglollgooloo",
     algorithms: [
       "U' R U R' U F' U' F",
       "U' R U R' d R' U' R",
@@ -778,6 +813,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-36",
     name: "F2L 36",
     group: "Edge In Slot",
+    isoStickers: "llllllllollgggogglwllgooloo",
     algorithms: [
       "U F' U' F U' R U R'",
       "U2 R' F R F' U2 R U R'",
@@ -801,6 +837,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-37",
     name: "F2L 37",
     group: "Pieces In Slot",
+    isoStickers: "llllllllllllggoggglllgooooo",
     algorithms: [
       "R2 U2 F R2 F' U2 R' U R'",
       "R' F R F' R U' R' U R U' R' U2 R U' R'",
@@ -824,6 +861,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-38",
     name: "F2L 38",
     group: "Pieces In Slot",
+    isoStickers: "llllllllllllgggggwlllooogoo",
     algorithms: [
       "R U' R' U' R U R' U2 R U' R'",
       "R U R' U' R U2 R' U' R U R'",
@@ -846,6 +884,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-39",
     name: "F2L 39",
     group: "Pieces In Slot",
+    isoStickers: "llllllllllllgggggolllooowoo",
     algorithms: [
       "R U' R' U R U2 R' U R U' R'",
       "R U2 R U R' U R U2 R2",
@@ -869,6 +908,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-40",
     name: "F2L 40",
     group: "Pieces In Slot",
+    isoStickers: "llllllllllllggoggwlllgoogoo",
     algorithms: [
       "r U' r' U2 r U r' R U R'",
       "F' L' U2 L F R U R'",
@@ -892,6 +932,7 @@ const List<AlgorithmCase> f2lCases = [
     id: "f2l-41",
     name: "F2L 41",
     group: "Pieces In Slot",
+    isoStickers: "llllllllllllggoggolllgoowoo",
     algorithms: [
       "R U' R' r U' r' U2 r U r'",
       "R U' R' F' L' U2 L F",

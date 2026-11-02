@@ -73,7 +73,12 @@ void main() {
         expect(cases.map((c) => c.id).toSet(), hasLength(count), reason: "$puzzle $setId ids");
         for (final c in cases) {
           expect(c.algorithms, isNotEmpty, reason: c.name);
-          if (c.cubeStickers case final s?) expect(cubeStickersSize(s), int.parse(puzzle[0]), reason: c.name);
+          final size = int.parse(puzzle[0]);
+          if (c.cubeStickers case final s?) expect(cubeStickersSize(s), size, reason: c.name);
+          if (c.isoStickers case final s?) expect(cubeIsoStickersSize(s), size, reason: c.name);
+          if (c.faceStickers case final s?) expect(cubeFaceStickersSize(s), size, reason: c.name);
+          final drawn = [c.cubeStickers, c.isoStickers, c.faceStickers].nonNulls;
+          expect(drawn, hasLength(1), reason: "${c.name} should have exactly one diagram");
         }
       });
     });
