@@ -11,6 +11,7 @@ import "../l10n/l10n.dart";
 import "../shared/puzzles/puzzle_utils.dart";
 import "../features/records/records_page.dart";
 import "../features/settings/settings_page.dart";
+import "../features/simulator/simulator_page.dart";
 import "../features/stats/stats_page.dart";
 import "../features/timer/timer_focus.dart";
 import "../features/timer/timer_page.dart";
@@ -107,6 +108,20 @@ GoRoute trainersRouter({required bool standalone}) {
   );
 }
 
+GoRoute simulatorRouter({required bool standalone}) {
+  final path = standalone ? "simulator-standalone" : "simulator";
+  return GoRoute(
+    path: "/$path",
+    name: path,
+    pageBuilder: (context, state) {
+      final page = SimulatorPage(standalone: standalone);
+      return standalone
+          ? MochiPage(key: state.pageKey, child: page)
+          : NoTransitionPage(key: state.pageKey, child: page);
+    },
+  );
+}
+
 /// The pages the home shell's bottom navigation and swipe go between; the branches after them are
 /// reached from the sidebar.
 const _homePages = [
@@ -131,6 +146,7 @@ final router = GoRouter(
     ),
 
     trainersRouter(standalone: true),
+    simulatorRouter(standalone: true),
 
     GoRoute(
       path: "/settings",
@@ -188,6 +204,7 @@ final router = GoRouter(
         ),
         StatefulShellBranch(routes: [algorithmsRouter(standalone: false)]),
         StatefulShellBranch(routes: [trainersRouter(standalone: false)]),
+        StatefulShellBranch(routes: [simulatorRouter(standalone: false)]),
       ],
     ),
   ],

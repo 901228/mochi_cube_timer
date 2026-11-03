@@ -1442,6 +1442,66 @@ abstract class AppLocalizations {
   /// **'{selected} of {total} cases'**
   String practiceCasesCount(int selected, int total);
 
+  /// No description provided for @simulatorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulator'**
+  String get simulatorTitle;
+
+  /// No description provided for @simulatorMovesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Moves, e.g. R U R\' U\''**
+  String get simulatorMovesHint;
+
+  /// No description provided for @simulatorToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'To start'**
+  String get simulatorToStart;
+
+  /// No description provided for @simulatorStepBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Step back'**
+  String get simulatorStepBack;
+
+  /// No description provided for @simulatorPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get simulatorPlay;
+
+  /// No description provided for @simulatorPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get simulatorPause;
+
+  /// No description provided for @simulatorStepForward.
+  ///
+  /// In en, this message translates to:
+  /// **'Step forward'**
+  String get simulatorStepForward;
+
+  /// No description provided for @simulatorToEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'To end'**
+  String get simulatorToEnd;
+
+  /// No description provided for @simulatorReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get simulatorReset;
+
+  /// No description provided for @simulatorInvalidMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t read: {move}'**
+  String simulatorInvalidMove(String move);
+
   /// No description provided for @trainersTitle.
   ///
   /// In en, this message translates to:

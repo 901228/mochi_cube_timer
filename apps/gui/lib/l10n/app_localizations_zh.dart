@@ -733,6 +733,38 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get simulatorTitle => '模擬';
+
+  @override
+  String get simulatorMovesHint => '輸入轉動，例如 R U R\' U\'';
+
+  @override
+  String get simulatorToStart => '回到開頭';
+
+  @override
+  String get simulatorStepBack => '上一步';
+
+  @override
+  String get simulatorPlay => '播放';
+
+  @override
+  String get simulatorPause => '暫停';
+
+  @override
+  String get simulatorStepForward => '下一步';
+
+  @override
+  String get simulatorToEnd => '跳到結尾';
+
+  @override
+  String get simulatorReset => '重置';
+
+  @override
+  String simulatorInvalidMove(String move) {
+    return '無法辨識：$move';
+  }
+
+  @override
   String get trainersTitle => '練習器';
 
   @override

@@ -741,6 +741,38 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get simulatorTitle => 'Simulator';
+
+  @override
+  String get simulatorMovesHint => 'Moves, e.g. R U R\' U\'';
+
+  @override
+  String get simulatorToStart => 'To start';
+
+  @override
+  String get simulatorStepBack => 'Step back';
+
+  @override
+  String get simulatorPlay => 'Play';
+
+  @override
+  String get simulatorPause => 'Pause';
+
+  @override
+  String get simulatorStepForward => 'Step forward';
+
+  @override
+  String get simulatorToEnd => 'To end';
+
+  @override
+  String get simulatorReset => 'Reset';
+
+  @override
+  String simulatorInvalidMove(String move) {
+    return 'Can\'t read: $move';
+  }
+
+  @override
   String get trainersTitle => 'Trainers';
 
   @override

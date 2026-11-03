@@ -260,6 +260,12 @@ class _HomeShellState extends State<HomeShell> {
         MochiDivider(gap: g.space.xs2, indent: g.space.xs),
 
         MochiSidebarItem(
+          icon: Icon(TablerIcons.cube3dSphere),
+          label: Text(context.l10n.simulatorTitle),
+          selected: widget.navigationShell.currentIndex == 5,
+          onPress: then(() => widget.navigationShell.goBranch(5)),
+        ),
+        MochiSidebarItem(
           icon: Icon(TablerIcons.cubeSpark),
           label: Text(context.l10n.algorithmsTitle),
           selected: widget.navigationShell.currentIndex == 3,
@@ -326,8 +332,8 @@ class _HomeShellState extends State<HomeShell> {
                 extendBody: true,
                 immersive: context.watch<TimerFocusCubit>().state,
                 padding: .zero,
-                // The trainers draw their own, as there is no puzzle or session to pick for them.
-                header: widget.navigationShell.currentIndex == 4
+                // The trainers and the simulator draw their own, as there is no puzzle or session to pick for them.
+                header: widget.navigationShell.currentIndex >= 4
                     ? null
                     : MochiHeader(
                         alignment: .center,
@@ -486,6 +492,14 @@ class _HomeShellState extends State<HomeShell> {
 
                             MochiDivider(gap: g.space.xs2, indent: g.space.xs),
 
+                            MochiSidebarItem(
+                              icon: Icon(TablerIcons.cube3dSphere),
+                              label: Text(context.l10n.simulatorTitle),
+                              onPress: () {
+                                MochiScaffold.of(context).closeDrawer();
+                                context.push("/simulator-standalone");
+                              },
+                            ),
                             MochiSidebarItem(
                               icon: Icon(TablerIcons.cubeSpark),
                               label: Text(context.l10n.algorithmsTitle),
