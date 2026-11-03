@@ -47,11 +47,7 @@ class Cube3dPainter extends CustomPainter {
     final turning = turn == null
         // Clockwise seen from the face is negative about its normal.
         ? Matrix3.identity()
-        // Three quarters is one quarter back: R' turns the short way.
-        : Quaternion.axisAngle(
-            _vector(axis!),
-            -math.pi / 2 * (turn.quarters == 3 ? -1 : turn.quarters) * progress,
-          ).asRotationMatrix();
+        : Quaternion.axisAngle(_vector(axis!), -math.pi / 2 * turn.quarters * progress).asRotationMatrix();
 
     final distance = n * 5.0;
     // The hints float out past the cube, so leave room for them.

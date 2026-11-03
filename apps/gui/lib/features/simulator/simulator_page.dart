@@ -106,10 +106,10 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   }
 
   void _start(CubeLayerTurn turn, {required bool backward}) {
-    _turn = backward ? (face: turn.face, lo: turn.lo, hi: turn.hi, quarters: 4 - turn.quarters) : turn;
+    _turn = backward ? (face: turn.face, lo: turn.lo, hi: turn.hi, quarters: -turn.quarters) : turn;
     _backward = backward;
     // Quicker while playing on, so a whole scramble does not drag.
-    final ms = (_playing ? 160 : 260) * (turn.quarters == 2 ? 1.5 : 1);
+    final ms = (_playing ? 160 : 260) * (1 + (turn.quarters.abs() - 1) * 0.5);
     _animation
       ..duration = Duration(milliseconds: ms.round())
       ..forward(from: 0);

@@ -41,6 +41,12 @@ void main() {
     expect(_stickers(_after("Rw", size: 4)), _stickers(_after("R 2R", size: 4)));
   });
 
+  test("a count turns that many quarters, the way it is written", () {
+    expect(_stickers(_after("R3")), _stickers(_after("R'")));
+    expect(_stickers(_after("U'2")), _stickers(_after("U2")));
+    expect(cubeLayerTurns("R3 U'2", size: 3).map((t) => t.quarters), [3, -2]);
+  });
+
   test("moves after a rotation turn the layer now on that side", () {
     // After y, the face on the right is the one that was at the back.
     expect(_stickers(_after("y R")), _stickers(_after("B y")));
