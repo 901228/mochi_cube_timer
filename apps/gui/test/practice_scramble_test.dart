@@ -1,5 +1,6 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:flutter_test/flutter_test.dart";
+import "package:mochi_cube/fto/cube.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/algorithm_data/common.dart";
 import "package:mochi_cube_timer_gui/features/algorithms/practice_scramble.dart";
@@ -43,6 +44,34 @@ void main() {
             }
           }
         }
+      }
+    }
+    expect(bad, isEmpty);
+  });
+
+  test("every FTO algorithm undone leaves one layer to solve", () {
+    // A face's layer: the stickers its turn moves, and its own, which keep their colour.
+    final layers = [
+      for (var f = 0; f < 8; f++)
+        {
+          for (final (k, c) in (Fto()..turn(f, 1)).facelets.indexed)
+            if (c != k ~/ 9 || k ~/ 9 == f) k,
+        },
+    ];
+    final bad = <String>[];
+    for (final set in algorithmSets["fto"]!.flatten()) {
+      for (final item in set.cases) {
+        final scramble = ftoPracticeScramble(item);
+        Puzzle.fto.scrambler.parse(scramble);
+        final state = Fto();
+        for (final move in scramble.split(" ")) {
+          state.turn(ftoFaceNames.indexOf(move.replaceAll("'", "")), move.endsWith("'") ? 2 : 1);
+        }
+        final wrong = {
+          for (final (k, c) in state.facelets.indexed)
+            if (c != k ~/ 9) k,
+        };
+        if (wrong.isEmpty || !layers.any((l) => wrong.difference(l).isEmpty)) bad.add("${set.id} ${item.id}");
       }
     }
     expect(bad, isEmpty);

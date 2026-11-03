@@ -143,7 +143,7 @@ class _PuzzleSelectionDialogState extends State<PuzzleSelectionDialog> {
     final topColor = SettingsProvider.of(context).cubeColorD.toColor();
     final entries = [
       for (final entry in algorithmSets.entries)
-        if (practiceCubeSize(entry.key) != null) entry,
+        if (canPractice(entry.key)) entry,
     ];
     void pick(String id, String set) {
       context.read<AppDatabase>().appStateDao.setAlgorithmSet(Puzzle.fromId(id), set);

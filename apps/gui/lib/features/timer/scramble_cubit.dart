@@ -56,7 +56,9 @@ class ScrambleCubit extends Cubit<Future<Scramble>> {
     final item = cases[_random.nextInt(cases.length)];
     final scramble = Future.sync(
       () => puzzle.scrambler.parse(
-        practiceScramble(item, practiceCubeSize(puzzle.id)!, auf: set.lastLayer, random: _random),
+        puzzle.id == "fto"
+            ? ftoPracticeScramble(item)
+            : practiceScramble(item, practiceCubeSize(puzzle.id)!, auf: set.lastLayer, random: _random),
       ),
     );
     _cases[scramble] = item.id;

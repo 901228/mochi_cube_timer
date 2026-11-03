@@ -1,5 +1,7 @@
 import "dart:math";
 
+import "package:mochi_cube/fto.dart";
+
 import "algorithm_data/common.dart";
 
 const _faces = "URFDLB";
@@ -124,6 +126,9 @@ List<_Turn> _merged(Iterable<_Turn> turns) {
 String _render(_Turn t) =>
     "${t.width > 2 ? t.width : ""}${t.face}${t.width > 1 ? "w" : ""}${const ["", "", "2", "'"][t.quarters]}";
 
+/// Whether [puzzleId] has practice scrambles: the cubes, and the FTO.
+bool canPractice(String puzzleId) => practiceCubeSize(puzzleId) != null || puzzleId == "fto";
+
 /// The puzzles the practice scrambles are made for, by the size of the cube.
 int? practiceCubeSize(String puzzleId) => switch (puzzleId) {
   "222" => 2,
@@ -169,3 +174,7 @@ String practiceScramble(AlgorithmCase item, int size, {bool auf = false, Random?
 /// The practice of 3x3's cross: no cases to pick from, so it is not an algorithm set; it has the ordinary
 /// scrambles, and its solves are kept apart from the puzzle's own under this id.
 const crossDrillId = "cross";
+
+/// A scramble that leaves the FTO (solved but for the case) where [item]'s first algorithm solves it: the
+/// algorithm undone.
+String ftoPracticeScramble(AlgorithmCase item) => parseFtoNotation(item.algorithms.first).inverse.toString();
