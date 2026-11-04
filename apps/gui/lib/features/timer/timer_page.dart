@@ -1,4 +1,5 @@
 import "package:cube_timer/cube_timer.dart";
+import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_ui/mochi_ui.dart";
@@ -420,18 +421,28 @@ class _TimerViewState extends State<_TimerView> {
               ? Stack(
                   children: [
                     body,
-                    Align(alignment: .bottomLeft, child: leftStats),
-                    Align(
-                      alignment: .bottomRight,
-                      child: Column(
-                        mainAxisSize: .min,
-                        crossAxisAlignment: .end,
-                        spacing: 8,
-                        children: [
-                          // Its own height, which upright the statistics beside it give it.
-                          if (cube != null) SizedBox(height: 96, child: cube),
-                          rightStats,
-                        ],
+                    Positioned(bottom: 0, left: 0, child: leftStats),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      // As wide as the statistics and no wider, so the cube stays clear of the time.
+                      child: IntrinsicWidth(
+                        child: Column(
+                          mainAxisSize: .min,
+                          crossAxisAlignment: .stretch,
+                          spacing: 8,
+                          children: [
+                            // Its own height, which upright the statistics beside it give it.
+                            if (cube != null)
+                              _NoIntrinsicWidth(
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxHeight: 96),
+                                  child: Align(alignment: .centerRight, child: cube),
+                                ),
+                              ),
+                            rightStats,
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -481,4 +492,20 @@ class _TimerViewState extends State<_TimerView> {
       ),
     );
   }
+}
+
+/// Its child, but asking nothing for its width, so an [IntrinsicWidth] above sizes to the rest.
+class _NoIntrinsicWidth extends SingleChildRenderObjectWidget {
+  const _NoIntrinsicWidth({required super.child});
+
+  @override
+  RenderObject createRenderObject(BuildContext context) => _RenderNoIntrinsicWidth();
+}
+
+class _RenderNoIntrinsicWidth extends RenderProxyBox {
+  @override
+  double computeMinIntrinsicWidth(double height) => 0;
+
+  @override
+  double computeMaxIntrinsicWidth(double height) => 0;
 }
