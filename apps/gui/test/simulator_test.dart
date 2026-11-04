@@ -3,6 +3,7 @@ import "package:drift/native.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mochi_cube_timer_gui/database/dao_provider.dart";
+import "package:mochi_cube_timer_gui/features/simulator/cube_3d_painter.dart";
 import "package:mochi_cube_timer_gui/features/simulator/notation.dart";
 import "package:mochi_cube_timer_gui/features/simulator/simulator_page.dart";
 import "package:mochi_cube_timer_gui/features/simulator/stickering.dart";
@@ -155,6 +156,33 @@ void main() {
     expect(tester.widget<MochiTextField>(find.byType(MochiTextField).last).error, isNull);
     // Everything played: the pause button is back to play, and stepping back is possible.
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
+
+    // Turning the last move into R2 plays only the extra quarter turn, and mid-turn edits continue from where it was.
+    CustomPainter? painter() => tester
+        .widget<CustomPaint>(
+          find.descendant(of: find.byType(GestureDetector).first, matching: find.byType(CustomPaint)),
+        )
+        .painter;
+    await tester.tap(find.byIcon(TablerIcons.restore));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(EditableText).last, "R");
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.enterText(find.byType(EditableText).last, "R2");
+    await tester.pump();
+    expect(
+      painter(),
+      isA<Cube3dPainter>()
+          .having((p) => p.turn?.quarters, "quarters", 2)
+          .having((p) => p.startQuarters, "startQuarters", greaterThan(0)),
+    );
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(EditableText).last, "R'");
+    await tester.pump();
+    expect(painter(), isA<Cube3dPainter>().having((p) => p.turn?.quarters, "quarters", -3));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(EditableText).last, "r U M' x");
+    await tester.pumpAndSettle();
 
     // The moves are the second box, under the setup; inverting rewrites it.
     final moves = find.byType(EditableText).last;

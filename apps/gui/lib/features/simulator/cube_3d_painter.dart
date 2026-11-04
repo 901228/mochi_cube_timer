@@ -21,6 +21,7 @@ class Cube3dPainter extends CustomPainter {
     required this.pitch,
     this.turn,
     this.progress = 0,
+    this.startQuarters = 0,
     this.hintDistance = 3.0,
     this.cubeSize = 1.0,
     this.stickerless = false,
@@ -39,6 +40,9 @@ class Cube3dPainter extends CustomPainter {
   final double pitch;
   final CubeLayerTurn? turn;
   final double progress;
+
+  /// Where [turn] started, in quarters from [_cube]'s state, when a move was edited mid-turn.
+  final double startQuarters;
 
   /// How far past the cube the stickers of the faces turned away float, in half cubies; 0 leaves them out.
   final double hintDistance;
@@ -67,7 +71,10 @@ class Cube3dPainter extends CustomPainter {
     final turning = turn == null
         // Clockwise seen from the face is negative about its normal.
         ? Matrix3.identity()
-        : Quaternion.axisAngle(_vector(axis!), -math.pi / 2 * turn.quarters * progress).asRotationMatrix();
+        : Quaternion.axisAngle(
+            _vector(axis!),
+            -math.pi / 2 * (startQuarters + (turn.quarters - startQuarters) * progress),
+          ).asRotationMatrix();
 
     final distance = n * 5.0;
     // Room for the hints at their usual distance and a little past it; moving them leaves the cube's size alone.

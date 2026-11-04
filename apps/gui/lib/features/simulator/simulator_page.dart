@@ -43,8 +43,12 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
 
   /// The turn being played out, which is [_turns]`[_index]` going forward or the undoing of the one before.
   CubeLayerTurn? _turn;
+  var _startQuarters = 0.0;
   var _backward = false;
   var _playing = false;
+
+  /// Whether typing is ahead of the animation, so turns play faster until it catches up.
+  var _catchingUp = false;
 
   /// Whether the play button started this run, which alone loops when [SettingsEntry.simulatorLoop] says to:
   /// moves played as they are typed do not.
@@ -53,8 +57,8 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   var _stickering = Stickering.full;
 
   /// The face whose layer is the last one, for the stages of [_stickering]: by the piece it belongs to, so it
-  /// stays so however the setup holds the cube.
-  var _lastLayer = 0;
+  /// stays so however the setup holds the cube. D (3) by default, as CFOP starts with the white cross on U.
+  var _lastLayer = 3;
 
   /// The orientation picked and the rotation it put at the start of the setup.
   var _orientation = 0;
@@ -88,6 +92,8 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     }
     _index = k;
     _turn = null;
+    _startQuarters = 0;
+    _catchingUp = false;
   }
 
   String? _errorFor(String text, int size) => invalidTokens(text, size: size).isEmpty ? null : "";
@@ -138,23 +144,58 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     setState(() {
       _error = null;
       final old = _turns;
-      // Typing on at the end plays what was added; any other edit shows where the moves end up.
-      final extended =
-          animate &&
-          _index == old.length &&
-          _turn == null &&
-          turns.length > old.length &&
-          _sameStart(old, turns);
+      final typingAhead = animate && (_turn == null ? _index == old.length : !_backward);
+      // Typing on at the end plays what was added; adding `2` or `'` to the last move turns it the rest of the way.
+      final extended = typingAhead && turns.length > old.length && _sameStart(old, turns);
+      final modifiedLast =
+          typingAhead &&
+          (_turn == null || _index == old.length - 1) &&
+          turns.isNotEmpty &&
+          turns.length == old.length &&
+          _sameStart(old.sublist(0, old.length - 1), turns);
       _turns = turns;
       _byPlay = false;
       if (extended) {
         _playing = true;
-        _next();
+        if (_turn != null) {
+          _speedUpCurrent();
+        } else {
+          _next();
+        }
+      } else if (modifiedLast) {
+        final prev = old.last;
+        final next = turns.last;
+        if (prev.face == next.face && prev.lo == next.lo && prev.hi == next.hi) {
+          if (_turn == null) {
+            final delta = next.quarters - prev.quarters;
+            if (delta != 0) {
+              _index = turns.length - 1;
+              _playing = false;
+              _start((face: next.face, lo: next.lo, hi: next.hi, quarters: delta), backward: false);
+            }
+          } else {
+            final progress = Curves.easeInOut.transform(_animation.value);
+            final current = _startQuarters + (_turn!.quarters - _startQuarters) * progress;
+            _playing = true;
+            _start(next, backward: false, fromQuarters: current);
+          }
+        } else {
+          _jump(turns.length - 1);
+          _playing = true;
+          _next();
+        }
       } else {
         _playing = false;
         _jump(turns.length);
       }
     });
+  }
+
+  void _speedUpCurrent() {
+    if (_catchingUp || !_animation.isAnimating) return;
+    _catchingUp = true;
+    final remaining = _animation.duration! * (1 - _animation.value) * 0.45;
+    _animation.animateTo(1.0, duration: remaining);
   }
 
   bool _sameStart(List<CubeLayerTurn> a, List<CubeLayerTurn> b) {
@@ -172,16 +213,20 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     }
     if (!_playing || _index >= _turns.length) {
       _playing = false;
+      _catchingUp = false;
       return;
     }
+    _catchingUp = !_byPlay && _index + 1 < _turns.length;
     _start(_turns[_index], backward: false);
   }
 
-  void _start(CubeLayerTurn turn, {required bool backward}) {
+  void _start(CubeLayerTurn turn, {required bool backward, double fromQuarters = 0}) {
     _turn = backward ? (face: turn.face, lo: turn.lo, hi: turn.hi, quarters: -turn.quarters) : turn;
+    _startQuarters = fromQuarters;
     _backward = backward;
-    // Quicker while playing on, so a whole scramble does not drag.
-    final ms = 615 * (1 + (turn.quarters.abs() - 1) * 0.5) / SettingsProvider.of(context).simulatorSpeed;
+    final span = (_turn!.quarters - fromQuarters).abs();
+    final pace = _catchingUp ? 280.0 : 615.0;
+    final ms = pace * (1 + (span - 1).clamp(0, 10) * 0.5) / SettingsProvider.of(context).simulatorSpeed;
     _animation
       ..duration = Duration(milliseconds: ms.round())
       ..forward(from: 0);
@@ -193,6 +238,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
       _cube.turn(_turn!);
       _index += _backward ? -1 : 1;
       _turn = null;
+      _startQuarters = 0;
       _next();
     });
   }
@@ -314,6 +360,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                                   pitch: _pitch,
                                   turn: _turn,
                                   progress: Curves.easeInOut.transform(_animation.value),
+                                  startQuarters: _startQuarters,
                                   hintDistance: settings.simulatorHintDistance,
                                   cubeSize: settings.simulatorCubeSize,
                                   stickerless: settings.simulatorStickerless,

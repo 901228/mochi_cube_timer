@@ -18,7 +18,7 @@ enum Stickering {
   /// Whether the sticker of the piece solved at [home] that was solved on the face [face] (an index in
   /// [nxnFaceNames]) is in colour, on a cube of [size] whose last layer is the one of [lastLayer], also an index
   /// there, and whose cross is on the opposite one.
-  bool lit(int size, Vec3 home, int face, {int lastLayer = 0}) {
+  bool lit(int size, Vec3 home, int face, {int lastLayer = 3}) {
     final edge = size - 1;
     // Centres are on one face, edges and corners on two or three.
     final onFaces = [home.$1, home.$2, home.$3].where((c) => c.abs() == edge).length;
