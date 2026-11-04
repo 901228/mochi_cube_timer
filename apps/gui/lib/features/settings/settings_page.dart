@@ -10,6 +10,7 @@ import "sections/general_section.dart";
 import "sections/inspection_section.dart";
 import "sections/puzzle_section.dart";
 import "sections/root_section.dart";
+import "../simulator/simulator_settings.dart";
 import "sections/stats_section.dart";
 import "sections/timer_appearance_section.dart";
 import "sections/timer_section.dart";
@@ -22,6 +23,7 @@ final Map<String, Widget Function(SettingsEntry settings, SettingsDao dao)> sett
   "puzzle": (settings, dao) => PuzzleSettingsSections(settings: settings, dao: dao),
   "general": (settings, dao) => GeneralSettingsSections(settings: settings, dao: dao),
   "stats": (settings, dao) => StatsSettingsSections(settings: settings, dao: dao),
+  "simulator": (settings, dao) => SimulatorSettingsGroup(settings: settings, dao: dao),
   "about": (settings, dao) => const AboutSettingsSections(),
 };
 
@@ -54,6 +56,7 @@ class SettingsPage extends StatelessWidget {
                         "puzzle" => context.l10n.settingsPuzzle,
                         "general" => context.l10n.settingsGeneral,
                         "stats" => context.l10n.settingsStats,
+                        "simulator" => context.l10n.simulatorTitle,
                         _ => context.l10n.settingsAbout,
                       }),
                     )

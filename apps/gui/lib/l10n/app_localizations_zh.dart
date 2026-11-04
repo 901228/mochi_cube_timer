@@ -757,6 +757,36 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simulatorToEnd => '跳到結尾';
 
   @override
+  String get simulatorSettings => '模擬設定';
+
+  @override
+  String get simulatorHintDistance => '提示貼紙距離';
+
+  @override
+  String get simulatorHintOff => '關閉';
+
+  @override
+  String get simulatorSpeed => '轉動速度';
+
+  @override
+  String get simulatorStickerless => '無貼紙';
+
+  @override
+  String get simulatorLoop => '循環播放';
+
+  @override
+  String get simulatorLoopHint => '按下播放後，播完會從頭再播';
+
+  @override
+  String get simulatorResetView => '重置視角';
+
+  @override
+  String get simulatorCubeSize => '方塊大小';
+
+  @override
+  String get simulatorResetSettings => '恢復預設';
+
+  @override
   String get simulatorReset => '重置';
 
   @override

@@ -765,6 +765,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get simulatorToEnd => 'To end';
 
   @override
+  String get simulatorSettings => 'Simulator settings';
+
+  @override
+  String get simulatorHintDistance => 'Hint sticker distance';
+
+  @override
+  String get simulatorHintOff => 'Off';
+
+  @override
+  String get simulatorSpeed => 'Turn speed';
+
+  @override
+  String get simulatorStickerless => 'Stickerless';
+
+  @override
+  String get simulatorLoop => 'Loop';
+
+  @override
+  String get simulatorLoopHint => 'After pressing play, start again once done';
+
+  @override
+  String get simulatorResetView => 'Reset view';
+
+  @override
+  String get simulatorCubeSize => 'Cube size';
+
+  @override
+  String get simulatorResetSettings => 'Restore defaults';
+
+  @override
   String get simulatorReset => 'Reset';
 
   @override

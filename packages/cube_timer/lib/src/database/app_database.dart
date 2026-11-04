@@ -28,7 +28,7 @@ class AppDatabase extends _$AppDatabase {
   // Bumped with every change to the tables: run `dart run drift_dev make-migrations` before and
   // after, and add the step below.
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -54,6 +54,13 @@ class AppDatabase extends _$AppDatabase {
       from5To6: (m, schema) async {
         // Only alert_types' default changed; SQLite cannot alter one in place, so the table is rebuilt.
         await m.alterTable(TableMigration(schema.settings));
+      },
+      from13To14: (m, schema) async {
+        await m.addColumn(schema.settings, schema.settings.simulatorHintDistance);
+        await m.addColumn(schema.settings, schema.settings.simulatorCubeSize);
+        await m.addColumn(schema.settings, schema.settings.simulatorSpeed);
+        await m.addColumn(schema.settings, schema.settings.simulatorStickerless);
+        await m.addColumn(schema.settings, schema.settings.simulatorLoop);
       },
       from6To7: (m, schema) async {
         await m.addColumn(schema.settings, schema.settings.showRunningTime);

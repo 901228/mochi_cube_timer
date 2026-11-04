@@ -1,5 +1,6 @@
 import "package:cube_timer/cube_timer.dart";
 import "package:drift/native.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mochi_cube_timer_gui/database/dao_provider.dart";
 import "package:mochi_cube_timer_gui/features/simulator/simulator_page.dart";
@@ -90,5 +91,38 @@ void main() {
     await tester.tap(find.byIcon(TablerIcons.playerPlay));
     await tester.pumpAndSettle();
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
+  });
+
+  testWidgets("the settings open beside the cube, and say what is set", (tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(() => tester.runAsync(db.close));
+    final settings = (await tester.runAsync(() => db.settingsDao.watch().first))!;
+
+    await tester.binding.setSurfaceSize(const Size(360, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      RepositoryProvider.value(
+        value: db,
+        child: SettingsProvider(
+          state: settings,
+          child: MochiApp(
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            locale: const Locale("en"),
+            home: const SimulatorPage(standalone: true),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text("Turn speed"), findsNothing);
+
+    await tester.tap(find.byIcon(TablerIcons.adjustmentsHorizontal));
+    await tester.pumpAndSettle();
+    expect(find.text("Turn speed"), findsOneWidget);
+    expect(find.text("1.0x"), findsOneWidget);
+    expect(find.text("3.0"), findsOneWidget);
+    // The cube is still there to watch.
+    expect(find.byType(CustomPaint), findsWidgets);
   });
 }

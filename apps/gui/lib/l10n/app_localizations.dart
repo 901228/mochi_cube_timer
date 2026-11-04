@@ -1490,6 +1490,66 @@ abstract class AppLocalizations {
   /// **'To end'**
   String get simulatorToEnd;
 
+  /// No description provided for @simulatorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulator settings'**
+  String get simulatorSettings;
+
+  /// No description provided for @simulatorHintDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Hint sticker distance'**
+  String get simulatorHintDistance;
+
+  /// No description provided for @simulatorHintOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get simulatorHintOff;
+
+  /// No description provided for @simulatorSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn speed'**
+  String get simulatorSpeed;
+
+  /// No description provided for @simulatorStickerless.
+  ///
+  /// In en, this message translates to:
+  /// **'Stickerless'**
+  String get simulatorStickerless;
+
+  /// No description provided for @simulatorLoop.
+  ///
+  /// In en, this message translates to:
+  /// **'Loop'**
+  String get simulatorLoop;
+
+  /// No description provided for @simulatorLoopHint.
+  ///
+  /// In en, this message translates to:
+  /// **'After pressing play, start again once done'**
+  String get simulatorLoopHint;
+
+  /// No description provided for @simulatorResetView.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset view'**
+  String get simulatorResetView;
+
+  /// No description provided for @simulatorCubeSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Cube size'**
+  String get simulatorCubeSize;
+
+  /// No description provided for @simulatorResetSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore defaults'**
+  String get simulatorResetSettings;
+
   /// No description provided for @simulatorReset.
   ///
   /// In en, this message translates to:

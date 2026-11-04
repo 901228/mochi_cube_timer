@@ -90,6 +90,12 @@ class RootSettingsSections extends StatelessWidget {
                     onPress: () => context.push("/settings/stats"),
                   ),
                   SettingsTile(
+                    title: context.l10n.simulatorTitle,
+                    icon: Icon(TablerIcons.cube3dSphere),
+                    suffix: Icon(TablerIcons.chevronRight),
+                    onPress: () => context.push("/settings/simulator"),
+                  ),
+                  SettingsTile(
                     title: context.l10n.settingsAbout,
                     icon: Icon(TablerIcons.infoCircle),
                     suffix: Icon(TablerIcons.chevronRight),
@@ -144,6 +150,12 @@ class RootSettingsSections extends StatelessWidget {
                     title: context.l10n.settingsStats,
                     icon: TablerIcons.chartLine,
                     link: "/settings/stats",
+                  ),
+                  _sectionCard(
+                    context,
+                    title: context.l10n.simulatorTitle,
+                    icon: TablerIcons.cube3dSphere,
+                    link: "/settings/simulator",
                   ),
                   _sectionCard(
                     context,

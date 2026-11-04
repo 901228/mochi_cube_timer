@@ -1,5 +1,7 @@
 import "dart:math" as math;
 
+import "package:cube_timer/cube_timer.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:mochi_cube/nxn.dart";
 import "package:mochi_ui/mochi_ui.dart";
 
@@ -8,6 +10,7 @@ import "../../l10n/l10n.dart";
 import "../../shared/utils.dart";
 import "../trainers/trainer_frame.dart";
 import "cube_3d_painter.dart";
+import "simulator_settings.dart";
 import "simulated_cube.dart";
 
 /// A 3x3 to turn by typing moves, any the notation has: rotations, slices and wide turns, each played out
@@ -35,13 +38,20 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   CubeLayerTurn? _turn;
   var _backward = false;
   var _playing = false;
+
+  /// Whether the play button started this run, which alone loops when [SettingsEntry.simulatorLoop] says to:
+  /// moves played as they are typed do not.
+  var _byPlay = false;
+  var _showSettings = false;
   late final _animation = AnimationController(vsync: this)..addStatusListener(_onStatus);
   final _moves = TextEditingController();
   String? _error;
 
   // Looking down on U, F and R, as a cube is usually drawn.
-  double _yaw = math.pi / 5;
-  double _pitch = math.pi / 6;
+  static const _defaultYaw = math.pi / 5;
+  static const _defaultPitch = math.pi / 6;
+  double _yaw = _defaultYaw;
+  double _pitch = _defaultPitch;
 
   @override
   void dispose() {
@@ -78,6 +88,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
       final extended =
           _index == old.length && _turn == null && turns.length > old.length && _sameStart(old, turns);
       _turns = turns;
+      _byPlay = false;
       if (extended) {
         _playing = true;
         _next();
@@ -98,6 +109,9 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   /// Plays the next turn if it is wanted and none is on.
   void _next() {
     if (_turn != null) return;
+    if (_playing && _byPlay && _index >= _turns.length && SettingsProvider.of(context).simulatorLoop) {
+      _jump(0);
+    }
     if (!_playing || _index >= _turns.length) {
       _playing = false;
       return;
@@ -109,7 +123,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     _turn = backward ? (face: turn.face, lo: turn.lo, hi: turn.hi, quarters: -turn.quarters) : turn;
     _backward = backward;
     // Quicker while playing on, so a whole scramble does not drag.
-    final ms = (_playing ? 160 : 260) * (1 + (turn.quarters.abs() - 1) * 0.5);
+    final ms = 615 * (1 + (turn.quarters.abs() - 1) * 0.5) / SettingsProvider.of(context).simulatorSpeed;
     _animation
       ..duration = Duration(milliseconds: ms.round())
       ..forward(from: 0);
@@ -133,6 +147,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     if (_turns.isEmpty) return;
     if (_index >= _turns.length) _jump(0);
     _playing = true;
+    _byPlay = true;
     _next();
   });
 
@@ -179,7 +194,14 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
       title: l10n.simulatorTitle,
       standalone: widget.standalone,
       canPop: false,
-      actions: [MochiAction(icon: TablerIcons.restore, label: l10n.simulatorReset, onPress: _reset)],
+      actions: [
+        MochiAction(icon: TablerIcons.restore, label: l10n.simulatorReset, onPress: _reset),
+        MochiAction(
+          icon: TablerIcons.adjustmentsHorizontal,
+          label: l10n.simulatorSettings,
+          onPress: () => setState(() => _showSettings = !_showSettings),
+        ),
+      ],
       child: Padding(
         padding: g.pagePadding + .only(bottom: MediaQuery.paddingOf(context).bottom),
         child: Column(
@@ -187,26 +209,60 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
           spacing: g.space.md,
           children: [
             Expanded(
-              child: GestureDetector(
-                onPanUpdate: (details) => setState(() {
-                  _yaw -= details.delta.dx * 0.01;
-                  _pitch = (_pitch + details.delta.dy * 0.01).clamp(-math.pi / 2, math.pi / 2);
-                }),
-                child: AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, _) => CustomPaint(
-                    size: Size.infinite,
-                    painter: Cube3dPainter(
-                      cube: _cube,
-                      colors: colors,
-                      body: const Color(0xFF1A1A1A),
-                      yaw: _yaw,
-                      pitch: _pitch,
-                      turn: _turn,
-                      progress: Curves.easeInOut.transform(_animation.value),
+              // Beside the cube when there is room, under it otherwise: either way the cube stays in view while
+              // the settings change it.
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final wide = constraints.maxWidth >= 720;
+                  final panel = _showSettings
+                      ? SizedBox(
+                          width: wide ? 340 : null,
+                          height: wide ? null : constraints.maxHeight * 0.55,
+                          child: SingleChildScrollView(
+                            child: SimulatorSettingsGroup(
+                              settings: settings,
+                              dao: context.read<AppDatabase>().settingsDao,
+                              onResetView: () => setState(() {
+                                _yaw = _defaultYaw;
+                                _pitch = _defaultPitch;
+                              }),
+                            ),
+                          ),
+                        )
+                      : null;
+                  final view = Expanded(
+                    child: GestureDetector(
+                      onPanUpdate: (details) => setState(() {
+                        _yaw -= details.delta.dx * 0.01;
+                        _pitch = (_pitch + details.delta.dy * 0.01).clamp(-math.pi / 2, math.pi / 2);
+                      }),
+                      child: AnimatedBuilder(
+                        animation: _animation,
+                        builder: (context, _) => CustomPaint(
+                          size: Size.infinite,
+                          painter: Cube3dPainter(
+                            cube: _cube,
+                            colors: colors,
+                            body: const Color(0xFF1A1A1A),
+                            yaw: _yaw,
+                            pitch: _pitch,
+                            turn: _turn,
+                            progress: Curves.easeInOut.transform(_animation.value),
+                            hintDistance: settings.simulatorHintDistance,
+                            cubeSize: settings.simulatorCubeSize,
+                            stickerless: settings.simulatorStickerless,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                  return Flex(
+                    direction: wide ? Axis.horizontal : Axis.vertical,
+                    crossAxisAlignment: .stretch,
+                    spacing: g.space.md,
+                    children: [view, ?panel],
+                  );
+                },
               ),
             ),
             AnimatedBuilder(

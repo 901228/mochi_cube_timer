@@ -123,6 +123,22 @@ class Settings extends Table {
   /// worst ones. Rounded up to a whole solve, so 5 % trims one of an Ao5 and three of an Ao50.
   IntColumn get averageTrim => integer().withDefault(const Constant(5))();
 
+  /// how far past the simulator's cube the stickers of the faces turned away float, in half cubies; 0 hides
+  /// them
+  RealColumn get simulatorHintDistance => real().withDefault(const Constant(3.0))();
+
+  /// how large the simulator's cube is drawn, as a multiple of what fits
+  RealColumn get simulatorCubeSize => real().withDefault(const Constant(1.0))();
+
+  /// how fast the simulator turns, as a multiple of its usual pace
+  RealColumn get simulatorSpeed => real().withDefault(const Constant(1.0))();
+
+  /// whether the simulator's cube is drawn without stickers, each face all its colour
+  BoolColumn get simulatorStickerless => boolean().withDefault(const Constant(false))();
+
+  /// whether the simulator plays the moves again from the start once they are done
+  BoolColumn get simulatorLoop => boolean().withDefault(const Constant(false))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

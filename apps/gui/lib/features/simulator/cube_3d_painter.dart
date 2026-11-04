@@ -21,6 +21,9 @@ class Cube3dPainter extends CustomPainter {
     required this.pitch,
     this.turn,
     this.progress = 0,
+    this.hintDistance = 3.0,
+    this.cubeSize = 1.0,
+    this.stickerless = false,
   });
 
   final SimulatedCube cube;
@@ -35,8 +38,16 @@ class Cube3dPainter extends CustomPainter {
   final CubeLayerTurn? turn;
   final double progress;
 
-  /// How far past the cube the stickers of the faces turned away float, in half cubies.
-  static const _hintGap = 2.2;
+  /// How far past the cube the stickers of the faces turned away float, in half cubies; 0 leaves them out.
+  final double hintDistance;
+
+  /// The cube's size as a multiple of what fits the view with the hints at their usual distance.
+  final double cubeSize;
+
+  static const _fitDistance = 3.0;
+
+  /// Each face all its colour, rather than stickers on black plastic.
+  final bool stickerless;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -50,8 +61,8 @@ class Cube3dPainter extends CustomPainter {
         : Quaternion.axisAngle(_vector(axis!), -math.pi / 2 * turn.quarters * progress).asRotationMatrix();
 
     final distance = n * 5.0;
-    // The hints float out past the cube, so leave room for them.
-    final scale = size.shortestSide / ((n + _hintGap) * 2 * 1.5);
+    // Room for the hints at their usual distance and a little past it; moving them leaves the cube's size alone.
+    final scale = cubeSize * size.shortestSide / ((n + _fitDistance) * 2 * 1.5);
     final centre = size.center(Offset.zero);
     Offset project(Vector3 p) {
       final k = distance / (distance - p.z);
@@ -93,10 +104,10 @@ class Cube3dPainter extends CustomPainter {
     Matrix3 rotationOf(Cubie c) => turn != null && block(c.position) == 1 ? turning : Matrix3.identity();
 
     // The stickers of the faces turned away, floating behind the cube.
-    for (final c in cube.cubies) {
+    for (final c in hintDistance > 0 ? cube.cubies : const <Cubie>[]) {
       for (final (normal, face) in cube.stickers(c)) {
         // One-sided like a sticker, facing the cube: seen only from behind it, through the cube.
-        final (points, front) = quad(c, normal, rotationOf(c), 0.62, _hintGap);
+        final (points, front) = quad(c, normal, rotationOf(c), 0.62, hintDistance);
         if (!front) canvas.drawPath(polygon(points), Paint()..color = colors[face]);
       }
     }
@@ -130,7 +141,7 @@ class Cube3dPainter extends CustomPainter {
           final face = stickers[normal];
           if (face != null) {
             canvas.drawPath(
-              polygon(quad(c, normal, rotationOf(c), 0.84, 0).$1),
+              polygon(quad(c, normal, rotationOf(c), stickerless ? 0.95 : 0.84, 0).$1),
               Paint()..color = colors[face],
             );
           }

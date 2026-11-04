@@ -20,6 +20,7 @@ import "generated/schema_v10.dart" as v10;
 import "generated/schema_v11.dart" as v11;
 import "generated/schema_v12.dart" as v12;
 import "generated/schema_v13.dart" as v13;
+import "generated/schema_v14.dart" as v14;
 
 void main() {
   driftRuntimeOptions.dontWarnAboutMultipleDatabases = true;
@@ -829,6 +830,28 @@ void main() {
           {...record.toJson(), "algorithmSet": null, "algorithmCase": null},
         ]);
         expect(await newDb.select(newDb.practiceExclusions).get(), isEmpty);
+      },
+    );
+  });
+
+  test("v13 to v14 keeps the settings and gives the simulator its defaults", () async {
+    await verifier.testWithDataIntegrity(
+      oldVersion: 13,
+      newVersion: 14,
+      createOld: v13.DatabaseAtV13.new,
+      createNew: v14.DatabaseAtV14.new,
+      openTestedDatabase: AppDatabase.new,
+      createItems: (batch, oldDb) {
+        batch.insert(oldDb.settings, const v13.SettingsCompanion(id: Value(0), averageTrim: Value(10)));
+      },
+      validateItems: (newDb) async {
+        final settings = await newDb.select(newDb.settings).getSingle();
+        expect(settings.averageTrim, 10);
+        expect(settings.simulatorHintDistance, 3.0);
+        expect(settings.simulatorCubeSize, 1.0);
+        expect(settings.simulatorSpeed, 1.0);
+        expect(settings.simulatorStickerless, 0);
+        expect(settings.simulatorLoop, 0);
       },
     );
   });
