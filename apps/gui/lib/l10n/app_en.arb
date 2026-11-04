@@ -274,6 +274,8 @@
   "simulatorStickeringFull": "Full",
   "simulatorOrientation": "Top {top}, front {front}",
   "@simulatorOrientation": {"placeholders": {"top": {"type": "String"}, "front": {"type": "String"}}},
+  "simulatorLastLayer": "Last layer {face}",
+  "@simulatorLastLayer": {"placeholders": {"face": {"type": "String"}}},
   "simulatorReset": "Reset",
   "simulatorInvalidMove": "Can't read: {move}",
   "@simulatorInvalidMove": {"placeholders": {"move": {"type": "String"}}},

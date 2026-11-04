@@ -815,6 +815,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String simulatorLastLayer(String face) {
+    return 'Last layer $face';
+  }
+
+  @override
   String get simulatorReset => 'Reset';
 
   @override

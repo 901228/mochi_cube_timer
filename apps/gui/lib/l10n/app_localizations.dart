@@ -1586,6 +1586,12 @@ abstract class AppLocalizations {
   /// **'Top {top}, front {front}'**
   String simulatorOrientation(String top, String front);
 
+  /// No description provided for @simulatorLastLayer.
+  ///
+  /// In en, this message translates to:
+  /// **'Last layer {face}'**
+  String simulatorLastLayer(String face);
+
   /// No description provided for @simulatorReset.
   ///
   /// In en, this message translates to:

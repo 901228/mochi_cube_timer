@@ -807,6 +807,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String simulatorLastLayer(String face) {
+    return '最後一層 $face';
+  }
+
+  @override
   String get simulatorReset => '重置';
 
   @override

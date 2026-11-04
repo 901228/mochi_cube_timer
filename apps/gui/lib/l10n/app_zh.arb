@@ -274,6 +274,8 @@
   "simulatorStickeringFull": "全部",
   "simulatorOrientation": "頂 {top}・前 {front}",
   "@simulatorOrientation": {"placeholders": {"top": {"type": "String"}, "front": {"type": "String"}}},
+  "simulatorLastLayer": "最後一層 {face}",
+  "@simulatorLastLayer": {"placeholders": {"face": {"type": "String"}}},
   "simulatorReset": "重置",
   "simulatorInvalidMove": "無法辨識：{move}",
   "@simulatorInvalidMove": {"placeholders": {"move": {"type": "String"}}},

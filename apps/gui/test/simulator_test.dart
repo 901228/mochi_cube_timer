@@ -73,6 +73,25 @@ void main() {
     );
   });
 
+  test("the last layer is the one of the face picked, whatever way the cube is held", () {
+    int shown(Stickering s, SimulatedCube cube, int lastLayer) => [
+      for (final c in cube.cubies)
+        for (final (_, face) in cube.stickers(c))
+          if (s.lit(3, c.home, face, lastLayer: lastLayer)) 1,
+    ].length;
+    // The cube is solved however it is held, and the stages are of its pieces: D as the last layer is U as it is
+    // from the other side, so the counts are the same, and a rotation first changes nothing.
+    for (final stage in Stickering.values) {
+      expect(shown(stage, _after("x2"), 3), shown(stage, SimulatedCube(3), 0), reason: "$stage");
+    }
+    // The top layer's pieces are dim in F2L, and the bottom's are not.
+    final cube = SimulatedCube(3);
+    final topEdge = cube.cubies.firstWhere((c) => c.home == (0, 2, 2));
+    final bottomEdge = cube.cubies.firstWhere((c) => c.home == (0, -2, 2));
+    expect(Stickering.f2l.lit(3, topEdge.home, 2, lastLayer: 3), isTrue);
+    expect(Stickering.f2l.lit(3, bottomEdge.home, 2, lastLayer: 3), isFalse);
+  });
+
   test("an orientation goes first in the setup, in the place of the one before it", () {
     expect(withOrientation("R U", previous: "", rotation: "z2"), "z2 R U");
     expect(withOrientation("z2 R U", previous: "z2", rotation: "y"), "y R U");

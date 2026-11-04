@@ -16,21 +16,23 @@ enum Stickering {
   final String label;
 
   /// Whether the sticker of the piece solved at [home] that was solved on the face [face] (an index in
-  /// [nxnFaceNames]) is in colour, on a cube of [size].
-  bool lit(int size, Vec3 home, int face) {
+  /// [nxnFaceNames]) is in colour, on a cube of [size] whose last layer is the one of [lastLayer], also an index
+  /// there, and whose cross is on the opposite one.
+  bool lit(int size, Vec3 home, int face, {int lastLayer = 0}) {
     final edge = size - 1;
     // Centres are on one face, edges and corners on two or three.
     final onFaces = [home.$1, home.$2, home.$3].where((c) => c.abs() == edge).length;
-    final top = home.$2 == edge;
-    final bottom = home.$2 == -edge;
+    final along = dot(faceNormals[lastLayer], home);
+    final top = along == edge;
+    final bottom = along == -edge;
     final firstTwoLayers = !top || onFaces == 1;
     return switch (this) {
       full => true,
       cross => onFaces == 1 || (onFaces == 2 && bottom),
       f2l => firstTwoLayers,
       // The last layer's stickers are all that is left to look at: its top ones, not its sides.
-      oll => firstTwoLayers || face == 0,
-      pll => face != 0 || onFaces == 1,
+      oll => firstTwoLayers || face == lastLayer,
+      pll => face != lastLayer || onFaces == 1,
     };
   }
 }

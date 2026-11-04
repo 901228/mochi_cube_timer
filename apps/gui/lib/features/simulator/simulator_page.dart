@@ -52,6 +52,10 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   var _showSettings = false;
   var _stickering = Stickering.full;
 
+  /// The face whose layer is the last one, for the stages of [_stickering]: by the piece it belongs to, so it
+  /// stays so however the setup holds the cube.
+  var _lastLayer = 0;
+
   /// The orientation picked and the rotation it put at the start of the setup.
   var _orientation = 0;
   var _heldAs = "";
@@ -306,7 +310,8 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                                   hintLabels: settings.simulatorHintLabels,
                                   isLit: _stickering == Stickering.full
                                       ? null
-                                      : (home, face) => _stickering.lit(_size, home, face),
+                                      : (home, face) =>
+                                            _stickering.lit(_size, home, face, lastLayer: _lastLayer),
                                 ),
                               ),
                             ),
@@ -315,20 +320,34 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                         Positioned(
                           top: 0,
                           left: 0,
-                          child: SizedBox(
-                            width: 120,
-                            child: MochiSelect<Stickering>(
-                              size: .sm,
-                              value: _stickering,
-                              onChanged: (v) => setState(() => _stickering = v),
-                              options: [
-                                for (final v in Stickering.values)
-                                  MochiSelectOption(
-                                    value: v,
-                                    label: v == Stickering.full ? l10n.simulatorStickeringFull : v.label,
-                                  ),
-                              ],
-                            ),
+                          width: 120,
+                          child: Column(
+                            crossAxisAlignment: .stretch,
+                            spacing: g.space.xs,
+                            children: [
+                              MochiSelect<Stickering>(
+                                size: .sm,
+                                value: _stickering,
+                                onChanged: (v) => setState(() => _stickering = v),
+                                options: [
+                                  for (final v in Stickering.values)
+                                    MochiSelectOption(
+                                      value: v,
+                                      label: v == Stickering.full ? l10n.simulatorStickeringFull : v.label,
+                                    ),
+                                ],
+                              ),
+                              if (_stickering != Stickering.full)
+                                MochiSelect<int>(
+                                  size: .sm,
+                                  value: _lastLayer,
+                                  onChanged: (v) => setState(() => _lastLayer = v),
+                                  options: [
+                                    for (final (i, name) in nxnFaceNames.indexed)
+                                      MochiSelectOption(value: i, label: l10n.simulatorLastLayer(name)),
+                                  ],
+                                ),
+                            ],
                           ),
                         ),
                         Positioned(
