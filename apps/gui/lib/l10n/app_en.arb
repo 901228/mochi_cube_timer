@@ -270,6 +270,7 @@
   "simulatorHintLabels": "Hint letters",
   "simulatorRandom": "Random scramble",
   "simulatorInverse": "Invert moves",
+  "simulatorSetupHint": "Setup: applied first, not played",
   "simulatorReset": "Reset",
   "simulatorInvalidMove": "Can't read: {move}",
   "@simulatorInvalidMove": {"placeholders": {"move": {"type": "String"}}},

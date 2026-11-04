@@ -1568,6 +1568,12 @@ abstract class AppLocalizations {
   /// **'Invert moves'**
   String get simulatorInverse;
 
+  /// No description provided for @simulatorSetupHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup: applied first, not played'**
+  String get simulatorSetupHint;
+
   /// No description provided for @simulatorReset.
   ///
   /// In en, this message translates to:

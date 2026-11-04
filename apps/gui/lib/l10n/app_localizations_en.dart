@@ -804,6 +804,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get simulatorInverse => 'Invert moves';
 
   @override
+  String get simulatorSetupHint => 'Setup: applied first, not played';
+
+  @override
   String get simulatorReset => 'Reset';
 
   @override

@@ -83,24 +83,34 @@ void main() {
     await tester.pumpAndSettle();
 
     // Typing plays on what is typed; what cannot be read is named and leaves the cube as it was.
-    await tester.enterText(find.byType(EditableText), "R Q");
+    await tester.enterText(find.byType(EditableText).last, "R Q");
     await tester.pumpAndSettle();
     expect(find.text("Can't read: Q"), findsOneWidget);
 
-    await tester.enterText(find.byType(EditableText), "r U M' x");
+    await tester.enterText(find.byType(EditableText).last, "r U M' x");
     await tester.pumpAndSettle();
     expect(find.textContaining("Can't read"), findsNothing);
     // Everything played: the pause button is back to play, and stepping back is possible.
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
 
-    // A random scramble is put in the box and shown done; inverting it rewrites the box.
-    await tester.tap(find.byIcon(TablerIcons.dice));
-    await tester.pumpAndSettle();
-    final scramble = tester.widget<EditableText>(find.byType(EditableText)).controller.text;
-    expect(scramble.split(" "), hasLength(20));
+    // The moves are the second box, under the setup; inverting rewrites it.
+    final moves = find.byType(EditableText).last;
+    String text(Finder box) => tester.widget<EditableText>(box).controller.text;
     await tester.tap(find.byIcon(TablerIcons.arrowsExchange));
     await tester.pumpAndSettle();
-    expect(tester.widget<EditableText>(find.byType(EditableText)).controller.text, invertNotation(scramble));
+    expect(text(moves), invertNotation("r U M' x"));
+
+    // A random scramble goes into the setup, which the slider does not count.
+    await tester.tap(find.byIcon(TablerIcons.dice));
+    await tester.pumpAndSettle();
+    expect(text(find.byType(EditableText).first).split(" "), hasLength(20));
+    expect(tester.widget<MochiSlider>(find.byType(MochiSlider)).max, 4);
+    await tester.enterText(find.byType(EditableText).first, "R Q");
+    await tester.pumpAndSettle();
+    expect(find.text("Can't read: Q"), findsOneWidget);
+    await tester.enterText(find.byType(EditableText).first, "R U");
+    await tester.pumpAndSettle();
+    expect(find.textContaining("Can't read"), findsNothing);
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
 
     await tester.tap(find.byIcon(TablerIcons.arrowBackUp));

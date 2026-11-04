@@ -30,6 +30,11 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   static const _size = 3;
 
   var _cube = SimulatedCube(_size);
+
+  /// What is turned first, to set the cube up: not played, and not counted by the slider.
+  var _setup = <CubeLayerTurn>[];
+
+  /// The moves played from there.
   var _turns = <CubeLayerTurn>[];
 
   /// How many of [_turns] [_cube] has had.
@@ -45,7 +50,9 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   var _byPlay = false;
   var _showSettings = false;
   late final _animation = AnimationController(vsync: this)..addStatusListener(_onStatus);
+  final _setupField = TextEditingController();
   final _moves = TextEditingController();
+  String? _setupError;
   String? _error;
 
   // Looking down on U, F and R, as a cube is usually drawn.
@@ -57,25 +64,45 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   @override
   void dispose() {
     _animation.dispose();
+    _setupField.dispose();
     _moves.dispose();
     super.dispose();
   }
 
-  /// The cube as it is after the first [k] turns, without playing them.
+  /// The cube as it is after the setup and the first [k] turns, without playing them.
   void _jump(int k) {
     _animation.stop();
     _cube = SimulatedCube(_size);
-    for (final t in _turns.take(k)) {
+    for (final t in [..._setup, ..._turns.take(k)]) {
       _cube.turn(t);
     }
     _index = k;
     _turn = null;
   }
 
-  /// Replaces what is typed with [text], showing where it ends up rather than playing it.
+  /// Replaces the moves with [text], showing where they end up rather than playing them.
   void _replace(String text) {
     _moves.text = text;
     _onChanged(text, animate: false);
+  }
+
+  /// The setup is [text]: the cube shows it done and the moves wait to be played from there.
+  void _onSetupChanged(String text) {
+    final List<CubeLayerTurn> turns;
+    try {
+      turns = cubeLayerTurns(text, size: _size);
+    } on FormatException catch (e) {
+      setState(
+        () => _setupError = context.l10n.simulatorInvalidMove(e.message.replaceFirst("Invalid move: ", "")),
+      );
+      return;
+    }
+    setState(() {
+      _setupError = null;
+      _setup = turns;
+      _playing = false;
+      _jump(0);
+    });
   }
 
   void _onChanged(String text, {bool animate = true}) {
@@ -177,8 +204,11 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   });
 
   void _reset() {
+    _setupField.clear();
     _moves.clear();
     setState(() {
+      _setup = [];
+      _setupError = null;
       _turns = [];
       _playing = false;
       _error = null;
@@ -340,17 +370,35 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
               children: [
                 Expanded(
                   child: MochiTextField(
-                    controller: _moves,
-                    hint: l10n.simulatorMovesHint,
-                    error: _error,
-                    onChanged: _onChanged,
+                    controller: _setupField,
+                    hint: l10n.simulatorSetupHint,
+                    error: _setupError,
+                    onChanged: _onSetupChanged,
                   ),
                 ),
                 MochiButton.icon(
                   intent: .neutral,
                   icon: Icon(TablerIcons.dice),
                   tooltip: l10n.simulatorRandom,
-                  onPress: () => _replace(randomNxNScramble(_size, length: 20).toString()),
+                  onPress: () {
+                    final scramble = randomNxNScramble(_size, length: 20).toString();
+                    _setupField.text = scramble;
+                    _onSetupChanged(scramble);
+                  },
+                ),
+              ],
+            ),
+            Row(
+              crossAxisAlignment: .start,
+              spacing: g.space.sm,
+              children: [
+                Expanded(
+                  child: MochiTextField(
+                    controller: _moves,
+                    hint: l10n.simulatorMovesHint,
+                    error: _error,
+                    onChanged: _onChanged,
+                  ),
                 ),
                 MochiButton.icon(
                   intent: .neutral,
