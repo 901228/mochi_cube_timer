@@ -137,6 +137,13 @@ class Cube3dPainter extends CustomPainter {
     }
 
     final fill = Paint()..color = body;
+    // The same colour round the edge too, or the antialiased edges of two faces side by side leave a hairline of the
+    // background between them.
+    final seam = Paint()
+      ..color = body
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..strokeJoin = StrokeJoin.round;
     for (final b in order) {
       for (final c in cube.cubies) {
         if (block(c.position) != b) continue;
@@ -152,6 +159,7 @@ class Cube3dPainter extends CustomPainter {
           final body = quad(c, normal, rotationOf(c), 1, 0);
           if (!body.$2) continue;
           canvas.drawPath(polygon(body.$1), fill);
+          canvas.drawPath(polygon(body.$1), seam);
           final face = stickers[normal];
           if (face != null) {
             canvas.drawPath(
