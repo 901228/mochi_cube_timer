@@ -2,7 +2,7 @@ import "package:mochi_cube/nxn.dart" show nxnFaceNames;
 
 import "simulated_cube.dart";
 
-/// Which stickers of the cube are shown in colour, the rest dimmed, as the steps of a CFOP solve are looked at.
+/// Which stickers of the cube are shown in colour, the rest grey, as the steps of a CFOP solve are looked at.
 /// A sticker goes by the piece it is on, wherever that piece is now, and by the face it was solved on.
 enum Stickering {
   full("Full"),
@@ -25,14 +25,14 @@ enum Stickering {
     final along = dot(faceNormals[lastLayer], home);
     final top = along == edge;
     final bottom = along == -edge;
-    final firstTwoLayers = !top || onFaces == 1;
     return switch (this) {
       full => true,
-      cross => onFaces == 1 || (onFaces == 2 && bottom),
-      f2l => firstTwoLayers,
-      // The last layer's stickers are all that is left to look at: its top ones, not its sides.
-      oll => firstTwoLayers || face == lastLayer,
-      pll => face != lastLayer || onFaces == 1,
+      // The side and bottom centres to match the edges to, and the bottom edges.
+      cross => (onFaces == 1 && !top) || (onFaces == 2 && bottom),
+      f2l => !top,
+      // Only the last layer's top is left to look at, then its sides too.
+      oll => top && face == lastLayer,
+      pll => top,
     };
   }
 }

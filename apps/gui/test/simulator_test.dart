@@ -61,14 +61,14 @@ void main() {
       {for (final s in Stickering.values) s: shown(s)},
       {
         Stickering.full: 54,
-        // The centres and the four bottom edges.
-        Stickering.cross: 6 + 8,
-        // All but the 20 stickers of the top layer's pieces, whose centre is still shown.
-        Stickering.f2l: 34,
-        // And the eight of those that look up.
-        Stickering.oll: 42,
-        // All but the same eight.
-        Stickering.pll: 46,
+        // The five centres but the top one, and the four bottom edges.
+        Stickering.cross: 5 + 8,
+        // All but the 21 of the top layer, its centre too.
+        Stickering.f2l: 33,
+        // The nine on top.
+        Stickering.oll: 9,
+        // The top layer, sides and all.
+        Stickering.pll: 21,
       },
     );
   });

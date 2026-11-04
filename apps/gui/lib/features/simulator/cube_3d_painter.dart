@@ -52,7 +52,7 @@ class Cube3dPainter extends CustomPainter {
   final bool hintLabels;
 
   /// Whether a sticker is in colour, given the home of its piece and the face it was solved on; the others
-  /// are dimmed. Null colours them all.
+  /// are grey. Null colours them all.
   final bool Function(Vec3 home, int face)? isLit;
 
   /// Each face all its colour, rather than stickers on black plastic.
@@ -172,13 +172,9 @@ class Cube3dPainter extends CustomPainter {
     }
   }
 
-  /// The colour of [face]'s sticker on [cubie], dimmed when [isLit] says it is not one to look at.
-  Color _colour(Cubie cubie, int face) {
-    final colour = colors[face];
-    return isLit == null || isLit!(cubie.home, face)
-        ? colour
-        : Color.lerp(colour, const Color(0xFF8A8A8A), 0.8)!;
-  }
+  /// The colour of [face]'s sticker on [cubie], or grey when [isLit] says it is not one to look at.
+  Color _colour(Cubie cubie, int face) =>
+      isLit == null || isLit!(cubie.home, face) ? colors[face] : const Color(0xFF777777);
 
   @override
   bool shouldRepaint(Cube3dPainter old) => true;
