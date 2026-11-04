@@ -83,4 +83,39 @@ void main() {
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.text("Megaminx"), findsOneWidget);
   });
+
+  testWidgets("browsing the algorithms hands the set over instead of practising it", (tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(() => tester.runAsync(db.close));
+    final settings = (await tester.runAsync(() => db.settingsDao.watch().first))!;
+    (Puzzle, String)? picked;
+    await tester.pumpWidget(
+      RepositoryProvider.value(
+        value: db,
+        child: MochiApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale("en"),
+          home: SettingsProvider(
+            state: settings,
+            child: MochiScaffold(
+              child: PuzzleSelectionDialog(onPickSet: (puzzle, set) => picked = (puzzle, set.id)),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.text("Algorithms"));
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(find.text("3x3"));
+    await tester.pumpAndSettle();
+    // The Cross drill is only for practising.
+    expect(find.text("Cross"), findsNothing);
+    await tester.tap(find.text("PLL"));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
+    expect(picked, (Puzzle.cube3, "pll"));
+    final state = (await tester.runAsync(() => db.appStateDao.current))!;
+    expect((state.puzzle, state.algorithmSet), (Puzzle.cube3, null));
+  });
 }

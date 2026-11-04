@@ -20,6 +20,10 @@ const _buttonRoom = 40.0;
 class PuzzleSelectionDialog extends StatefulWidget {
   final void Function(Puzzle puzzle)? onSelect;
 
+  /// Given, the algorithms tab is for browsing: it lists the sets of every puzzle, without the Cross drill, and
+  /// picking one switches to its puzzle and calls this, instead of starting to practise it.
+  final void Function(Puzzle puzzle, AlgorithmSet set)? onPickSet;
+
   /// Whether the puzzles / algorithms switch is shown; off, only the puzzles are.
   final bool showKinds;
 
@@ -30,6 +34,7 @@ class PuzzleSelectionDialog extends StatefulWidget {
   const PuzzleSelectionDialog({
     super.key,
     this.onSelect,
+    this.onPickSet,
     this.showKinds = true,
     this.current,
     this.currentSet,
@@ -40,7 +45,7 @@ class PuzzleSelectionDialog extends StatefulWidget {
 }
 
 class _PuzzleSelectionDialogState extends State<PuzzleSelectionDialog> {
-  late _Kind _kind = widget.currentSet == null ? .puzzles : .algorithms;
+  late _Kind _kind = widget.currentSet == null || widget.onPickSet != null ? .puzzles : .algorithms;
 
   /// Whether the sets are laid out as a grid rather than a list; kept for the session, not saved.
   static bool _grid = true;
@@ -143,16 +148,25 @@ class _PuzzleSelectionDialogState extends State<PuzzleSelectionDialog> {
     final topColor = SettingsProvider.of(context).cubeColorD.toColor();
     final entries = [
       for (final entry in algorithmSets.entries)
-        if (canPractice(entry.key)) entry,
+        if (widget.onPickSet != null || canPractice(entry.key)) entry,
     ];
-    void pick(String id, String set) {
-      context.read<AppDatabase>().appStateDao.setAlgorithmSet(Puzzle.fromId(id), set);
+    // [set] is null for the Cross drill, which is only ever picked to practise.
+    void pick(String id, String setId, [AlgorithmSet? set]) {
+      final puzzle = Puzzle.fromId(id);
+      final dao = context.read<AppDatabase>().appStateDao;
       Navigator.of(context).pop();
+      final onPickSet = widget.onPickSet;
+      if (onPickSet == null || set == null) {
+        dao.setAlgorithmSet(puzzle, setId);
+      } else {
+        dao.setPuzzle(puzzle);
+        onPickSet(puzzle, set);
+      }
     }
 
     // Every way to pick, as (diagram, name, subtitle, what picking does).
     List<(Widget, String, String?, VoidCallback)> choices(String id, List<AlgorithmSet> sets) => [
-      if (id == "333")
+      if (id == "333" && widget.onPickSet == null)
         (
           // The cross from the front-right corner: the two edges in sight below their centres.
           const AspectRatio(
@@ -176,7 +190,7 @@ class _PuzzleSelectionDialogState extends State<PuzzleSelectionDialog> {
           ),
           set.name,
           set.subtitle,
-          () => pick(id, set.id),
+          () => pick(id, set.id, set),
         ),
     ];
 

@@ -351,13 +351,15 @@ class _HomeShellState extends State<HomeShell> {
                               body: PuzzleSelectionDialog(
                                 current: data?.appState.puzzle,
                                 currentSet: data?.appState.algorithmSet,
-                                // TODO: enable algorithm list, them click the algorithm and go to the corresponding page
-                                showKinds: widget.navigationShell.currentIndex != 3,
                                 onSelect: (puzzle) {
                                   if (widget.navigationShell.currentIndex == 3) {
                                     context.go("/algorithms/${puzzle.id}");
                                   }
                                 },
+                                // On the algorithms page the sets are to look at, not to practise.
+                                onPickSet: widget.navigationShell.currentIndex == 3
+                                    ? (puzzle, set) => context.go("/algorithms/${puzzle.id}/${set.id}")
+                                    : null,
                               ),
                             ),
                             child: data == null
