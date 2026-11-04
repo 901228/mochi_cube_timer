@@ -15,7 +15,7 @@ import "simulator_settings.dart";
 import "stickering.dart";
 import "simulated_cube.dart";
 
-/// A 3x3 to turn by typing moves, any the notation has: rotations, slices and wide turns, each played out
+/// An NxN cube to turn by typing moves, any the notation has: rotations, slices and wide turns, each played out
 /// in turn, and the cube dragged round to look at. `/simulator` in the home shell, `/simulator-standalone`
 /// pushed over it.
 class SimulatorPage extends StatefulWidget {
@@ -28,9 +28,9 @@ class SimulatorPage extends StatefulWidget {
 }
 
 class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProviderStateMixin {
-  static const _size = 3;
+  var _size = 3;
 
-  var _cube = SimulatedCube(_size);
+  late var _cube = SimulatedCube(_size);
 
   /// What is turned first, to set the cube up: not played, and not counted by the slider.
   var _setup = <CubeLayerTurn>[];
@@ -88,6 +88,29 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     }
     _index = k;
     _turn = null;
+  }
+
+  void _setSize(int size) {
+    setState(() {
+      _size = size;
+      if (size != 3) _stickering = Stickering.full;
+      _playing = false;
+      try {
+        _setup = cubeLayerTurns(_setupField.text, size: size);
+        _setupError = null;
+      } on FormatException catch (e) {
+        _setup = [];
+        _setupError = context.l10n.simulatorInvalidMove(e.message.replaceFirst("Invalid move: ", ""));
+      }
+      try {
+        _turns = cubeLayerTurns(_moves.text, size: size);
+        _error = null;
+      } on FormatException catch (e) {
+        _turns = [];
+        _error = context.l10n.simulatorInvalidMove(e.message.replaceFirst("Invalid move: ", ""));
+      }
+      _jump(_turns.length);
+    });
   }
 
   /// Replaces the moves with [text], showing where they end up rather than playing them.
@@ -325,19 +348,28 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                             crossAxisAlignment: .stretch,
                             spacing: g.space.xs,
                             children: [
-                              MochiSelect<Stickering>(
+                              MochiSelect<int>(
                                 size: .sm,
-                                value: _stickering,
-                                onChanged: (v) => setState(() => _stickering = v),
+                                value: _size,
+                                onChanged: _setSize,
                                 options: [
-                                  for (final v in Stickering.values)
-                                    MochiSelectOption(
-                                      value: v,
-                                      label: v == Stickering.full ? l10n.simulatorStickeringFull : v.label,
-                                    ),
+                                  for (var n = 2; n <= 7; n++) MochiSelectOption(value: n, label: "${n}x$n"),
                                 ],
                               ),
-                              if (_stickering != Stickering.full)
+                              if (_size == 3)
+                                MochiSelect<Stickering>(
+                                  size: .sm,
+                                  value: _stickering,
+                                  onChanged: (v) => setState(() => _stickering = v),
+                                  options: [
+                                    for (final v in Stickering.values)
+                                      MochiSelectOption(
+                                        value: v,
+                                        label: v == Stickering.full ? l10n.simulatorStickeringFull : v.label,
+                                      ),
+                                  ],
+                                ),
+                              if (_size == 3 && _stickering != Stickering.full)
                                 MochiSelect<int>(
                                   size: .sm,
                                   value: _lastLayer,
@@ -467,7 +499,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                   onPress: () {
                     // Held as it was, so the scramble is of the cube the way it is picked up.
                     final text = withOrientation(
-                      randomNxNScramble(_size, length: 20).toString(),
+                      randomNxNScramble(_size, length: _size == 3 ? 20 : null).toString(),
                       previous: "",
                       rotation: _heldAs,
                     );

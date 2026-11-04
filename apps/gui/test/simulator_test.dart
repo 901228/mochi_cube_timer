@@ -173,6 +173,16 @@ void main() {
     await tester.tap(find.byIcon(TablerIcons.playerPlay));
     await tester.pumpAndSettle();
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
+
+    // Picking another size re-reads the moves for it: M is not on a 2x2.
+    expect(find.text("3x3"), findsOneWidget);
+    await tester.tap(find.text("3x3"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("2x2").last);
+    await tester.pumpAndSettle();
+    expect(find.text("Can't read: M"), findsOneWidget);
+    // And stage stickering is only for the 3x3.
+    expect(find.text("Full"), findsNothing);
   });
 
   testWidgets("the settings open beside the cube, and say what is set", (tester) async {
