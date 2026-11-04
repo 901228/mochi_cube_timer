@@ -3,6 +3,7 @@ import "package:drift/native.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mochi_cube_timer_gui/database/dao_provider.dart";
+import "package:mochi_cube_timer_gui/features/simulator/notation.dart";
 import "package:mochi_cube_timer_gui/features/simulator/simulator_page.dart";
 import "package:mochi_cube_timer_gui/l10n/l10n.dart";
 import "package:mochi_ui/mochi_ui.dart";
@@ -48,6 +49,14 @@ void main() {
     expect(cubeLayerTurns("R3 U'2", size: 3).map((t) => t.quarters), [3, -2]);
   });
 
+  test("inverting reverses the moves and turns each the other way", () {
+    expect(invertNotation("R U R' U'"), "U R U' R'");
+    expect(invertNotation("(R2 F3) M' r2'"), "r2 M F'3 R'2");
+    // Undone, the cube is as it was.
+    const moves = "R U2 F' L3 r M' x";
+    expect(_stickers(_after("$moves ${invertNotation(moves)}")), _stickers(SimulatedCube(3)));
+  });
+
   test("moves after a rotation turn the layer now on that side", () {
     // After y, the face on the right is the one that was at the back.
     expect(_stickers(_after("y R")), _stickers(_after("B y")));
@@ -82,6 +91,16 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining("Can't read"), findsNothing);
     // Everything played: the pause button is back to play, and stepping back is possible.
+    expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
+
+    // A random scramble is put in the box and shown done; inverting it rewrites the box.
+    await tester.tap(find.byIcon(TablerIcons.dice));
+    await tester.pumpAndSettle();
+    final scramble = tester.widget<EditableText>(find.byType(EditableText)).controller.text;
+    expect(scramble.split(" "), hasLength(20));
+    await tester.tap(find.byIcon(TablerIcons.arrowsExchange));
+    await tester.pumpAndSettle();
+    expect(tester.widget<EditableText>(find.byType(EditableText)).controller.text, invertNotation(scramble));
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
 
     await tester.tap(find.byIcon(TablerIcons.arrowBackUp));

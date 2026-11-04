@@ -1556,6 +1556,18 @@ abstract class AppLocalizations {
   /// **'Hint letters'**
   String get simulatorHintLabels;
 
+  /// No description provided for @simulatorRandom.
+  ///
+  /// In en, this message translates to:
+  /// **'Random scramble'**
+  String get simulatorRandom;
+
+  /// No description provided for @simulatorInverse.
+  ///
+  /// In en, this message translates to:
+  /// **'Invert moves'**
+  String get simulatorInverse;
+
   /// No description provided for @simulatorReset.
   ///
   /// In en, this message translates to:

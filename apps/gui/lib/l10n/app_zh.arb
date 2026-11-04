@@ -268,6 +268,8 @@
   "simulatorCubeSize": "方塊大小",
   "simulatorResetSettings": "恢復預設",
   "simulatorHintLabels": "提示字母",
+  "simulatorRandom": "隨機打亂",
+  "simulatorInverse": "反轉公式",
   "simulatorReset": "重置",
   "simulatorInvalidMove": "無法辨識：{move}",
   "@simulatorInvalidMove": {"placeholders": {"move": {"type": "String"}}},

@@ -790,6 +790,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simulatorHintLabels => '提示字母';
 
   @override
+  String get simulatorRandom => '隨機打亂';
+
+  @override
+  String get simulatorInverse => '反轉公式';
+
+  @override
   String get simulatorReset => '重置';
 
   @override

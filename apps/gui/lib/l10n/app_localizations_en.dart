@@ -798,6 +798,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get simulatorHintLabels => 'Hint letters';
 
   @override
+  String get simulatorRandom => 'Random scramble';
+
+  @override
+  String get simulatorInverse => 'Invert moves';
+
+  @override
   String get simulatorReset => 'Reset';
 
   @override

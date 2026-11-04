@@ -10,6 +10,7 @@ import "../../l10n/l10n.dart";
 import "../../shared/utils.dart";
 import "../trainers/trainer_frame.dart";
 import "cube_3d_painter.dart";
+import "notation.dart";
 import "simulator_settings.dart";
 import "simulated_cube.dart";
 
@@ -71,7 +72,13 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     _turn = null;
   }
 
-  void _onChanged(String text) {
+  /// Replaces what is typed with [text], showing where it ends up rather than playing it.
+  void _replace(String text) {
+    _moves.text = text;
+    _onChanged(text, animate: false);
+  }
+
+  void _onChanged(String text, {bool animate = true}) {
     final List<CubeLayerTurn> turns;
     try {
       turns = cubeLayerTurns(text, size: _size);
@@ -86,7 +93,11 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
       final old = _turns;
       // Typing on at the end plays what was added; any other edit shows where the moves end up.
       final extended =
-          _index == old.length && _turn == null && turns.length > old.length && _sameStart(old, turns);
+          animate &&
+          _index == old.length &&
+          _turn == null &&
+          turns.length > old.length &&
+          _sameStart(old, turns);
       _turns = turns;
       _byPlay = false;
       if (extended) {
@@ -323,11 +334,32 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                 ),
               ],
             ),
-            MochiTextField(
-              controller: _moves,
-              hint: l10n.simulatorMovesHint,
-              error: _error,
-              onChanged: _onChanged,
+            Row(
+              crossAxisAlignment: .start,
+              spacing: g.space.sm,
+              children: [
+                Expanded(
+                  child: MochiTextField(
+                    controller: _moves,
+                    hint: l10n.simulatorMovesHint,
+                    error: _error,
+                    onChanged: _onChanged,
+                  ),
+                ),
+                MochiButton.icon(
+                  intent: .neutral,
+                  icon: Icon(TablerIcons.dice),
+                  tooltip: l10n.simulatorRandom,
+                  onPress: () => _replace(randomNxNScramble(_size, length: 20).toString()),
+                ),
+                MochiButton.icon(
+                  intent: .neutral,
+                  icon: Icon(TablerIcons.arrowsExchange),
+                  tooltip: l10n.simulatorInverse,
+                  enabled: _error == null && _turns.isNotEmpty,
+                  onPress: () => _replace(invertNotation(_moves.text)),
+                ),
+              ],
             ),
           ],
         ),
