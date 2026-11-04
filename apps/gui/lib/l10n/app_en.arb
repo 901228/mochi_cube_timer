@@ -272,6 +272,8 @@
   "simulatorInverse": "Invert moves",
   "simulatorSetupHint": "Setup: applied first, not played",
   "simulatorStickeringFull": "Full",
+  "simulatorOrientation": "Top {top}, front {front}",
+  "@simulatorOrientation": {"placeholders": {"top": {"type": "String"}, "front": {"type": "String"}}},
   "simulatorReset": "Reset",
   "simulatorInvalidMove": "Can't read: {move}",
   "@simulatorInvalidMove": {"placeholders": {"move": {"type": "String"}}},

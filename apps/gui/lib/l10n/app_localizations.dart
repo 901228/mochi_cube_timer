@@ -1580,6 +1580,12 @@ abstract class AppLocalizations {
   /// **'Full'**
   String get simulatorStickeringFull;
 
+  /// No description provided for @simulatorOrientation.
+  ///
+  /// In en, this message translates to:
+  /// **'Top {top}, front {front}'**
+  String simulatorOrientation(String top, String front);
+
   /// No description provided for @simulatorReset.
   ///
   /// In en, this message translates to:

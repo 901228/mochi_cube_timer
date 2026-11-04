@@ -51,6 +51,10 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   var _byPlay = false;
   var _showSettings = false;
   var _stickering = Stickering.full;
+
+  /// The orientation picked and the rotation it put at the start of the setup.
+  var _orientation = 0;
+  var _heldAs = "";
   late final _animation = AnimationController(vsync: this)..addStatusListener(_onStatus);
   final _setupField = TextEditingController();
   final _moves = TextEditingController();
@@ -208,7 +212,9 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   void _reset() {
     _setupField.clear();
     _moves.clear();
+    _heldAs = "";
     setState(() {
+      _orientation = 0;
       _setup = [];
       _setupError = null;
       _turns = [];
@@ -325,6 +331,35 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                             ),
                           ),
                         ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: SizedBox(
+                            width: 150,
+                            child: MochiSelect<int>(
+                              size: .sm,
+                              value: _orientation,
+                              onChanged: (i) {
+                                final text = withOrientation(
+                                  _setupField.text,
+                                  previous: _heldAs,
+                                  rotation: orientations[i].rotation,
+                                );
+                                _orientation = i;
+                                _heldAs = orientations[i].rotation;
+                                _setupField.text = text;
+                                _onSetupChanged(text);
+                              },
+                              options: [
+                                for (final (i, o) in orientations.indexed)
+                                  MochiSelectOption(
+                                    value: i,
+                                    label: l10n.simulatorOrientation(o.top, o.front),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -411,9 +446,14 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                   icon: Icon(TablerIcons.dice),
                   tooltip: l10n.simulatorRandom,
                   onPress: () {
-                    final scramble = randomNxNScramble(_size, length: 20).toString();
-                    _setupField.text = scramble;
-                    _onSetupChanged(scramble);
+                    // Held as it was, so the scramble is of the cube the way it is picked up.
+                    final text = withOrientation(
+                      randomNxNScramble(_size, length: 20).toString(),
+                      previous: "",
+                      rotation: _heldAs,
+                    );
+                    _setupField.text = text;
+                    _onSetupChanged(text);
                   },
                 ),
               ],

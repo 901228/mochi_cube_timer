@@ -810,6 +810,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get simulatorStickeringFull => 'Full';
 
   @override
+  String simulatorOrientation(String top, String front) {
+    return 'Top $top, front $front';
+  }
+
+  @override
   String get simulatorReset => 'Reset';
 
   @override

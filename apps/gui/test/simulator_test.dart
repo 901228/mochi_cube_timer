@@ -73,6 +73,16 @@ void main() {
     );
   });
 
+  test("an orientation goes first in the setup, in the place of the one before it", () {
+    expect(withOrientation("R U", previous: "", rotation: "z2"), "z2 R U");
+    expect(withOrientation("z2 R U", previous: "z2", rotation: "y"), "y R U");
+    expect(withOrientation("z2 R U", previous: "z2", rotation: ""), "R U");
+    expect(withOrientation("", previous: "", rotation: "x2"), "x2");
+    // Held as it says, the faces are where it names: x2 puts D on top.
+    final cube = _after("x2");
+    expect(cube.cubies.firstWhere((c) => c.position == (0, 2, 0)).home, (0, -2, 0));
+  });
+
   test("inverting reverses the moves and turns each the other way", () {
     expect(invertNotation("R U R' U'"), "U R U' R'");
     expect(invertNotation("(R2 F3) M' r2'"), "r2 M F'3 R'2");
