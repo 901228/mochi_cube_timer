@@ -121,7 +121,7 @@ class Cube3dPainter extends CustomPainter {
         canvas.drawPath(polygon(points), Paint()..color = _colour(c, face));
         // The middle sticker of a face: no other coordinate of its cubie off the centre.
         if (hintLabels && [c.home.$1, c.home.$2, c.home.$3].where((v) => v.abs() > 1).length == 1) {
-          _label(canvas, nxnFaceNames[face], points, _colour(c, face));
+          _label(canvas, nxnFaceNames[face], points);
         }
       }
     }
@@ -185,16 +185,12 @@ class Cube3dPainter extends CustomPainter {
 }
 
 /// [text] upright on the middle of the quad [points], as large as the quad's side allows.
-void _label(Canvas canvas, String text, List<Offset> points, Color background) {
+void _label(Canvas canvas, String text, List<Offset> points) {
   final side = (points[1] - points[0]).distance;
   final painter = TextPainter(
     text: TextSpan(
       text: text,
-      style: TextStyle(
-        fontSize: side * 0.7,
-        fontWeight: FontWeight.bold,
-        color: background.computeLuminance() > 0.5 ? const Color(0xFF000000) : const Color(0xFFFFFFFF),
-      ),
+      style: TextStyle(fontSize: side * 0.7, fontWeight: FontWeight.bold, color: const Color(0xFF000000)),
     ),
     textDirection: TextDirection.ltr,
   )..layout();
