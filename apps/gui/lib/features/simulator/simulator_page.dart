@@ -60,8 +60,8 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   var _orientation = 0;
   var _heldAs = "";
   late final _animation = AnimationController(vsync: this)..addStatusListener(_onStatus);
-  final _setupField = TextEditingController();
-  final _moves = TextEditingController();
+  final _setupField = NotationController();
+  final _moves = NotationController();
   String? _setupError;
   String? _error;
 
@@ -90,25 +90,19 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
     _turn = null;
   }
 
+  String? _errorFor(String text, int size) => invalidTokens(text, size: size).isEmpty ? null : "";
+
   void _setSize(int size) {
     setState(() {
       _size = size;
+      _setupField.size = size;
+      _moves.size = size;
       if (size != 3) _stickering = Stickering.full;
       _playing = false;
-      try {
-        _setup = cubeLayerTurns(_setupField.text, size: size);
-        _setupError = null;
-      } on FormatException catch (e) {
-        _setup = [];
-        _setupError = context.l10n.simulatorInvalidMove(e.message.replaceFirst("Invalid move: ", ""));
-      }
-      try {
-        _turns = cubeLayerTurns(_moves.text, size: size);
-        _error = null;
-      } on FormatException catch (e) {
-        _turns = [];
-        _error = context.l10n.simulatorInvalidMove(e.message.replaceFirst("Invalid move: ", ""));
-      }
+      _setupError = _errorFor(_setupField.text, size);
+      _setup = _setupError == null ? cubeLayerTurns(_setupField.text, size: size) : [];
+      _error = _errorFor(_moves.text, size);
+      _turns = _error == null ? cubeLayerTurns(_moves.text, size: size) : [];
       _jump(_turns.length);
     });
   }
@@ -121,33 +115,26 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
 
   /// The setup is [text]: the cube shows it done and the moves wait to be played from there.
   void _onSetupChanged(String text) {
-    final List<CubeLayerTurn> turns;
-    try {
-      turns = cubeLayerTurns(text, size: _size);
-    } on FormatException catch (e) {
-      setState(
-        () => _setupError = context.l10n.simulatorInvalidMove(e.message.replaceFirst("Invalid move: ", "")),
-      );
+    final error = _errorFor(text, _size);
+    if (error != null) {
+      setState(() => _setupError = error);
       return;
     }
     setState(() {
       _setupError = null;
-      _setup = turns;
+      _setup = cubeLayerTurns(text, size: _size);
       _playing = false;
       _jump(0);
     });
   }
 
   void _onChanged(String text, {bool animate = true}) {
-    final List<CubeLayerTurn> turns;
-    try {
-      turns = cubeLayerTurns(text, size: _size);
-    } on FormatException catch (e) {
-      setState(
-        () => _error = context.l10n.simulatorInvalidMove(e.message.replaceFirst("Invalid move: ", "")),
-      );
+    final error = _errorFor(text, _size);
+    if (error != null) {
+      setState(() => _error = error);
       return;
     }
+    final turns = cubeLayerTurns(text, size: _size);
     setState(() {
       _error = null;
       final old = _turns;

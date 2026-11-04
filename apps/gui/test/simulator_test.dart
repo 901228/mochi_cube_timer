@@ -135,14 +135,24 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    // Typing plays on what is typed; what cannot be read is named and leaves the cube as it was.
-    await tester.enterText(find.byType(EditableText).last, "R Q");
+    // Typing plays on what is typed; what cannot be read is underlined in red and leaves the cube as it was.
+    List<String?> underlined(Finder box) {
+      final controller = tester.widget<EditableText>(box).controller as NotationController;
+      final span = controller.buildTextSpan(context: tester.element(box), withComposing: false);
+      return [
+        for (final child in span.children!.whereType<TextSpan>())
+          if (child.style?.decoration == TextDecoration.underline) child.text,
+      ];
+    }
+
+    await tester.enterText(find.byType(EditableText).last, "R Q W");
     await tester.pumpAndSettle();
-    expect(find.text("Can't read: Q"), findsOneWidget);
+    expect(tester.widget<MochiTextField>(find.byType(MochiTextField).last).error, "");
+    expect(underlined(find.byType(EditableText).last), ["Q", "W"]);
 
     await tester.enterText(find.byType(EditableText).last, "r U M' x");
     await tester.pumpAndSettle();
-    expect(find.textContaining("Can't read"), findsNothing);
+    expect(tester.widget<MochiTextField>(find.byType(MochiTextField).last).error, isNull);
     // Everything played: the pause button is back to play, and stepping back is possible.
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
 
@@ -160,10 +170,10 @@ void main() {
     expect(tester.widget<MochiSlider>(find.byType(MochiSlider)).max, 4);
     await tester.enterText(find.byType(EditableText).first, "R Q");
     await tester.pumpAndSettle();
-    expect(find.text("Can't read: Q"), findsOneWidget);
+    expect(underlined(find.byType(EditableText).first), ["Q"]);
     await tester.enterText(find.byType(EditableText).first, "R U");
     await tester.pumpAndSettle();
-    expect(find.textContaining("Can't read"), findsNothing);
+    expect(underlined(find.byType(EditableText).first), isEmpty);
     expect(find.byIcon(TablerIcons.playerPlay), findsOneWidget);
 
     await tester.tap(find.byIcon(TablerIcons.arrowBackUp));
@@ -180,7 +190,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text("2x2").last);
     await tester.pumpAndSettle();
-    expect(find.text("Can't read: M"), findsOneWidget);
+    expect(underlined(find.byType(EditableText).last), ["M"]);
     // And stage stickering is only for the 3x3.
     expect(find.text("Full"), findsNothing);
   });
