@@ -61,6 +61,7 @@ class AppDatabase extends _$AppDatabase {
         await m.addColumn(schema.settings, schema.settings.simulatorSpeed);
         await m.addColumn(schema.settings, schema.settings.simulatorStickerless);
         await m.addColumn(schema.settings, schema.settings.simulatorLoop);
+        await m.addColumn(schema.settings, schema.settings.simulatorHintLabels);
       },
       from6To7: (m, schema) async {
         await m.addColumn(schema.settings, schema.settings.showRunningTime);

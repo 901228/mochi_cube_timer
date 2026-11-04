@@ -1550,6 +1550,12 @@ abstract class AppLocalizations {
   /// **'Restore defaults'**
   String get simulatorResetSettings;
 
+  /// No description provided for @simulatorHintLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'Hint letters'**
+  String get simulatorHintLabels;
+
   /// No description provided for @simulatorReset.
   ///
   /// In en, this message translates to:

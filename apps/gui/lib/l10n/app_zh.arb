@@ -267,6 +267,7 @@
   "simulatorResetView": "重置視角",
   "simulatorCubeSize": "方塊大小",
   "simulatorResetSettings": "恢復預設",
+  "simulatorHintLabels": "提示字母",
   "simulatorReset": "重置",
   "simulatorInvalidMove": "無法辨識：{move}",
   "@simulatorInvalidMove": {"placeholders": {"move": {"type": "String"}}},

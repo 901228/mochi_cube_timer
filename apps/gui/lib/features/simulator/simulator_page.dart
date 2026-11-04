@@ -251,6 +251,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                             hintDistance: settings.simulatorHintDistance,
                             cubeSize: settings.simulatorCubeSize,
                             stickerless: settings.simulatorStickerless,
+                            hintLabels: settings.simulatorHintLabels,
                           ),
                         ),
                       ),

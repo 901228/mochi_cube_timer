@@ -136,6 +136,9 @@ class Settings extends Table {
   /// whether the simulator's cube is drawn without stickers, each face all its colour
   BoolColumn get simulatorStickerless => boolean().withDefault(const Constant(false))();
 
+  /// whether the simulator writes the face's letter on the middle hint sticker of each face turned away
+  BoolColumn get simulatorHintLabels => boolean().withDefault(const Constant(true))();
+
   /// whether the simulator plays the moves again from the start once they are done
   BoolColumn get simulatorLoop => boolean().withDefault(const Constant(false))();
 

@@ -594,6 +594,17 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("simulator_stickerless" IN (0, 1))'),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _simulatorHintLabelsMeta = const VerificationMeta('simulatorHintLabels');
+  @override
+  late final GeneratedColumn<bool> simulatorHintLabels = GeneratedColumn<bool>(
+    'simulator_hint_labels',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("simulator_hint_labels" IN (0, 1))'),
+    defaultValue: const Constant(true),
+  );
   static const VerificationMeta _simulatorLoopMeta = const VerificationMeta('simulatorLoop');
   @override
   late final GeneratedColumn<bool> simulatorLoop = GeneratedColumn<bool>(
@@ -665,6 +676,7 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
     simulatorCubeSize,
     simulatorSpeed,
     simulatorStickerless,
+    simulatorHintLabels,
     simulatorLoop,
   ];
   @override
@@ -991,6 +1003,12 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
         simulatorStickerless.isAcceptableOrUnknown(data['simulator_stickerless']!, _simulatorStickerlessMeta),
       );
     }
+    if (data.containsKey('simulator_hint_labels')) {
+      context.handle(
+        _simulatorHintLabelsMeta,
+        simulatorHintLabels.isAcceptableOrUnknown(data['simulator_hint_labels']!, _simulatorHintLabelsMeta),
+      );
+    }
     if (data.containsKey('simulator_loop')) {
       context.handle(
         _simulatorLoopMeta,
@@ -1212,6 +1230,10 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, SettingsEnt
         DriftSqlType.bool,
         data['${effectivePrefix}simulator_stickerless'],
       )!,
+      simulatorHintLabels: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}simulator_hint_labels'],
+      )!,
       simulatorLoop: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}simulator_loop'],
@@ -1355,6 +1377,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
   /// whether the simulator's cube is drawn without stickers, each face all its colour
   final bool simulatorStickerless;
 
+  /// whether the simulator writes the face's letter on the middle hint sticker of each face turned away
+  final bool simulatorHintLabels;
+
   /// whether the simulator plays the moves again from the start once they are done
   final bool simulatorLoop;
   const SettingsEntry({
@@ -1416,6 +1441,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     required this.simulatorCubeSize,
     required this.simulatorSpeed,
     required this.simulatorStickerless,
+    required this.simulatorHintLabels,
     required this.simulatorLoop,
   });
   @override
@@ -1487,6 +1513,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     map['simulator_cube_size'] = Variable<double>(simulatorCubeSize);
     map['simulator_speed'] = Variable<double>(simulatorSpeed);
     map['simulator_stickerless'] = Variable<bool>(simulatorStickerless);
+    map['simulator_hint_labels'] = Variable<bool>(simulatorHintLabels);
     map['simulator_loop'] = Variable<bool>(simulatorLoop);
     return map;
   }
@@ -1551,6 +1578,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       simulatorCubeSize: Value(simulatorCubeSize),
       simulatorSpeed: Value(simulatorSpeed),
       simulatorStickerless: Value(simulatorStickerless),
+      simulatorHintLabels: Value(simulatorHintLabels),
       simulatorLoop: Value(simulatorLoop),
     );
   }
@@ -1616,6 +1644,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       simulatorCubeSize: serializer.fromJson<double>(json['simulatorCubeSize']),
       simulatorSpeed: serializer.fromJson<double>(json['simulatorSpeed']),
       simulatorStickerless: serializer.fromJson<bool>(json['simulatorStickerless']),
+      simulatorHintLabels: serializer.fromJson<bool>(json['simulatorHintLabels']),
       simulatorLoop: serializer.fromJson<bool>(json['simulatorLoop']),
     );
   }
@@ -1681,6 +1710,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       'simulatorCubeSize': serializer.toJson<double>(simulatorCubeSize),
       'simulatorSpeed': serializer.toJson<double>(simulatorSpeed),
       'simulatorStickerless': serializer.toJson<bool>(simulatorStickerless),
+      'simulatorHintLabels': serializer.toJson<bool>(simulatorHintLabels),
       'simulatorLoop': serializer.toJson<bool>(simulatorLoop),
     };
   }
@@ -1744,6 +1774,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     double? simulatorCubeSize,
     double? simulatorSpeed,
     bool? simulatorStickerless,
+    bool? simulatorHintLabels,
     bool? simulatorLoop,
   }) => SettingsEntry(
     id: id ?? this.id,
@@ -1804,6 +1835,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     simulatorCubeSize: simulatorCubeSize ?? this.simulatorCubeSize,
     simulatorSpeed: simulatorSpeed ?? this.simulatorSpeed,
     simulatorStickerless: simulatorStickerless ?? this.simulatorStickerless,
+    simulatorHintLabels: simulatorHintLabels ?? this.simulatorHintLabels,
     simulatorLoop: simulatorLoop ?? this.simulatorLoop,
   );
   SettingsEntry copyWithCompanion(SettingsCompanion data) {
@@ -1882,6 +1914,9 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
       simulatorStickerless: data.simulatorStickerless.present
           ? data.simulatorStickerless.value
           : this.simulatorStickerless,
+      simulatorHintLabels: data.simulatorHintLabels.present
+          ? data.simulatorHintLabels.value
+          : this.simulatorHintLabels,
       simulatorLoop: data.simulatorLoop.present ? data.simulatorLoop.value : this.simulatorLoop,
     );
   }
@@ -1947,6 +1982,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           ..write('simulatorCubeSize: $simulatorCubeSize, ')
           ..write('simulatorSpeed: $simulatorSpeed, ')
           ..write('simulatorStickerless: $simulatorStickerless, ')
+          ..write('simulatorHintLabels: $simulatorHintLabels, ')
           ..write('simulatorLoop: $simulatorLoop')
           ..write(')'))
         .toString();
@@ -2012,6 +2048,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
     simulatorCubeSize,
     simulatorSpeed,
     simulatorStickerless,
+    simulatorHintLabels,
     simulatorLoop,
   ]);
   @override
@@ -2076,6 +2113,7 @@ class SettingsEntry extends DataClass implements Insertable<SettingsEntry> {
           other.simulatorCubeSize == this.simulatorCubeSize &&
           other.simulatorSpeed == this.simulatorSpeed &&
           other.simulatorStickerless == this.simulatorStickerless &&
+          other.simulatorHintLabels == this.simulatorHintLabels &&
           other.simulatorLoop == this.simulatorLoop);
 }
 
@@ -2138,6 +2176,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
   final Value<double> simulatorCubeSize;
   final Value<double> simulatorSpeed;
   final Value<bool> simulatorStickerless;
+  final Value<bool> simulatorHintLabels;
   final Value<bool> simulatorLoop;
   const SettingsCompanion({
     this.id = const Value.absent(),
@@ -2198,6 +2237,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.simulatorCubeSize = const Value.absent(),
     this.simulatorSpeed = const Value.absent(),
     this.simulatorStickerless = const Value.absent(),
+    this.simulatorHintLabels = const Value.absent(),
     this.simulatorLoop = const Value.absent(),
   });
   SettingsCompanion.insert({
@@ -2259,6 +2299,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     this.simulatorCubeSize = const Value.absent(),
     this.simulatorSpeed = const Value.absent(),
     this.simulatorStickerless = const Value.absent(),
+    this.simulatorHintLabels = const Value.absent(),
     this.simulatorLoop = const Value.absent(),
   });
   static Insertable<SettingsEntry> custom({
@@ -2320,6 +2361,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Expression<double>? simulatorCubeSize,
     Expression<double>? simulatorSpeed,
     Expression<bool>? simulatorStickerless,
+    Expression<bool>? simulatorHintLabels,
     Expression<bool>? simulatorLoop,
   }) {
     return RawValuesInsertable({
@@ -2381,6 +2423,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       if (simulatorCubeSize != null) 'simulator_cube_size': simulatorCubeSize,
       if (simulatorSpeed != null) 'simulator_speed': simulatorSpeed,
       if (simulatorStickerless != null) 'simulator_stickerless': simulatorStickerless,
+      if (simulatorHintLabels != null) 'simulator_hint_labels': simulatorHintLabels,
       if (simulatorLoop != null) 'simulator_loop': simulatorLoop,
     });
   }
@@ -2444,6 +2487,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     Value<double>? simulatorCubeSize,
     Value<double>? simulatorSpeed,
     Value<bool>? simulatorStickerless,
+    Value<bool>? simulatorHintLabels,
     Value<bool>? simulatorLoop,
   }) {
     return SettingsCompanion(
@@ -2505,6 +2549,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
       simulatorCubeSize: simulatorCubeSize ?? this.simulatorCubeSize,
       simulatorSpeed: simulatorSpeed ?? this.simulatorSpeed,
       simulatorStickerless: simulatorStickerless ?? this.simulatorStickerless,
+      simulatorHintLabels: simulatorHintLabels ?? this.simulatorHintLabels,
       simulatorLoop: simulatorLoop ?? this.simulatorLoop,
     );
   }
@@ -2686,6 +2731,9 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
     if (simulatorStickerless.present) {
       map['simulator_stickerless'] = Variable<bool>(simulatorStickerless.value);
     }
+    if (simulatorHintLabels.present) {
+      map['simulator_hint_labels'] = Variable<bool>(simulatorHintLabels.value);
+    }
     if (simulatorLoop.present) {
       map['simulator_loop'] = Variable<bool>(simulatorLoop.value);
     }
@@ -2753,6 +2801,7 @@ class SettingsCompanion extends UpdateCompanion<SettingsEntry> {
           ..write('simulatorCubeSize: $simulatorCubeSize, ')
           ..write('simulatorSpeed: $simulatorSpeed, ')
           ..write('simulatorStickerless: $simulatorStickerless, ')
+          ..write('simulatorHintLabels: $simulatorHintLabels, ')
           ..write('simulatorLoop: $simulatorLoop')
           ..write(')'))
         .toString();
@@ -4283,6 +4332,7 @@ typedef $$SettingsTableCreateCompanionBuilder = SettingsCompanion Function({
   Value<double> simulatorCubeSize,
   Value<double> simulatorSpeed,
   Value<bool> simulatorStickerless,
+  Value<bool> simulatorHintLabels,
   Value<bool> simulatorLoop,
 });
 typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
@@ -4344,6 +4394,7 @@ typedef $$SettingsTableUpdateCompanionBuilder = SettingsCompanion Function({
   Value<double> simulatorCubeSize,
   Value<double> simulatorSpeed,
   Value<bool> simulatorStickerless,
+  Value<bool> simulatorHintLabels,
   Value<bool> simulatorLoop,
 });
 
@@ -4533,6 +4584,9 @@ class $$SettingsTableFilterComposer extends Composer<_$AppDatabase, $SettingsTab
   ColumnFilters<bool> get simulatorStickerless =>
       $composableBuilder(column: $table.simulatorStickerless, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<bool> get simulatorHintLabels =>
+      $composableBuilder(column: $table.simulatorHintLabels, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<bool> get simulatorLoop =>
       $composableBuilder(column: $table.simulatorLoop, builder: (column) => ColumnFilters(column));
 }
@@ -4719,6 +4773,9 @@ class $$SettingsTableOrderingComposer extends Composer<_$AppDatabase, $SettingsT
   ColumnOrderings<bool> get simulatorStickerless =>
       $composableBuilder(column: $table.simulatorStickerless, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get simulatorHintLabels =>
+      $composableBuilder(column: $table.simulatorHintLabels, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<bool> get simulatorLoop =>
       $composableBuilder(column: $table.simulatorLoop, builder: (column) => ColumnOrderings(column));
 }
@@ -4904,6 +4961,9 @@ class $$SettingsTableAnnotationComposer extends Composer<_$AppDatabase, $Setting
   GeneratedColumn<bool> get simulatorStickerless =>
       $composableBuilder(column: $table.simulatorStickerless, builder: (column) => column);
 
+  GeneratedColumn<bool> get simulatorHintLabels =>
+      $composableBuilder(column: $table.simulatorHintLabels, builder: (column) => column);
+
   GeneratedColumn<bool> get simulatorLoop =>
       $composableBuilder(column: $table.simulatorLoop, builder: (column) => column);
 }
@@ -4991,6 +5051,7 @@ class $$SettingsTableTableManager
                 Value<double> simulatorCubeSize = const Value.absent(),
                 Value<double> simulatorSpeed = const Value.absent(),
                 Value<bool> simulatorStickerless = const Value.absent(),
+                Value<bool> simulatorHintLabels = const Value.absent(),
                 Value<bool> simulatorLoop = const Value.absent(),
               }) => SettingsCompanion(
                 id: id,
@@ -5051,6 +5112,7 @@ class $$SettingsTableTableManager
                 simulatorCubeSize: simulatorCubeSize,
                 simulatorSpeed: simulatorSpeed,
                 simulatorStickerless: simulatorStickerless,
+                simulatorHintLabels: simulatorHintLabels,
                 simulatorLoop: simulatorLoop,
               ),
           createCompanionCallback:
@@ -5113,6 +5175,7 @@ class $$SettingsTableTableManager
                 Value<double> simulatorCubeSize = const Value.absent(),
                 Value<double> simulatorSpeed = const Value.absent(),
                 Value<bool> simulatorStickerless = const Value.absent(),
+                Value<bool> simulatorHintLabels = const Value.absent(),
                 Value<bool> simulatorLoop = const Value.absent(),
               }) => SettingsCompanion.insert(
                 id: id,
@@ -5173,6 +5236,7 @@ class $$SettingsTableTableManager
                 simulatorCubeSize: simulatorCubeSize,
                 simulatorSpeed: simulatorSpeed,
                 simulatorStickerless: simulatorStickerless,
+                simulatorHintLabels: simulatorHintLabels,
                 simulatorLoop: simulatorLoop,
               ),
           withReferenceMapper: (p0) => p0

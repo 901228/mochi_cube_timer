@@ -120,6 +120,7 @@ void main() {
     await tester.tap(find.byIcon(TablerIcons.adjustmentsHorizontal));
     await tester.pumpAndSettle();
     expect(find.text("Turn speed"), findsOneWidget);
+    expect(find.text("Hint letters"), findsOneWidget);
     expect(find.text("1.0x"), findsOneWidget);
     expect(find.text("3.0"), findsOneWidget);
     // The cube is still there to watch.

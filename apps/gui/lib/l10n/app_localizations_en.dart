@@ -795,6 +795,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get simulatorResetSettings => 'Restore defaults';
 
   @override
+  String get simulatorHintLabels => 'Hint letters';
+
+  @override
   String get simulatorReset => 'Reset';
 
   @override

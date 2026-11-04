@@ -56,6 +56,10 @@ class SimulatorSettingsGroup extends StatelessWidget {
           ),
         ),
         SettingsTile(
+          title: l10n.simulatorHintLabels,
+          suffix: MochiSwitch(value: settings.simulatorHintLabels, onChanged: dao.setSimulatorHintLabels),
+        ),
+        SettingsTile(
           title: l10n.simulatorStickerless,
           suffix: MochiSwitch(value: settings.simulatorStickerless, onChanged: dao.setSimulatorStickerless),
         ),

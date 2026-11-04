@@ -2992,6 +2992,7 @@ final class Schema14 extends i0.VersionedSchema {
         _column_82,
         _column_83,
         _column_84,
+        _column_85,
       ],
       attachedDatabase: database,
     ),
@@ -3178,6 +3179,8 @@ class Shape16 extends i0.VersionedTable {
       columnsByName['simulator_speed']! as i1.GeneratedColumn<double>;
   i1.GeneratedColumn<int> get simulatorStickerless =>
       columnsByName['simulator_stickerless']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get simulatorHintLabels =>
+      columnsByName['simulator_hint_labels']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<int> get simulatorLoop =>
       columnsByName['simulator_loop']! as i1.GeneratedColumn<int>;
 }
@@ -3220,6 +3223,16 @@ i1.GeneratedColumn<int> _column_83(String aliasedName) =>
       defaultValue: const i1.CustomExpression('0'),
     );
 i1.GeneratedColumn<int> _column_84(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'simulator_hint_labels',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'NOT NULL DEFAULT 1 CHECK (simulator_hint_labels IN (0, 1))',
+      defaultValue: const i1.CustomExpression('1'),
+    );
+i1.GeneratedColumn<int> _column_85(String aliasedName) =>
     i1.GeneratedColumn<int>(
       'simulator_loop',
       aliasedName,

@@ -787,6 +787,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simulatorResetSettings => '恢復預設';
 
   @override
+  String get simulatorHintLabels => '提示字母';
+
+  @override
   String get simulatorReset => '重置';
 
   @override

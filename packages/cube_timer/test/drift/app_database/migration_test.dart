@@ -849,6 +849,7 @@ void main() {
         expect(settings.averageTrim, 10);
         expect(settings.simulatorHintDistance, 3.0);
         expect(settings.simulatorCubeSize, 1.0);
+        expect(settings.simulatorHintLabels, 1);
         expect(settings.simulatorSpeed, 1.0);
         expect(settings.simulatorStickerless, 0);
         expect(settings.simulatorLoop, 0);

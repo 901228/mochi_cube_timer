@@ -62,12 +62,15 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
       simulatorSpeed: Value(1.0),
       simulatorStickerless: Value(false),
       simulatorLoop: Value(false),
+      simulatorHintLabels: Value(true),
     ),
   );
 
   Future<void> setSimulatorSpeed(double v) => _write(SettingsCompanion(simulatorSpeed: Value(v)));
 
   Future<void> setSimulatorStickerless(bool v) => _write(SettingsCompanion(simulatorStickerless: Value(v)));
+
+  Future<void> setSimulatorHintLabels(bool v) => _write(SettingsCompanion(simulatorHintLabels: Value(v)));
 
   Future<void> setSimulatorLoop(bool v) => _write(SettingsCompanion(simulatorLoop: Value(v)));
 

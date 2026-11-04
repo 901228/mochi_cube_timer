@@ -24,6 +24,7 @@ class Cube3dPainter extends CustomPainter {
     this.hintDistance = 3.0,
     this.cubeSize = 1.0,
     this.stickerless = false,
+    this.hintLabels = true,
   });
 
   final SimulatedCube cube;
@@ -45,6 +46,9 @@ class Cube3dPainter extends CustomPainter {
   final double cubeSize;
 
   static const _fitDistance = 3.0;
+
+  /// Whether the middle hint sticker of each face turned away carries the face's letter.
+  final bool hintLabels;
 
   /// Each face all its colour, rather than stickers on black plastic.
   final bool stickerless;
@@ -108,7 +112,12 @@ class Cube3dPainter extends CustomPainter {
       for (final (normal, face) in cube.stickers(c)) {
         // One-sided like a sticker, facing the cube: seen only from behind it, through the cube.
         final (points, front) = quad(c, normal, rotationOf(c), 0.62, hintDistance);
-        if (!front) canvas.drawPath(polygon(points), Paint()..color = colors[face]);
+        if (front) continue;
+        canvas.drawPath(polygon(points), Paint()..color = colors[face]);
+        // The middle sticker of a face: no other coordinate of its cubie off the centre.
+        if (hintLabels && [c.home.$1, c.home.$2, c.home.$3].where((v) => v.abs() > 1).length == 1) {
+          _label(canvas, nxnFaceNames[face], points, colors[face]);
+        }
       }
     }
 
@@ -152,6 +161,24 @@ class Cube3dPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(Cube3dPainter old) => true;
+}
+
+/// [text] upright on the middle of the quad [points], as large as the quad's side allows.
+void _label(Canvas canvas, String text, List<Offset> points, Color background) {
+  final side = (points[1] - points[0]).distance;
+  final painter = TextPainter(
+    text: TextSpan(
+      text: text,
+      style: TextStyle(
+        fontSize: side * 0.7,
+        fontWeight: FontWeight.bold,
+        color: background.computeLuminance() > 0.5 ? const Color(0xFF000000) : const Color(0xFFFFFFFF),
+      ),
+    ),
+    textDirection: TextDirection.ltr,
+  )..layout();
+  final centre = (points[0] + points[2]) / 2;
+  painter.paint(canvas, centre - Offset(painter.width, painter.height) / 2);
 }
 
 Vector3 _vector(Vec3 v) => Vector3(v.$1.toDouble(), v.$2.toDouble(), v.$3.toDouble());
