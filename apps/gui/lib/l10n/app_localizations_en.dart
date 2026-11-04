@@ -807,6 +807,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get simulatorSetupHint => 'Setup: applied first, not played';
 
   @override
+  String get simulatorStickeringFull => 'Full';
+
+  @override
   String get simulatorReset => 'Reset';
 
   @override

@@ -25,6 +25,7 @@ class Cube3dPainter extends CustomPainter {
     this.cubeSize = 1.0,
     this.stickerless = false,
     this.hintLabels = true,
+    this.isLit,
   });
 
   final SimulatedCube cube;
@@ -49,6 +50,10 @@ class Cube3dPainter extends CustomPainter {
 
   /// Whether the middle hint sticker of each face turned away carries the face's letter.
   final bool hintLabels;
+
+  /// Whether a sticker is in colour, given the home of its piece and the face it was solved on; the others
+  /// are dimmed. Null colours them all.
+  final bool Function(Vec3 home, int face)? isLit;
 
   /// Each face all its colour, rather than stickers on black plastic.
   final bool stickerless;
@@ -113,10 +118,10 @@ class Cube3dPainter extends CustomPainter {
         // One-sided like a sticker, facing the cube: seen only from behind it, through the cube.
         final (points, front) = quad(c, normal, rotationOf(c), 0.62, hintDistance);
         if (front) continue;
-        canvas.drawPath(polygon(points), Paint()..color = colors[face]);
+        canvas.drawPath(polygon(points), Paint()..color = _colour(c, face));
         // The middle sticker of a face: no other coordinate of its cubie off the centre.
         if (hintLabels && [c.home.$1, c.home.$2, c.home.$3].where((v) => v.abs() > 1).length == 1) {
-          _label(canvas, nxnFaceNames[face], points, colors[face]);
+          _label(canvas, nxnFaceNames[face], points, _colour(c, face));
         }
       }
     }
@@ -151,12 +156,20 @@ class Cube3dPainter extends CustomPainter {
           if (face != null) {
             canvas.drawPath(
               polygon(quad(c, normal, rotationOf(c), stickerless ? 0.95 : 0.84, 0).$1),
-              Paint()..color = colors[face],
+              Paint()..color = _colour(c, face),
             );
           }
         }
       }
     }
+  }
+
+  /// The colour of [face]'s sticker on [cubie], dimmed when [isLit] says it is not one to look at.
+  Color _colour(Cubie cubie, int face) {
+    final colour = colors[face];
+    return isLit == null || isLit!(cubie.home, face)
+        ? colour
+        : Color.lerp(colour, const Color(0xFF8A8A8A), 0.8)!;
   }
 
   @override

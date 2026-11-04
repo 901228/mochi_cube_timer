@@ -271,6 +271,7 @@
   "simulatorRandom": "Random scramble",
   "simulatorInverse": "Invert moves",
   "simulatorSetupHint": "Setup: applied first, not played",
+  "simulatorStickeringFull": "Full",
   "simulatorReset": "Reset",
   "simulatorInvalidMove": "Can't read: {move}",
   "@simulatorInvalidMove": {"placeholders": {"move": {"type": "String"}}},

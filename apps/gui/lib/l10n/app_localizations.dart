@@ -1574,6 +1574,12 @@ abstract class AppLocalizations {
   /// **'Setup: applied first, not played'**
   String get simulatorSetupHint;
 
+  /// No description provided for @simulatorStickeringFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get simulatorStickeringFull;
+
   /// No description provided for @simulatorReset.
   ///
   /// In en, this message translates to:

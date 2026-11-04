@@ -5,6 +5,7 @@ import "package:flutter_test/flutter_test.dart";
 import "package:mochi_cube_timer_gui/database/dao_provider.dart";
 import "package:mochi_cube_timer_gui/features/simulator/notation.dart";
 import "package:mochi_cube_timer_gui/features/simulator/simulator_page.dart";
+import "package:mochi_cube_timer_gui/features/simulator/stickering.dart";
 import "package:mochi_cube_timer_gui/l10n/l10n.dart";
 import "package:mochi_ui/mochi_ui.dart";
 import "package:mochi_cube/nxn.dart";
@@ -47,6 +48,29 @@ void main() {
     expect(_stickers(_after("R3")), _stickers(_after("R'")));
     expect(_stickers(_after("U'2")), _stickers(_after("U2")));
     expect(cubeLayerTurns("R3 U'2", size: 3).map((t) => t.quarters), [3, -2]);
+  });
+
+  test("each stage of the solve shows its own stickers", () {
+    final cube = SimulatedCube(3);
+    int shown(Stickering s) => [
+      for (final c in cube.cubies)
+        for (final (_, face) in cube.stickers(c))
+          if (s.lit(3, c.home, face)) 1,
+    ].length;
+    expect(
+      {for (final s in Stickering.values) s: shown(s)},
+      {
+        Stickering.full: 54,
+        // The centres and the four bottom edges.
+        Stickering.cross: 6 + 8,
+        // All but the 20 stickers of the top layer's pieces, whose centre is still shown.
+        Stickering.f2l: 34,
+        // And the eight of those that look up.
+        Stickering.oll: 42,
+        // All but the same eight.
+        Stickering.pll: 46,
+      },
+    );
   });
 
   test("inverting reverses the moves and turns each the other way", () {

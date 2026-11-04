@@ -799,6 +799,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simulatorSetupHint => 'Setup：先套用，不播放';
 
   @override
+  String get simulatorStickeringFull => '全部';
+
+  @override
   String get simulatorReset => '重置';
 
   @override

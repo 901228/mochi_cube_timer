@@ -12,6 +12,7 @@ import "../trainers/trainer_frame.dart";
 import "cube_3d_painter.dart";
 import "notation.dart";
 import "simulator_settings.dart";
+import "stickering.dart";
 import "simulated_cube.dart";
 
 /// A 3x3 to turn by typing moves, any the notation has: rotations, slices and wide turns, each played out
@@ -49,6 +50,7 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
   /// moves played as they are typed do not.
   var _byPlay = false;
   var _showSettings = false;
+  var _stickering = Stickering.full;
   late final _animation = AnimationController(vsync: this)..addStatusListener(_onStatus);
   final _setupField = TextEditingController();
   final _moves = TextEditingController();
@@ -272,30 +274,58 @@ class _SimulatorPageState extends State<SimulatorPage> with SingleTickerProvider
                         )
                       : null;
                   final view = Expanded(
-                    child: GestureDetector(
-                      onPanUpdate: (details) => setState(() {
-                        _yaw -= details.delta.dx * 0.01;
-                        _pitch = (_pitch + details.delta.dy * 0.01).clamp(-math.pi / 2, math.pi / 2);
-                      }),
-                      child: AnimatedBuilder(
-                        animation: _animation,
-                        builder: (context, _) => CustomPaint(
-                          size: Size.infinite,
-                          painter: Cube3dPainter(
-                            cube: _cube,
-                            colors: colors,
-                            body: const Color(0xFF1A1A1A),
-                            yaw: _yaw,
-                            pitch: _pitch,
-                            turn: _turn,
-                            progress: Curves.easeInOut.transform(_animation.value),
-                            hintDistance: settings.simulatorHintDistance,
-                            cubeSize: settings.simulatorCubeSize,
-                            stickerless: settings.simulatorStickerless,
-                            hintLabels: settings.simulatorHintLabels,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: GestureDetector(
+                            onPanUpdate: (details) => setState(() {
+                              _yaw -= details.delta.dx * 0.01;
+                              _pitch = (_pitch + details.delta.dy * 0.01).clamp(-math.pi / 2, math.pi / 2);
+                            }),
+                            child: AnimatedBuilder(
+                              animation: _animation,
+                              builder: (context, _) => CustomPaint(
+                                size: Size.infinite,
+                                painter: Cube3dPainter(
+                                  cube: _cube,
+                                  colors: colors,
+                                  body: const Color(0xFF1A1A1A),
+                                  yaw: _yaw,
+                                  pitch: _pitch,
+                                  turn: _turn,
+                                  progress: Curves.easeInOut.transform(_animation.value),
+                                  hintDistance: settings.simulatorHintDistance,
+                                  cubeSize: settings.simulatorCubeSize,
+                                  stickerless: settings.simulatorStickerless,
+                                  hintLabels: settings.simulatorHintLabels,
+                                  isLit: _stickering == Stickering.full
+                                      ? null
+                                      : (home, face) => _stickering.lit(_size, home, face),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: SizedBox(
+                            width: 120,
+                            child: MochiSelect<Stickering>(
+                              size: .sm,
+                              value: _stickering,
+                              onChanged: (v) => setState(() => _stickering = v),
+                              options: [
+                                for (final v in Stickering.values)
+                                  MochiSelectOption(
+                                    value: v,
+                                    label: v == Stickering.full ? l10n.simulatorStickeringFull : v.label,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                   return Flex(
