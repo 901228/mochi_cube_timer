@@ -10,6 +10,8 @@ import "records_list.dart";
 import "search_bar/record_add_dialog.dart";
 import "../../l10n/l10n.dart";
 
+// TODO: tile list mode
+
 class RecordsPage extends StatelessWidget {
   const RecordsPage({super.key});
 
