@@ -1,0 +1,55 @@
+# Builds apps/gui for Linux and packs it as an AppImage.
+name: Linux
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      # Side by side, so the relative path dependencies on mochi_ui and
+      # mochi_cube resolve as they do locally.
+      - uses: actions/checkout@v4
+        with:
+          path: mochi_cube_timer
+      - uses: actions/checkout@v4
+        with:
+          repository: 901228/mochi_ui
+          path: mochi_ui
+      - uses: actions/checkout@v4
+        with:
+          repository: 901228/mochi_cube
+          path: mochi_cube
+
+      - id: fvm
+        run: >-
+          echo "flutter=$(jq -r .flutter mochi_cube_timer/.fvmrc)"
+          >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          channel: stable
+          cache: true
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config \
+            libgtk-3-dev liblzma-dev libstdc++-12-dev libfuse2
+          base=https://github.com/AppImage/appimagetool/releases/download
+          sudo curl -fsSL -o /usr/local/bin/appimagetool \
+            "$base/continuous/appimagetool-x86_64.AppImage"
+          sudo chmod +x /usr/local/bin/appimagetool
+
+      - name: Build
+        working-directory: mochi_cube_timer/apps/gui
+        shell: bash
+        run: |
+          flutter build linux --release
+          linux/packaging/build_appimage.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mochi_cube_timer-appimage
+          path: mochi_cube_timer/apps/gui/build/mochi_timer-x86_64.AppImage
+          retention-days: 7

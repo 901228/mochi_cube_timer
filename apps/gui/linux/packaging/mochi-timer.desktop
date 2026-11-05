@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Mochi Timer
+Comment=Speedcubing timer and trainer
+Exec=gui
+Icon=mochi-timer
+Categories=Utility;Game;
+Terminal=false
+StartupWMClass=io.github.u901228.mochicubetimer
