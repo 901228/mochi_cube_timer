@@ -1580,17 +1580,17 @@ abstract class AppLocalizations {
   /// **'Full'**
   String get simulatorStickeringFull;
 
-  /// No description provided for @simulatorOrientation.
+  /// No description provided for @simulatorTop.
   ///
   /// In en, this message translates to:
-  /// **'Top {top}, front {front}'**
-  String simulatorOrientation(String top, String front);
+  /// **'Top {face}'**
+  String simulatorTop(String face);
 
-  /// No description provided for @simulatorLastLayer.
+  /// No description provided for @simulatorFront.
   ///
   /// In en, this message translates to:
-  /// **'Last layer {face}'**
-  String simulatorLastLayer(String face);
+  /// **'Front {face}'**
+  String simulatorFront(String face);
 
   /// No description provided for @simulatorReset.
   ///

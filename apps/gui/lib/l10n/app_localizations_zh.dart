@@ -802,13 +802,13 @@ class AppLocalizationsZh extends AppLocalizations {
   String get simulatorStickeringFull => '全部';
 
   @override
-  String simulatorOrientation(String top, String front) {
-    return '頂 $top・前 $front';
+  String simulatorTop(String face) {
+    return '頂 $face';
   }
 
   @override
-  String simulatorLastLayer(String face) {
-    return '最後一層 $face';
+  String simulatorFront(String face) {
+    return '前 $face';
   }
 
   @override

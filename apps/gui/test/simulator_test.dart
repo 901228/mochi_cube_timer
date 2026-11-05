@@ -4,12 +4,14 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mochi_cube_timer_gui/database/dao_provider.dart";
 import "package:mochi_cube_timer_gui/features/simulator/cube_3d_painter.dart";
+import "package:mochi_cube_timer_gui/features/simulator/fto_3d_painter.dart";
 import "package:mochi_cube_timer_gui/features/simulator/notation.dart";
 import "package:mochi_cube_timer_gui/features/simulator/simulator_page.dart";
 import "package:mochi_cube_timer_gui/features/simulator/stickering.dart";
 import "package:mochi_cube_timer_gui/l10n/l10n.dart";
 import "package:mochi_ui/mochi_ui.dart";
 import "package:mochi_cube/nxn.dart";
+import "package:mochi_cube_timer_gui/features/simulator/sim_move.dart";
 import "package:mochi_cube_timer_gui/features/simulator/simulated_cube.dart";
 
 SimulatedCube _after(String moves, {int size = 3}) {
@@ -59,7 +61,7 @@ void main() {
           if (s.lit(3, c.home, face)) 1,
     ].length;
     expect(
-      {for (final s in Stickering.values) s: shown(s)},
+      {for (final s in Stickering.of(fto: false)) s: shown(s)},
       {
         Stickering.full: 54,
         // The five centres but the top one, and the four bottom edges.
@@ -93,14 +95,18 @@ void main() {
     expect(Stickering.f2l.lit(3, bottomEdge.home, 2, lastLayer: 3), isFalse);
   });
 
-  test("an orientation goes first in the setup, in the place of the one before it", () {
-    expect(withOrientation("R U", previous: "", rotation: "z2"), "z2 R U");
-    expect(withOrientation("z2 R U", previous: "z2", rotation: "y"), "y R U");
-    expect(withOrientation("z2 R U", previous: "z2", rotation: ""), "R U");
-    expect(withOrientation("", previous: "", rotation: "x2"), "x2");
-    // Held as it says, the faces are where it names: x2 puts D on top.
-    final cube = _after("x2");
-    expect(cube.cubies.firstWhere((c) => c.position == (0, 2, 0)).home, (0, -2, 0));
+  test("a hold is the rotation that puts the faces picked on top and in front", () {
+    expect(holdRotation(0, 2), "");
+    expect(holdRotation(0, 1), "y");
+    // Every face on top, with each of the four next to it in front.
+    for (var top = 0; top < 6; top++) {
+      for (var front = 0; front < 6; front++) {
+        if (dot(faceNormals[top], faceNormals[front]) != 0) continue;
+        final cube = _after(holdRotation(top, front));
+        expect(cube.cubies.firstWhere((c) => c.position == (0, 2, 0)).home, _times2(faceNormals[top]));
+        expect(cube.cubies.firstWhere((c) => c.position == (0, 0, 2)).home, _times2(faceNormals[front]));
+      }
+    }
   });
 
   test("inverting reverses the moves and turns each the other way", () {
@@ -109,6 +115,25 @@ void main() {
     // Undone, the cube is as it was.
     const moves = "R U2 F' L3 r M' x";
     expect(_stickers(_after("$moves ${invertNotation(moves)}")), _stickers(SimulatedCube(3)));
+  });
+
+  test("turns of one axis in brackets turn at once, others are only grouped", () {
+    final (_, moves) = readSimMoves(4, "", "(R L') (r R') (R U) (x 2L)");
+    expect(
+      [for (final m in moves.cast<CubeMove>()) m.base],
+      [
+        [1, 0, 0, 1],
+        [0, 1, 0, 0],
+        [1, 0, 0, 0],
+        [1, 0, 0, 0],
+        [1, 1, 0, 1],
+      ],
+    );
+    final cube = SimulatedCube(4);
+    for (final m in moves.cast<CubeMove>()) {
+      m.turns.forEach(cube.turn);
+    }
+    expect(_stickers(cube), _stickers(_after("R L' r R' R U x 2L", size: 4)));
   });
 
   test("moves after a rotation turn the layer now on that side", () {
@@ -173,16 +198,28 @@ void main() {
     expect(
       painter(),
       isA<Cube3dPainter>()
-          .having((p) => p.turn?.quarters, "quarters", 2)
+          .having((p) => p.move?.amount, "amount", 2)
           .having((p) => p.startQuarters, "startQuarters", greaterThan(0)),
     );
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(EditableText).last, "R'");
     await tester.pump();
-    expect(painter(), isA<Cube3dPainter>().having((p) => p.turn?.quarters, "quarters", -3));
+    expect(painter(), isA<Cube3dPainter>().having((p) => p.move?.amount, "amount", -3));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(EditableText).last, "r U M' x");
     await tester.pumpAndSettle();
+
+    // Stepping while a turn is on hurries it and plays the next one straight after.
+    for (final icon in [TablerIcons.arrowBackUp, TablerIcons.arrowForwardUp]) {
+      await tester.tap(find.byIcon(icon));
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.tap(find.byIcon(icon));
+      await tester.pumpAndSettle();
+      expect(
+        _stickers((painter()! as Cube3dPainter).cube),
+        _stickers(_after(icon == TablerIcons.arrowBackUp ? "r U" : "r U M' x")),
+      );
+    }
 
     // The moves are the second box, under the setup; inverting rewrites it.
     final moves = find.byType(EditableText).last;
@@ -256,4 +293,57 @@ void main() {
     // The cube is still there to watch.
     expect(find.byType(CustomPaint), findsWidgets);
   });
+
+  testWidgets("the FTO is picked like a size, and turns, rotates and inverts", (tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    addTearDown(() => tester.runAsync(db.close));
+    final settings = (await tester.runAsync(() => db.settingsDao.watch().first))!;
+    await tester.binding.setSurfaceSize(const Size(360, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      SettingsProvider(
+        state: settings,
+        child: MochiApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          locale: const Locale("en"),
+          home: const SimulatorPage(standalone: true),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    tester.widget<MochiSelect<int>>(find.byType(MochiSelect<int>).first).onChanged!(ftoPuzzle);
+    await tester.pumpAndSettle();
+    CustomPainter? painter() => tester
+        .widget<CustomPaint>(
+          find.descendant(of: find.byType(GestureDetector).first, matching: find.byType(CustomPaint)),
+        )
+        .painter;
+    expect(painter(), isA<Fto3dPainter>());
+    // Its own stages, and held by the faces it has.
+    expect(
+      [
+        for (final o in tester.widget<MochiSelect<Stickering>>(find.byType(MochiSelect<Stickering>)).options)
+          o.value,
+      ],
+      [Stickering.full, Stickering.l6x, Stickering.l3c],
+    );
+    final front = tester.widget<MochiSelect<int>>(find.byType(MochiSelect<int>).last);
+    expect(front.options, hasLength(6));
+
+    final moves = find.byType(EditableText).last;
+    await tester.enterText(moves, "{U, R} r BR2 Q");
+    await tester.pumpAndSettle();
+    expect(tester.widget<MochiTextField>(find.byType(MochiTextField).last).error, "");
+
+    await tester.enterText(moves, "{U, R} r BR2");
+    await tester.pumpAndSettle();
+    expect(tester.widget<MochiTextField>(find.byType(MochiTextField).last).error, isNull);
+    await tester.tap(find.byIcon(TablerIcons.arrowsExchange));
+    await tester.pumpAndSettle();
+    expect(tester.widget<EditableText>(moves).controller.text, "BR2' r' {U, R}");
+  });
 }
+
+Vec3 _times2(Vec3 v) => (v.$1 * 2, v.$2 * 2, v.$3 * 2);

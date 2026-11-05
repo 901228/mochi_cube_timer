@@ -4,13 +4,14 @@ import "package:flutter/widgets.dart";
 import "package:mochi_cube/nxn.dart";
 import "package:vector_math/vector_math_64.dart";
 
+import "sim_move.dart";
 import "simulated_cube.dart";
 
-/// [cube] in perspective, seen from [yaw] round and [pitch] above, with [turn] (if any) [progress] of the way
+/// [cube] in perspective, seen from [yaw] round and [pitch] above, with [move] (if any) [progress] of the way
 /// through: the layers it turns are drawn turned that far, and the cube's state is still from before it.
 ///
-/// Only faces turned towards the eye are drawn. The cube is cut into the layers turning and the ones either
-/// side, each a convex block, drawn far one first; inside a block the faces facing the eye cannot overlap.
+/// Only faces turned towards the eye are drawn. The cube is cut into blocks of layers next to each other that
+/// turn as one, each convex, drawn far one first; inside a block the faces facing the eye cannot overlap.
 /// The stickers of the faces turned away are drawn again floating behind the cube.
 class Cube3dPainter extends CustomPainter {
   Cube3dPainter({
@@ -19,7 +20,7 @@ class Cube3dPainter extends CustomPainter {
     required this.body,
     required this.yaw,
     required this.pitch,
-    this.turn,
+    this.move,
     this.progress = 0,
     this.startQuarters = 0,
     this.hintDistance = 3.0,
@@ -38,10 +39,10 @@ class Cube3dPainter extends CustomPainter {
   final Color body;
   final double yaw;
   final double pitch;
-  final CubeLayerTurn? turn;
+  final CubeMove? move;
   final double progress;
 
-  /// Where [turn] started, in quarters from [_cube]'s state, when a move was edited mid-turn.
+  /// Where [move] started, in quarters from [_cube]'s state, when a move was edited mid-turn.
   final double startQuarters;
 
   /// How far past the cube the stickers of the faces turned away float, in half cubies; 0 leaves them out.
@@ -66,15 +67,23 @@ class Cube3dPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final n = cube.size;
     final camera = Matrix3.rotationX(pitch) * Matrix3.rotationY(-yaw) as Matrix3;
-    final turn = this.turn;
-    final axis = turn == null ? null : faceNormals[turn.face];
-    final turning = turn == null
-        // Clockwise seen from the face is negative about its normal.
-        ? Matrix3.identity()
-        : Quaternion.axisAngle(
-            _vector(axis!),
-            -math.pi / 2 * (startQuarters + (turn.quarters - startQuarters) * progress),
-          ).asRotationMatrix();
+    final move = this.move;
+    final axis = move == null ? null : faceNormals[move.face];
+    // Each layer from the move's face in, by the block it is in: the layers next to each other turned alike.
+    final blockOf = <int>[];
+    final blockTurns = <int>[];
+    for (final k in move?.base ?? const [0]) {
+      if (blockTurns.isEmpty || blockTurns.last != k) blockTurns.add(k);
+      blockOf.add(blockTurns.length - 1);
+    }
+    final turned = move == null ? 0.0 : startQuarters + (move.amount - startQuarters) * progress;
+    final turnings = [
+      for (final k in blockTurns)
+        k == 0
+            ? Matrix3.identity()
+            // Clockwise seen from the face is negative about its normal.
+            : Quaternion.axisAngle(_vector(axis!), -math.pi / 2 * k * turned).asRotationMatrix(),
+    ];
 
     final distance = n * 5.0;
     // Room for the hints at their usual distance and a little past it; moving them leaves the cube's size alone.
@@ -85,12 +94,8 @@ class Cube3dPainter extends CustomPainter {
       return centre + Offset(p.x * k * scale, -p.y * k * scale);
     }
 
-    // Which block a position is in: 0 the layers before the turning ones, 1 those turning, 2 after.
-    int block(Vec3 p) {
-      if (turn == null) return 1;
-      final layer = (n + 1 - dot(axis!, p)) ~/ 2;
-      return layer < turn.lo ? 0 : (layer > turn.hi ? 2 : 1);
-    }
+    // Which block a position is in.
+    int block(Vec3 p) => move == null ? 0 : blockOf[(n - 1 - dot(axis!, p)) ~/ 2];
 
     bool inside(Vec3 p) => p.$1.abs() < n && p.$2.abs() < n && p.$3.abs() < n;
 
@@ -117,7 +122,7 @@ class Cube3dPainter extends CustomPainter {
 
     Path polygon(List<Offset> points) => Path()..addPolygon(points, true);
 
-    Matrix3 rotationOf(Cubie c) => turn != null && block(c.position) == 1 ? turning : Matrix3.identity();
+    Matrix3 rotationOf(Cubie c) => turnings[block(c.position)];
 
     // The stickers of the faces turned away, floating behind the cube.
     for (final c in hintDistance > 0 ? cube.cubies : const <Cubie>[]) {
@@ -133,14 +138,18 @@ class Cube3dPainter extends CustomPainter {
       }
     }
 
-    // Where the eye is along the turning axis says which side of the turning layers is nearer.
-    var order = const [1];
-    if (turn != null) {
+    // The blocks furthest from the eye along the axis first, the one it is level with, if any, last.
+    var order = [for (var b = 0; b < blockTurns.length; b++) b];
+    if (move != null) {
       final eye = camera.transposed() * Vector3(0, 0, distance);
       final along = eye.dot(_vector(axis!));
-      final top = n + 2 - 2 * turn.lo;
-      final bottom = n - 2 * turn.hi;
-      order = along > top ? const [2, 1, 0] : (along < bottom ? const [0, 1, 2] : const [0, 2, 1]);
+      double away(int b) {
+        final top = n + 2 - 2 * (blockOf.indexOf(b) + 1);
+        final bottom = n - 2 * (blockOf.lastIndexOf(b) + 1);
+        return along > top ? along - top : (along < bottom ? bottom - along : 0);
+      }
+
+      order = order..sort((a, b) => away(b).compareTo(away(a)));
     }
 
     final fill = Paint()..color = body;
